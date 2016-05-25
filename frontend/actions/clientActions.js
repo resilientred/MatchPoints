@@ -1,38 +1,37 @@
 import ApiUtil from "../utils/apiUtil";
 
-class ClientActions {
-	fetchUsers() {
+export default {
+	fetchPlayers() {
 		ApiUtil.apiService({
-			url: "/api/users",
-			success: "fetchedUsers"
+			url: "/api/players",
+			success: "fetchedPlayers"
 		});
-	}
+	},
 
-	addUser(user) {
+	addPlayer(player) {
 		ApiUtil.apiService({
-			url: "/api/users",
+			url: "/api/players",
 			method: "POST",
-			data: {user: user},
-			success: "updatedUser"
+			data: {player: player},
+			success: "updatedPlayer"
 		})
-	}
+	},
 
-	updateUser(id, user) {
+	updatePlayer(id, player) {
 		ApiUtil.apiService({
-			url: "/api/users/" + id,
+			url: "/api/players/" + id,
 			method: "PATCH",
-			data: {user: user},
-			success: "updatedUser"
+			data: {player: player},
+			success: "updatedPlayer"
 		})
-	}
+	},
 
-	removeUser(id) {
+	removePlayer(id) {
 		ApiUtil.apiService({
-			url: "/api/users/" + id,
+			url: "/api/players/" + id,
 			method: "DELETE",
-			success: "removedUser"
+			success: "removedPlayer"
 		})
 	}
 }
 
-export default ClientActions;

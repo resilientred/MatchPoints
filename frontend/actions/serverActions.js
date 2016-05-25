@@ -1,28 +1,27 @@
 import ApiUtil from "../utils/apiUtil";
 import Dispatcher from "../dispatcher/dispatcher";
-import UserConstants from "../constants/userConstants";
+import PlayerConstants from "../constants/playerConstants";
 
-class ServerActions {
-	fetchedUsers = function(users){
+export default {
+	fetchedUsers(players){
 		Dispatcher.dispatch({
-			actionType: UserConstants."FETCHED_USERS",
-			users: users
+			actionType: PlayerConstants.FETCHED_PLAYERS,
+			players: players
 		})
-	}
-
-	updatedUser = function(user){
+	},
+	
+	updatedUser(player){
 		Dispatcher.dispatch({
-			actionType: UserConstants."FETCHED_USER",
-			user: user
+			actionType: PlayerConstants.FETCHED_PLAYER,
+			player: player
 		})
-	}
+	},
 
-	removedUser = function(user){
+	removedUser(player){
 		Dispatcher.dispatch({
-			actionType: UserConstants."REMOVED_USER",
-			user: user
+			actionType: PlayerConstants.REMOVED_PLAYER,
+			player: player
 		})
 	}
 }
 
-export default ServerActions;

@@ -1,35 +1,50 @@
 import React from 'react';
 import ClientActions from '../actions/clientActions';
 import PlayerStore from '../stores/playerStore';
+import PlayerButton from './playerButton';
+import PlayerList from './playerList';
 
-class Players extends React.Component {
-	constructor() {
-		this.state = {
-			players: ClientActions.all() || []
-		}
-	}
+export default class Players extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      allPlayers: [],
+      addedPlayers: {}
+    }
+  }
 
-	componentDidMount = () => {
-		ClientsActions.fetchUsers();
-		PlayerStore.addListener(this._fetchedUsers);
-	}
+  componentDidMount(){
+    ClientActions.fetchPlayers();
+    PlayerStore.addListener(this._fetchedPlayers);
+  }
 
-	_fetchedUsers = () => {
-		this.setState({players: ClientsActions.all()});
-	}
+  _fetchedPlayers = () => {
+    this.setState({players: ClientActions.all()});
+  }
 
-	render(){
-		return (<div>
-			<ul>
-				{
-					this.state.users.map( user => 
-						(<li key={user.id}>{user.name}</li>)
-					 )
-				}
-			</ul>
-		</div>
-		)
-	}
+  addPlayer = (player) => {
+    addedPlayers[player.id] = player
+  }
+
+  removePlayer = (player) => {
+
+  }
+
+  render(){
+    return (<div>
+    </div>
+    )
+  }
 }
+      //<ul>
+        //{
+          //this.state.allPlayers.map( player => 
+            //(<li key={player.id}>{player.name}</li>)
+           //)
+        //}
+      //</ul>
+      //<div>
+        //<PlayerButton name="Add" callback={this.addPlayer}/>
+        //<PlayerButton name="Remove" callback={this.removePlayer}/>
+      // </div>
 
-export default Players;

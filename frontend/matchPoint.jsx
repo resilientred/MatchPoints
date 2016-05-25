@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, hashHistory } from 'react-router';
-
+import Players from "./components/players.jsx";
 
 class App extends React.Component {
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 	}
 	render() {
 		return (<div>
@@ -14,11 +14,19 @@ class App extends React.Component {
 		</div>);
 	}
 }
+
+let Routes = (
+	<Route path="/" component={App}>
+		<Route path="players" component={Players} />
+	</Route>
+)
+
+
 document.addEventListener("DOMContentLoaded", ()=>{
 		ReactDOM.render(
-			<App />,
+			<Router history={hashHistory}>
+				{Routes}
+			</Router>,
 			document.getElementById("root")
 		);
-	}
-);
-console.log('loading...');
+});

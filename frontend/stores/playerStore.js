@@ -1,46 +1,46 @@
 import Dispatcher from '../dispatcher/dispatcher';
 import { Store } from 'flux/utils';
-import UserConstants from '../constants/userConstants';
-let _users = {};
+import PlayerConstants from '../constants/playerConstants';
+let _players = {};
 
-let _resetUsers = (users) => {
-	users.forEach(user=>(_users[id] = user));
+let _resetPlayers = (players) => {
+	players.forEach(player=>(_players[id] = player));
 }; 
 
-let _setUser = (user) => {
-	_users[user];
+let _setPlayer = (player) => {
+	_players[player];
 };
 
-let _removeUser = (user) => {
-	delete _users[user.id];
+let _removePlayer = (player) => {
+	delete _players[player.id];
 };
 
-class UserStore extends Store {	
-	all = function(){
-		return _users;
+export default class PlayerStore extends Store {	
+	all(){
+		return _players;
 	}
 
-	find = function(id){
-		return _users[id];
+	find(id){
+		return _players[id];
 	}
 
-	__onDispatcher = function(payload){
+	__onDispatch(payload){
 		switch(payload.actionType){
-			case UserConstants.FETCHED_USERS:
-				_resetUsers(payload.users);
-				UserStore.__emitChange();
+			case PlayerConstants.FETCHED_PLAYERS:
+				debugger;
+				_resetPlayers(payload.players);
+				PlayerStore.__emitChange();
 				break;
-			case UserConstants.FETCHED_USER:
-				_setUser(payload.user);
-				UserStore.__emitChange();
+			case PlayerConstants.FETCHED_PLAYER:
+				_setPlayer(payload.player);
+				PlayerStore.__emitChange();
 				break;
-			case UserConstants.REMOVED_USER:
-				_removeUser(payload.user);
-				UserStore.__emitChange();
+			case PlayerConstants.REMOVED_PLAYER:
+				_removePlayer(payload.player);
+				PlayerStore.__emitChange();
 				break;
 		}
 	}
 }
 
-export default UserStore;
 	
