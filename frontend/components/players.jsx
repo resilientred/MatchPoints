@@ -3,7 +3,7 @@ import ClientActions from '../actions/clientActions';
 import PlayerStore from '../stores/playerStore';
 import PlayerButton from './playerButton';
 import PlayerList from './playerList';
-
+import PlayerForm from './playerForm';
 export default class Players extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +19,7 @@ export default class Players extends React.Component {
   }
 
   _fetchedPlayers = () => {
-    this.setState({players: ClientActions.all()});
+    this.setState({allPlayers: PlayerStore.all()});
   }
 
   addPlayer = (player) => {
@@ -31,7 +31,16 @@ export default class Players extends React.Component {
   }
 
   render(){
+    let allPlayers = this.state.allPlayers;
     return (<div>
+      <ul>
+        {
+          Object.keys(allPlayers).map ( (player) => {
+            return <li key={allPlayers[player]._id}>{allPlayers[player].name}</li>;
+            })
+        }
+      </ul>
+      <PlayerForm />
     </div>
     )
   }

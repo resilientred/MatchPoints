@@ -25941,7 +25941,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Players).call(this, props));
 	
 	    _this._fetchedPlayers = function () {
-	      _this.setState({ players: _clientActions2.default.all() });
+	      _this.setState({ allPlayers: _playerStore2.default.all() });
 	    };
 	
 	    _this.addPlayer = function (player) {
@@ -25966,7 +25966,22 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('div', null);
+	      var allPlayers = this.state.allPlayers;
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          Object.keys(allPlayers).map(function (player) {
+	            return _react2.default.createElement(
+	              'li',
+	              { key: allPlayers[player]._id },
+	              allPlayers[player].name
+	            );
+	          })
+	        )
+	      );
 	    }
 	  }]);
 	
@@ -26044,12 +26059,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	
-	var _serverActions = __webpack_require__(232);
-	
-	var _serverActions2 = _interopRequireDefault(_serverActions);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var ServerActions = __webpack_require__(232);
 	
 	exports.default = {
 		apiService: function apiService(options) {
@@ -26058,8 +26068,7 @@
 				url: options["url"],
 				data: options["data"] || {},
 				success: function success(data) {
-					debugger;
-					_serverActions2.default[options["success"]](data);
+					ServerActions[options["success"]](data);
 				}
 			});
 		}
@@ -26071,14 +26080,6 @@
 
 	"use strict";
 	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _apiUtil = __webpack_require__(231);
-	
-	var _apiUtil2 = _interopRequireDefault(_apiUtil);
-	
 	var _dispatcher = __webpack_require__(233);
 	
 	var _dispatcher2 = _interopRequireDefault(_dispatcher);
@@ -26089,20 +26090,22 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = {
-		fetchedUsers: function fetchedUsers(players) {
+	module.exports = {
+		fetchedPlayers: function fetchedPlayers(players) {
 			_dispatcher2.default.dispatch({
 				actionType: _playerConstants2.default.FETCHED_PLAYERS,
 				players: players
 			});
 		},
-		updatedUser: function updatedUser(player) {
+	
+		updatedPlayer: function updatedPlayer(player) {
 			_dispatcher2.default.dispatch({
 				actionType: _playerConstants2.default.FETCHED_PLAYER,
 				player: player
 			});
 		},
-		removedUser: function removedUser(player) {
+	
+		removedPlayer: function removedPlayer(player) {
 			_dispatcher2.default.dispatch({
 				actionType: _playerConstants2.default.REMOVED_PLAYER,
 				player: player
@@ -26455,10 +26458,8 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _dispatcher = __webpack_require__(233);
 	
@@ -26472,71 +26473,41 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
 	var _players = {};
-	
 	var _resetPlayers = function _resetPlayers(players) {
-		players.forEach(function (player) {
-			return _players[id] = player;
-		});
+	  players.forEach(function (player) {
+	    return _players[player._id] = player;
+	  });
 	};
 	
 	var _setPlayer = function _setPlayer(player) {
-		_players[player];
+	  _players[player];
 	};
 	
 	var _removePlayer = function _removePlayer(player) {
-		delete _players[player.id];
+	  delete _players[player._id];
 	};
-	
-	var PlayerStore = function (_Store) {
-		_inherits(PlayerStore, _Store);
-	
-		function PlayerStore() {
-			_classCallCheck(this, PlayerStore);
-	
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(PlayerStore).apply(this, arguments));
-		}
-	
-		_createClass(PlayerStore, [{
-			key: 'all',
-			value: function all() {
-				return _players;
-			}
-		}, {
-			key: 'find',
-			value: function find(id) {
-				return _players[id];
-			}
-		}, {
-			key: '__onDispatch',
-			value: function __onDispatch(payload) {
-				switch (payload.actionType) {
-					case _playerConstants2.default.FETCHED_PLAYERS:
-						debugger;
-						_resetPlayers(payload.players);
-						PlayerStore.__emitChange();
-						break;
-					case _playerConstants2.default.FETCHED_PLAYER:
-						_setPlayer(payload.player);
-						PlayerStore.__emitChange();
-						break;
-					case _playerConstants2.default.REMOVED_PLAYER:
-						_removePlayer(payload.player);
-						PlayerStore.__emitChange();
-						break;
-				}
-			}
-		}]);
-	
-		return PlayerStore;
-	}(_utils.Store);
-	
+	var PlayerStore = new _utils.Store(_dispatcher2.default);
+	PlayerStore.all = function () {
+	  return _players;
+	}, PlayerStore.find = function (id) {
+	  return _players[id];
+	}, PlayerStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case _playerConstants2.default.FETCHED_PLAYERS:
+	      _resetPlayers(payload.players);
+	      PlayerStore.__emitChange();
+	      break;
+	    case _playerConstants2.default.FETCHED_PLAYER:
+	      _setPlayer(payload.player);
+	      PlayerStore.__emitChange();
+	      break;
+	    case _playerConstants2.default.REMOVED_PLAYER:
+	      _removePlayer(payload.player);
+	      PlayerStore.__emitChange();
+	      break;
+	  }
+	};
 	exports.default = PlayerStore;
 
 /***/ },

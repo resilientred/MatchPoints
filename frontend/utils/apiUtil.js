@@ -1,4 +1,4 @@
-import ServerActions from '../actions/serverActions';
+const ServerActions = require('../actions/serverActions');
 
 export default {
 	apiService(options){
@@ -7,7 +7,6 @@ export default {
 			url: options["url"],
 			data: options["data"] || {},
 			success: function(data){
-				debugger;
 				ServerActions[options["success"]](data);
 			}
 		})

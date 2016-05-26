@@ -6,9 +6,11 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import config from './webpack.config.js';
 import mongoose from 'mongoose';
 import Player from "./app/models/player";
+import BodyParser from 'body-parser';
 
 const app = express();
 const compiler = webpack(config);
+const parseUrlencoded = BodyParser.urlencoded({ extended: false });
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(express.static(__dirname + "/public"));
@@ -29,8 +31,21 @@ app.route("/api/players")
 		}
 	})
 })
-	.post((req, res)=>{
-
+	.post(parseUrlencoded, (req, res) => {
+		let data = req.body;
+		let player = new Player({
+			"name": data.name,
+			"rating": +data.rating
+		})
+		player.save((err, player)=> {
+			if (err) {
+				console.log(err);
+			} else {
+				res.status(201).send(player);
+				res.end();
+			}
+			
+		})
 })
 	.delete((req, res)=>{
 

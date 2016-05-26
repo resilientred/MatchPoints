@@ -18,5 +18,5 @@ And allow users to:
 ## Languages:
  - Front-end: React.js with Flux architectural framework
  - Back-end: Node.js/Express.js
- - Database: MongoDB
+ - Database: MongoDB with Mongoose ODM
 

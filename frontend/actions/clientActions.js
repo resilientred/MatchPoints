@@ -12,7 +12,7 @@ export default {
 		ApiUtil.apiService({
 			url: "/api/players",
 			method: "POST",
-			data: {player: player},
+			data: player,
 			success: "updatedPlayer"
 		})
 	},
@@ -21,7 +21,7 @@ export default {
 		ApiUtil.apiService({
 			url: "/api/players/" + id,
 			method: "PATCH",
-			data: {player: player},
+			data: player,
 			success: "updatedPlayer"
 		})
 	},
