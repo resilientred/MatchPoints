@@ -8,7 +8,7 @@ export default class Players extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allPlayers: [],
+      allPlayers: {},
       addedPlayers: {}
     }
   }
@@ -23,37 +23,34 @@ export default class Players extends React.Component {
   }
 
   addPlayer = (player) => {
-    addedPlayers[player.id] = player
+    addedPlayers[player._id] = player
   }
 
   removePlayer = (player) => {
-
+    delete addedPlayers[player._id];
   }
-
-  render(){
-    let allPlayers = this.state.allPlayers;
+  addButton = () => {
+    return (
+      <button className="playerButton"
+          onClick={this.addPlayer.bind(this)}>Add</button>
+      )
+  }
+  removeButton = () => {
+    return (
+      <button className="playerButton"
+          onClick={this.removePlayer.bind(this)}>Remove</button>
+          )
+  }
+  render = () => {
+    let allPlayers = this.state.allPlayers,
+        addedPlayers = this.state.addedPlayers;
     return (<div>
-      <ul>
-        {
-          Object.keys(allPlayers).map ( (player) => {
-            return <li key={allPlayers[player]._id}>{allPlayers[player].name}</li>;
-            })
-        }
-      </ul>
+      <PlayerList players={allPlayers} button={this.addButton()}/>
+      <PlayerList players={addedPlayers} button={this.removeButton()}/>
       <PlayerForm />
     </div>
     )
   }
 }
-      //<ul>
-        //{
-          //this.state.allPlayers.map( player => 
-            //(<li key={player.id}>{player.name}</li>)
-           //)
-        //}
-      //</ul>
-      //<div>
-        //<PlayerButton name="Add" callback={this.addPlayer}/>
-        //<PlayerButton name="Remove" callback={this.removePlayer}/>
-      // </div>
+
 
