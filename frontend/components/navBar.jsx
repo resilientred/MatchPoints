@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router';
 export default class NavBar extends React.Component {
     constructor(props) {
         super(props);
@@ -9,8 +9,8 @@ export default class NavBar extends React.Component {
         return <div className="nav-bar">
         	<div className="logo">MatchPoint</div>
         	<ul>
-        		<li>Log In</li>
-        		<li>Sign Up</li>
+        		<li><Link to="/login" activeClassName="active">Log In</Link></li>
+        		<li><Link to="/signup" activeClassName="active">Sign Up</Link></li>
         	</ul>
         </div>;
     }

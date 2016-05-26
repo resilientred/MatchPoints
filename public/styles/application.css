@@ -5,16 +5,14 @@ button {
 p {
   font-family: 'Oswald', sans-serif; }
 
-body {
-  background-color: black; }
-
 .nav-bar {
   font-size: 24px;
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white; }
+  color: white;
+  background-color: black; }
   .nav-bar ul {
     display: flex;
     justify-content: space-around; }

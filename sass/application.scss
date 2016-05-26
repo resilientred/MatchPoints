@@ -6,7 +6,6 @@ p {
 	font-family: 'Oswald', sans-serif;
 }
 body {
-	background-color: black;
 }
 .nav-bar {
 	font-size: 24px;
@@ -15,7 +14,7 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	color: white;
-
+	background-color: black;
 	ul {
 		display: flex;
 		justify-content: space-around;

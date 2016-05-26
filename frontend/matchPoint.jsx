@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import Players from "./components/players";
 import NavBar from './components/navBar';
+import Splash from "./components/splash"
 class App extends React.Component {
 	constructor(props){
 		super(props);
@@ -10,13 +11,6 @@ class App extends React.Component {
 	render() {
 		return (<div>
 			<NavBar />
-			<div className="banner-container">
-				<div className="banner"></div>
-				<div>
-					<p>One-stop shop for Round Robin Tournament Management..</p>
-					<button>Learn More</button>
-				</div>
-			</div>
 			{ this.props.children }
 		</div>);
 	}
@@ -24,6 +18,9 @@ class App extends React.Component {
 
 let Routes = (
 	<Route path="/" component={App}>
+		<IndexRoute component={Splash}/>
+		<Route path="login" component={LogIn} />
+		<Route path="signup" component={SignUp} />
 		<Route path="players" component={Players} />
 	</Route>
 )
