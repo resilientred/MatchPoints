@@ -10,19 +10,21 @@ const parseUrlencoded = bodyParser.urlencoded({ extended: false });
 
 const saltRounds = 10;
 class User {
-  constructor = () => {
+  constructor(app){
+    this.app = app;
     this._currentUser = null;
   }
-
-  currentUser = (req) => {
-    if (this._currentUser) return this._currentUser;
-
-    this._currentUser = UserModel.findBySessionToken(req.cookies.matchpoint_seesion);
-    if (this._currentUser) return this._currentUser;
-
-    return null;
+  currentUser(req){
+    if (this._currentUser) {
+      this.app.emit('foundUser', this._currentUser);
+      return;
+    }
+    UserModel.findBySessionToken(req.cookies.matchpoint_seesion, this.foundUser);
   }
-
+  foundUser = (user) => {
+    this._currentUser = user;
+    this.app.emit('foundUser', this._currentUser);
+  }
   _saveUser = (user, hash, res) => {
     user.passwordDigest = hash;
     user.sessionToken = URLSafeBase64.encode(crypto.randomBytes(32)); 
@@ -30,7 +32,8 @@ class User {
       if (err){
         res.status(422).send(err);
       } else {
-        logIn(res, user);
+        logIn(res, user); //change these to emit change,
+                            //shouldn't touch the res
       }
     })
   }
@@ -55,7 +58,6 @@ class User {
     UserModel.findByPasswordAndUsername(username, password, logIn, res)
   }
   _success = (res, user) => {
-    //user is 2nd because that's what's passed back from update
     res.status(200).send(user);
   }
   _isPassword = (password, hash, cb) => {
@@ -80,8 +82,7 @@ class User {
 }
 
 
-router.route("user")
-  .post(parseUrlencoded, (req, res) => {
+router.post("/new", parseUrlencoded, (req, res) => {
     let data = req.body;
     let newUser = new UserModel({
       organization: data.organization,

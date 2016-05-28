@@ -10,17 +10,17 @@ let userSchema = new Schema({
 	sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))}
 });
 
-let User = mongoose.model("User", userSchema);
-userSchema.methods.resetSessionToken = (user, callback) => {
+userSchema.statics.resetSessionToken = (user, callback) => {
 	let token = URLSafeBase64.encode(crypto.randomBytes(32));
 	user.update({sessionToken: token}, callback);
 }
 
-userSchema.methods.findByPasswordAndUsername = (username, password, callback) => {
+userSchema.statics.findByPasswordAndUsername = (username, password, callback) => {
 	User.find({"username": username, "password": password}, callback);
 }
 
-userSchema.method.findBySessionToken = (sessionToken, callback) => {
+userSchema.statics.findBySessionToken = (sessionToken, callback) => {
 	User.find({"sessionToken": sessionToken}, callback);
 }
+let User = mongoose.model("User", userSchema);
 export default User;

@@ -5,8 +5,7 @@ import UserConstants from "../constants/userConstants";
 let _csrf = null;
 
 let _setCSRF = (csrf) => {
-  _csrf = csrf;
-  UserStore.__emitChange();
+  _csrf = csrf.csrfToken;
 }
 
 const UserStore = new Store(AppDispatcher);
@@ -18,8 +17,9 @@ UserStore.getCSRF = () => {
   }
 UserStore.__onDispatch = (payload) => {
   switch(payload.actionType){
-    case UserConstants.FETCHED_CSFR:
+    case UserConstants.FETCHED_CSRF:
       _setCSRF(payload.token);
+      UserStore.__emitChange();
       break;
   }
 }

@@ -1,13 +1,16 @@
 import React from 'react';
 
-export default function userForms(Component, store, action) {
+export default function userForms(Component, fields, store, action) {
 	const userFormMixins = React.createClass({
+		getInitialState(){
+			return Object.assign({}, fields);
+		},
 		componentDidMount(){
-			action.fetchCSRF();
 			this.csrfListener = store.addListener(this._fetchedCSRF);
+			action.fetchCSRF();
 		},
 		_fetchedCSRF(){
-			
+			this.setState({ csrf: store.getCSRF() });
 		},
 		componentWillUnmount() {
 			this.csrfListener.remove();
@@ -23,7 +26,8 @@ export default function userForms(Component, store, action) {
     },
 
     render() {
-    	return <Component {...this.props} {...this.state} />;
+    	return <Component {...this.props} {...this.state} 
+    						_updateField={this._updateField} _handleSubmit={this._handleSubmit}/>;
     }
 	});
 

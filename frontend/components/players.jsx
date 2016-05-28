@@ -1,7 +1,6 @@
 import React from 'react';
 import ClientActions from '../actions/clientActions';
 import PlayerStore from '../stores/playerStore';
-import PlayerButton from './playerButton';
 import PlayerList from './playerList';
 import PlayerForm from './playerForm';
 export default class Players extends React.Component {
