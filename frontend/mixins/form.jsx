@@ -10,7 +10,7 @@ export default function userForms(Component, fields, store, action) {
 			action.fetchCSRF();
 		},
 		_fetchedCSRF(){
-			this.setState({ csrf: store.getCSRF() });
+			this.setState({ _csrf: store.getCSRF() });
 		},
 		componentWillUnmount() {
 			this.csrfListener.remove();

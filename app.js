@@ -9,18 +9,25 @@ import cookieParser from 'cookie-parser';
 
 import config from './webpack.config.js';
 import routes from './app/api/players';
-import { userRoutes, userClass } from './app/api/user';
+import userMethoding from './app/api/userMethods';
+import userRouting from "./app/api/userRoutes";
 import sessionRouting from "./app/api/session";
 
 const app = express();
 const compiler = webpack(config);
 const csrfProtection = csrf({ cookie: true })
-const User = new userClass(app);
-const sessionRoutes = sessionRouting(app);
+const userMethods = new userMethoding(app);
+const sessionRoutes = sessionRouting(app, userMethods);
+const userRoutes = userRouting(app, userMethods);
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
 app.use(csrf({ cookie: true }));
+// app.use(function (err, req, res, next) {
+//   if (err.code !== 'EBADCSRFTOKEN') return next(err);
+
+//   res.status(403).send("Invalid session token");
+// })
 app.use(
   sassMiddleware({
     src: __dirname + "/sass",
@@ -41,7 +48,7 @@ app.use('*', (req, res, next) => {
 		next();
 		return;
 	} 
-	User.currentUser(req);
+	userMethods.currentUser(req);
 	app.once('foundUser', (user) => {
 		if (!user){
 			res.redirect("/login");

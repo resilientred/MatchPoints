@@ -9,7 +9,7 @@ export default {
 		})
 	},
 	logIn(user) {
-		ApiUtil.apiService({
+		ApiUtil.apiCSRFService({
 			method: "POST",
 			url: "/session/new",
 			data: user,
@@ -18,11 +18,14 @@ export default {
 	},
 
 	signUp(user) {
-		ApiUtil.apiService({
+		let _csrf = user._csrf;
+		delete user._csrf;
+		debugger;
+		ApiUtil.apiCSRFService({
 			method: "POST",
 			url: "/user/new",
 			data: user,
 			success: "loggedIn"
-		})
+		}, _csrf)
 	}
 }

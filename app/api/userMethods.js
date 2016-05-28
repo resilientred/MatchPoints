@@ -1,15 +1,9 @@
-import express from 'express';
 import UserModel from "../models/user";
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import bcrypt from 'bcrypt';
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
-const router = express.Router();
-const parseUrlencoded = bodyParser.urlencoded({ extended: false });
-
 const saltRounds = 10;
-class User {
+class UserMethods {
   constructor(app){
     this.app = app;
     this._currentUser = null;
@@ -25,15 +19,14 @@ class User {
     this._currentUser = user;
     this.app.emit('foundUser', this._currentUser);
   }
-  _saveUser = (user, hash, res) => {
+  _saveUser = (user, hash) => {
     user.passwordDigest = hash;
     user.sessionToken = URLSafeBase64.encode(crypto.randomBytes(32)); 
     user.save( (err, user) => {
       if (err){
-        res.status(422).send(err);
+        this.app.emit("userError");
       } else {
-        logIn(res, user); //change these to emit change,
-                            //shouldn't touch the res
+        this.app.emit("savedUser", user);
       }
     })
   }
@@ -48,6 +41,7 @@ class User {
   }
   logIn = (res, user) => {
     if (!user) res.status(404).send("User not found");
+    this._currentUser = user;
     res.cookie("matchpoint_session", user.sessionToken, 
           { maxAge: 14 * 24 * 60 * 60 * 1000 });
     res.status(200).send(user);
@@ -70,26 +64,19 @@ class User {
       }
     })
   }
-  _passwordDigest = (user, password, res) => {
+  _passwordDigest = (user, password, cb) => {
     bcrypt.hash(password, saltRounds, (err, hash)=>{
       if (err) {
         res.status(422).send(err);
       } else {
-        _saveUser(user, hash, res);
+        this._saveUser(user, hash);
       }
     })
   };
 }
 
 
-router.post("/new", parseUrlencoded, (req, res) => {
-    let data = req.body;
-    let newUser = new UserModel({
-      organization: data.organization,
-      username: data.organization
-    })
-    _passwordDigest(newUser, data.password, _saveUser, res);
-  })
 
-export { router as userRoutes, User as userClass};
+
+export default UserMethods;
 
