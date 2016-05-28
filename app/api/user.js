@@ -11,14 +11,14 @@ const parseUrlencoded = bodyParser.urlencoded({ extended: false });
 const saltRounds = 10;
 class User {
   constructor = () => {
-    _currentUser = null;
+    this._currentUser = null;
   }
 
   currentUser = (req) => {
-    if (_currentUser) return _currentUser;
+    if (this._currentUser) return this._currentUser;
 
-    _currentUser = User.findBySessionToken(req.cookies.matchpoint_seesion);
-    if (_currentUser) return _currentUser;
+    this._currentUser = UserModel.findBySessionToken(req.cookies.matchpoint_seesion);
+    if (this._currentUser) return this._currentUser;
 
     return null;
   }
@@ -35,8 +35,8 @@ class User {
     })
   }
   logOut = (res) => {
-    let user = _currentUser; 
-    _currentUser = null;
+    let user = this._currentUser; 
+    this._currentUser = null;
     UserModel.resetSessionToken(user, _loggedOut.bind(null, res));    
   }
   _loggedOut = (res) => {
@@ -52,7 +52,7 @@ class User {
   }
 
   _findUser = (res) => {
-    User.findByPasswordAndUsername(username, password, logIn, res)
+    UserModel.findByPasswordAndUsername(username, password, logIn, res)
   }
   _success = (res, user) => {
     //user is 2nd because that's what's passed back from update
@@ -83,12 +83,12 @@ class User {
 router.route("user")
   .post(parseUrlencoded, (req, res) => {
     let data = req.body;
-    let newUser = new User({
+    let newUser = new UserModel({
       organization: data.organization,
       username: data.organization
     })
     _passwordDigest(newUser, data.password, _saveUser, res);
   })
 
-export { router as userRoutes, User };
+export { router as userRoutes, User as userClass};
 

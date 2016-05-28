@@ -1,22 +1,19 @@
 import React from 'react';
+import UserForm from '../mixins/userForm';
+import UserStore from '../stores/userStore';
+import UserActions from '../actions/userActions';
 
 class SignUp extends React.Component {
     constructor(props) {
         super(props);
-        this.displayName = 'SignUp';
         this.state = {
         	organization: "",
         	username: "",
         	password: ""
         }
     }
-    _handleSubmit = (e) => {
-    	e.preventDefault()
-    } 
-    _updateField = (name, e) => {
-    	let field = {};
-    	field[name] = e.target.value;
-    	this.setState(field);
+    componentDidMount = () => {
+    
     }
     render() {
         return <div>
@@ -31,5 +28,5 @@ class SignUp extends React.Component {
         </div>;
     }
 }
-
+SignUp = UserForm(SignUp, UserStore, UserActions);
 export default SignUp;
