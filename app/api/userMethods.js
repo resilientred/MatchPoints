@@ -21,7 +21,6 @@ class UserMethods {
   }
   _saveUser = (user, hash) => {
     user.passwordDigest = hash;
-    user.sessionToken = URLSafeBase64.encode(crypto.randomBytes(32)); 
     user.save( (err, user) => {
       if (err){
         this.app.emit("userError");
@@ -40,29 +39,39 @@ class UserMethods {
     res.end();
   }
   logIn = (res, user) => {
-    if (!user) res.status(404).send("User not found");
-    this._currentUser = user;
-    res.cookie("matchpoint_session", user.sessionToken, 
-          { maxAge: 14 * 24 * 60 * 60 * 1000 });
-    res.status(200).send(user);
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      this._currentUser = Object.assign({}, user.toObject());
+      delete this._currentUser.sessionToken;
+      delete this._currentUser.passwordDigest;
+      
+      res.cookie("matchpoint_session", user.sessionToken, 
+            { maxAge: 14 * 24 * 60 * 60 * 1000 });
+      res.status(200).send(this._currentUser);  
+      res.redirect("/players");
+    }
     res.end();
   }
 
-  _findUser = (res) => {
-    UserModel.findByPasswordAndUsername(username, password, logIn, res)
+  _findUser(username, password){
+    UserModel.findByUsernameAndPassword.call(UserModel, username, this._isPassword.bind(null, password));
+  }
+  _foundUser(user){
+    this.app.emit("foundDigest", user);
   }
   _success = (res, user) => {
     res.status(200).send(user);
   }
-  _isPassword = (password, hash, cb) => {
-    brcypt.compare(password, hash, (err, bool) => {
-      if (err){
-        throw err;
-        return;
-      } else {
-        cb(bool);
-      }
-    })
+  _isPassword = (password, err, user) => {
+    user.isPassword(password, this.passwordChecked.bind(this, user))
+  }
+  passwordChecked = (user, err, bool) => {
+    if (err){
+      this.app.emit('logInError', err);
+    } else {
+      this.app.emit('passwordChecked', bool, user);    
+    }
   }
   _passwordDigest = (user, password, cb) => {
     bcrypt.hash(password, saltRounds, (err, hash)=>{

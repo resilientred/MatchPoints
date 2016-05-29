@@ -9,18 +9,19 @@ export default {
 		})
 	},
 	logIn(user) {
+		let _csrf = user._csrf;
+		delete user._csrf;
 		ApiUtil.apiCSRFService({
 			method: "POST",
 			url: "/session/new",
 			data: user,
 			success: "loggedIn"
-		})
+		}, _csrf)
 	},
 
 	signUp(user) {
 		let _csrf = user._csrf;
 		delete user._csrf;
-		debugger;
 		ApiUtil.apiCSRFService({
 			method: "POST",
 			url: "/user/new",

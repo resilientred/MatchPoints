@@ -6,11 +6,12 @@ const parseUrlencoded = BodyParser.urlencoded({ extended: false });
 
 router.route("/players")
 	.get((req, res)=>{
-  Player.find(function(err, players){
+  Player.find( (err, players) => {
     if (err) {
       console.log(err);
     } else {
       res.json(players);
+      res.end();
     }
   })
 })

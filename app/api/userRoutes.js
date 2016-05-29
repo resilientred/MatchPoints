@@ -11,7 +11,7 @@ function userRoutes(app, userMethods){
 	    let data = req.body;
 	    let newUser = new UserModel({
 	      organization: data.organization,
-	      username: data.organization
+	      username: data.username
 	    })
 	    userMethods._passwordDigest(newUser, data.password, userMethods._saveUser);
 	    app.once("savedUser", (user) => {

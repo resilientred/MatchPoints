@@ -48,9 +48,10 @@ form {
 			padding: 10px 20px;
 			border-radius: 3px;
 			background-color: rgba(0, 0, 0, 0.8);
-		}
-		input[type="submit"]:hover {
-			background-color: rgba(33, 33, 33, 0.9)
+
+			&:hover {
+				background-color: rgba(100, 100, 100, 0.9);
+			}
 		}
 
 }

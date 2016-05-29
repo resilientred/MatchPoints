@@ -1,5 +1,5 @@
 import React from 'react';
-import Form from '../mixins/Form';
+import Form from '../mixins/form';
 import UserStore from '../stores/userStore';
 import UserActions from '../actions/userActions';
 
@@ -10,25 +10,17 @@ class SignUp extends React.Component {
 
     static propTypes = {
       username: React.PropTypes.string,
-      csrf: React.PropTypes.string,
       password: React.PropTypes.string,
       _handleSubmit: React.PropTypes.func,
       _updateField: React.PropTypes.func,
       organization: React.PropTypes.string,
     }
 
-    csrf() {
-        if (this.props.csrf){
-          return <input type="hidden" name="_csrf" value={this.props.csrf} />;
-        } else {
-          return "";
-        }
-    }
     render() {
         return <div className="forms">
           <form onSubmit={this.props._handleSubmit.bind(null, UserActions.signUp) }>
             <h3>Sign Up</h3>
-            { this.csrf() }
+            { this.props._csrf() }
             <div>
           		<label for="organization">Organization</label>
           		<input type="text" id="organization" value={this.props.organization}

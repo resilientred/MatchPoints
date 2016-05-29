@@ -1,26 +1,31 @@
 import mongoose from 'mongoose';
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
+import bcrypt from 'bcrypt';
+
 const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
-	organization: {type: String, required: true},
-	username: {type: String, required: true},
-	passwordDigest: {type: String, required: true},
-	sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))}
+    organization: {type: String, required: true},
+    username: {type: String, required: true, index: { unique: true }},
+    passwordDigest: {type: String, required: true},
+    sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))}
 });
 
 userSchema.statics.resetSessionToken = (user, callback) => {
-	let token = URLSafeBase64.encode(crypto.randomBytes(32));
-	user.update({sessionToken: token}, callback);
+    let token = URLSafeBase64.encode(crypto.randomBytes(32));
+    user.update({sessionToken: token}, callback);
 }
 
-userSchema.statics.findByPasswordAndUsername = (username, password, callback) => {
-	User.find({"username": username, "password": password}, callback);
+userSchema.methods.isPassword = function(password, cb){
+	bcrypt.compare(password, this.passwordDigest, cb);
+}
+userSchema.statics.findByUsernameAndPassword = function(username, callback){
+    this.findOne({ "username": username }, callback);
 }
 
 userSchema.statics.findBySessionToken = (sessionToken, callback) => {
-	User.find({"sessionToken": sessionToken}, callback);
+    this.find({"sessionToken": sessionToken}, callback);
 }
 let User = mongoose.model("User", userSchema);
 export default User;
