@@ -9,6 +9,7 @@ function sessionRoutes(app, userMethods){
   return (
     router.post("/new", parseUrlEncoded, (req, res) => {
       let data = req.body;
+
       app.once('passwordChecked', (bool, user) => {
         if (!bool){
           res.status(404).send("Username or password error.");
@@ -19,12 +20,12 @@ function sessionRoutes(app, userMethods){
       })
 
       userMethods._findUser(data.username, data.password, 
-            userMethods.logIn.bind(null, res))
+            userMethods.logIn.bind(null, res));
     })
     .delete("/", (_, res) => {
-      userMethods.logOut(res);
+      userMethods.logOut();
       app.on("loggedOut", () => {
-        res.status(200).send("Successfully logged out!");
+        res.redirect("/");
         res.end();
       })        
     }

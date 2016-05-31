@@ -13,7 +13,7 @@ class UserMethods {
       this.app.emit('foundUser', this._currentUser);
       return;
     }
-    UserModel.findBySessionToken(req.cookies.matchpoint_seesion, this.foundUser);
+    UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_seesion, this.foundUser);
   }
   foundUser = (user) => {
     this._currentUser = user;
@@ -29,18 +29,19 @@ class UserMethods {
       }
     })
   }
-  logOut = (res) => {
+  logOut = () => {
     let user = this._currentUser; 
     this._currentUser = null;
-    UserModel.resetSessionToken(user, _loggedOut.bind(null, res));    
+    UserModel.resetSessionToken.call(UserModel, user, this._loggedOut);    
   }
-  _loggedOut = (res) => {
-    res.status(200).send("Successfully logged out!");
-    res.end();
+  _loggedOut = () => {
+    this.app.emit("loggedOut");
   }
+  
   logIn = (res, user) => {
     if (!user) {
       res.status(404).send("User not found");
+      res.end();
     } else {
       this._currentUser = Object.assign({}, user.toObject());
       delete this._currentUser.sessionToken;
@@ -48,10 +49,8 @@ class UserMethods {
       
       res.cookie("matchpoint_session", user.sessionToken, 
             { maxAge: 14 * 24 * 60 * 60 * 1000 });
-      res.status(200).send(this._currentUser);  
       res.redirect("/players");
     }
-    res.end();
   }
 
   _findUser(username, password){

@@ -13,27 +13,25 @@ class PlayerList extends React.Component {
 		button: React.PropTypes.object.isRequired
 	}
 
-	selectPlayer = (player) => {
-		this.setState({selectedPlayer: player})
-		console.log("selected" + player.name)
-	}
-
 	render = () => {
 		let players = this.props.players;
 		return (
-			<div>
+			<div className="player-list">
+        <h4>{this.props.title}</h4>
 				<ul>
         {
           Object.keys(players).map ( (_id) => {
           	let cur_player = players[_id];
             return <li key={_id} 
-            						onClick={this.selectPlayer.bind(null, cur_player)}>
-            							{cur_player.name}
+            						onClick={this.props.selectPlayer.bind(null, cur_player)}
+                        className={ _id === this.props.selectedPlayer._id ? 
+                                    "selected" : "not-selected" }>
+            							<div>{cur_player.name}</div>
+                          <div>{cur_player.rating}</div>
             				</li>;
             })
         }				
        	</ul>
-       	{this.props.button}
 			</div>
 			);
 	}

@@ -22,7 +22,7 @@ const userRoutes = userRouting(app, userMethods);
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
-app.use(csrf({ cookie: true }));
+app.use(csrf({ cookie: true, ignoreMethods: ['GET', 'DELETE'] }));
 // app.use(function (err, req, res, next) {
 //   if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
@@ -41,35 +41,36 @@ app.use(webpackMiddleware(compiler));
 app.use('/api', routes);
 app.use('/session', sessionRoutes);
 app.use('/user', userRoutes);
-app.use('*', (req, res, next) => {
+app.use('/*', (req, res, next) => {
   let origUrl = req.originalUrl;
   let needToRedirect = !/^(\/|\/login|\/form|\/signup)$/.test(origUrl);
-  if (!needToRedirect) {
-    if (currentUser){
-      res.redirect("/players");
-      res.end(); //currentUser is not fetched yet!
-                  //probably mvoe all these logic with the listener;
-    } else {
-      next();    
-    }
+  if (/(\..*|^\/form)$/.test(origUrl)){
+    next();
     return;
-  } 
+  }
   userMethods.currentUser(req);
   app.once('foundUser', (user) => {
-    if (!user){
+    console.log(origUrl + ": " + user + " " + needToRedirect);
+    if (!user && needToRedirect){
       res.redirect("/login");
       res.end();
+    } else if (user && !needToRedirect) {
+      res.redirect('/players');
+      res.end();
+    } else {
+      next();
     }
   })
 });
-
 
 app.get('/form', (req, res) => {
   res.status(200).send({ csrfToken: req.csrfToken() })
   res.end();
 })
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.end();
 });  
 
 app.listen(3000, () => {

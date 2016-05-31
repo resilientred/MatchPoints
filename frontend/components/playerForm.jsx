@@ -1,14 +1,16 @@
 import React from 'react';
 import ClientActions from '../actions/clientActions';
+import Form from "../mixins/form";
+import CSRFStore from "../stores/csrfStore";
 
 class PlayerForm extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = {
-			name: "",
-			rating: 0
-		}
 	}
+  static propTypes = {
+    name: React.PropTypes.string,
+    rating: React.PropTypes.number
+  }
 
 	updateField = (field, e) => {
 		let newField = {};
@@ -43,5 +45,11 @@ class PlayerForm extends React.Component {
       </div>)
 	}
 }
+let initialState = {
+      name: "",
+      rating: 0,
+      _csrf: ""
+};
 
+PlayerForm = Form(PlayerForm, initialState, CSRFStore, ClientActions)
 export default PlayerForm;

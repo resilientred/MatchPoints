@@ -123,3 +123,44 @@ form {
   -ms-filter: blur(0.2px);
   filter: blur(0.2px);
 }
+
+
+/* Player list */
+.player-container {
+	display: flex;
+	flex-direction: column;
+	.buttons {
+		display: flex;
+		flex-direction: column;
+	}
+}
+.player-container > div{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+.selected {
+	background-color: black;
+	color: white;
+}
+.not-selected {
+	background-color: white;
+	color: black;
+}
+
+.player-list {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid black;
+	padding: 5px;
+	font-size: 20px;
+	text-align: center;
+	width: 30%;
+	min-width: 174px;
+	li {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+}
+

@@ -1,11 +1,12 @@
 # MatchPoint
-MatchPoint is a Full-stack web Round-Robin rating systems. It provides a platform (or should) for round-robin organizers to: 
-	- group players 
-	- enter results 
-	- calculate score
+MatchPoint is a Full-stack web Round-Robin rating systems. It provides a platform (or should) for round-robin organizers to:
+* group players
+* record results
+* calculate score
+
 And allow users to:
-	- query results based on date
-	- query their indiviual old results
+* query results based on date
+* query their indiviual old results
 
 ## Expected Features
  - [ ] Arrange groups for players based on ratings
@@ -19,4 +20,3 @@ And allow users to:
  - Front-end: React.js with Flux architectural framework
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM
-

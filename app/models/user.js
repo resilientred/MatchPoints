@@ -12,9 +12,9 @@ let userSchema = new Schema({
     sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))}
 });
 
-userSchema.statics.resetSessionToken = (user, callback) => {
+userSchema.statics.resetSessionToken = function(user, callback){
     let token = URLSafeBase64.encode(crypto.randomBytes(32));
-    user.update({sessionToken: token}, callback);
+    this.update({ "username": user.username}, {sessionToken: token}, callback);
 }
 
 userSchema.methods.isPassword = function(password, cb){
@@ -24,7 +24,7 @@ userSchema.statics.findByUsernameAndPassword = function(username, callback){
     this.findOne({ "username": username }, callback);
 }
 
-userSchema.statics.findBySessionToken = (sessionToken, callback) => {
+userSchema.statics.findBySessionToken = function(sessionToken, callback){
     this.find({"sessionToken": sessionToken}, callback);
 }
 let User = mongoose.model("User", userSchema);

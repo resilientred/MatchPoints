@@ -8,10 +8,11 @@ export default class Players extends React.Component {
     super(props);
     this.state = {
       allPlayers: {},
-      addedPlayers: {}
+      addedPlayers: {},
+      selectedPlayer: {},
+      selectedRemovePlayer: {}
     }
   }
-
   componentDidMount(){
     ClientActions.fetchPlayers();
     PlayerStore.addListener(this._fetchedPlayers);
@@ -21,33 +22,63 @@ export default class Players extends React.Component {
     this.setState({allPlayers: PlayerStore.all()});
   }
 
-  addPlayer = (player) => {
-    addedPlayers[player._id] = player
+  addPlayer = () => {
+    let curPlayer = this.state.selectedPlayer;
+    let tempPlayers = this.state.addedPlayers;
+    tempPlayers[curPlayer._id] = curPlayer;
+
+    this.setState({ addedPlayers: tempPlayers });
   }
 
-  removePlayer = (player) => {
-    delete addedPlayers[player._id];
+  removePlayer = () => {
+    let curPlayer = this.state.selectedRemovePlayer;
+    let tempPlayers = this.state.addedPlayers;
+    delete tempPlayers[curPlayer._id];
+
+    this.setState({ addedPLayers: tempPlayers });
   }
   addButton = () => {
     return (
       <button className="playerButton"
-          onClick={this.addPlayer.bind(this)}>Add</button>
+          onClick={this.addPlayer}>Add</button>
       )
   }
   removeButton = () => {
     return (
       <button className="playerButton"
-          onClick={this.removePlayer.bind(this)}>Remove</button>
+          onClick={this.removePlayer}>Remove</button>
           )
   }
+  selectPlayer = (player) => {
+    this.setState({selectedPlayer: player})
+  }
+
+  selectRemovePlayer = (player) => {
+    this.setState({selectedRemovePlayer: player});
+  }
+
   render = () => {
     let allPlayers = this.state.allPlayers,
         addedPlayers = this.state.addedPlayers;
-    return (<div>
-      <PlayerList players={allPlayers} button={this.addButton()}/>
-      <PlayerList players={addedPlayers} button={this.removeButton()}/>
-      <PlayerForm />
-    </div>
+    return (
+      <div className="player-container">
+        <h3>Participant Registration</h3>
+        <div>
+          <PlayerList players={allPlayers}
+                      selectPlayer={this.selectPlayer}
+                      selectedPlayer={this.state.selectedPlayer}
+                      title="All Players"/>
+          <div className="buttons">
+            { this.addButton() }
+            { this.removeButton() }
+          </div>
+          <PlayerList players={addedPlayers} 
+                      selectPlayer={this.selectRemovePlayer}
+                      selectedPlayer={this.state.selectedRemovePlayer}
+                      title="Selected Players"/>
+        </div>
+        <PlayerForm />
+      </div>
     )
   }
 }

@@ -13,14 +13,15 @@ function userRoutes(app, userMethods){
 	      organization: data.organization,
 	      username: data.username
 	    })
-	    userMethods._passwordDigest(newUser, data.password, userMethods._saveUser);
 	    app.once("savedUser", (user) => {
 	    	userMethods.logIn(res, user);
 	    })
+	    
 	    app.once("userError", (err)=>{
 	    	res.status(422).send(err);
 	    	res.end();
 	    })
+	    userMethods._passwordDigest(newUser, data.password, userMethods._saveUser);
 	  })
 	)
 };

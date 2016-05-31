@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory } from "react-router";
 
 export default function userForms(Component, fields, store, action) {
   const userFormMixins = React.createClass({
@@ -11,9 +12,11 @@ export default function userForms(Component, fields, store, action) {
   },
   _fetchedCSRF(){
     this.setState({ _csrf: store.getCSRF() });
+    this.csrfListener.remove();
+    this.loggedIn = store.addListener(this.redirect);
   },
   componentWillUnmount() {
-    this.csrfListener.remove();
+    if (this.csrfListener) this.csrfListener.remove();
   },
   _updateField(name, e) {
     let field = {};
@@ -23,19 +26,19 @@ export default function userForms(Component, fields, store, action) {
   _handleSubmit(callback, e) {
     e.preventDefault();
     callback(this.state);
-    },
-    csrf() {
-       if (this.state.csrf){
-        return <input type="hidden" name="_csrf" value={this.state.csrf} />;
-      } else {
-        return "";
-      }
-    },
-    render() {
-      return <Component {...this.props} {...this.state} 
-                _updateField={this._updateField} _handleSubmit={this._handleSubmit}
-                _csrf={this.csrf}/>;
+  },
+  csrf() {
+    if (this.state.csrf){
+      return <input type="hidden" name="_csrf" value={this.state.csrf} />;
+    } else {
+      return "";
     }
+  },
+  render() {
+    return <Component {...this.props} {...this.state} 
+              _updateField={this._updateField} _handleSubmit={this._handleSubmit}
+              _csrf={this.csrf}/>;
+  }
   });
 
   return userFormMixins;

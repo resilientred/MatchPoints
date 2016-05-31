@@ -1,7 +1,8 @@
 import React from 'react';
 import Form from "../mixins/form";
 import UserActions from "../actions/userActions";
-import UserStore from "../stores/userStore";
+import CSRFStore from "../stores/csrfStore";
+
 class LogIn extends React.Component {
     constructor(props) {
         super(props);
@@ -12,6 +13,7 @@ class LogIn extends React.Component {
     	_handleSubmit: React.PropTypes.func,
     	_updateField: React.PropTypes.func
     }
+
     render() {
         return <div className="forms">
           <form onSubmit={this.props._handleSubmit.bind(null, UserActions.logIn) }>
@@ -30,7 +32,7 @@ class LogIn extends React.Component {
                     required/>
             </div>
             <input type="submit" value="Log In"/>
-        	</form>
+          </form>
         </div>;
     }
 }
@@ -39,5 +41,5 @@ let fields = {
 	password: ""
 };
 
-LogIn = Form(LogIn, fields, UserStore, UserActions);
+LogIn = Form(LogIn, fields, CSRFStore, UserActions);
 export default LogIn;

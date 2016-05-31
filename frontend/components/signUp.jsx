@@ -1,7 +1,7 @@
 import React from 'react';
 import Form from '../mixins/form';
-import UserStore from '../stores/userStore';
 import UserActions from '../actions/userActions';
+import CSRFStore from "../stores/csrfStore";
 
 class SignUp extends React.Component {
     constructor(props) {
@@ -50,6 +50,6 @@ let initialState = {
           password: "",
           _csrf: ""
         };
-
-SignUp = Form(SignUp, initialState, UserStore, UserActions);
+        
+SignUp = Form(SignUp, initialState, CSRFStore, UserActions);
 export default SignUp;
