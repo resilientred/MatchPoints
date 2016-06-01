@@ -2,7 +2,8 @@ import React from 'react';
 import Form from "../mixins/form";
 import UserActions from "../actions/userActions";
 import CSRFStore from "../stores/csrfStore";
-
+import UserStore from "../stores/userStore";
+import { browserHistory } from "react-router";
 class LogIn extends React.Component {
     constructor(props) {
         super(props);
@@ -13,7 +14,17 @@ class LogIn extends React.Component {
     	_handleSubmit: React.PropTypes.func,
     	_updateField: React.PropTypes.func
     }
-
+    componentDidMount() {
+      this.cuListener = UserStore.addListener(this.redirect);
+    }
+    redirect() {
+      if (UserStore.getCurrentUser()){
+        browserHistory.push("/players");
+      }
+    }
+    componentWillUnmount() {
+      if (this.cuListener) this.cuListener.remove();
+    }
     render() {
         return <div className="forms">
           <form onSubmit={this.props._handleSubmit.bind(null, UserActions.logIn) }>

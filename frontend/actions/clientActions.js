@@ -9,12 +9,15 @@ export default {
 	},
 
 	addPlayer(player) {
-		ApiUtil.apiService({
+		let _csrf = player._csrf;
+    delete player._csrf;
+    player.rating = +player.rating;
+		ApiUtil.apiCSRFService({
 			url: "/api/players",
 			method: "POST",
 			data: player,
 			success: "updatedPlayer"
-		})
+		}, _csrf);
 	},
 
 	updatePlayer(id, player) {

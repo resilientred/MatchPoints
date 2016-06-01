@@ -7,12 +7,17 @@ import Splash from "./components/splash";
 import SignUp from "./components/signUp";
 import LogIn from "./components/logIn";
 import UserStore from "./stores/userStore";
-
+import Modal from "react-modal"
 class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {currentUser: null};
   }
+  componentWillMount() {
+    let el = document.getElementById("root");
+    Modal.setAppElement(el);    
+  }
+
   componentDidMount(){
     this.cuListener = UserStore.addListener(this.setCurrentUser);
   }

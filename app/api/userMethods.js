@@ -48,8 +48,7 @@ class UserMethods {
       delete this._currentUser.passwordDigest;
       
       res.cookie("matchpoint_session", user.sessionToken, 
-            { maxAge: 14 * 24 * 60 * 60 * 1000 });
-      res.redirect("/players");
+            { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(this._currentUser);
     }
   }
 

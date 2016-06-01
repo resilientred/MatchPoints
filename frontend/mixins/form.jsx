@@ -12,8 +12,6 @@ export default function userForms(Component, fields, store, action) {
   },
   _fetchedCSRF(){
     this.setState({ _csrf: store.getCSRF() });
-    this.csrfListener.remove();
-    this.loggedIn = store.addListener(this.redirect);
   },
   componentWillUnmount() {
     if (this.csrfListener) this.csrfListener.remove();

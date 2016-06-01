@@ -1,7 +1,8 @@
 import React from 'react';
-import ClientActions from '../actions/clientActions';
+import UserActions from '../actions/userActions';
 import Form from "../mixins/form";
 import CSRFStore from "../stores/csrfStore";
+import ClientActions from "../actions/clientActions";
 
 class PlayerForm extends React.Component {
 	constructor(props){
@@ -9,36 +10,23 @@ class PlayerForm extends React.Component {
 	}
   static propTypes = {
     name: React.PropTypes.string,
-    rating: React.PropTypes.number
+    rating: React.PropTypes.string
   }
-
-	updateField = (field, e) => {
-		let newField = {};
-		newField[field] = e.target.value
-		this.setState(newField);
-	}
-
-	registerPlayer = (e) => {
-		e.preventDefault();
-		ClientActions.addPlayer({
-			name: this.state.name, 
-			rating: this.state.rating
-		});
-	}
 
 	render = () => {
 		  return (<div>
-        <h3>UserForm</h3>
-        <form onSubmit={this.registerPlayer}>
+        <a onClick={this.props.closeModal}>Close</a>
+        <form onSubmit={this.props._handleSubmit.bind(null, ClientActions.addPlayer)}>
+          <h3>Player Form</h3>
           <label for="name">Name</label>
           <input type="text" id="name" 
-          				onChange={this.updateField.bind(null, "name")} 
-          				value={this.state.name} required/>
+          				onChange={this.props._updateField.bind(null, "name")} 
+          				value={this.props.name} required/>
 
           <label for="rating">Rating</label>
           <input type="text" id="rating" 
-          			 onChange={this.updateField.bind(null, "rating")} 
-          			 value={this.state.rating} pattern="^\d{2,4}$"
+          			 onChange={this.props._updateField.bind(null, "rating")} 
+          			 value={this.props.rating} pattern="^\d{2,4}$"
           			 required/>
           <input type="submit" value="Register Player"/>
         </form>
@@ -47,9 +35,9 @@ class PlayerForm extends React.Component {
 }
 let initialState = {
       name: "",
-      rating: 0,
+      rating: "0",
       _csrf: ""
 };
-
-PlayerForm = Form(PlayerForm, initialState, CSRFStore, ClientActions)
+// need to clear
+PlayerForm = Form(PlayerForm, initialState, CSRFStore, UserActions)
 export default PlayerForm;

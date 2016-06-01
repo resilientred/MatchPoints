@@ -3,6 +3,8 @@ import ClientActions from '../actions/clientActions';
 import PlayerStore from '../stores/playerStore';
 import PlayerList from './playerList';
 import PlayerForm from './playerForm';
+import Modal from "react-modal";
+import NewPlayerStyle from "../modalStyles/newPlayerModal";
 export default class Players extends React.Component {
   constructor(props) {
     super(props);
@@ -10,12 +12,24 @@ export default class Players extends React.Component {
       allPlayers: {},
       addedPlayers: {},
       selectedPlayer: {},
-      selectedRemovePlayer: {}
+      selectedRemovePlayer: {},
+      newPlayerModal: false
     }
   }
   componentDidMount(){
     ClientActions.fetchPlayers();
     PlayerStore.addListener(this._fetchedPlayers);
+  }
+  openModal(name){
+    let modalObj = {};
+    modalObj[name] = true;
+    this.setState(modalObj);
+  }
+
+  closeModal(name){
+    let modalObj = {};
+    modalObj[name] = false;
+    this.setState(modalObj);
   }
 
   _fetchedPlayers = () => {
@@ -77,7 +91,14 @@ export default class Players extends React.Component {
                       selectedPlayer={this.state.selectedRemovePlayer}
                       title="Selected Players"/>
         </div>
-        <PlayerForm />
+        <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button>
+        <Modal isOpen={this.state.newPlayerModal} 
+                onRequestClose={this.closeModal.bind(this, "newPlayerModal")}
+                style={NewPlayerStyle}>
+                <PlayerForm closeModal={
+                  this.closeModal.bind(this, "newPlayerModal")
+                }/>
+        </Modal>
       </div>
     )
   }

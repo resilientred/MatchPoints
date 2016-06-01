@@ -107,10 +107,12 @@ form {
 /* Player list */
 .player-container {
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  align-items: center; }
   .player-container .buttons {
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    justify-content: center; }
 
 .player-container > div {
   display: flex;
