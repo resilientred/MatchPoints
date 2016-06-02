@@ -25,8 +25,7 @@ function sessionRoutes(app, userMethods){
     .delete("/", (_, res) => {
       userMethods.logOut();
       app.on("loggedOut", () => {
-        res.redirect("/");
-        res.end();
+        res.clearCookie("matchpoint_session").send("");
       })        
     }
   )

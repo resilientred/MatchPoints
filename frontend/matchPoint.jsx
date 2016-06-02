@@ -7,7 +7,8 @@ import Splash from "./components/splash";
 import SignUp from "./components/signUp";
 import LogIn from "./components/logIn";
 import UserStore from "./stores/userStore";
-import Modal from "react-modal"
+import Modal from "react-modal";
+
 class App extends React.Component {
   constructor(props){
     super(props);

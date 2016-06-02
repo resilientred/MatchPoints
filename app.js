@@ -43,24 +43,21 @@ app.use('/session', sessionRoutes);
 app.use('/user', userRoutes);
 app.use('/*', (req, res, next) => {
   let origUrl = req.originalUrl;
-  let needToRedirect = !/^(\/|\/login|\/form|\/signup)$/.test(origUrl);
+  let needToRedirect = !/^(\/login|\/form|\/signup|\/)$/.test(origUrl);
   if (/(\..*|^\/form)$/.test(origUrl)){
     next();
     return;
   }
-  userMethods.currentUser(req);
-  app.once('foundUser', (user) => {
-    console.log(origUrl + ": " + user + " " + needToRedirect);
-    if (!user && needToRedirect){
-      res.redirect("/login");
-      res.end();
-    } else if (user && !needToRedirect) {
-      res.redirect('/players');
-      res.end();
-    } else {
-      next();
-    }
-  })
+  let cookie = req.cookies.matchpoint_session;
+  if (cookie === undefined && needToRedirect){
+    res.redirect("/login");
+    return;
+  } else if (cookie && !needToRedirect) {
+    res.redirect("/players");
+    return;
+  }
+  
+  next();
 });
 
 app.get('/form', (req, res) => {

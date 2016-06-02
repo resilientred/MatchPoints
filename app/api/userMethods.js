@@ -19,6 +19,7 @@ class UserMethods {
     this._currentUser = user;
     this.app.emit('foundUser', this._currentUser);
   }
+  
   _saveUser = (user, hash) => {
     user.passwordDigest = hash;
     user.save( (err, user) => {
@@ -34,6 +35,7 @@ class UserMethods {
     this._currentUser = null;
     UserModel.resetSessionToken.call(UserModel, user, this._loggedOut);    
   }
+
   _loggedOut = () => {
     this.app.emit("loggedOut");
   }
@@ -58,9 +60,7 @@ class UserMethods {
   _foundUser(user){
     this.app.emit("foundDigest", user);
   }
-  _success = (res, user) => {
-    res.status(200).send(user);
-  }
+
   _isPassword = (password, err, user) => {
     user.isPassword(password, this.passwordChecked.bind(this, user))
   }

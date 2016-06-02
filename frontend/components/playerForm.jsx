@@ -12,7 +12,7 @@ class PlayerForm extends React.Component {
     name: React.PropTypes.string,
     rating: React.PropTypes.string
   }
-
+  
 	render = () => {
 		  return (<div>
         <a onClick={this.props.closeModal}>Close</a>

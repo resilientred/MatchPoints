@@ -5,7 +5,7 @@ class RecordTable extends React.components {
 		super(props);
 	}
 	render(){
-
+    <h1>LALALA</h1>
 	}
 }
 

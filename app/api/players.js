@@ -20,7 +20,8 @@ router.route("/players")
     let player = new Player({
       "name": data.name,
       "rating": +data.rating
-    })
+    });
+    
     player.save((err, player)=> {
       if (err) {
         res.status(422).send(err);

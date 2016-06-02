@@ -108,7 +108,16 @@ form {
 .player-container {
   display: flex;
   flex-direction: column;
-  align-items: center; }
+  align-items: center;
+  border: 4px solid black;
+  border-radius: 5px;
+  width: 60%;
+  min-width: 500px;
+  margin: 10% auto 0 auto; }
+  .player-container h3 {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 24px; }
   .player-container .buttons {
     display: flex;
     flex-direction: column;
@@ -134,9 +143,23 @@ form {
   padding: 5px;
   font-size: 20px;
   text-align: center;
-  width: 30%;
-  min-width: 174px; }
+  width: 50%;
+  min-width: 174px;
+  margin: 0 auto;
+  margin-top: 10%; }
   .player-list li {
     display: flex;
     flex-direction: row;
     justify-content: space-between; }
+
+.player-nav {
+  display: flex;
+  justify-content: row; }
+  .player-nav a {
+    font-size: 16px;
+    color: black;
+    background-color: red;
+    padding: 5px; }
+
+.grouping {
+  margin-top: 30px; }
