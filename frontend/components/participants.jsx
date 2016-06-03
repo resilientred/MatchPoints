@@ -18,20 +18,22 @@ class PlayerGroup extends React.Component {
     }
 
     render() {
-        return <div>
+        return <div className="participant-reg">
           <h3>Participant Registration</h3>
-          <PlayerList players={this.props.allPlayers}
-                      selectPlayer={this.props.selectPlayer}
-                      selectedPlayer={this.props.selectedPlayer}
-                      title="All Players"/>
-          <div className="buttons">
-            { this.props.addButton() }
-            { this.props.removeButton() }
+          <div>
+            <PlayerList players={this.props.allPlayers}
+                        selectPlayer={this.props.selectPlayer}
+                        selectedPlayer={this.props.selectedPlayer}
+                        title="All Players"/>
+            <div className="buttons">
+              { this.props.addButton() }
+              { this.props.removeButton() }
+            </div>
+            <PlayerList players={this.props.addedPlayers} 
+                        selectPlayer={this.props.selectRemovePlayer}
+                        selectedPlayer={this.props.selectedRemovePlayer}
+                        title="Selected Players"/>
           </div>
-          <PlayerList players={this.props.addedPlayers} 
-                      selectPlayer={this.props.selectRemovePlayer}
-                      selectedPlayer={this.props.selectedRemovePlayer}
-                      title="Selected Players"/>
         </div>;
     }
 }

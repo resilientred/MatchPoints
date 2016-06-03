@@ -12,6 +12,7 @@ function sessionRoutes(app, userMethods){
 
       app.once('passwordChecked', (bool, user) => {
         if (!bool){
+          console.log("password error");
           res.status(404).send("Username or password error.");
           res.end();
         } else {
@@ -25,7 +26,9 @@ function sessionRoutes(app, userMethods){
     .delete("/", (_, res) => {
       userMethods.logOut();
       app.on("loggedOut", () => {
+        console.log("clearing cookie at logout")
         res.clearCookie("matchpoint_session").send("");
+        res.end();
       })        
     }
   )

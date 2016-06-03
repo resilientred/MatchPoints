@@ -5,7 +5,18 @@ class RecordTable extends React.components {
 		super(props);
 	}
 	render(){
-    <h1>LALALA</h1>
+    return <tr>
+              <th>Group Id: {this.props.groupId}</th>
+              <th>Name</th>
+              <th>Rating</th>
+              {
+                Array.from
+                    (
+                     Array(this.props.numPlayers), 
+                     ( (_, i) => <th>{i}</th> )
+                    )
+              }
+          </tr>
 	}
 }
 

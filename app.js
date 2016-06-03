@@ -13,6 +13,7 @@ import userMethoding from './app/api/userMethods';
 import userRouting from "./app/api/userRoutes";
 import sessionRouting from "./app/api/session";
 
+const port = process.env.PORT || 3000;
 const app = express();
 const compiler = webpack(config);
 const csrfProtection = csrf({ cookie: true })
@@ -43,34 +44,43 @@ app.use('/session', sessionRoutes);
 app.use('/user', userRoutes);
 app.use('/*', (req, res, next) => {
   let origUrl = req.originalUrl;
-  let needToRedirect = !/^(\/login|\/form|\/signup|\/)$/.test(origUrl);
-  if (/(\..*|^\/form)$/.test(origUrl)){
+  let redirectURL = origUrl.match(/^(\/login|\/signup|\/players)$/);
+  if (!redirectURL){
+    console.log("path don't match");
     next();
     return;
   }
   let cookie = req.cookies.matchpoint_session;
-  if (cookie === undefined && needToRedirect){
+  if (!cookie && redirectURL[0] === "/players"){
+    console.log("redirecing to login");
     res.redirect("/login");
-    return;
-  } else if (cookie && !needToRedirect) {
+    res.end();
+  } else if (cookie && redirectURL[0] !== "/players") {
+    console.log("redirecting to players");
     res.redirect("/players");
-    return;
+    res.end()
+  } else {
+    console.log("route check..sending to next")
+    next();
   }
   
-  next();
 });
 
 app.get('/form', (req, res) => {
+  console.log("sent csrf");
   res.status(200).send({ csrfToken: req.csrfToken() })
   res.end();
+  //everytime when a form mounts...
+  //even if an error is flashed...should refetch..
 })
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  console.log("Sending file index.html...");
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
   res.end();
 });  
 
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log('listening on port 3000...');
 });
 

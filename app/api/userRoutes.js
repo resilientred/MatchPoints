@@ -1,5 +1,6 @@
 import express from 'express';
 import UserModel from "../models/user";
+import UserMethods from "./userMethods";
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 const router = express.Router();
@@ -22,6 +23,13 @@ function userRoutes(app, userMethods){
 	    	res.end();
 	    })
 	    userMethods._passwordDigest(newUser, data.password, userMethods._saveUser);
+	  }).get("", (req, res) => {
+	  	userMethods.currentUser(req);
+
+	  	app.once("foundUser", (user)=>{
+	  		res.status(200).send(user);
+	  		res.end();
+	  	})
 	  })
 	)
 };

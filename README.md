@@ -20,3 +20,31 @@ And allow users to:
  - Front-end: React.js with Flux architectural framework
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM
+
+
+## Implementation:
+MatchPoint allows users to dynamically change the range of players that can be in a single group. It also offers the possible schemata that fulfills the condition of the range of players.
+
+```javascript
+  static findSchemata(numPlayers, rangeOfPlayers = [6, 5, 4]){
+      if (numPlayers < 0) return null;
+      if (numPlayers === 0) return [[]];
+      let possibilities = [],
+          recursions = [];
+      rangeOfPlayers.forEach((range, i)=>{
+        recursions.push([range, Grouping.findSchemata(numPlayers - range, rangeOfPlayers.slice(i))]);
+      })
+
+      if (recursions.every(result => (result[1] === false))) return null;
+
+      recursions.forEach((test) => {
+        if (test[1]){
+          possibilities = possibilities.concat(test[1].map( 
+            result => [test[0]].concat(result)
+          ));  
+        }
+      })
+
+      return possibilities;
+    }
+```

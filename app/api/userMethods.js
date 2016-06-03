@@ -8,13 +8,14 @@ class UserMethods {
     this.app = app;
     this._currentUser = null;
   }
-  currentUser(req){
+  currentUser = (req) => {
     if (this._currentUser) {
       this.app.emit('foundUser', this._currentUser);
-      return;
+    } else {
+      UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_seesion, this.foundUser);
     }
-    UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_seesion, this.foundUser);
   }
+  
   foundUser = (user) => {
     this._currentUser = user;
     this.app.emit('foundUser', this._currentUser);
@@ -48,7 +49,7 @@ class UserMethods {
       this._currentUser = Object.assign({}, user.toObject());
       delete this._currentUser.sessionToken;
       delete this._currentUser.passwordDigest;
-      
+      console.log("At logIn...setting cookie");
       res.cookie("matchpoint_session", user.sessionToken, 
             { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(this._currentUser);
     }
@@ -74,6 +75,7 @@ class UserMethods {
   _passwordDigest = (user, password, cb) => {
     bcrypt.hash(password, saltRounds, (err, hash)=>{
       if (err) {
+        console.log(err);
         res.status(422).send(err);
       } else {
         this._saveUser(user, hash);

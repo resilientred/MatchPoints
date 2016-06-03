@@ -8,6 +8,12 @@ export default {
       success: "fetchedCSRF"
     })
   },
+  fetchCurrentUser() {
+    ApiUtil.apiService({
+      url: "/user",
+      success: "loggenIn"
+    })
+  },
   logIn(user) {
     let _csrf = user._csrf;
     delete user._csrf;

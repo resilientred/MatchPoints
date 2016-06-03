@@ -1,5 +1,6 @@
 import React from 'react';
 import ClientActions from '../actions/clientActions';
+import UserActions from "../actions/userActions";
 import PlayerStore from '../stores/playerStore';
 
 import PlayerForm from './playerForm';
@@ -24,8 +25,9 @@ export default class Players extends React.Component {
     }
     //should fetch all these from stores, so user can save their states
   }
-  componentDidMount(){
+  componentDidMount = () => {
     ClientActions.fetchPlayers();
+    UserActions.fetchCurrentUser();
     this.psListener = PlayerStore.addListener(this._fetchedPlayers);
     this.usListener = UserStore.addListener(this.redirect);
     //possibly run a method that will save the page every a couple of minutes
@@ -40,7 +42,7 @@ export default class Players extends React.Component {
   redirect(){
     if (!UserStore.getCurrentUser()){
       browserHistory.push("/");
-    }
+    } 
   }
   openModal(name){
     let modalObj = {};
@@ -61,6 +63,8 @@ export default class Players extends React.Component {
   addPlayer = () => {
     let curPlayer = this.state.selectedPlayer;
     let tempPlayers = this.state.addedPlayers;
+    if (tempPlayers[curPlayer._id]) return;
+
     tempPlayers[curPlayer._id] = curPlayer;
     this.setState({ 
       addedPlayers: this.state.addedPlayers, 
@@ -77,21 +81,6 @@ export default class Players extends React.Component {
       addedPLayers: tempPlayers,
       numPlayers: --this.state.numPlayers
     });
-    //     let curPlayer = this.state.selectedRemovePlayer;
-    // let tempPlayers = this.state.addedPlayers;
-    // for (let i = 0; i < tempPlayers.length; i++){
-    //   if (curPlayer._id === tempPlayers[i].id){
-    //     tempPlayers.splice(i, 1);
-    //     this.setState({ 
-    //       addedPLayers: tempPlayers,
-    //       numPlayers: --this.state.numPlayers
-    //     });
-    //     return;
-
-        //is this a good choice? 
-        //obj is so much faster..
-    //   }
-    // }
   }
   addButton = () => {
     return (
@@ -140,10 +129,16 @@ export default class Players extends React.Component {
         <div>
           <ul className="player-nav">
             <li>
-              <a onClick={this.changeTab.bind(null, 0)}>Participants</a>
+              <a onClick={this.changeTab.bind(null, 0)} 
+                 className={this.state.tab === 0 ? "active" : ""}>
+                 Participants
+              </a>
             </li>
             <li>
-              <a onClick={this.changeTab.bind(null, 1)}>Grouping</a>
+              <a onClick={this.changeTab.bind(null, 1)}
+                className={this.state.tab === 1 ? "active" : ""}>
+                Grouping
+              </a>
             </li>
           </ul>
         </div>
@@ -156,7 +151,7 @@ export default class Players extends React.Component {
         }
 
         <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button>
-        <Modal isOpen={modalIsOpen} 
+        <Modal isOpen={this.state.newPlayerModal} 
                 onRequestClose={this.closeModal.bind(this, "newPlayerModal")}
                 style={NewPlayerStyle}>
                 <PlayerForm closeModal={
