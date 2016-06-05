@@ -21,7 +21,7 @@ const csrfProtection = csrf({ cookie: true })
 const userMethods = new userMethoding(app);
 const sessionRoutes = sessionRouting(app, userMethods);
 const userRoutes = userRouting(app, userMethods);
-const clubRoutes = clubRouting(app);
+const clubRoutes = clubRouting(app).routes;
 
 
 mongoose.connect('mongodb://localhost/roundrobindb');

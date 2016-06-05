@@ -15,4 +15,6 @@ Player.methods.findClubs(cb){
   return this.model.find({_id: this.id}, {_id: false, associated_clubs: true }, cb);
 };
 
+
+
 export default Player;
