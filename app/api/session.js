@@ -25,7 +25,7 @@ function sessionRoutes(app, userMethods){
     })
     .delete("/", (_, res) => {
       userMethods.logOut();
-      app.on("loggedOut", () => {
+      app.once("loggedOut", () => {
         console.log("clearing cookie at logout")
         res.clearCookie("matchpoint_session").send("");
         res.end();

@@ -19,8 +19,8 @@ And allow users to:
 ## Languages:
  - Front-end: React.js with Flux architectural framework
  - Back-end: Node.js/Express.js
- - Database: MongoDB with Mongoose ODM
-
+ - Database: MongoDB with Mongoose ODM (with Redis caching - not implementing yet)
+ 
 
 ## Implementation:
 MatchPoint allows users to dynamically change the range of players that can be in a single group. It also offers the possible schemata that fulfills the condition of the range of players.

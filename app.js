@@ -12,6 +12,7 @@ import routes from './app/api/players';
 import userMethoding from './app/api/userMethods';
 import userRouting from "./app/api/userRoutes";
 import sessionRouting from "./app/api/session";
+import clubRouting from "./app/api/club";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -20,6 +21,8 @@ const csrfProtection = csrf({ cookie: true })
 const userMethods = new userMethoding(app);
 const sessionRoutes = sessionRouting(app, userMethods);
 const userRoutes = userRouting(app, userMethods);
+const clubRoutes = clubRouting(app);
+
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
@@ -40,6 +43,7 @@ app.use(
 app.use(express.static(__dirname + "/public"));
 app.use(webpackMiddleware(compiler));
 app.use('/api', routes);
+app.use('/api/club', clubRoutes);
 app.use('/session', sessionRoutes);
 app.use('/user', userRoutes);
 app.use('/*', (req, res, next) => {

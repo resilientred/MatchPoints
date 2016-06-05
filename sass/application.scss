@@ -13,9 +13,9 @@ button {
 	}
 }
 select {
-	  -webkit-appearance: none;
-   -moz-appearance: none;
-   appearance: none;
+	-webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 	padding: 5px 15px;
 	font-size: 16px;
 	border-radius: 3px;
@@ -32,6 +32,21 @@ body {
 input {
 	border: none;
 	border: 2px solid black;
+	border-radius: 4px;
+}
+.close-icon {
+	right: 30px;
+	top: 30px;
+	width: 50px;
+	height: 50px;
+	color: black;
+	font-size: 38px;
+	text-align: center;
+	position: fixed;
+	cursor: pointer;
+	&:hover {
+		opacity: 0.8;
+	}
 }
 form {
 	width: 60%;
@@ -44,12 +59,17 @@ form {
 		margin-bottom: 50px;
 		margin-top: 30px;
 	}
-	div {
+	& > div {
 		display: flex;
 		justify-content: space-between;
 		margin-bottom: 10px;
 		font-size: 24px;
 		align-items: center;
+		& > div {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
 		input {
 			margin-left: 20px;
 			font-size: 24px;
@@ -62,7 +82,8 @@ form {
 		input[type="submit"] {
 			cursor: pointer;
 			align-self: center;
-			width: 50%;
+			width: 100%;
+
 			margin-top: 25px;
 			color: white;
 			font-size: 20px;

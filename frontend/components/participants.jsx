@@ -9,12 +9,19 @@ class PlayerGroup extends React.Component {
     static propTypes = {
       selectPlayer: React.PropTypes.func.isRequired,
       selectRemovePlayer: React.PropTypes.func.isRequired,
-      addButton: React.PropTypes.func.isRequired,
-      removeButton: React.PropTypes.func.isRequired,
+      addPlayer: React.PropTypes.func.isRequired,
+      removePlayer: React.PropTypes.func.isRequired,
+      sortPlayer: React.PropTypes.func.isRequired,
       allPlayers: React.PropTypes.object.isRequired,
       addedPlayers: React.PropTypes.object.isRequired,
       selectedPlayer: React.PropTypes.object.isRequired,
       selectedRemovePlayer: React.PropTypes.object.isRequired
+    }
+
+    button(callback, name){
+      return  (<button className="playerButton"
+          onClick={callback}>{name}</button>
+      )
     }
 
     render() {
@@ -26,8 +33,9 @@ class PlayerGroup extends React.Component {
                         selectedPlayer={this.props.selectedPlayer}
                         title="All Players"/>
             <div className="buttons">
-              { this.props.addButton() }
-              { this.props.removeButton() }
+              { this.button(this.props.addPlayer, "Add") }
+              { this.button(this.props.removePlayer, "Remove") }
+              { this.button(this.props.sortPlayer, "Sort") }
             </div>
             <PlayerList players={this.props.addedPlayers} 
                         selectPlayer={this.props.selectRemovePlayer}

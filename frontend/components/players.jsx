@@ -2,6 +2,7 @@ import React from 'react';
 import ClientActions from '../actions/clientActions';
 import UserActions from "../actions/userActions";
 import PlayerStore from '../stores/playerStore';
+import RRSessionActions from "../acitons/rrSessionActions";
 
 import PlayerForm from './playerForm';
 import Modal from "react-modal";
@@ -82,17 +83,13 @@ export default class Players extends React.Component {
       numPlayers: --this.state.numPlayers
     });
   }
-  addButton = () => {
-    return (
-      <button className="playerButton"
-          onClick={this.addPlayer}>Add</button>
-      )
-  }
-  removeButton = () => {
-    return (
-      <button className="playerButton"
-          onClick={this.removePlayer}>Remove</button>
-          )
+
+
+  sortPlayer = () => {
+    //it might be better to have a heap.. since I might want to do promotions..
+    this.setState({
+      
+    });
   }
   selectPlayer = (player) => {
     this.setState({selectedPlayer: player})
@@ -110,14 +107,46 @@ export default class Players extends React.Component {
       return this.state.addedPlayers[_id];
     });
   }
+  saveSesion = (e) =>{
+    e.preventDefault();
+    RRSessionActions.saveSession({
+      organization: this.state.currentUser._id,
+      addedPlayers: this.state.addedPlayers,
+      schema: this.state.schema
+    });
+    //also need the schema to be changeable...(5444 to 4544)
+    //very complicated
+    //one way is to be able to adjust the counts of the players per group
+    //which will automatically update the count of other group that has a deficit or overload
+    //the other way is to just have a button that rotates the count
+    //which is not viable (6544 but you want it to be 6454)
+    //another way.. draggable! totally viable I think
+    
+    // simplest way.. the first way but not adjust the other groups' players
+    //simply say not not enough player or something
+
+    //I don't know how players can be promotoed..
+    //If I use a heap, I assume I can alter the priority..
+    //i.e. when there are two values, I will look into the one that has priority first
+    //or just have a function that switch players from a lower ranking group
+    //to the last player in the group .. I think this is more efficient
+    //there's no guarantee that I can adjust priority correctly
+    //which may end up being more costly in time complexity
+
+    //then there should be a tab on the top to view svaed session...
+    //and then they have a choice to publish the results
+    //results won't be shown until they finalize but they can still amend
+  }
+
   render = () => {
     let allPlayers = this.state.allPlayers,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
         groupingCallbacks = {
                 selectPlayer: this.selectPlayer, 
                 selectRemovePlayer: this.selectRemovePlayer, 
-                addButton: this.addButton,
-                removeButton: this.removeButton
+                addPlayer: this.addPlayer,
+                removePlayer: this.removePlayer,
+                sortPlayer: this.sortPlayer
               };
 
 
@@ -141,15 +170,16 @@ export default class Players extends React.Component {
               </a>
             </li>
           </ul>
-        </div>
-       
+        </div>  
+        <h3>Date: To be inserted</h3>
+        <h3>Organization: To be inserted</h3>
         {
           tab === 1 ?
               <Grouping numPlayers={numPlayers} addedPlayers={addedPlayers}/>
               :
               <Participants {...states} {...groupingCallbacks} />         
         }
-
+        <button onClick={this.saveSession}>Save</button>
         <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button>
         <Modal isOpen={this.state.newPlayerModal} 
                 onRequestClose={this.closeModal.bind(this, "newPlayerModal")}

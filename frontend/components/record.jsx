@@ -10,7 +10,6 @@ class Record extends React.component {
 
 	}
 
-
 	render(){
 		return (
 			<div>
