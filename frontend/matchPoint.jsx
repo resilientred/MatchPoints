@@ -6,6 +6,7 @@ import NavBar from './components/navBar';
 import Splash from "./components/splash";
 import SignUp from "./components/users/signUp";
 import RoundrobinResultList from "./components/rrSession/RoundrobinResultList";
+import RoundrobinSession from "./components/rrSession/roundrobinSession";
 import club from "./components/club";
 import NewRRSession from "./rrSession/newRRSession";
 import LogIn from "./components/users/logIn";
@@ -48,7 +49,7 @@ let Routes = (
     <Route path="signup" component={SignUp} />
     <Route path="club" component={Club} >
       <Route path="rrResults" component={RoundrobinResultList} >
-        <Route path=":date" component={} />
+        <Route path=":date" component={RoundrobinSession} />
        </Route> 
       <Route path="newRRSession" component={NewRRSession} >
         <Route path="players" component={Players} />

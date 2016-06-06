@@ -7,6 +7,9 @@ export default {
       success: "fetchedRRSessions"
     })
   }
+  fetchSession(date) {
+    
+  }
   saveSession(id, data){
     ApiUtils.apiCSRFService({
       url: "/api/club/" + id,
