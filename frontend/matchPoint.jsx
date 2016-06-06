@@ -4,8 +4,11 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Players from "./components/players";
 import NavBar from './components/navBar';
 import Splash from "./components/splash";
-import SignUp from "./components/signUp";
-import LogIn from "./components/logIn";
+import SignUp from "./components/users/signUp";
+import RoundrobinResultList from "./components/rrSession/RoundrobinResultList";
+import club from "./components/club";
+import NewRRSession from "./rrSession/newRRSession";
+import LogIn from "./components/users/logIn";
 import UserStore from "./stores/userStore";
 import Modal from "react-modal";
 
@@ -43,7 +46,14 @@ let Routes = (
     <IndexRoute component={Splash}/>
     <Route path="login" component={LogIn} />
     <Route path="signup" component={SignUp} />
-    <Route path="players" component={Players} />
+    <Route path="club" component={Club} >
+      <Route path="rrResults" component={RoundrobinResultList} >
+        <Route path=":date" component={} />
+       </Route> 
+      <Route path="newRRSession" component={NewRRSession} >
+        <Route path="players" component={Players} />
+      </Route>
+    </Route>
   </Route>
 )
 

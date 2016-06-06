@@ -1,9 +1,9 @@
 import React from 'react';
-import UserActions from '../actions/userActions';
-import Form from "../mixins/form";
-import CSRFStore from "../stores/csrfStore";
-import ClientActions from "../actions/clientActions";
-import PlayerStore from "../stores/playerStore";
+import UserActions from '../../actions/userActions';
+import Form from "../../mixins/form";
+import CSRFStore from "../../stores/csrfStore";
+import ClientActions from "../../actions/clientActions";
+import PlayerStore from "../../stores/playerStore";
 
 class PlayerForm extends React.Component {
 	constructor(props){

@@ -1,13 +1,13 @@
 import React from 'react';
-import ClientActions from '../actions/clientActions';
-import UserActions from "../actions/userActions";
-import PlayerStore from '../stores/playerStore';
-import RRSessionActions from "../acitons/rrSessionActions";
+import ClientActions from '../../actions/clientActions';
+import UserActions from "../../actions/userActions";
+import PlayerStore from '../../stores/playerStore';
+import RRSessionActions from "../../acitons/rrSessionActions";
 
 import PlayerForm from './playerForm';
 import Modal from "react-modal";
-import NewPlayerStyle from "../modalStyles/newPlayerModal";
-import UserStore from "../stores/userStore";
+import NewPlayerStyle from "../../modalStyles/newPlayerModal";
+import UserStore from "../../stores/userStore";
 import { browserHistory } from "react-router";
 import Participants from "./participants";
 import Grouping from "./grouping";
@@ -145,8 +145,7 @@ export default class Players extends React.Component {
                 selectPlayer: this.selectPlayer, 
                 selectRemovePlayer: this.selectRemovePlayer, 
                 addPlayer: this.addPlayer,
-                removePlayer: this.removePlayer,
-                sortPlayer: this.sortPlayer
+                removePlayer: this.removePlayer
               };
 
 
