@@ -1,17 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-import Players from "./components/rrSession/players";
-import NavBar from './components/navBar';
-import Splash from "./components/splash";
-import SignUp from "./components/users/signUp";
-import RoundrobinResultList from "./components/rrSession/roundrobinResultList";
-import RoundrobinSession from "./components/rrSession/roundrobinSession";
-import Club from "./components/club";
-import NewRRSession from "./components/rrSession/newRRSession";
-import LogIn from "./components/users/logIn";
-import UserStore from "./stores/userStore";
 import Modal from "react-modal";
+import UserStore from "./stores/userStore";
+import { NavBar, Splash, SignUp, LogIn, 
+          Club, Players, NewRRSession, ErrorPage,
+          RoundrobinResultList, RoundrobinSession } from './routes';
 
 class App extends React.Component {
   constructor(props){
@@ -56,6 +50,7 @@ let Routes = (
         <Route path="players" component={Players} />
       </Route>
     </Route>
+    <Route path="*" component={ ErrorPage } />
   </Route>
 )
 

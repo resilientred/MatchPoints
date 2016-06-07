@@ -38,6 +38,7 @@ class Grouping extends React.Component {
     }
     
     componentDidMount() {
+      debugger;
       let schemata = Grouping.findSchemata(this.props.numPlayers, this.state.rangeOfPlayers);
       this.setState({ 
         schemata: schemata || [],
@@ -47,9 +48,9 @@ class Grouping extends React.Component {
 
     schemata() {
       if (this.state.schemata.length){
-        return <select value={this.state.selectedGroup} 
+        return <select value="" 
                        onChange={this.changeSchema}>Select the grouping schema:
-          <option value={""}></option>;
+          <option value=""></option>;
           {
             this.state.schemata.map( (schema, i)=>{
               return <option key={schema} value={schema}>{schema.join(", ")}</option>;
@@ -70,16 +71,16 @@ class Grouping extends React.Component {
       return <div className="grouping">
         {this.schemata()}
         { 
-           this.state.selectedGroup.map( (numPlayers, i) => {
-              this.totalPlayerAdded += numPlayers;
-              debugger;
+           this.state.selectedGroup.map(function(numPlayers, i){
+              this.totalPlayerAdded += +numPlayers;
               return <ParticipantGroup key={i + "" + numPlayers} groupId={i}
                         numPlayers={numPlayers}
                         players={self.props.addedPlayers.slice(
                           this.totalPlayerAdded - numPlayers, this.totalPlayerAdded
                           )}
                       />;
-           })
+           }.bind(this)
+        )
         }
 
       </div>;
