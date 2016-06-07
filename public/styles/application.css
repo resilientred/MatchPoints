@@ -99,6 +99,18 @@ form {
     .nav-bar ul li {
       margin-left: 15px; }
 
+.club-nav ul {
+  display: flex;
+  flex-direction: row; }
+
+.club-nav li {
+  padding: 5px;
+  font-size: 16px;
+  background-color: black;
+  cursor: pointer; }
+  .club-nav li:hover {
+    opacity: 0.8; }
+
 .banner-container:after {
   clear: both;
   display: block;

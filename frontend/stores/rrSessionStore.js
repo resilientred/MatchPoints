@@ -1,15 +1,15 @@
 import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
-import RRSessionConstants from "../components/constants/rrSessionConstants";
+import RRSessionConstants from "../constants/rrSessionConstants";
 
 let RRSessionStore = new Store(AppDispatcher);
 let _rrSessions = {};
 
-let _resetSession = (session){
+let _resetSession = (session) => {
   _rrSessions[session._id] = session;
 }
 
-let _resetSessions = (sessions){
+let _resetSessions = (sessions) => {
   sessions.forEach( (session) => {
     _rrSessions[session._id] = session;
   } )
@@ -25,7 +25,7 @@ RRSessionStore.find = (id) => {
   return _rrSessions[id];
 }
 
-RRSessionStore.__onDispatcher = (payload) => {
+RRSessionStore.__onDispatch = (payload) => {
   switch (payload.actionType){
     case RRSessionConstants.FETCHED_SESSION:
       _resetSession(payload.session);

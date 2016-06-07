@@ -1,14 +1,11 @@
 import express from 'express';
-import bodyParser from 'BodyParser';
-import ClubModel from './models/club';
+import bodyParser from 'body-parser';
+import ClubModel from '../models/club';
 
 const router = express.Router();
-const parsedUrlEncoded = bodyParser.urlEncdoed({ extended: true });
+const parsedUrlEncoded = bodyParser.urlencoded({ extended: true });
 
 
-// let _emit = (event, data){
-//   app.emit(event, data);
-// };
 
 export default function (app){
   return {
@@ -63,14 +60,6 @@ export default function (app){
         res.status(200).send(club);
         res.end();
       })
-
-    });
+    })
   };
 }
-
-  
-
-
-
-
- ClubRouter;

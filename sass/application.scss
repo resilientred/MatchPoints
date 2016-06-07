@@ -118,6 +118,21 @@ form {
 		}
 	}
 }
+.club-nav {
+	ul {
+		display: flex;
+		flex-direction: row;
+	}
+	li {
+		padding: 5px;
+		font-size: 16px;
+		background-color: black;
+		cursor: pointer;
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+}
 .banner-container:after {
 	clear: both;
 	display: block;

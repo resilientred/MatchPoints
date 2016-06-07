@@ -40,7 +40,7 @@ app.use(
     debug: true
   })
 );
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname + "/public"), { maxAge: 86400000 }));
 app.use(webpackMiddleware(compiler));
 app.use('/api', routes);
 app.use('/api/club', clubRoutes);
@@ -48,20 +48,20 @@ app.use('/session', sessionRoutes);
 app.use('/user', userRoutes);
 app.use('/*', (req, res, next) => {
   let origUrl = req.originalUrl;
-  let redirectURL = origUrl.match(/^(\/login|\/signup|\/players)$/);
+  let redirectURL = origUrl.match(/^(\/login|\/signup|\/club|\/players)/);
   if (!redirectURL){
     console.log("path don't match");
     next();
     return;
   }
   let cookie = req.cookies.matchpoint_session;
-  if (!cookie && redirectURL[0] === "/players"){
+  if (!cookie && redirectURL[0].match(/^(\/club|\/players)/)){
     console.log("redirecing to login");
     res.redirect("/login");
     res.end();
-  } else if (cookie && redirectURL[0] !== "/players") {
-    console.log("redirecting to players");
-    res.redirect("/players");
+  } else if (cookie && redirectURL[0].match(/^\/(login|signup)/)) {
+    console.log("redirecting to clubs");
+    res.redirect("/club");
     res.end()
   } else {
     console.log("route check..sending to next")
@@ -79,9 +79,7 @@ app.get('/form', (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  console.log("Sending file index.html...");
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-  res.end();
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 });  
 
 app.listen(port, () => {

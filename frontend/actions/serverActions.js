@@ -1,7 +1,7 @@
 import Dispatcher from "../dispatcher/dispatcher";
 import PlayerConstants from "../constants/playerConstants";
 import UserConstants from "../constants/userConstants";
-import SessionConstants from "../constants/sessionConstants";
+import SessionConstants from "../constants/rrSessionConstants";
 module.exports = {
 	fetchedCSRF (token){
 		Dispatcher.dispatch({
@@ -20,21 +20,21 @@ module.exports = {
 			actionType: SessionConstants.FETCHED_SESSION,
 			session: session
 		})
-	}
-	loggedIn (user) {
+	},
+	loggedIn(user) {
 		Dispatcher.dispatch({
 			actionType: UserConstants.LOGGED_IN,
 			user: user
 		})
 	},
-	fetchedPlayers (players) {
+	fetchedPlayers(players) {
 		Dispatcher.dispatch({
 			actionType: PlayerConstants.FETCHED_PLAYERS,
 			players: players
 		})
 	},
 	
-	updatedPlayer (player) {
+	updatedPlayer(player) {
 		Dispatcher.dispatch({
 			actionType: PlayerConstants.FETCHED_PLAYER,
 			player: player

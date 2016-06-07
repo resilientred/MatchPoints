@@ -2,8 +2,9 @@ import React from 'react';
 import ClientActions from '../../actions/clientActions';
 import UserActions from "../../actions/userActions";
 import PlayerStore from '../../stores/playerStore';
-import RRSessionActions from "../../acitons/rrSessionActions";
-
+import RRSessionActions from "../../actions/rrSessionActions";
+import DatePicker from "react-datepicker";
+import moment from "moment";
 import PlayerForm from './playerForm';
 import Modal from "react-modal";
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
@@ -16,6 +17,7 @@ export default class Players extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      date: moment(),
       newPlayerModal: false,
       tab: 0,
       numPlayers: 0,
@@ -27,10 +29,10 @@ export default class Players extends React.Component {
     //should fetch all these from stores, so user can save their states
   }
   componentDidMount = () => {
-    ClientActions.fetchPlayers();
-    UserActions.fetchCurrentUser();
     this.psListener = PlayerStore.addListener(this._fetchedPlayers);
     this.usListener = UserStore.addListener(this.redirect);
+    ClientActions.fetchPlayers();
+    UserActions.fetchCurrentUser();
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
   }
@@ -84,13 +86,6 @@ export default class Players extends React.Component {
     });
   }
 
-
-  sortPlayer = () => {
-    //it might be better to have a heap.. since I might want to do promotions..
-    this.setState({
-      
-    });
-  }
   selectPlayer = (player) => {
     this.setState({selectedPlayer: player})
   }
@@ -100,6 +95,11 @@ export default class Players extends React.Component {
   }
   changeTab = (tab) => {
     this.setState({tab: tab});
+  }
+  handleChange = (field, moment) => {
+    let obj = {};
+    obj[field] = moment;
+    this.setState(obj)
   }
   convertPlayersToArr = () => {
     let self = this;
@@ -150,7 +150,7 @@ export default class Players extends React.Component {
 
 
 
-    let { modalIsOpen, tab, numPlayers, ...states} = this.state;
+    let { date, modalIsOpen, tab, numPlayers, ...states} = this.state;
 
     return (
       <div className="player-container">
@@ -170,7 +170,9 @@ export default class Players extends React.Component {
             </li>
           </ul>
         </div>  
-        <h3>Date: To be inserted</h3>
+        <div>Date: <DatePicker 
+            selected={this.state.date}
+            onChange={this.handleChange.bind(null, "date")}/></div>
         <h3>Organization: To be inserted</h3>
         {
           tab === 1 ?

@@ -1,5 +1,5 @@
 import React from 'react';
-import RRSessionActions from "../../acitons/RRSessionActions";
+import RRSessionActions from "../../actions/rrSessionActions";
 import RRSessionStore from "../../stores/rrSessionStore";
 import { browserHistory } from 'react-router';
 
@@ -21,8 +21,8 @@ class RoundRobinResultList extends React.Component {
       })
     }
 
-    editResult = (date) => {
-      browserHistory.push("/club/rrResults/" + date);
+    editResult = (id) => {
+      browserHistory.push("/club/rrResults/" + id);
     }
 
     deleteResult = (id) => {
@@ -51,4 +51,4 @@ class RoundRobinResultList extends React.Component {
     }
 }
 
-export default RoundRobinResult;
+export default RoundRobinResultList;

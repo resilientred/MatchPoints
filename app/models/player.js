@@ -9,11 +9,11 @@ let playerSchema = new Schema({
 //should add an array of associated clubs.
 //so when querying all the clubs..you can limited to all those
 
-let Player = mongoose.model('Player', playerSchema);
 
-Player.methods.findClubs(cb){
+playerSchema.methods.findClubs = function(cb){
   return this.model.find({_id: this.id}, {_id: false, associated_clubs: true }, cb);
 };
+let Player = mongoose.model('Player', playerSchema);
 
 
 

@@ -11,7 +11,7 @@ export default {
   fetchCurrentUser() {
     ApiUtil.apiService({
       url: "/user",
-      success: "loggenIn"
+      success: "loggedIn"
     })
   },
   logIn(user) {

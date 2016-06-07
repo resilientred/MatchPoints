@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-import Players from "./components/players";
+import Players from "./components/rrSession/players";
 import NavBar from './components/navBar';
 import Splash from "./components/splash";
 import SignUp from "./components/users/signUp";
-import RoundrobinResultList from "./components/rrSession/RoundrobinResultList";
+import RoundrobinResultList from "./components/rrSession/roundrobinResultList";
 import RoundrobinSession from "./components/rrSession/roundrobinSession";
-import club from "./components/club";
-import NewRRSession from "./rrSession/newRRSession";
+import Club from "./components/club";
+import NewRRSession from "./components/rrSession/newRRSession";
 import LogIn from "./components/users/logIn";
 import UserStore from "./stores/userStore";
 import Modal from "react-modal";
@@ -32,6 +32,7 @@ class App extends React.Component {
       this.setState({currentUser: currentUser});
     } else {
       if (this.state.currentUser) this.setState({currentUser: null});
+      browserHistory.push("/");
     }
   }
   render() {

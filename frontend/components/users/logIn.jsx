@@ -1,8 +1,8 @@
 import React from 'react';
-import Form from "../mixins/form";
-import UserActions from "../actions/userActions";
-import CSRFStore from "../stores/csrfStore";
-import UserStore from "../stores/userStore";
+import Form from "../../mixins/form";
+import UserActions from "../../actions/userActions";
+import CSRFStore from "../../stores/csrfStore";
+import UserStore from "../../stores/userStore";
 import { browserHistory } from "react-router";
 class LogIn extends React.Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class LogIn extends React.Component {
     }
     redirect() {
       if (UserStore.getCurrentUser()){
-        browserHistory.push("/players");
+        browserHistory.push("/club");
       }
     }
     componentWillUnmount() {

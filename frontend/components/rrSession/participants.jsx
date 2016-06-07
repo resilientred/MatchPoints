@@ -11,7 +11,6 @@ class PlayerGroup extends React.Component {
       selectRemovePlayer: React.PropTypes.func.isRequired,
       addPlayer: React.PropTypes.func.isRequired,
       removePlayer: React.PropTypes.func.isRequired,
-      sortPlayer: React.PropTypes.func.isRequired,
       allPlayers: React.PropTypes.object.isRequired,
       addedPlayers: React.PropTypes.object.isRequired,
       selectedPlayer: React.PropTypes.object.isRequired,
@@ -35,7 +34,6 @@ class PlayerGroup extends React.Component {
             <div className="buttons">
               { this.button(this.props.addPlayer, "Add") }
               { this.button(this.props.removePlayer, "Remove") }
-              { this.button(this.props.sortPlayer, "Sort") }
             </div>
             <PlayerList players={this.props.addedPlayers} 
                         selectPlayer={this.props.selectRemovePlayer}

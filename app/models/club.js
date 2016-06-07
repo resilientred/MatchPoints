@@ -1,36 +1,39 @@
 import mongoose from 'mongoose';
-const schema = mongoose.Schema;
 
-let Roundrobins = new Schema({
+const Schema = mongoose.Schema;
+
+let roundrobinSchema = new Schema({
   date: { type: Date, default: Date.now },
   players: { type: Object },
-  schema: { type: Object },
+  schemata: { type: Object },
   results: { type: Object },
   finalized: { type: Boolean, default: false }
 });
 //has id property that filters out embedded documents
 
-let ClubSchema = new Schema({
+let clubSchema = new Schema({
+  adminId: { type: Number, required: true },
   clubName: { type: String, required: true },
   city: { type: String, required: true },
   state: { type: String, required: true },
-  roundrobins: [Roundrobins]
+  roundrobins: [roundrobinSchema ]
 });
 //also add location...
-let Club = mongoose.Model('Club', ClubSchema);
 
-ClubSchema.statics.findClub(id, callback){
+clubSchema.statics.findClub = function(id, callback){
   return this.find({"_id": id}, callback);
 };
 
-ClubSchema.statics.findRoundRobins(id, callback){
+clubSchema.statics.findRoundRobins = function(id, callback){
   return this.find({"_id": id}, {"roundrobins": true}, callback)
 };
-ClubSchema.statics.finalizeResult(clubId, roundrobinId, callback){
+clubSchema.statics.finalizeResult = function(clubId, roundrobinId, callback){
   return this.update({"_id": clubId, "roundrobinId": roundrobinId}, callback)
 }
-ClubSchema.methods.deleteRoundRobin(clubId, roundrobinId, callback){
+clubSchema.methods.deleteRoundRobin = function(clubId, roundrobinId, callback){
   this.roundrobins.id(roundrobinId).remove();
   this.save(callback);
 };
+let Club = mongoose.model('Club', clubSchema);
+
 export default Club; 
