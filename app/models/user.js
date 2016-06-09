@@ -25,7 +25,8 @@ userSchema.statics.findByUsernameAndPassword = function(username, callback){
 }
 
 userSchema.statics.findBySessionToken = function(sessionToken, callback){
-    this.find({"sessionToken": sessionToken}, callback);
+    this.findOne({"sessionToken": sessionToken}, 
+                  {"organization": true, "username": true}, callback);
 }
 let User = mongoose.model("User", userSchema);
 export default User;

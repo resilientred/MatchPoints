@@ -10,7 +10,8 @@ class ParticipantGroup extends React.Component {
         numPlayers: React.PropTypes.oneOfType([
           React.PropTypes.string,
           React.PropTypes.number
-          ])
+          ]),
+        changeNumOfPlayers: React.PropTypes.func
     }
     render() {
         return (<table> 
@@ -32,6 +33,9 @@ class ParticipantGroup extends React.Component {
                     })
                   }
                 </tbody>
+                <input type="number" 
+                       onChange={this.props.changeNumOfPlayers.bind(null, this.props.numPlayers)}
+                       value={this.props.numPlayers} />
                 </table>
                 );
     }

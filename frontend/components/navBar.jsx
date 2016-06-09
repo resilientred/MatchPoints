@@ -1,16 +1,38 @@
 import React from 'react';
 import { Link, browserHistory } from 'react-router';
 import UserActions from '../actions/userActions';
+import UserStore from "../stores/userStore";
 
 export default class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.displayName = 'NavBar';
+        this.state = { currentUser: null };
+    }
+    componentDidMount() {
+        console.log("cdm");
+        this.cuListener = UserStore.addListener(this.setCurrentUser);
+        if (!this.state.currentUser){
+            UserActions.fetchCurrentUser();
+        }
     }
 
+    componentWillUnmount() {
+        if (this.cuListener) this.cuListener.remove();   
+    }
+
+    setCurrentUser = () => {
+        let currentUser = UserStore.getCurrentUser();
+        if (currentUser){
+          this.setState({currentUser: currentUser});
+        } else {
+          if (this.state.currentUser) this.setState({currentUser: null});
+          browserHistory.push("/");
+        }
+    }
     rightNav() {
-        if (this.props.currentUser){
-            return  <ul><li>Welcome, { this.props.currentUser.username }</li>
+        if (this.state.currentUser){
+            return  <ul><li>Welcome, { this.state.currentUser.username }</li>
                 <li onClick={this.logOut}>Log Out</li></ul>;
         } else {
             return  <ul><li><Link to="/login" activeClassName="active">Log In</Link></li>

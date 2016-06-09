@@ -10,9 +10,9 @@ export default {
   fetchSession(date) {
     
   },
-  saveSession(id, data){
+  saveSession(data, _csrf, adminId){
     ApiUtils.apiCSRFService({
-      url: "/api/club/" + id,
+      url: "/api/club/" + adminId,
       data: data,
       success: "savedRRSessions"
     }, _csrf)

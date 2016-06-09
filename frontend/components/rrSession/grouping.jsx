@@ -38,7 +38,6 @@ class Grouping extends React.Component {
     }
     
     componentDidMount() {
-      debugger;
       let schemata = Grouping.findSchemata(this.props.numPlayers, this.state.rangeOfPlayers);
       this.setState({ 
         schemata: schemata || [],
@@ -65,16 +64,29 @@ class Grouping extends React.Component {
       this.totalPlayerAdded = 0;
       this.setState({selectedGroup: e.target.value.split(",")}); 
     }
+
+    changeNumOfPlayers = (index, num, _) => {
+      let selectedGroup = this.state.selectedGroup;
+      selectedGroup[index] = num;
+      this.setState({selectedGroup: selectedGroup});
+    }
+
     render() {
       let self = this;
       this.totalPlayerAdded = 0;
       return <div className="grouping">
-        {this.schemata()}
+        { this.schemata() }
+        <button onClick={this.props.saveSession.bind(null, 
+                          this.state.schemata, 
+                          this.state.rangeOfPlayer,
+                          this.state.selectedGroup)
+                        }>Save</button>
         { 
-           this.state.selectedGroup.map(function(numPlayers, i){
+           this.props.selectedGroup.map(function(numPlayers, i){
               this.totalPlayerAdded += +numPlayers;
               return <ParticipantGroup key={i + "" + numPlayers} groupId={i}
                         numPlayers={numPlayers}
+                        changeNumOfPlayers={this.changeNumOfPlayers.bind(null, i)}
                         players={self.props.addedPlayers.slice(
                           this.totalPlayerAdded - numPlayers, this.totalPlayerAdded
                           )}

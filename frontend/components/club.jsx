@@ -5,7 +5,7 @@ class Club extends React.Component {
     constructor(props) {
         super(props);
     }
-
+    
     render() {
         return <div>
         <nav className="club-nav">

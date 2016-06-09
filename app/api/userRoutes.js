@@ -27,6 +27,7 @@ function userRoutes(app, userMethods){
 	  	userMethods.currentUser(req);
 
 	  	app.once("foundUser", (user)=>{
+	  		console.log("sending user back");
 	  		res.status(200).send(user);
 	  		res.end();
 	  	})

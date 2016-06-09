@@ -74,8 +74,6 @@ app.get('/form', (req, res) => {
   console.log("sent csrf");
   res.status(200).send({ csrfToken: req.csrfToken() })
   res.end();
-  //everytime when a form mounts...
-  //even if an error is flashed...should refetch..
 })
 
 app.get('*', (req, res) => {

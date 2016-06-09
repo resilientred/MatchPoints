@@ -12,12 +12,14 @@ class UserMethods {
     if (this._currentUser) {
       this.app.emit('foundUser', this._currentUser);
     } else {
-      UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_seesion, this.foundUser);
+      UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_session, this.foundUser);
     }
   }
   
-  foundUser = (user) => {
+  foundUser = (err, user) => {
+    if (err) console.log("not found");
     this._currentUser = user;
+    console.log(this._currentUser);
     this.app.emit('foundUser', this._currentUser);
   }
   

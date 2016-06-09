@@ -6,6 +6,7 @@ let _csrf = null;
 let _currentUser = null;
 
 let _setCurrentUser = (user) => {
+  console.log(user);
   _currentUser = user;
 }
 const UserStore = new Store(AppDispatcher);

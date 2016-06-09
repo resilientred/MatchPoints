@@ -9,6 +9,7 @@ import PlayerForm from './playerForm';
 import Modal from "react-modal";
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import UserStore from "../../stores/userStore";
+import CSRFStore from "../../stores/csrfStore";
 import { browserHistory } from "react-router";
 import Participants from "./participants";
 import Grouping from "./grouping";
@@ -17,9 +18,10 @@ export default class Players extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: moment(),
       newPlayerModal: false,
       tab: 0,
+      _csrf: null,
+      date: moment(),
       numPlayers: 0,
       allPlayers: {},
       addedPlayers: {},
@@ -30,9 +32,9 @@ export default class Players extends React.Component {
   }
   componentDidMount = () => {
     this.psListener = PlayerStore.addListener(this._fetchedPlayers);
-    this.usListener = UserStore.addListener(this.redirect);
     ClientActions.fetchPlayers();
-    UserActions.fetchCurrentUser();
+    this.csrfListener = CSRFStore.addListener(this._fetchedCSRF);
+    UserActions.fetchCSRF();
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
   }
@@ -42,10 +44,8 @@ export default class Players extends React.Component {
     if (this.usListener) this.usListener.remove();
   }
 
-  redirect(){
-    if (!UserStore.getCurrentUser()){
-      browserHistory.push("/");
-    } 
+  _fetchedCSRF(){
+    this.setState({ _csrf: CSRFStore.getCSRF() });
   }
   openModal(name){
     let modalObj = {};
@@ -107,15 +107,21 @@ export default class Players extends React.Component {
       return this.state.addedPlayers[_id];
     });
   }
-  saveSesion = (e) =>{
+
+  saveSesion = (schemata, selectedSchema, e) => {
     e.preventDefault();
+    var admin = UserStore.getCurrentUser();
+    
+    if (!admin) browserHistory.push("/login");
+
     RRSessionActions.saveSession({
-      organization: this.state.currentUser._id,
+      date: this.state.date,
+      numOfPlayers: this.state.numOfPlayers,
       addedPlayers: this.state.addedPlayers,
-      schema: this.state.schema
-    });
-    //also need the schema to be changeable...(5444 to 4544)
-    //very complicated
+      selectedSchema: selectedSchema,
+      schemata: schemata
+    }, this.state._csrf, admin._id);
+
     //one way is to be able to adjust the counts of the players per group
     //which will automatically update the count of other group that has a deficit or overload
     //the other way is to just have a button that rotates the count
@@ -124,18 +130,6 @@ export default class Players extends React.Component {
     
     // simplest way.. the first way but not adjust the other groups' players
     //simply say not not enough player or something
-
-    //I don't know how players can be promotoed..
-    //If I use a heap, I assume I can alter the priority..
-    //i.e. when there are two values, I will look into the one that has priority first
-    //or just have a function that switch players from a lower ranking group
-    //to the last player in the group .. I think this is more efficient
-    //there's no guarantee that I can adjust priority correctly
-    //which may end up being more costly in time complexity
-
-    //then there should be a tab on the top to view svaed session...
-    //and then they have a choice to publish the results
-    //results won't be shown until they finalize but they can still amend
   }
 
   render = () => {
@@ -148,9 +142,7 @@ export default class Players extends React.Component {
                 removePlayer: this.removePlayer
               };
 
-
-
-    let { date, modalIsOpen, tab, numPlayers, ...states} = this.state;
+    let { modalIsOpen, tab, _csrf, date, numPlayers, ...states} = this.state;
 
     return (
       <div className="player-container">
@@ -176,11 +168,13 @@ export default class Players extends React.Component {
         <h3>Organization: To be inserted</h3>
         {
           tab === 1 ?
-              <Grouping numPlayers={numPlayers} addedPlayers={addedPlayers}/>
+              <Grouping numPlayers={numPlayers} 
+                        addedPlayers={addedPlayers} 
+                        saveSession={this.saveSession.bind(this)}/>
               :
               <Participants {...states} {...groupingCallbacks} />         
         }
-        <button onClick={this.saveSession}>Save</button>
+        
         <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button>
         <Modal isOpen={this.state.newPlayerModal} 
                 onRequestClose={this.closeModal.bind(this, "newPlayerModal")}

@@ -7,9 +7,14 @@ MatchPoint is a Full-stack web Round-Robin rating systems. It provides a platfor
 And allow users to:
 * query results based on date
 * query their indiviual old results
+## Todos
+ - [ ] saving schema
+ - [ ] temporarily save schema in react-cookie and empty after sending request to store
+ - [ ] pdf generator
+
 
 ## Expected Features
- - [ ] Arrange groups for players based on ratings
+ - [x] Arrange groups for players based on ratings
  - [ ] Allow organizers to enter results
  - [ ] Allow Users to customize scoring algorithm
  - [ ] Calculate scores automatically based on default or given scoring algorithms

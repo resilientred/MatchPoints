@@ -4,8 +4,10 @@ const Schema = mongoose.Schema;
 
 let roundrobinSchema = new Schema({
   date: { type: Date, default: Date.now },
+  numOfPlayers: { type: Number },
   players: { type: Object },
   schemata: { type: Object },
+  selectedSchema: { type: Object},
   results: { type: Object },
   finalized: { type: Boolean, default: false }
 });

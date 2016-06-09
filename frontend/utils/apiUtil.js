@@ -8,6 +8,9 @@ export default {
 			data: options["data"] || {},
 			success: function(data){
 				ServerActions[options["success"]](data);
+			},
+			error: (error) => {
+				console.log(error);
 			}
 		})
 	},

@@ -36,7 +36,7 @@ class RoundRobinResultList extends React.Component {
     }
 
     componentWillUnmount() {
-      this.rrsListener.remove();
+      if (this.rrsListener) this.rrsListener.remove();
     }
 
     render() {
