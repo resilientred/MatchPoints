@@ -1,15 +1,22 @@
-button {
+body {
+	min-height: 800px;
+}
+.player-buttons {
 	cursor: pointer;
 	font-family: 'Titillium Web', sans-serif;
-	padding: 5px 15px;
+	padding: 10px 15px;
 	font-size: 20px;
 	font-weight: 700;
 	border-radius: 3px;
-	background-color: rgb(217, 94, 114);
+	width: 65%;
+	border: none;
+	background-color: #B36B89;
 	color: white;
 	letter-spacing: 1.1px;
+	align-self: center;
+	margin-top: 5px;
 	&:hover {
-		background-color: rgba(217, 94, 114, 0.8);
+		background-color: rgba(39, 31, 51, 0.8);
 	}
 }
 select {
@@ -27,8 +34,7 @@ select::-ms-expand {
 p {
 	font-family: 'Oswald', sans-serif;
 }
-body {
-}
+
 input {
 	border: none;
 	border: 2px solid black;
@@ -99,40 +105,48 @@ form {
 
 }
 
-.forms {
+.links {
+			color: white;
+}
 
+
+.links:hover {
+	color: #333333;
+	transition: color 0.5s ease-out 0.5s;
+	-o-transition: color 0.5s ease-out 0.5s;
+	-webkit-transition: color 0.5s ease-out 0.5s;
+	-moz-transition: color 0.5s ease-out 0.5s;
 }
 .nav-bar {
-	font-size: 24px;
-	height: 50px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 	color: white;
-	background-color: black;
-	ul {
-		display: flex;
-		justify-content: space-around;
-		li {
-			margin-left: 15px;
-		}
-	}
-}
-.club-nav {
-	ul {
+	background-color: #896bb3;
+	&> div {
+		height: 60px;
+		width: 70%;
+		margin: 0 auto;
 		display: flex;
 		flex-direction: row;
-	}
-	li {
-		padding: 5px;
-		font-size: 16px;
-		background-color: black;
-		cursor: pointer;
-		&:hover {
-			opacity: 0.8;
+		justify-content: space-between;
+		align-items: center;
+
+		.logo {
+			font-family: 'varela round', sans-serif;
+			font-size: 30px;
+			cursor: pointer;
+		}
+		ul {
+			display: flex;
+			justify-content: space-around;
+				font-size: 22px;
+			li {
+				font-family: 'varela round', sans-serif;
+				margin-left: 15px;
+			}
 		}
 	}
+
 }
+
 .banner-container:after {
 	clear: both;
 	display: block;
@@ -175,7 +189,7 @@ form {
 	width: 100%;
 	height: 500px;
 	opacity: 0.7;
-		  -webkit-filter: blur(0.2px);
+	-webkit-filter: blur(0.2px);
   -moz-filter: blur(0.2px);
   -o-filter: blur(0.2px);
   -ms-filter: blur(0.2px);
@@ -188,15 +202,17 @@ form {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border: 4px solid black;
-	border-radius: 5px;
-	width: 60%;
+	border: 1px solid #dad7de;
+	border-radius: 4px;
+	background-color: #f7f5fa;
+	width: 70%;
 	min-width: 600px;
-	margin: 10% auto 0 auto;
-	min-height: 600px;
+	margin: 5% auto 0 auto;
+	min-height: 700px;
+
 	h3 {
-		margin-top: 40px;
-		margin-bottom: 40px;
+		margin-top: 20px;
+		margin-bottom: 20px;
 		font-size: 24px;
 	}
 	.buttons {
@@ -205,18 +221,42 @@ form {
 		justify-content: center;
 	}
 }
-.player-container > div{
+
+.player-container > div > div{
 	display: flex;
+	flex-wrap: wrap;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: space-around;
+	margin-top: 5px;
 }
+
+@mixin selected {
+	-webkit-transition: all 0.4s ease-out 0.4s;
+	transition: all 0.4s ease-out 0.4s;
+	-o-transition: all 0.4s ease-out 0.4s;
+	-moz-transition: all 0.4s ease-out 0.4s;}
+
+@mixin hover {
+	-webkit-transition: all 0.2s ease-out;
+	transition: all 0.2s ease-out;
+	-o-transition: all 0.2s ease-out;
+	-moz-transition: all 0.2s ease-out;}
+
 .selected {
-	background-color: black;
+	@include selected;
+	background-color:  #B3896B;
 	color: white;
+
 }
 .not-selected {
+	@include selected;
 	background-color: white;
+	color: 	#989898;
+}
+.not-selected:hover {
+	@include hover;
 	color: black;
+	background-color: #CCC;
 }
 
 .participant-reg {
@@ -227,49 +267,102 @@ form {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+
+		& > div {
+			display: flex;
+			flex-direction: column;
+		}
 	}
 }
 
 .player-list {
 	display: flex;
 	flex-direction: column;
-	border: 1px solid black;
+	border: 1px solid tranparent;
 	border-radius: 4px;
 	padding: 10px;
 	font-size: 20px;
 	text-align: center;
-	min-width: 204px;
+	width: 300px;
 	margin: 0 auto;
 	margin-top: 5%;
-	h4 {
-		margin-bottom: 15px;
-
+	height: 400px;
+	overflow-y: scroll;
+	.list-title {
+		background-color: #B36B89;
+		width: 100%;
+		color: white;
+		padding: 35px 15px;
+		animation-duration: 1s;
+		animation-timing-function: ease-out;
 	}
 	li {
+		width: 280px;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		margin: 5px 0;
+		padding: 20px 15px;
+		cursor: pointer;
+		animation-name: added-player;
+		animation-duration: 1s;
+		animation-timing-function: ease-out;
+		border-bottom: 1px solid #F1EFEF;
 	}
 }
 
+@media (max-width: 920px){
+	.player-list {
+		width: 100%;
+		align-self: center;
+		li, .list-title {
+			width: 500px;
+		}
+	}
+
+
+}
+@keyframes added-player {
+	0% { opacity: 0; }
+	100% {opacity: 1; }
+}
+
+@-webkit-keyframes added-player {
+	0% { opacity: 0; }
+	100% {opacity: 1; }
+}
+@-moz-keyframes added-player {
+	0% { opacity: 0; }
+	100% {opacity: 1; }
+}
+@-o-keyframes added-player {
+	0% { opacity: 0; }
+	100% {opacity: 1; }
+}
+
 .player-nav {
+	position: relative;
+	top: 15px;
 	display: flex;
 	flex-direction: row;
-	a {	
 
-		font-size: 16px;
-		color: black;
-		background-color: rgb(206, 48, 71);
-		padding: 5px;
+	li {
+		width: 100%;
+	}
+
+	a {	
+		font-family: 'varela round', sans-serif;
+		font-size: 24px;
+		color: white;
+		background-color: rgb(51, 40, 66);
+		padding: 10px;
 		cursor: pointer;
 
 		&:hover {
-			background-color: rgba(206, 48, 71, 0.8);
+			background-color: rgba(51, 40, 66, 0.8);
 		}
 
 		&.active {
-			background-color: grey;
+			background-color: rgb(68,54,89);
 		}
 	}
 
@@ -283,6 +376,7 @@ form {
 	flex-wrap: wrap;
 	width: 100%;
 	justify-content: space-between;
+
 	table {
 		border-top: 1px solid black;
 		border-bottom: 1px solid black;
@@ -294,3 +388,47 @@ form {
 		}
 	}
 }
+
+.select-action {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: 40px;
+	font-family: 'varela round', sans-serif;
+
+}
+.select-action li {
+	text-align: center;
+	min-width: 300px;
+
+	margin-top: 20px;
+	a {
+ 		color: black;
+	}
+
+	a:hover {
+		background-color: #B4ACC0;
+	 -webkit-transition: background-color 500ms ease-out 0.5s;
+    -moz-transition: background-color 500ms ease-out 0.5s;
+    -o-transition: background-color 500ms ease-out 0.5s;
+    transition: background-color 500ms ease-out 0.5s;
+	}
+}
+
+.new-session-appear {
+	opacity: 0.01;
+	background-color: black;
+}
+
+.new-session-appear.new-session-appear-active {
+  opacity: 1;
+  background-color: white;
+	-webkit-transition: all 0.5s ease-out 0.5s;
+	-moz-transition: all 0.5s ease-out 0.5s;
+	-o-transition: all 0.5s ease-out 0.5s;
+  transition: all 0.5s ease-out 0.5s;
+}
+
+
+

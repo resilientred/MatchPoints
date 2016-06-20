@@ -17,7 +17,7 @@ class PlayerList extends React.Component {
 		let players = this.props.players;
 		return (
 			<div className="player-list">
-        <h4>{this.props.title}</h4>
+        <div className="list-title">{this.props.title}</div>
 				<ul>
         {
           Object.keys(players).map ( (_id) => {

@@ -10,7 +10,6 @@ export default class NavBar extends React.Component {
         this.state = { currentUser: null };
     }
     componentDidMount() {
-        console.log("cdm");
         this.cuListener = UserStore.addListener(this.setCurrentUser);
         if (!this.state.currentUser){
             UserActions.fetchCurrentUser();
@@ -35,8 +34,8 @@ export default class NavBar extends React.Component {
             return  <ul><li>Welcome, { this.state.currentUser.username }</li>
                 <li onClick={this.logOut}>Log Out</li></ul>;
         } else {
-            return  <ul><li><Link to="/login" activeClassName="active">Log In</Link></li>
-                <li><Link to="/signup" activeClassName="active">Sign Up</Link></li></ul>;
+            return  <ul><li><Link to="/login" activeClassName="active" className="links">Log In</Link></li>
+                <li><Link to="/signup" activeClassName="active"  className="links">Sign Up</Link></li></ul>;
         }
     }
 
@@ -46,8 +45,10 @@ export default class NavBar extends React.Component {
 
     render() {
         return <div className="nav-bar">
-        	<div className="logo">MatchPoint</div>
-            { this.rightNav() }
+            <div>
+            	<div className="logo links" href="/">Match.Point</div>
+                { this.rightNav() }
+            </div>
         </div>;
     }
 }

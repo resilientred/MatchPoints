@@ -82,7 +82,7 @@ class Grouping extends React.Component {
                           this.state.selectedGroup)
                         }>Save</button>
         { 
-           this.props.selectedGroup.map(function(numPlayers, i){
+           this.state.selectedGroup.map(function(numPlayers, i){
               this.totalPlayerAdded += +numPlayers;
               return <ParticipantGroup key={i + "" + numPlayers} groupId={i}
                         numPlayers={numPlayers}

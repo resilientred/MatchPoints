@@ -6,15 +6,19 @@ class Club extends React.Component {
         super(props);
     }
     
-    render() {
-        return <div>
-        <nav className="club-nav">
-          <ul>
+    content (){
+        if (/^\/club$/.test(this.props.location.pathname)){
+         return <ul className="select-action">
             <li><Link to="/club/newRRSession" activeClassName="active">New Session</Link></li>
             <li><Link to="/club/rrResults" activeClassName="active">Old Sessions</Link></li>
-          </ul>
-        </nav>
-        { this.props.children }
+          </ul>;
+        } else {
+            return this.props.children;
+        }
+    }
+    render() {
+        return <div>
+            { this.content() }
         </div>;
     }
 }

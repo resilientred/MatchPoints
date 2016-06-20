@@ -18,7 +18,7 @@ class PlayerGroup extends React.Component {
     }
 
     button(callback, name){
-      return  (<button className="playerButton"
+      return  (<button className="player-buttons"
           onClick={callback}>{name}</button>
       )
     }
@@ -27,18 +27,20 @@ class PlayerGroup extends React.Component {
         return <div className="participant-reg">
           <h3>Participant Registration</h3>
           <div>
-            <PlayerList players={this.props.allPlayers}
-                        selectPlayer={this.props.selectPlayer}
-                        selectedPlayer={this.props.selectedPlayer}
-                        title="All Players"/>
-            <div className="buttons">
+            <div>
+              <PlayerList players={this.props.allPlayers}
+                          selectPlayer={this.props.selectPlayer}
+                          selectedPlayer={this.props.selectedPlayer}
+                          title="All Players"/>
               { this.button(this.props.addPlayer, "Add") }
+            </div>
+            <div>
+              <PlayerList players={this.props.addedPlayers} 
+                          selectPlayer={this.props.selectRemovePlayer}
+                          selectedPlayer={this.props.selectedRemovePlayer}
+                          title="Selected Players"/>
               { this.button(this.props.removePlayer, "Remove") }
             </div>
-            <PlayerList players={this.props.addedPlayers} 
-                        selectPlayer={this.props.selectRemovePlayer}
-                        selectedPlayer={this.props.selectedRemovePlayer}
-                        title="Selected Players"/>
           </div>
         </div>;
     }

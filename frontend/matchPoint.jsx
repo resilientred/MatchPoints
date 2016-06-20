@@ -12,7 +12,7 @@ class App extends React.Component {
     
   }
   componentWillMount() {
-    let el = document.getElementById("root");
+    var el = document.getElementById("root");
     Modal.setAppElement(el);    
   }
   render() {
@@ -23,7 +23,7 @@ class App extends React.Component {
   }
 }
 
-let Routes = (
+const Routes = (
   <Route path="/" component={App}>
     <IndexRoute component={Splash}/>
     <Route path="login" component={LogIn} />
