@@ -3,8 +3,9 @@ import ClientActions from '../../actions/clientActions';
 import UserActions from "../../actions/userActions";
 import PlayerStore from '../../stores/playerStore';
 import RRSessionActions from "../../actions/rrSessionActions";
-import DatePicker from "react-datepicker";
+import Calendar from "react-input-calendar";
 import moment from "moment";
+import 'moment-range'
 import PlayerForm from './playerForm';
 import Modal from "react-modal";
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
@@ -15,6 +16,7 @@ import Participants from "./participants";
 import Grouping from "./grouping";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+
 export default class NewRRSession extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +26,8 @@ export default class NewRRSession extends React.Component {
       _csrf: null,
       date: moment(),
       numPlayers: 0,
+      selectedPlayerTarget: null,
+      selectedRemovePlayerTarget: null,
       allPlayers: {},
       addedPlayers: {},
       selectedPlayer: {},
@@ -31,7 +35,8 @@ export default class NewRRSession extends React.Component {
     }
     //should fetch all these from stores, so user can save their states
   }
-  componentDidMount = () => {
+  componentDidMount(){
+    console.log(moment());
     this.psListener = PlayerStore.addListener(this._fetchedPlayers);
     ClientActions.fetchPlayers();
     this.csrfListener = CSRFStore.addListener(this._fetchedCSRF);
@@ -100,7 +105,7 @@ export default class NewRRSession extends React.Component {
   handleChange = (field, moment) => {
     let obj = {};
     obj[field] = moment;
-    this.setState(obj)
+    this.setState(obj);
   }
   convertPlayersToArr = () => {
     let self = this;
@@ -132,7 +137,10 @@ export default class NewRRSession extends React.Component {
     // simplest way.. the first way but not adjust the other groups' players
     //simply say not not enough player or something
   }
-
+  newPlayer = () => {
+    return this.state.tab === 0 ? <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button> :
+         "";
+  }
   render = () => {
     let allPlayers = this.state.allPlayers,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
@@ -142,8 +150,7 @@ export default class NewRRSession extends React.Component {
                 addPlayer: this.addPlayer,
                 removePlayer: this.removePlayer
               };
-
-    let { modalIsOpen, tab, _csrf, date, numPlayers, ...states} = this.state;
+    let { modalIsOpen, tab, a, date, numPlayers, b, c, ...states} = this.state;
 
     return (
       <ReactCSSTransitionGroup transitionName="new-session" transitionAppear={true} 
@@ -165,8 +172,9 @@ export default class NewRRSession extends React.Component {
               </a>
             </li>
           </ul>
-          <div>Date: <DatePicker 
-              selected={this.state.date}
+          <div className="date">Date: <Calendar
+              format="YYYY/MM/DD"
+              date={this.state.date}
               onChange={this.handleChange.bind(null, "date")}/></div>
           <h3>Organization: To be inserted</h3>
           {
@@ -177,8 +185,8 @@ export default class NewRRSession extends React.Component {
                 :
                 <Participants {...states} {...groupingCallbacks} />         
           }
-          
-          <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button>
+                
+          {this.newPlayer()}
           <Modal isOpen={this.state.newPlayerModal} 
                   onRequestClose={this.closeModal.bind(this, "newPlayerModal")}
                   style={NewPlayerStyle}>

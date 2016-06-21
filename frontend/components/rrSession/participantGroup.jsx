@@ -14,29 +14,32 @@ class ParticipantGroup extends React.Component {
         changeNumOfPlayers: React.PropTypes.func
     }
     render() {
-        return (<table> 
-                 <thead>
-                  <tr>
-                    <th>Group {this.props.groupId + 1}</th>
-                    <th>Name</th>
-                    <th>Rating</th>
-                  </tr>
-                 </thead>
-                 <tbody>
-                  {
-                    this.props.players.map( (player, i) => {
-                        return <tr key={player._id}>
-                                <td>{i + 1}</td>
-                                <td>{player.name}</td>
-                                <td>{player.rating}</td>
-                               </tr>;              
-                    })
-                  }
-                </tbody>
-                <input type="number" 
-                       onChange={this.props.changeNumOfPlayers.bind(null, this.props.numPlayers)}
-                       value={this.props.numPlayers} />
-                </table>
+        return (
+                <div>
+                  <table> 
+                   <thead>
+                     <tr>
+                        <th>Group {this.props.groupId + 1}</th>
+                        <th>Name</th>
+                        <th>Rating</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                    {
+                      this.props.players.map( (player, i) => {
+                          return <tr class="table-row" key={player._id}>
+                                  <td>{i + 1}</td>
+                                  <td>{player.name}</td>
+                                  <td>{player.rating}</td>
+                                 </tr>;              
+                      })
+                    }
+                  </tbody>
+                  </table>
+                  <input type="number" 
+                         onChange={this.props.changeNumOfPlayers.bind(null, this.props.numPlayers)}
+                         value={this.props.numPlayers} />
+                </div>
                 );
     }
 }

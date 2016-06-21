@@ -1,5 +1,5 @@
 import UserModel from "../models/user";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt-as-promised';
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
 const saltRounds = 10;
@@ -36,13 +36,10 @@ class UserMethods {
   logOut = () => {
     let user = this._currentUser; 
     this._currentUser = null;
-    UserModel.resetSessionToken.call(UserModel, user, this._loggedOut);    
+    return UserModel.resetSessionToken.call(UserModel, user);
   }
 
-  _loggedOut = () => {
-    this.app.emit("loggedOut");
-  }
-  
+
   logIn = (res, user) => {
     if (!user) {
       res.status(404).send("User not found");
@@ -58,22 +55,27 @@ class UserMethods {
   }
 
   _findUser(username, password){
-    UserModel.findByUsernameAndPassword.call(UserModel, username, this._isPassword.bind(null, password));
+    var _user;
+    return UserModel.findByUsernameAndPassword.call(UserModel, username)
+      .then((user) => {
+        _user = user;
+        return user.isPassword(password);
+      }).catch((err)=>{
+      }).then(() => {
+        return new Promise((resolve, reject) => {
+          resolve(_user);
+        })
+      }, err => {
+        return new Promise((_, reject) => {
+          reject(err);
+        })
+      });
   }
+
   _foundUser(user){
     this.app.emit("foundDigest", user);
   }
 
-  _isPassword = (password, err, user) => {
-    user.isPassword(password, this.passwordChecked.bind(this, user))
-  }
-  passwordChecked = (user, err, bool) => {
-    if (err){
-      this.app.emit('logInError', err);
-    } else {
-      this.app.emit('passwordChecked', bool, user);    
-    }
-  }
   _passwordDigest = (user, password, cb) => {
     bcrypt.hash(password, saltRounds, (err, hash)=>{
       if (err) {

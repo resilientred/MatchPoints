@@ -10,7 +10,6 @@ body {
 	border-radius: 3px;
 	width: 65%;
 	border: none;
-	background-color: #B36B89;
 	color: white;
 	letter-spacing: 1.1px;
 	align-self: center;
@@ -182,7 +181,9 @@ form {
 		}
 	}
 }
-
+.date {
+	margin-top: 30px;
+}
 .banner {
 	background-image: url("/images/tt_banner.jpg");
 	background-size: cover;
@@ -222,7 +223,7 @@ form {
 	}
 }
 
-.player-container > div > div{
+.player-container > .participant-reg > div{
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
@@ -288,8 +289,9 @@ form {
 	margin-top: 5%;
 	height: 400px;
 	overflow-y: scroll;
+			transition: all 0.4s ease-out 0.4s;
 	.list-title {
-		background-color: #B36B89;
+		background-color: #6B89B3;
 		width: 100%;
 		color: white;
 		padding: 35px 15px;
@@ -310,15 +312,21 @@ form {
 	}
 }
 
+.remove .list-title, .remove .player-buttons {
+	background-color: #6BB389;
+}
+.add .player-buttons {
+			background-color: #6B89B3;
+}
 @media (max-width: 920px){
 	.player-list {
 		width: 100%;
 		align-self: center;
+		transition: all 0.4s ease-out 0.4s;
 		li, .list-title {
 			width: 500px;
 		}
 	}
-
 
 }
 @keyframes added-player {
@@ -374,17 +382,21 @@ form {
 	align-items: center;
 	flex-direction: column;
 	flex-wrap: wrap;
-	width: 100%;
-	justify-content: space-between;
 
 	table {
-		border-top: 1px solid black;
-		border-bottom: 1px solid black;
-		padding: 5px 0;
 		font-size: 24px;
-		width: 80%;
-		tr {
-			border-bottom: 1px solid black;
+		min-width: 500px;
+		width: 100%;
+		font-family: 'varela round', sans-serif;
+		th {
+			color: white;
+			text-align: left;
+			background-color: #AD6BB3;
+			padding: 20px 15px;
+		}
+		td {
+			border-top: 1px solid #F1EFEF;
+			padding: 20px 15px;
 		}
 	}
 }

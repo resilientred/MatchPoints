@@ -27,14 +27,14 @@ class PlayerGroup extends React.Component {
         return <div className="participant-reg">
           <h3>Participant Registration</h3>
           <div>
-            <div>
+            <div className="add">
               <PlayerList players={this.props.allPlayers}
                           selectPlayer={this.props.selectPlayer}
                           selectedPlayer={this.props.selectedPlayer}
                           title="All Players"/>
               { this.button(this.props.addPlayer, "Add") }
             </div>
-            <div>
+            <div className="remove">
               <PlayerList players={this.props.addedPlayers} 
                           selectPlayer={this.props.selectRemovePlayer}
                           selectedPlayer={this.props.selectedRemovePlayer}

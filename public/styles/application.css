@@ -10,7 +10,6 @@ body {
   border-radius: 3px;
   width: 65%;
   border: none;
-  background-color: #B36B89;
   color: white;
   letter-spacing: 1.1px;
   align-self: center;
@@ -157,6 +156,9 @@ form {
     .banner-container div:last-child button:hover {
       background-color: rgba(33, 33, 33, 0.9); }
 
+.date {
+  margin-top: 30px; }
+
 .banner {
   background-image: url("/images/tt_banner.jpg");
   background-size: cover;
@@ -190,7 +192,7 @@ form {
     flex-direction: column;
     justify-content: center; }
 
-.player-container > div > div {
+.player-container > .participant-reg > div {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -245,9 +247,10 @@ form {
   margin: 0 auto;
   margin-top: 5%;
   height: 400px;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  transition: all 0.4s ease-out 0.4s; }
   .player-list .list-title {
-    background-color: #B36B89;
+    background-color: #6B89B3;
     width: 100%;
     color: white;
     padding: 35px 15px;
@@ -265,10 +268,17 @@ form {
     animation-timing-function: ease-out;
     border-bottom: 1px solid #F1EFEF; }
 
+.remove .list-title, .remove .player-buttons {
+  background-color: #6BB389; }
+
+.add .player-buttons {
+  background-color: #6B89B3; }
+
 @media (max-width: 920px) {
   .player-list {
     width: 100%;
-    align-self: center; }
+    align-self: center;
+    transition: all 0.4s ease-out 0.4s; }
     .player-list li, .player-list .list-title {
       width: 500px; } }
 
@@ -320,17 +330,20 @@ form {
   display: flex;
   align-items: center;
   flex-direction: column;
-  flex-wrap: wrap;
-  width: 100%;
-  justify-content: space-between; }
+  flex-wrap: wrap; }
   .grouping table {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    padding: 5px 0;
     font-size: 24px;
-    width: 80%; }
-    .grouping table tr {
-      border-bottom: 1px solid black; }
+    min-width: 500px;
+    width: 100%;
+    font-family: 'varela round', sans-serif; }
+    .grouping table th {
+      color: white;
+      text-align: left;
+      background-color: #AD6BB3;
+      padding: 20px 15px; }
+    .grouping table td {
+      border-top: 1px solid #F1EFEF;
+      padding: 20px 15px; }
 
 .select-action {
   display: flex;

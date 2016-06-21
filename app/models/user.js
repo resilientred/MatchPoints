@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt-as-promised';
 
 const Schema = mongoose.Schema;
 
@@ -12,16 +12,17 @@ let userSchema = new Schema({
     sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))}
 });
 
-userSchema.statics.resetSessionToken = function(user, callback){
+userSchema.statics.resetSessionToken = function(user){
     let token = URLSafeBase64.encode(crypto.randomBytes(32));
-    this.update({ "username": user.username}, {sessionToken: token}, callback);
+    return this.update({ "username": user.username}, {sessionToken: token});
+        
 }
 
-userSchema.methods.isPassword = function(password, cb){
-	bcrypt.compare(password, this.passwordDigest, cb);
+userSchema.methods.isPassword = function(password){
+	return bcrypt.compare(password, this.passwordDigest); 
 }
-userSchema.statics.findByUsernameAndPassword = function(username, callback){
-    this.findOne({ "username": username }, callback);
+userSchema.statics.findByUsernameAndPassword = function(username){
+    return this.findOne({ "username": username });
 }
 
 userSchema.statics.findBySessionToken = function(sessionToken, callback){
