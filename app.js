@@ -19,8 +19,8 @@ const app = express();
 const compiler = webpack(config);
 const csrfProtection = csrf({ cookie: true })
 const userMethods = new userMethoding(app);
-const sessionRoutes = sessionRouting(app, userMethods);
-const userRoutes = userRouting(app, userMethods);
+const sessionRoutes = sessionRouting(userMethods);
+const userRoutes = userRouting(userMethods);
 const clubRoutes = clubRouting(app).routes;
 
 

@@ -6,31 +6,35 @@ import cookieParser from 'cookie-parser';
 const router = express.Router();
 const parseUrlencoded = bodyParser.urlencoded({ extended: false });
 
-function userRoutes(app, userMethods){
+function userRoutes(userMethods){
 	return (
 		router.post("/new", parseUrlencoded, (req, res) => {
-	    let data = req.body;
-	    let newUser = new UserModel({
+	    var data = req.body;
+	    var newUser = new UserModel({
 	      organization: data.organization,
 	      username: data.username
 	    })
-	    app.once("savedUser", (user) => {
-	    	userMethods.logIn(res, user);
-	    })
-	    
-	    app.once("userError", (err)=>{
-	    	res.status(422).send(err);
-	    	res.end();
-	    })
-	    userMethods._passwordDigest(newUser, data.password, userMethods._saveUser);
-	  }).get("", (req, res) => {
-	  	userMethods.currentUser(req);
 
-	  	app.once("foundUser", (user)=>{
-	  		console.log("sending user back");
-	  		res.status(200).send(user);
-	  		res.end();
-	  	})
+	    UserModel.generatePasswordDigest(data.password)
+	    	.then((digest) => {
+	    		newUser.passwordDigest = digest;
+	    		return newUser.save();//do I need to call it?
+	    	}).catch((err)=>{
+	    		res.status(500).send(err);
+	    		res.end();
+	    	}).then((user)=> {
+	    		userMethods.logIn(res, user);
+	    	}).catch((err)=>{
+	    		res.status(422).send(err);
+	    		res.end();
+	    	})
+	    	// , userMethods._saveUser);
+	  }).get("", (req, res) => {
+	  	userMethods.currentUser(req)
+	  		.then((currentUser) => {
+	  			res.status(200).send(currentUser);
+		  		res.end();
+	  		});
 	  })
 	)
 };

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt-as-promised';
-
+const saltRounds = 10;
 const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
@@ -11,6 +11,7 @@ let userSchema = new Schema({
     passwordDigest: {type: String, required: true},
     sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))}
 });
+
 
 userSchema.statics.resetSessionToken = function(user){
     let token = URLSafeBase64.encode(crypto.randomBytes(32));
@@ -25,9 +26,13 @@ userSchema.statics.findByUsernameAndPassword = function(username){
     return this.findOne({ "username": username });
 }
 
-userSchema.statics.findBySessionToken = function(sessionToken, callback){
-    this.findOne({"sessionToken": sessionToken}, 
-                  {"organization": true, "username": true}, callback);
+userSchema.statics.findBySessionToken = function(sessionToken){
+    return this.findOne({"sessionToken": sessionToken}, 
+                  {"organization": true, "username": true});
+}
+
+userSchema.statics.generatePasswordDigest = function(password){
+    return bcrypt.hash(password, saltRounds);
 }
 let User = mongoose.model("User", userSchema);
 export default User;

@@ -1,18 +1,21 @@
 import UserModel from "../models/user";
-import bcrypt from 'bcrypt-as-promised';
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
-const saltRounds = 10;
+
+
 class UserMethods {
   constructor(app){
     this.app = app;
     this._currentUser = null;
   }
+
   currentUser = (req) => {
     if (this._currentUser) {
-      this.app.emit('foundUser', this._currentUser);
+      return new Promise((resolve, reject)=>{
+        resolve(this._currentUser);
+      });
     } else {
-      UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_session, this.foundUser);
+      return UserModel.findBySessionToken.call(UserModel, req.cookies.matchpoint_session);
     }
   }
   
@@ -23,16 +26,6 @@ class UserMethods {
     this.app.emit('foundUser', this._currentUser);
   }
   
-  _saveUser = (user, hash) => {
-    user.passwordDigest = hash;
-    user.save( (err, user) => {
-      if (err){
-        this.app.emit("userError");
-      } else {
-        this.app.emit("savedUser", user);
-      }
-    })
-  }
   logOut = () => {
     let user = this._currentUser; 
     this._currentUser = null;
@@ -72,20 +65,8 @@ class UserMethods {
       });
   }
 
-  _foundUser(user){
-    this.app.emit("foundDigest", user);
-  }
 
-  _passwordDigest = (user, password, cb) => {
-    bcrypt.hash(password, saltRounds, (err, hash)=>{
-      if (err) {
-        console.log(err);
-        res.status(422).send(err);
-      } else {
-        this._saveUser(user, hash);
-      }
-    })
-  };
+
 }
 
 

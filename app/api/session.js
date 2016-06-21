@@ -1,11 +1,11 @@
 import express from 'express';
 import BodyParser from 'body-parser';
 import UserModel from '../models/user';
-
+import UserMethods from "./userMethods";
 const router = express.Router();
 const parseUrlEncoded = BodyParser.urlencoded({extended: false});
 
-function sessionRoutes(app, userMethods) {
+function sessionRoutes(userMethods) {
   return (
     router.post("/new", parseUrlEncoded, (req, res) => {
       let data = req.body;
