@@ -1,5 +1,5 @@
 import React from 'react';
-import UserActions from '../../actions/userActions';
+import ClubActions from '../../actions/clubActions';
 import Form from "../../mixins/form";
 import CSRFStore from "../../stores/csrfStore";
 import ClientActions from "../../actions/clientActions";
@@ -48,5 +48,5 @@ let initialState = {
       _csrf: ""
 };
 // need to clear
-PlayerForm = Form(PlayerForm, initialState, CSRFStore, UserActions)
+PlayerForm = Form(PlayerForm, initialState, CSRFStore, ClubActions)
 export default PlayerForm;

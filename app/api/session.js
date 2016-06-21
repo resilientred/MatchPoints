@@ -1,18 +1,17 @@
 import express from 'express';
 import BodyParser from 'body-parser';
-import UserModel from '../models/user';
-import UserMethods from "./userMethods";
+import ClubModel from '../models/club';
 const router = express.Router();
 const parseUrlEncoded = BodyParser.urlencoded({extended: false});
 
-function sessionRoutes(userMethods) {
+function sessionRoutes(clubMethods) {
   return (
     router.post("/new", parseUrlEncoded, (req, res) => {
       let data = req.body;
 
-      userMethods._findUser(data.username, data.password)
-        .then((user) => {
-          userMethods.logIn(res, user);
+      clubMethods._findClub(data.username, data.password)
+        .then((club) => {
+          clubMethods.logIn(res, club);
         }).catch((err)=>{
           console.log("at root catching err");
           res.status(404).send("Username or password error.");
@@ -20,7 +19,7 @@ function sessionRoutes(userMethods) {
         });
     })
     .delete("/", (_, res) => {
-      userMethods.logOut().then(() => {
+      clubMethods.logOut().then(() => {
         res.clearCookie("matchpoint_session").send("");
         res.end();
       }).catch((err)=>{

@@ -1,41 +1,49 @@
 import mongoose from 'mongoose';
-
+import URLSafeBase64 from 'urlsafe-base64';
+import crypto from 'crypto';
+import bcrypt from 'bcrypt-as-promised';
+import shortid from 'shortid'
+mongoose.Promise = require('bluebird');
+const saltRounds = 10;
 const Schema = mongoose.Schema;
 
-let roundrobinSchema = new Schema({
-  date: { type: Date, default: Date.now },
-  numOfPlayers: { type: Number },
-  players: { type: Object },
-  schemata: { type: Object },
-  selectedSchema: { type: Object},
-  results: { type: Object },
-  finalized: { type: Boolean, default: false }
-});
-//has id property that filters out embedded documents
 
 let clubSchema = new Schema({
-  adminId: { type: Number, required: true },
+  username: {type: String, required: true, index: { unique: true }},
+  passwordDigest: {type: String, required: true},
+  sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))},
   clubName: { type: String, required: true },
   city: { type: String, required: true },
   state: { type: String, required: true },
-  roundrobins: [roundrobinSchema ]
+  id: { type: String, default: shortid.generate }
 });
-//also add location...
 
+clubSchema.statics.resetSessionToken = function(club){
+    let token = URLSafeBase64.encode(crypto.randomBytes(32));
+    return this.update({ "username": club.username}, {sessionToken: token});
+}
+
+clubSchema.methods.isPassword = function(password){
+  return bcrypt.compare(password, this.passwordDigest); 
+}
+clubSchema.statics.findByUsernameAndPassword = function(username){
+    return this.findOne({ "username": username });
+}
+
+clubSchema.statics.findBySessionToken = function(sessionToken){
+    console.log("At find by sT: " + sessionToken);
+    return this.findOne({"sessionToken": sessionToken}, 
+                  {"username": true});
+}
+
+clubSchema.statics.generatePasswordDigest = function(password){
+    return bcrypt.hash(password, saltRounds);
+}
 clubSchema.statics.findClub = function(id){
   return this.find({"_id": id});
 };
 
-clubSchema.statics.findRoundRobins = function(id, callback){
-  return this.find({"_id": id}, {"roundrobins": true})
-};
-clubSchema.statics.finalizeResult = function(clubId, roundrobinId){
-  return this.update({"_id": clubId, "roundrobinId": roundrobinId})
-}
-clubSchema.methods.deleteRoundRobin = function(clubId, roundrobinId){
-  return this.roundrobins.id(roundrobinId).remove(); //what is being returned from this?
-  // this.save(); do we need to save this?
-};
+
 let Club = mongoose.model('Club', clubSchema);
 
 export default Club; 

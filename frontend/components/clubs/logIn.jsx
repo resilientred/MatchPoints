@@ -1,8 +1,8 @@
 import React from 'react';
 import Form from "../../mixins/form";
-import UserActions from "../../actions/userActions";
+import ClubActions from "../../actions/clubActions";
 import CSRFStore from "../../stores/csrfStore";
-import UserStore from "../../stores/userStore";
+import ClubStore from "../../stores/clubStore";
 import { browserHistory } from "react-router";
 class LogIn extends React.Component {
     constructor(props) {
@@ -15,10 +15,10 @@ class LogIn extends React.Component {
     	_updateField: React.PropTypes.func
     }
     componentDidMount() {
-      this.cuListener = UserStore.addListener(this.redirect);
+      this.cuListener = ClubStore.addListener(this.redirect);
     }
     redirect() {
-      if (UserStore.getCurrentUser()){
+      if (ClubStore.getCurrentClub()){
         browserHistory.push("/club");
       }
     }
@@ -27,7 +27,7 @@ class LogIn extends React.Component {
     }
     render() {
         return <div className="forms">
-          <form onSubmit={this.props._handleSubmit.bind(null, UserActions.logIn) }>
+          <form onSubmit={this.props._handleSubmit.bind(null, ClubActions.logIn) }>
             <h3>Log In</h3>
             { this.props._csrf() }
              <div>
@@ -52,5 +52,5 @@ let fields = {
 	password: ""
 };
 
-LogIn = Form(LogIn, fields, CSRFStore, UserActions);
+LogIn = Form(LogIn, fields, CSRFStore, ClubActions);
 export default LogIn;

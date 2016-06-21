@@ -1,8 +1,8 @@
 import React from 'react';
 import { browserHistory } from "react-router";
 
-export default function userForms(Component, fields, store, action) {
-  const userFormMixins = React.createClass({
+export default function clubForms(Component, fields, store, action) {
+  const clubFormMixins = React.createClass({
   getInitialState(){
     return Object.assign({}, fields);
   },
@@ -39,5 +39,5 @@ export default function userForms(Component, fields, store, action) {
   }
   });
 
-  return userFormMixins;
+  return clubFormMixins;
 }

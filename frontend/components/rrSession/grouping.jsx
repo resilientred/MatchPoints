@@ -1,12 +1,17 @@
-import React from 'react';
-import ParticipantGroup from './participantGroup';
+import React from 'react'
+import ParticipantGroup from './participantGroup'
+import CSRFStore from "../../stores/csrfStore"
+import ClubActions from "../../actions/clubActions"
+
+//need to fetch csrf..
 class Grouping extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           schemata: [],
           rangeOfPlayers: [6, 5, 4],
-          selectedGroup: []
+          selectedGroup: [],
+          _csrf: null
         }
     }
 
@@ -42,8 +47,14 @@ class Grouping extends React.Component {
       this.setState({ 
         schemata: schemata || [],
         selectedGroup: schemata.length ? schemata[0] : ""
-      })   
+      })
+      this.csrfListener = CSRFStore.addListener(_fetchedCSRF);
+      ClubActions.fetchCSRF();
     }
+
+    // _fetchedCSRF = () => {
+    //   this.setState({ _csrf: CSRFStore.getCSRF() });
+    // }
 
     schemata() {
       if (this.state.schemata.length){
@@ -75,12 +86,13 @@ class Grouping extends React.Component {
       var self = this;
       this.totalPlayerAdded = 0;
       return <div className="grouping">
-        { this.schemata() }
         <button onClick={this.props.saveSession.bind(null, 
                           this.state.schemata, 
                           this.state.rangeOfPlayer,
-                          this.state.selectedGroup)
+                          this.state.selectedGroup,
+                          this.state._csrf)
                         }>Save</button>
+        { this.schemata() }
         { 
            this.state.selectedGroup.map(function(numPlayers, i){
               this.totalPlayerAdded += +numPlayers;

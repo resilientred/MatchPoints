@@ -9,18 +9,18 @@ import cookieParser from 'cookie-parser';
 
 import config from './webpack.config.js';
 import routes from './app/api/players';
-import userMethoding from './app/api/userMethods';
-import userRouting from "./app/api/userRoutes";
+import clubMethoding from './app/api/clubMethods';
+import clubRouting from "./app/api/club";
 import sessionRouting from "./app/api/session";
-import clubRoutes from "./app/api/club";
+// import clubRoutes from "./app/api/club";
 
 const port = process.env.PORT || 3000;
 const app = express();
 const compiler = webpack(config);
 const csrfProtection = csrf({ cookie: true })
-const userMethods = new userMethoding(app);
-const sessionRoutes = sessionRouting(userMethods);
-const userRoutes = userRouting(userMethods);
+const clubMethods = new clubMethoding(app);
+const sessionRoutes = sessionRouting(clubMethods);
+const clubRoutes = clubRouting(clubMethods);
 
 
 mongoose.connect('mongodb://localhost/roundrobindb');
@@ -44,7 +44,7 @@ app.use(webpackMiddleware(compiler));
 app.use('/api', routes);
 app.use('/api/club', clubRoutes);
 app.use('/session', sessionRoutes);
-app.use('/user', userRoutes);
+// app.use('/user', userRoutes);
 app.use('/*', (req, res, next) => {
   let origUrl = req.originalUrl;
   let redirectURL = origUrl.match(/^(\/login|\/signup|\/club|\/players)/);

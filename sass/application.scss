@@ -317,18 +317,11 @@ form {
 
 .participant-reg {
 	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	& > div {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-
-		& > div {
+	flex-direction: column;		
+		& > div > div {
 			display: flex;
 			flex-direction: column;
 		}
-	}
 }
 
 .player-list {

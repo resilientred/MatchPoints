@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link, browserHistory } from 'react-router';
-import UserActions from '../actions/userActions';
-import UserStore from "../stores/userStore";
+import ClubActions from '../actions/clubActions';
+import ClubStore from "../stores/clubStore";
 
 export default class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.displayName = 'NavBar';
-        this.state = { currentUser: null, tab: 0 };
+        this.state = { currentClub: null, tab: 0 };
     }
     componentDidMount() {
-        this.cuListener = UserStore.addListener(this.setCurrentUser);
-        if (!this.state.currentUser){
-            UserActions.fetchCurrentUser();
+        this.cuListener = ClubStore.addListener(this.setCurrentClub);
+        if (!this.state.currentClub){
+            ClubActions.fetchCurrentClub();
         }
     }
 
@@ -22,18 +22,19 @@ export default class NavBar extends React.Component {
     setTab(tabNum){
         this.setState({ tab: tabNum });
     }
-    setCurrentUser = () => {
-        var currentUser = UserStore.getCurrentUser();
-        if (currentUser){
-          this.setState({currentUser: currentUser, tab: 0});
+    setCurrentClub = () => {
+        var currentClub = ClubStore.getCurrentClub();
+        if (currentClub){
+          this.setState({currentClub: currentClub, tab: 0});
         } else {
-          if (this.state.currentUser) this.setState({currentUser: null});
+          if (this.state.currentClub) this.setState({currentClub: null});
           browserHistory.push("/");
         }
     }
     rightNav() {
-        if (this.state.currentUser){
-            return  <ul><li>Welcome, { this.state.currentUser.username }</li>
+        debugger;
+        if (this.state.currentClub){
+            return  <ul><li>Welcome, { this.state.currentClub.username }</li>
                 <li className="links" onClick={this.logOut}>Log Out</li></ul>;
         } else {
             return <ul>
@@ -56,7 +57,7 @@ export default class NavBar extends React.Component {
     }
 
     logOut() {
-        UserActions.logOut();
+        ClubActions.logOut();
     }
 
     render() {

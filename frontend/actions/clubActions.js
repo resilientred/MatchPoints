@@ -8,30 +8,30 @@ export default {
       success: "fetchedCSRF"
     })
   },
-  fetchCurrentUser() {
+  fetchCurrentClub() {
     ApiUtil.apiService({
-      url: "/user",
+      url: "/api/club",
       success: "loggedIn"
     })
   },
-  logIn(user) {
-    let _csrf = user._csrf;
-    delete user._csrf;
+  logIn(club) {
+    let _csrf = club._csrf;
+    delete club._csrf;
     ApiUtil.apiCSRFService({
       method: "POST",
       url: "/session/new",
-      data: user,
+      data: club,
       success: "loggedIn"
     }, _csrf)
   },
 
-  signUp(user) {
-    let _csrf = user._csrf;
-    delete user._csrf;
+  signUp(club) {
+    let _csrf = club._csrf;
+    delete club._csrf;
     ApiUtil.apiCSRFService({
       method: "POST",
-      url: "/user/new",
-      data: user,
+      url: "/api/club/new",
+      data: club,
       success: "loggedIn"
     }, _csrf)
   },
