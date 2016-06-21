@@ -13,6 +13,7 @@ class PlayerGroup extends React.Component {
       removePlayer: React.PropTypes.func.isRequired,
       allPlayers: React.PropTypes.object.isRequired,
       addedPlayers: React.PropTypes.object.isRequired,
+      hiddenPlayers: React.PropTypes.object.isRequired,
       selectedPlayer: React.PropTypes.object.isRequired,
       selectedRemovePlayer: React.PropTypes.object.isRequired
     }
@@ -25,12 +26,12 @@ class PlayerGroup extends React.Component {
 
     render() {
         return <div className="participant-reg">
-          <h3>Participant Registration</h3>
           <div>
             <div className="add">
               <PlayerList players={this.props.allPlayers}
                           selectPlayer={this.props.selectPlayer}
                           selectedPlayer={this.props.selectedPlayer}
+                          hiddenPlayers={this.props.hiddenPlayers}
                           title="All Players"/>
               { this.button(this.props.addPlayer, "Add") }
             </div>
@@ -38,6 +39,7 @@ class PlayerGroup extends React.Component {
               <PlayerList players={this.props.addedPlayers} 
                           selectPlayer={this.props.selectRemovePlayer}
                           selectedPlayer={this.props.selectedRemovePlayer}
+                          hiddenPlayers={{}}
                           title="Selected Players"/>
               { this.button(this.props.removePlayer, "Remove") }
             </div>

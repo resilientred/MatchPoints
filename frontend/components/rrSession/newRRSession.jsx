@@ -14,7 +14,6 @@ import CSRFStore from "../../stores/csrfStore";
 import { browserHistory } from "react-router";
 import Participants from "./participants";
 import Grouping from "./grouping";
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 
 export default class NewRRSession extends React.Component {
@@ -28,6 +27,7 @@ export default class NewRRSession extends React.Component {
       numPlayers: 0,
       selectedPlayerTarget: null,
       selectedRemovePlayerTarget: null,
+      hiddenPlayers: {},
       allPlayers: {},
       addedPlayers: {},
       selectedPlayer: {},
@@ -70,30 +70,37 @@ export default class NewRRSession extends React.Component {
   }
 
   addPlayer = () => {
-    let curPlayer = this.state.selectedPlayer;
-    let tempPlayers = this.state.addedPlayers;
+    var curPlayer = this.state.selectedPlayer,
+        tempPlayers = this.state.addedPlayers;
     if (tempPlayers[curPlayer._id]) return;
-
     tempPlayers[curPlayer._id] = curPlayer;
+
+    this.state.selectedPlayerTarget.className += " hidden-name";
+    this.state.hiddenPlayers[curPlayer._id] = true;
     this.setState({ 
       addedPlayers: this.state.addedPlayers, 
       numPlayers: ++this.state.numPlayers
     });
+    // delete this.state.allPlayers[curPlayer._id];
   }
 
   removePlayer = () => {
-    let curPlayer = this.state.selectedRemovePlayer;
-    let tempPlayers = this.state.addedPlayers;
+    var curPlayer = this.state.selectedRemovePlayer;
+    var tempPlayers = this.state.addedPlayers;
     delete tempPlayers[curPlayer._id];
 
+    delete this.state.hiddenPlayers[curPlayer._id];
     this.setState({ 
       addedPLayers: tempPlayers,
       numPlayers: --this.state.numPlayers
     });
   }
 
-  selectPlayer = (player) => {
-    this.setState({selectedPlayer: player})
+  selectPlayer = (player, e) => {
+    this.setState({
+      selectedPlayer: player, 
+      selectedPlayerTarget: e.target
+    });
   }
 
   selectRemovePlayer = (player) => {
@@ -138,11 +145,13 @@ export default class NewRRSession extends React.Component {
     //simply say not not enough player or something
   }
   newPlayer = () => {
-    return this.state.tab === 0 ? <button onClick={this.openModal.bind(this, "newPlayerModal")}>New Player</button> :
-         "";
+    return this.state.tab === 0 ? 
+        <button className="new-player-modal" onClick={this.openModal.bind(this, "newPlayerModal")}>
+          New Player
+        </button> : "";
   }
-  render = () => {
-    let allPlayers = this.state.allPlayers,
+  render(){
+    var allPlayers = this.state.allPlayers,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
         groupingCallbacks = {
                 selectPlayer: this.selectPlayer, 
@@ -150,13 +159,20 @@ export default class NewRRSession extends React.Component {
                 addPlayer: this.addPlayer,
                 removePlayer: this.removePlayer
               };
-    let { modalIsOpen, tab, a, date, numPlayers, b, c, ...states} = this.state;
+    var { modalIsOpen, tab, a, date, numPlayers, b, c, ...states} = this.state;
+    var title, grouping;
+
+    if (tab === 1){
+      title = "Grouping";
+      grouping =  <Grouping numPlayers={numPlayers} 
+                          addedPlayers={addedPlayers} 
+                          saveSession={this.saveSession}/>
+    } else {
+      title = "Participant Registration";
+      grouping = <Participants {...states} {...groupingCallbacks} />    
+    }
 
     return (
-      <ReactCSSTransitionGroup transitionName="new-session" transitionAppear={true} 
-                              transitionAppearTimeout={400}
-                              transitionEnterTimeout={500}
-                              transitionLeaveTimeout={500}>
         <div className="player-container">
           <ul className="player-nav">
             <li>
@@ -177,16 +193,10 @@ export default class NewRRSession extends React.Component {
               date={this.state.date}
               onChange={this.handleChange.bind(null, "date")}/></div>
           <h3>Organization: To be inserted</h3>
-          {
-            tab === 1 ?
-                <Grouping numPlayers={numPlayers} 
-                          addedPlayers={addedPlayers} 
-                          saveSession={this.saveSession}/>
-                :
-                <Participants {...states} {...groupingCallbacks} />         
-          }
+          <h3>{title}</h3>
+          { this.newPlayer() }
+          { grouping }
                 
-          {this.newPlayer()}
           <Modal isOpen={this.state.newPlayerModal} 
                   onRequestClose={this.closeModal.bind(this, "newPlayerModal")}
                   style={NewPlayerStyle}>
@@ -195,7 +205,6 @@ export default class NewRRSession extends React.Component {
                   }/>
           </Modal>
         </div>
-      </ReactCSSTransitionGroup>
     )
   }
 }

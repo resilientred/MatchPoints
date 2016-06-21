@@ -12,7 +12,7 @@ import routes from './app/api/players';
 import userMethoding from './app/api/userMethods';
 import userRouting from "./app/api/userRoutes";
 import sessionRouting from "./app/api/session";
-import clubRouting from "./app/api/club";
+import clubRoutes from "./app/api/club";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -21,7 +21,6 @@ const csrfProtection = csrf({ cookie: true })
 const userMethods = new userMethoding(app);
 const sessionRoutes = sessionRouting(userMethods);
 const userRoutes = userRouting(userMethods);
-const clubRoutes = clubRouting(app).routes;
 
 
 mongoose.connect('mongodb://localhost/roundrobindb');

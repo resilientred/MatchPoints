@@ -3,35 +3,35 @@ import React from 'react';
 class PlayerList extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = {
-			selectedPlayer: {}
-		}
 	}
 
 	static PropTypes = {
 		players: React.PropTypes.object.isRequired,
-		button: React.PropTypes.object.isRequired
+		button: React.PropTypes.object.isRequired,
+    hiddenPlayers: React.PropTypes.object
 	}
 
-	render = () => {
-		let players = this.props.players;
+	render() {
+		var players = this.props.players, playerLists = [];
+
+    for (let _id in players){
+      var hideClassName = this.props.hiddenPlayers[_id] ? " hidden-name" : "";
+
+      if (players.hasOwnProperty(_id)){
+        let cur_player = players[_id];
+        playerLists.push(<li key={_id} 
+                        onClick={this.props.selectPlayer.bind(null, cur_player)}
+                        className={ (_id === this.props.selectedPlayer._id ? 
+                                    "selected" : "not-selected") + hideClassName}>
+                          <div>{cur_player.name}</div>
+                          <div>{cur_player.rating}</div>
+                    </li>);
+      }
+    }
 		return (
 			<div className="player-list">
         <div className="list-title">{this.props.title}</div>
-				<ul>
-        {
-          Object.keys(players).map ( (_id) => {
-          	let cur_player = players[_id];
-            return <li key={_id} 
-            						onClick={this.props.selectPlayer.bind(null, cur_player)}
-                        className={ _id === this.props.selectedPlayer._id ? 
-                                    "selected" : "not-selected" }>
-            							<div>{cur_player.name}</div>
-                          <div>{cur_player.rating}</div>
-            				</li>;
-            })
-        }				
-       	</ul>
+				<ul> {playerLists} </ul>
 			</div>
 			);
 	}

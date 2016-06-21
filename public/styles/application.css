@@ -1,21 +1,65 @@
+@keyframes added-player {
+  0% {
+    opacity: 0;
+    width: 0px;
+    margin-right: 200px; }
+  100% {
+    opacity: 1;
+    width: 280px;
+    margin-right: 0px; } }
+
+@-webkit-keyframes added-player {
+  0% {
+    opacity: 0;
+    width: 0px;
+    margin-right: 280px; }
+  100% {
+    opacity: 1;
+    width: 280px;
+    margin-right: 0px; } }
+
+@-moz-keyframes added-player {
+  0% {
+    opacity: 0;
+    width: 0px; }
+  100% {
+    opacity: 1;
+    width: 280px; } }
+
+@-o-keyframes added-player {
+  0% {
+    opacity: 0;
+    width: 0px; }
+  100% {
+    opacity: 1;
+    width: 280px; } }
+
+@keyframes fade-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-webkit-keyframes fade-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-moz-keyframes fade-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-o-keyframes fade-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
 body {
   min-height: 800px; }
-
-.player-buttons {
-  cursor: pointer;
-  font-family: 'Titillium Web', sans-serif;
-  padding: 10px 15px;
-  font-size: 20px;
-  font-weight: 700;
-  border-radius: 3px;
-  width: 65%;
-  border: none;
-  color: white;
-  letter-spacing: 1.1px;
-  align-self: center;
-  margin-top: 5px; }
-  .player-buttons:hover {
-    background-color: rgba(39, 31, 51, 0.8); }
 
 select {
   -webkit-appearance: none;
@@ -91,15 +135,32 @@ form {
     form input[type="submit"]:hover {
       background-color: rgba(100, 100, 100, 0.9); }
 
+.new-player-modal {
+  background-color: #B36B89;
+  color: white;
+  cursor: pointer;
+  padding: 20px 20px;
+  border-radius: 4px; }
+  .new-player-modal:hover {
+    -webkit-transition: all 0.4s ease-out 0.1s;
+    transition: all 0.4s ease-out 0.1s;
+    -o-transition: all 0.4s ease-out 0.1s;
+    -moz-transition: all 0.4s ease-out 0.1s;
+    background-color: #724558; }
+
 .links {
-  color: white; }
+  color: white;
+  cursor: pointer; }
 
 .links:hover {
   color: #333333;
-  transition: color 0.5s ease-out 0.5s;
-  -o-transition: color 0.5s ease-out 0.5s;
-  -webkit-transition: color 0.5s ease-out 0.5s;
-  -moz-transition: color 0.5s ease-out 0.5s; }
+  -webkit-transition: color 0.5s ease-out 0.2s;
+  transition: color 0.5s ease-out 0.2s;
+  -o-transition: color 0.5s ease-out 0.2s;
+  -moz-transition: color 0.5s ease-out 0.2s; }
+
+.active-tab {
+  color: #333333; }
 
 .nav-bar {
   color: white;
@@ -182,7 +243,19 @@ form {
   width: 70%;
   min-width: 600px;
   margin: 5% auto 0 auto;
-  min-height: 700px; }
+  min-height: 700px;
+  animation-name: fade-in;
+  -moz-animation-name: fade-in;
+  -webkit-animation-name: fade-in;
+  -o-animation-name: fade-in;
+  animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -webkit-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-timing-function: ease-out;
+  -moz-animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
+  -o-animation-timing-function: ease-out; }
   .player-container h3 {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -200,26 +273,26 @@ form {
   margin-top: 5px; }
 
 .selected {
-  -webkit-transition: all 0.4s ease-out 0.4s;
-  transition: all 0.4s ease-out 0.4s;
-  -o-transition: all 0.4s ease-out 0.4s;
-  -moz-transition: all 0.4s ease-out 0.4s;
+  -webkit-transition: all 0.6s ease-out 0.2s;
+  transition: all 0.6s ease-out 0.2s;
+  -o-transition: all 0.6s ease-out 0.2s;
+  -moz-transition: all 0.6s ease-out 0.2s;
   background-color: #B3896B;
   color: white; }
 
 .not-selected {
-  -webkit-transition: all 0.4s ease-out 0.4s;
-  transition: all 0.4s ease-out 0.4s;
-  -o-transition: all 0.4s ease-out 0.4s;
-  -moz-transition: all 0.4s ease-out 0.4s;
+  -webkit-transition: all 0.6s ease-out 0.2s;
+  transition: all 0.6s ease-out 0.2s;
+  -o-transition: all 0.6s ease-out 0.2s;
+  -moz-transition: all 0.6s ease-out 0.2s;
   background-color: white;
   color: #989898; }
 
 .not-selected:hover {
-  -webkit-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
+  -webkit-transition: all 0.4s ease-out 0.1s;
+  transition: all 0.4s ease-out 0.1s;
+  -o-transition: all 0.4s ease-out 0.1s;
+  -moz-transition: all 0.4s ease-out 0.1s;
   color: black;
   background-color: #CCC; }
 
@@ -254,8 +327,18 @@ form {
     width: 100%;
     color: white;
     padding: 35px 15px;
+    animation-name: added-player;
+    -moz-animation-name: added-player;
+    -webkit-animation-name: added-player;
+    -o-animation-name: added-player;
     animation-duration: 1s;
-    animation-timing-function: ease-out; }
+    -moz-animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    -o-animation-duration: 1s;
+    animation-timing-function: ease-out;
+    -moz-animation-timing-function: ease-out;
+    -webkit-animation-timing-function: ease-out;
+    -o-animation-timing-function: ease-out; }
   .player-list li {
     width: 280px;
     display: flex;
@@ -264,9 +347,50 @@ form {
     padding: 20px 15px;
     cursor: pointer;
     animation-name: added-player;
+    -moz-animation-name: added-player;
+    -webkit-animation-name: added-player;
+    -o-animation-name: added-player;
     animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    -o-animation-duration: 1s;
     animation-timing-function: ease-out;
+    -moz-animation-timing-function: ease-out;
+    -webkit-animation-timing-function: ease-out;
+    -o-animation-timing-function: ease-out;
     border-bottom: 1px solid #F1EFEF; }
+
+.hidden-name {
+  opacity: 0;
+  transform: translateX(-300px);
+  display: none;
+  margin-bottom: -61px;
+  position: relative;
+  transition-duration: 1.0s;
+  -moz-transition-duration: 1.0s;
+  -webkit-transition-duration: 1.0s;
+  transition-timing-function: ease-out;
+  -moz-transition-timing-function: ease-out;
+  -webkit-transition-timing-function: ease-out; }
+
+.player-buttons {
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif;
+  padding: 10px 15px;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 3px;
+  width: 65%;
+  border: none;
+  color: white;
+  letter-spacing: 1.1px;
+  align-self: center;
+  margin-top: 5px; }
+  .player-buttons:hover {
+    -webkit-transition: all 0.4s ease-out 0.1s;
+    transition: all 0.4s ease-out 0.1s;
+    -o-transition: all 0.4s ease-out 0.1s;
+    -moz-transition: all 0.4s ease-out 0.1s; }
 
 .remove .list-title, .remove .player-buttons {
   background-color: #6BB389; }
@@ -274,37 +398,13 @@ form {
 .add .player-buttons {
   background-color: #6B89B3; }
 
-@media (max-width: 920px) {
-  .player-list {
-    width: 100%;
-    align-self: center;
-    transition: all 0.4s ease-out 0.4s; }
-    .player-list li, .player-list .list-title {
-      width: 500px; } }
+.add .player-buttons:hover {
+  background-color: #859EC0;
+  color: #666; }
 
-@keyframes added-player {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-@-webkit-keyframes added-player {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-@-moz-keyframes added-player {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-@-o-keyframes added-player {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
+.remove .player-buttons:hover {
+  background-color: #8DC4A4;
+  color: #666; }
 
 .player-nav {
   position: relative;
@@ -361,19 +461,18 @@ form {
     color: black; }
   .select-action li a:hover {
     background-color: #B4ACC0;
-    -webkit-transition: background-color 500ms ease-out 0.5s;
-    -moz-transition: background-color 500ms ease-out 0.5s;
-    -o-transition: background-color 500ms ease-out 0.5s;
-    transition: background-color 500ms ease-out 0.5s; }
+    -webkit-transition: all 0.4s ease-out 0.1s;
+    transition: all 0.4s ease-out 0.1s;
+    -o-transition: all 0.4s ease-out 0.1s;
+    -moz-transition: all 0.4s ease-out 0.1s; }
 
-.new-session-appear {
-  opacity: 0.01;
-  background-color: black; }
-
-.new-session-appear.new-session-appear-active {
-  opacity: 1;
-  background-color: white;
-  -webkit-transition: all 0.5s ease-out 0.5s;
-  -moz-transition: all 0.5s ease-out 0.5s;
-  -o-transition: all 0.5s ease-out 0.5s;
-  transition: all 0.5s ease-out 0.5s; }
+@media (max-width: 920px) {
+  .player-list {
+    width: 100%;
+    align-self: center;
+    -webkit-transition: all 0.6s ease-out 0.2s;
+    transition: all 0.6s ease-out 0.2s;
+    -o-transition: all 0.6s ease-out 0.2s;
+    -moz-transition: all 0.6s ease-out 0.2s; }
+    .player-list li, .player-list .list-title {
+      width: 500px; } }

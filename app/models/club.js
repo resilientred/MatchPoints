@@ -22,19 +22,19 @@ let clubSchema = new Schema({
 });
 //also add location...
 
-clubSchema.statics.findClub = function(id, callback){
-  return this.find({"_id": id}, callback);
+clubSchema.statics.findClub = function(id){
+  return this.find({"_id": id});
 };
 
 clubSchema.statics.findRoundRobins = function(id, callback){
-  return this.find({"_id": id}, {"roundrobins": true}, callback)
+  return this.find({"_id": id}, {"roundrobins": true})
 };
-clubSchema.statics.finalizeResult = function(clubId, roundrobinId, callback){
-  return this.update({"_id": clubId, "roundrobinId": roundrobinId}, callback)
+clubSchema.statics.finalizeResult = function(clubId, roundrobinId){
+  return this.update({"_id": clubId, "roundrobinId": roundrobinId})
 }
-clubSchema.methods.deleteRoundRobin = function(clubId, roundrobinId, callback){
-  this.roundrobins.id(roundrobinId).remove();
-  this.save(callback);
+clubSchema.methods.deleteRoundRobin = function(clubId, roundrobinId){
+  return this.roundrobins.id(roundrobinId).remove(); //what is being returned from this?
+  // this.save(); do we need to save this?
 };
 let Club = mongoose.model('Club', clubSchema);
 

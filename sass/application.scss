@@ -1,23 +1,77 @@
+@mixin reg-transition($anim-part, $duration, $curve, $delay){
+	-webkit-transition: $anim-part $duration $curve $delay;
+	transition: $anim-part $duration $curve $delay;
+	-o-transition: $anim-part $duration $curve $delay;
+	-moz-transition: $anim-part $duration $curve $delay;
+}
+
+@mixin reg-anim ($name, $duration, $timing) {
+		animation-name: $name;
+		-moz-animation-name: $name;
+		-webkit-animation-name: $name;
+		-o-animation-name: $name;
+		animation-duration: $duration;
+		-moz-animation-duration: $duration;
+		-webkit-animation-duration: $duration;
+		-o-animation-duration: $duration;
+		animation-timing-function: $timing;
+		-moz-animation-timing-function: $timing;
+		-webkit-animation-timing-function: $timing;
+		-o-animation-timing-function: $timing;
+}
+
+@mixin selected {@include reg-transition(all, 0.6s, ease-out, 0.2s);}
+
+@mixin hover {@include reg-transition(all, 0.4s, ease-out, 0.1s);}
+
+@keyframes added-player {
+	0% { opacity: 0;
+			 width: 0px; 			 margin-right: 200px;}
+	100% {opacity: 1; 
+				width: 280px;			 margin-right: 0px;}
+}
+
+@-webkit-keyframes added-player {
+	0% { opacity: 0;
+			 width: 0px; 
+			 margin-right: 280px;}
+	100% {opacity: 1; 
+				width: 280px;
+				margin-right: 0px;}
+}
+@-moz-keyframes added-player {
+	0% { opacity: 0;
+			 width: 0px; }
+	100% {opacity: 1; 
+				width: 280px;}
+}
+@-o-keyframes added-player {
+	0% { opacity: 0;
+			 width: 0px; }
+	100% {opacity: 1; 
+				width: 280px;}
+}
+
+@keyframes fade-in {
+	0% {opacity: 0; }
+	100% {opacity: 1;}
+}
+@-webkit-keyframes fade-in {
+	0% {opacity: 0; }
+	100% {opacity: 1;}
+}
+@-moz-keyframes fade-in {
+	0% {opacity: 0; }
+	100% {opacity: 1;}
+}
+@-o-keyframes fade-in {
+	0% {opacity: 0; }
+	100% {opacity: 1;}
+}
 body {
 	min-height: 800px;
 }
-.player-buttons {
-	cursor: pointer;
-	font-family: 'Titillium Web', sans-serif;
-	padding: 10px 15px;
-	font-size: 20px;
-	font-weight: 700;
-	border-radius: 3px;
-	width: 65%;
-	border: none;
-	color: white;
-	letter-spacing: 1.1px;
-	align-self: center;
-	margin-top: 5px;
-	&:hover {
-		background-color: rgba(39, 31, 51, 0.8);
-	}
-}
+
 select {
 	-webkit-appearance: none;
   -moz-appearance: none;
@@ -103,19 +157,31 @@ form {
 		}
 
 }
-
-.links {
-			color: white;
+.new-player-modal {
+	background-color: #B36B89;
+	color: white;
+	cursor: pointer;
+	padding: 20px 20px;
+	border-radius: 4px;
+	&:hover {
+			@include hover;
+			background-color: #724558;
+		}
 }
-
+.links {
+	color: white;
+	cursor: pointer;
+}
 
 .links:hover {
 	color: #333333;
-	transition: color 0.5s ease-out 0.5s;
-	-o-transition: color 0.5s ease-out 0.5s;
-	-webkit-transition: color 0.5s ease-out 0.5s;
-	-moz-transition: color 0.5s ease-out 0.5s;
+	@include reg-transition(color, 0.5s, ease-out, 0.2s)
 }
+.active-tab {
+	color: #333333;
+}
+
+
 .nav-bar {
 	color: white;
 	background-color: #896bb3;
@@ -136,7 +202,7 @@ form {
 		ul {
 			display: flex;
 			justify-content: space-around;
-				font-size: 22px;
+			font-size: 22px;
 			li {
 				font-family: 'varela round', sans-serif;
 				margin-left: 15px;
@@ -210,6 +276,7 @@ form {
 	min-width: 600px;
 	margin: 5% auto 0 auto;
 	min-height: 700px;
+	@include reg-anim(fade-in, 1s, ease-out);
 
 	h3 {
 		margin-top: 20px;
@@ -230,18 +297,6 @@ form {
 	justify-content: space-around;
 	margin-top: 5px;
 }
-
-@mixin selected {
-	-webkit-transition: all 0.4s ease-out 0.4s;
-	transition: all 0.4s ease-out 0.4s;
-	-o-transition: all 0.4s ease-out 0.4s;
-	-moz-transition: all 0.4s ease-out 0.4s;}
-
-@mixin hover {
-	-webkit-transition: all 0.2s ease-out;
-	transition: all 0.2s ease-out;
-	-o-transition: all 0.2s ease-out;
-	-moz-transition: all 0.2s ease-out;}
 
 .selected {
 	@include selected;
@@ -289,14 +344,15 @@ form {
 	margin-top: 5%;
 	height: 400px;
 	overflow-y: scroll;
-			transition: all 0.4s ease-out 0.4s;
+	transition: all 0.4s ease-out 0.4s;
+
 	.list-title {
 		background-color: #6B89B3;
 		width: 100%;
 		color: white;
-		padding: 35px 15px;
-		animation-duration: 1s;
-		animation-timing-function: ease-out;
+		padding: 35px 15px;	
+		@include reg-anim(added-player, 1s, ease-out);
+
 	}
 	li {
 		width: 280px;
@@ -305,47 +361,58 @@ form {
 		justify-content: space-between;
 		padding: 20px 15px;
 		cursor: pointer;
-		animation-name: added-player;
-		animation-duration: 1s;
-		animation-timing-function: ease-out;
+		@include reg-anim(added-player, 1s, ease-out);
 		border-bottom: 1px solid #F1EFEF;
 	}
 }
+.hidden-name {
+	opacity: 0;
+	transform: translateX(-300px);
+	display: none;
+	margin-bottom: -61px;
+	position: relative;
 
+	transition-duration: 1.0s;
+	-moz-transition-duration: 1.0s;
+	-webkit-transition-duration: 1.0s;
+	transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+}
+
+.player-buttons {
+	cursor: pointer;
+	font-family: 'Titillium Web', sans-serif;
+	padding: 10px 15px;
+	font-size: 20px;
+	font-weight: 700;
+	border-radius: 3px;
+	width: 65%;
+	border: none;
+	color: white;
+	letter-spacing: 1.1px;
+	align-self: center;
+	margin-top: 5px;
+
+	&:hover {
+		@include hover;
+	}
+}
 .remove .list-title, .remove .player-buttons {
 	background-color: #6BB389;
 }
 .add .player-buttons {
 			background-color: #6B89B3;
 }
-@media (max-width: 920px){
-	.player-list {
-		width: 100%;
-		align-self: center;
-		transition: all 0.4s ease-out 0.4s;
-		li, .list-title {
-			width: 500px;
-		}
-	}
-
+.add .player-buttons:hover {
+	background-color: #859EC0;
+	color: #666;
 }
-@keyframes added-player {
-	0% { opacity: 0; }
-	100% {opacity: 1; }
+.remove .player-buttons:hover {
+	background-color: #8DC4A4;
+	color: #666;
 }
 
-@-webkit-keyframes added-player {
-	0% { opacity: 0; }
-	100% {opacity: 1; }
-}
-@-moz-keyframes added-player {
-	0% { opacity: 0; }
-	100% {opacity: 1; }
-}
-@-o-keyframes added-player {
-	0% { opacity: 0; }
-	100% {opacity: 1; }
-}
 
 .player-nav {
 	position: relative;
@@ -421,25 +488,21 @@ form {
 
 	a:hover {
 		background-color: #B4ACC0;
-	 -webkit-transition: background-color 500ms ease-out 0.5s;
-    -moz-transition: background-color 500ms ease-out 0.5s;
-    -o-transition: background-color 500ms ease-out 0.5s;
-    transition: background-color 500ms ease-out 0.5s;
+		@include hover;
 	}
 }
 
-.new-session-appear {
-	opacity: 0.01;
-	background-color: black;
-}
 
-.new-session-appear.new-session-appear-active {
-  opacity: 1;
-  background-color: white;
-	-webkit-transition: all 0.5s ease-out 0.5s;
-	-moz-transition: all 0.5s ease-out 0.5s;
-	-o-transition: all 0.5s ease-out 0.5s;
-  transition: all 0.5s ease-out 0.5s;
+@media (max-width: 920px){
+	.player-list {
+		width: 100%;
+		align-self: center;
+		@include selected;
+		li, .list-title {
+			width: 500px;
+		}
+	}
+
 }
 
 

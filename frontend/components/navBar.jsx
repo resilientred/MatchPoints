@@ -7,7 +7,7 @@ export default class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.displayName = 'NavBar';
-        this.state = { currentUser: null };
+        this.state = { currentUser: null, tab: 0 };
     }
     componentDidMount() {
         this.cuListener = UserStore.addListener(this.setCurrentUser);
@@ -19,11 +19,13 @@ export default class NavBar extends React.Component {
     componentWillUnmount() {
         if (this.cuListener) this.cuListener.remove();   
     }
-
+    setTab(tabNum){
+        this.setState({ tab: tabNum });
+    }
     setCurrentUser = () => {
-        let currentUser = UserStore.getCurrentUser();
+        var currentUser = UserStore.getCurrentUser();
         if (currentUser){
-          this.setState({currentUser: currentUser});
+          this.setState({currentUser: currentUser, tab: 0});
         } else {
           if (this.state.currentUser) this.setState({currentUser: null});
           browserHistory.push("/");
@@ -32,10 +34,24 @@ export default class NavBar extends React.Component {
     rightNav() {
         if (this.state.currentUser){
             return  <ul><li>Welcome, { this.state.currentUser.username }</li>
-                <li onClick={this.logOut}>Log Out</li></ul>;
+                <li className="links" onClick={this.logOut}>Log Out</li></ul>;
         } else {
-            return  <ul><li><Link to="/login" activeClassName="active" className="links">Log In</Link></li>
-                <li><Link to="/signup" activeClassName="active"  className="links">Sign Up</Link></li></ul>;
+            return <ul>
+                    <li>
+                        <Link to="/login" className={
+                            this.state.tab === 1 ? "links active-tab" : "links"}
+                            onClick={this.setTab.bind(this, 1)}>
+                                Log In
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/signup" className={"links" + 
+                            this.state.tab === 2 ? "links active-tab" : "links"}
+                            onClick={this.setTab.bind(this, 2)}>
+                            Sign Up
+                        </Link>
+                    </li>
+                </ul>;
         }
     }
 
