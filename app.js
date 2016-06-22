@@ -48,6 +48,7 @@ app.use('/session', sessionRoutes);
 // app.use('/user', userRoutes);
 app.use('/*', (req, res, next) => {
   let origUrl = req.originalUrl;
+  console.log(origUrl);
   let redirectURL = origUrl.match(/^(\/login|\/signup|\/club|\/players)/);
   if (!redirectURL){
     console.log("path don't match");
@@ -77,6 +78,7 @@ app.get('/form', (req, res) => {
 })
 
 app.get('*', (req, res) => {
+  console.log("rendering back public");
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 });  
 

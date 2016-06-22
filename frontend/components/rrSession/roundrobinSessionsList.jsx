@@ -1,16 +1,17 @@
-import React from 'react';
-import RRSessionActions from "../../actions/rrSessionActions";
-import RRSessionStore from "../../stores/rrSessionStore";
-import { browserHistory } from 'react-router';
+import React from 'react'
+import RRSessionActions from "../../actions/rrSessionActions"
+import RRSessionStore from "../../stores/rrSessionStore"
+import { browserHistory } from 'react-router'
 
 class RoundRobinSessionsList extends React.Component {
     constructor(props) {
         super(props);
+        debugger;
         this.state = {
           results: []
         }
     }
-    componentDidMount() {
+    componentDidMount(){
       debugger;
       this.rrsListener = RRSessionStore.addListener(_fetchedRRSessions);
       RRSessionActions.fetchRRSessions(this.props.clubId);
@@ -22,7 +23,7 @@ class RoundRobinSessionsList extends React.Component {
       })
     }
     editResult = (id) => {
-      browserHistory.push("/club/session/" + id);
+      browserHistory.push("/club/sessions/" + id);
     }
 
     deleteResult = (id) => {

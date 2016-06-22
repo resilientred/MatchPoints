@@ -63,6 +63,9 @@ export default class NavBar extends React.Component {
         return <div className="nav-bar">
             <div>
             	<div className="logo links" href="/">Match.Point</div>
+                <ul><li><Link to="/club" className={ this.state.tab === 3 ? 
+                            "links active-tab" : "links"}
+                            onClick={this.setTab.bind(this, 3)}>Club</Link></li></ul>
                 { this.rightNav() }
             </div>
         </div>;
