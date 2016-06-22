@@ -2,6 +2,7 @@ import React from 'react';
 import ClientActions from '../../actions/clientActions';
 import ClubActions from "../../actions/clubActions";
 import PlayerStore from '../../stores/playerStore';
+import RRSessionStore from "../../stores/rrSessionStore";
 import RRSessionActions from "../../actions/rrSessionActions";
 import Calendar from "react-input-calendar";
 import moment from "moment";
@@ -34,11 +35,11 @@ export default class NewRRSession extends React.Component {
     //should fetch all these from stores, so club can save their states
   }
   componentDidMount(){
-    console.log(moment());
     this.psListener = PlayerStore.addListener(this._fetchedPlayers);
     ClientActions.fetchPlayers();
     this.csrfListener = CSRFStore.addListener(this._fetchedCSRF);
     ClubActions.fetchCSRF();
+    this.rrListener = RRSessionStore.addListener(this._savedRR);
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
   }
@@ -51,14 +52,17 @@ export default class NewRRSession extends React.Component {
   _fetchedCSRF = () => {
     this.setState({ _csrf: CSRFStore.getCSRF() });
   }
+  _savedRR = () => {
+    browserHistory.push("/club/sessions");
+  }
   openModal(name){
-    let modalObj = {};
+    var modalObj = {};
     modalObj[name] = true;
     this.setState(modalObj);
   }
 
   closeModal(name){
-    let modalObj = {};
+    var modalObj = {};
     modalObj[name] = false;
     this.setState(modalObj);
   }
@@ -106,12 +110,12 @@ export default class NewRRSession extends React.Component {
     this.setState({tab: tab});
   }
   handleChange = (field, moment) => {
-    let obj = {};
+    var obj = {};
     obj[field] = moment;
     this.setState(obj);
   }
   convertPlayersToArr = () => {
-    let self = this;
+    var self = this;
     return Object.keys(this.state.addedPlayers).map( (_id) => {
       return this.state.addedPlayers[_id];
     });
@@ -119,12 +123,11 @@ export default class NewRRSession extends React.Component {
 
   saveSession = (schemata, rangeOfPlayer, selectedSchema, e) => {
     e.preventDefault();
-    var club_id = this.props.params.club_id;
+    var club_id = ClubStore.getCurrentClub().id;
     
-    // if (!club) browserHistory.push("/login");
     RRSessionActions.saveSession({
-      date: this.state.date,
-      numOfPlayers: this.state.numOfPlayers,
+      date: this.state.date.toDate(),
+      numOfPlayers: this.state.numPlayers,
       addedPlayers: this.state.addedPlayers,
       selectedSchema: selectedSchema,
       schemata: schemata

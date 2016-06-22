@@ -24,32 +24,39 @@
 
 @mixin hover {@include reg-transition(all, 0.4s, ease-out, 0.1s);}
 
-@keyframes added-player {
-	0% { opacity: 0;
-			 width: 0px; 			 margin-right: 200px;}
-	100% {opacity: 1; 
-				width: 280px;			 margin-right: 0px;}
+@keyframes added-player-sm {
+	0% { opacity: 0; width: 0px; margin-right: 200px;}
+	100% {opacity: 1; width: 280px; margin-right: 0px;} 
 }
 
-@-webkit-keyframes added-player {
-	0% { opacity: 0;
-			 width: 0px; 
-			 margin-right: 280px;}
-	100% {opacity: 1; 
-				width: 280px;
-				margin-right: 0px;}
+@-webkit-keyframes added-player-sm {
+	0% { opacity: 0; width: 0px; margin-right: 280px;}
+	100% {opacity: 1; width: 280px; margin-right: 0px;}
 }
-@-moz-keyframes added-player {
-	0% { opacity: 0;
-			 width: 0px; }
-	100% {opacity: 1; 
-				width: 280px;}
+@-moz-keyframes added-player-sm {
+	0% { opacity: 0; width: 0px; margin-right: 200px;} 
+	100% {opacity: 1; width: 280px;margin-right: 0px;}
 }
-@-o-keyframes added-player {
-	0% { opacity: 0;
-			 width: 0px; }
-	100% {opacity: 1; 
-				width: 280px;}
+@-o-keyframes added-player-sm {
+	0% { opacity: 0; width: 0px; margin-right: 200px;}
+	100% {opacity: 1; width: 280px;margin-right: 0px;}
+}
+@keyframes added-player-lg {
+	0% { opacity: 0; width: 0px; margin-right: 200px;}
+	100% {opacity: 1; width: 500px; margin-right: 0px;} 
+}
+
+@-webkit-keyframes added-player-lg {
+	0% { opacity: 0; width: 0px; margin-right: 280px;}
+	100% {opacity: 1; width: 500px; margin-right: 0px;}
+}
+@-moz-keyframes added-player-lg {
+	0% { opacity: 0; width: 0px; margin-right: 200px;} 
+	100% {opacity: 1; width: 500px;margin-right: 0px;}
+}
+@-o-keyframes added-player-lg {
+	0% { opacity: 0; width: 0px; margin-right: 200px;}
+	100% {opacity: 1; width: 500px;margin-right: 0px;}
 }
 
 @keyframes fade-in {
@@ -344,7 +351,7 @@ form {
 		width: 100%;
 		color: white;
 		padding: 35px 15px;	
-		@include reg-anim(added-player, 1s, ease-out);
+		@include reg-anim(added-player-sm, 1s, ease-out);
 
 	}
 	li {
@@ -354,7 +361,7 @@ form {
 		justify-content: space-between;
 		padding: 20px 15px;
 		cursor: pointer;
-		@include reg-anim(added-player, 1s, ease-out);
+		@include reg-anim(added-player-sm, 1s, ease-out);
 		border-bottom: 1px solid #F1EFEF;
 	}
 }

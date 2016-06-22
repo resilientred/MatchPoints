@@ -3,7 +3,7 @@ import RRSessionActions from "../../actions/rrSessionActions";
 import RRSessionStore from "../../stores/rrSessionStore";
 import { browserHistory } from 'react-router';
 
-class RoundRobinResultList extends React.Component {
+class RoundRobinSessionsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -11,18 +11,18 @@ class RoundRobinResultList extends React.Component {
         }
     }
     componentDidMount() {
-      this.rrsListener = RRSessionStore.addListener(_setResults);
+      debugger;
+      this.rrsListener = RRSessionStore.addListener(_fetchedRRSessions);
       RRSessionActions.fetchRRSessions(this.props.clubId);
     }
 
-    fetchRRSessions = () => {
+    _fetchedRRSessions = () => {
       this.setState({
         results: RRSessionStore.all()
       })
     }
-
     editResult = (id) => {
-      browserHistory.push("/club/rrResults/" + id);
+      browserHistory.push("/club/session/" + id);
     }
 
     deleteResult = (id) => {
@@ -51,4 +51,4 @@ class RoundRobinResultList extends React.Component {
     }
 }
 
-export default RoundRobinResultList;
+export default RoundRobinSessionsList;

@@ -1,5 +1,5 @@
 import React from 'react';
-import RoundRobinResultList from './rrSession/roundrobinResultList';
+import RoundRobinSessionsList from './rrSession/roundrobinSessionsList';
 import { Link, browserHistory } from "react-router";
 class Club extends React.Component {
     constructor(props) {
@@ -10,7 +10,7 @@ class Club extends React.Component {
         if (/^\/club$/.test(this.props.location.pathname)){
          return <ul className="select-action">
             <li><Link to="/club/newRRSession" activeClassName="active">New Session</Link></li>
-            <li><Link to="/club/rrResults" activeClassName="active">Old Sessions</Link></li>
+            <li><Link to="/club/sessions" activeClassName="active">Session Records</Link></li>
           </ul>;
         } else {
             return this.props.children;

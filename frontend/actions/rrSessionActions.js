@@ -3,7 +3,7 @@ import ApiUtils from "../utils/apiUtil";
 export default {
   fetchRRSessions(id) {
     ApiUtils.apiService({
-      url: "/api/club/" + id + "rrSessions",
+      url: "/api/club/" + id + "/rrSessions",
       success: "fetchedRRSessions"
     })
   },
@@ -12,9 +12,10 @@ export default {
   },
   saveSession(data, _csrf, clubId){
     ApiUtils.apiCSRFService({
-      url: "/api/club/" + clubId,
+      url: "/api/club/" + clubId + "/session/new",
+      method: "POST",
       data: data,
-      success: "savedRRSessions"
+      success: "fetchedRRSession"
     }, _csrf)
   },
 

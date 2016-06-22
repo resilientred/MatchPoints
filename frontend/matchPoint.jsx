@@ -4,7 +4,7 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Modal from "react-modal";
 import { NavBar, Splash, SignUp, LogIn, 
           Club, Players, NewRRSession, ErrorPage,
-          RoundrobinResultList, RoundrobinSession } from './routes';
+          RoundRobinSessionsList, RoundRobinSession } from './routes';
 
 class App extends React.Component {
   constructor(props){
@@ -29,8 +29,8 @@ const Routes = (
     <Route path="login" component={LogIn} />
     <Route path="signup" component={SignUp} />
     <Route path="club" component={Club} >
-      <Route path="rrResults" component={RoundrobinResultList} >
-        <Route path=":date" component={RoundrobinSession} />
+      <Route path="sessions" component={RoundRobinSessionsList} >
+        <Route path=":rrId" component={RoundRobinSession} />
        </Route> 
       <Route path="newRRSession" component={NewRRSession} >
         <Route path="players" component={Players} />

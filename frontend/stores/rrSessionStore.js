@@ -2,21 +2,23 @@ import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
 import RRSessionConstants from "../constants/rrSessionConstants";
 
-let RRSessionStore = new Store(AppDispatcher);
-let _rrSessions = {};
+var RRSessionStore = new Store(AppDispatcher);
+var _rrSessions = {};
 
-let _resetSession = (session) => {
+var _resetSession = (session) => {
   _rrSessions[session._id] = session;
+  RRSessionStore.__emitChange();
 }
 
-let _resetSessions = (sessions) => {
+var _resetSessions = (sessions) => {
   sessions.forEach( (session) => {
     _rrSessions[session._id] = session;
-  } )
+  } );
+  RRSessionStore.__emitChange();
 }
 
 RRSessionStore.all = () => {
-  let sessions = Object.keys(_rrSessions).map( (sessionId) =>
+  var sessions = Object.keys(_rrSessions).map( (sessionId) =>
     _rrSessions[sessionId]);
   return sessions;
 }

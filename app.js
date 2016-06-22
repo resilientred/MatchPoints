@@ -39,6 +39,7 @@ app.use(
     debug: true
   })
 );
+
 app.use(express.static(path.join(__dirname + "/public"), { maxAge: 86400000 }));
 app.use(webpackMiddleware(compiler));
 app.use('/api', routes);

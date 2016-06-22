@@ -32,7 +32,6 @@ export default class NavBar extends React.Component {
         }
     }
     rightNav() {
-        debugger;
         if (this.state.currentClub){
             return  <ul><li>Welcome, { this.state.currentClub.username }</li>
                 <li className="links" onClick={this.logOut}>Log Out</li></ul>;

@@ -1,4 +1,4 @@
-@keyframes added-player {
+@keyframes added-player-sm {
   0% {
     opacity: 0;
     width: 0px;
@@ -8,7 +8,7 @@
     width: 280px;
     margin-right: 0px; } }
 
-@-webkit-keyframes added-player {
+@-webkit-keyframes added-player-sm {
   0% {
     opacity: 0;
     width: 0px;
@@ -18,21 +18,65 @@
     width: 280px;
     margin-right: 0px; } }
 
-@-moz-keyframes added-player {
+@-moz-keyframes added-player-sm {
   0% {
     opacity: 0;
-    width: 0px; }
+    width: 0px;
+    margin-right: 200px; }
   100% {
     opacity: 1;
-    width: 280px; } }
+    width: 280px;
+    margin-right: 0px; } }
 
-@-o-keyframes added-player {
+@-o-keyframes added-player-sm {
   0% {
     opacity: 0;
-    width: 0px; }
+    width: 0px;
+    margin-right: 200px; }
   100% {
     opacity: 1;
-    width: 280px; } }
+    width: 280px;
+    margin-right: 0px; } }
+
+@keyframes added-player-lg {
+  0% {
+    opacity: 0;
+    width: 0px;
+    margin-right: 200px; }
+  100% {
+    opacity: 1;
+    width: 500px;
+    margin-right: 0px; } }
+
+@-webkit-keyframes added-player-lg {
+  0% {
+    opacity: 0;
+    width: 0px;
+    margin-right: 280px; }
+  100% {
+    opacity: 1;
+    width: 500px;
+    margin-right: 0px; } }
+
+@-moz-keyframes added-player-lg {
+  0% {
+    opacity: 0;
+    width: 0px;
+    margin-right: 200px; }
+  100% {
+    opacity: 1;
+    width: 500px;
+    margin-right: 0px; } }
+
+@-o-keyframes added-player-lg {
+  0% {
+    opacity: 0;
+    width: 0px;
+    margin-right: 200px; }
+  100% {
+    opacity: 1;
+    width: 500px;
+    margin-right: 0px; } }
 
 @keyframes fade-in {
   0% {
@@ -322,10 +366,10 @@ form {
     width: 100%;
     color: white;
     padding: 35px 15px;
-    animation-name: added-player;
-    -moz-animation-name: added-player;
-    -webkit-animation-name: added-player;
-    -o-animation-name: added-player;
+    animation-name: added-player-sm;
+    -moz-animation-name: added-player-sm;
+    -webkit-animation-name: added-player-sm;
+    -o-animation-name: added-player-sm;
     animation-duration: 1s;
     -moz-animation-duration: 1s;
     -webkit-animation-duration: 1s;
@@ -341,10 +385,10 @@ form {
     justify-content: space-between;
     padding: 20px 15px;
     cursor: pointer;
-    animation-name: added-player;
-    -moz-animation-name: added-player;
-    -webkit-animation-name: added-player;
-    -o-animation-name: added-player;
+    animation-name: added-player-sm;
+    -moz-animation-name: added-player-sm;
+    -webkit-animation-name: added-player-sm;
+    -o-animation-name: added-player-sm;
     animation-duration: 1s;
     -moz-animation-duration: 1s;
     -webkit-animation-duration: 1s;

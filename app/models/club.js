@@ -31,9 +31,8 @@ clubSchema.statics.findByUsernameAndPassword = function(username){
 }
 
 clubSchema.statics.findBySessionToken = function(sessionToken){
-    console.log("At find by sT: " + sessionToken);
     return this.findOne({"sessionToken": sessionToken}, 
-                  {"username": true});
+                  {"passwordDigest": false, "sessionToken": false});
 }
 
 clubSchema.statics.generatePasswordDigest = function(password){
@@ -44,6 +43,6 @@ clubSchema.statics.findClub = function(id){
 };
 
 
-let Club = mongoose.model('Club', clubSchema);
+const Club = mongoose.model('Club', clubSchema);
 
 export default Club; 

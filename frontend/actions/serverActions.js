@@ -9,14 +9,14 @@ module.exports = {
 			token: token
 		})
 	},
-	fetchedRRSessions (sessions){
+	fetchedRRSessions(sessions){
 		Dispatcher.dispatch({
 			actionType: SessionConstants.FETCHED_SESSIONS,
 			sessions: sessions
 		})
 	},
 	fetchedRRSession(session){
-		Dispatcher.disaptch({
+		Dispatcher.dispatch({
 			actionType: SessionConstants.FETCHED_SESSION,
 			session: session
 		})

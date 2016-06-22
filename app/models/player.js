@@ -13,7 +13,7 @@ let playerSchema = new Schema({
 playerSchema.methods.findClubs = function(cb){
   return this.model.find({_id: this.id}, {_id: false, associated_clubs: true }, cb);
 };
-let Player = mongoose.model('Player', playerSchema);
+const Player = mongoose.model('Player', playerSchema);
 
 
 

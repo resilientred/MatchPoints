@@ -48,8 +48,8 @@ class Grouping extends React.Component {
         schemata: schemata || [],
         selectedGroup: schemata.length ? schemata[0] : ""
       })
-      this.csrfListener = CSRFStore.addListener(_fetchedCSRF);
-      ClubActions.fetchCSRF();
+      // this.csrfListener = CSRFStore.addListener(_fetchedCSRF);
+      // ClubActions.fetchCSRF();
     }
 
     // _fetchedCSRF = () => {
@@ -89,8 +89,7 @@ class Grouping extends React.Component {
         <button onClick={this.props.saveSession.bind(null, 
                           this.state.schemata, 
                           this.state.rangeOfPlayer,
-                          this.state.selectedGroup,
-                          this.state._csrf)
+                          this.state.selectedGroup)
                         }>Save</button>
         { this.schemata() }
         { 

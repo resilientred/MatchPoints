@@ -1,13 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import ClubModel from '../models/club';
-
+import RoundRobinModel from "../models/roundrobin";
 const router = express.Router();
 const parsedUrlEncoded = bodyParser.urlencoded({ extended: true });
 
 function clubRoutes(clubMethods){
   return ( 
     router.get("", (req, res) => {
+      console.log("at get ...");
       clubMethods.currentClub(req)
         .then((currentClub) => {
           res.status(200).send(currentClub);
@@ -15,19 +16,9 @@ function clubRoutes(clubMethods){
         }).catch((err) => {
           console.log(err);
         });
-    }).get("/:clubId", (req, res) => {
+    }).get("/:clubId/roundrobins", (req, res) => {
         let clubId = req.params.clubId;
-        ClubModel.findClub(clubId)
-          .then((club) => {
-            res.status(200).send(club);
-            res.end();
-          }).catch((err) => {
-            res.status(500);
-            res.end();
-          });
-      }).get("/:clubId/roundrobins", (req, res) => {
-        let clubId = req.params.clubId;
-        ClubModel.findRoundRobins(clubId)
+        RoundRobin.findRoundRobinsByClub(clubId)
           .then((roundrobins) => {
             res.status(200).send(roundrobins);
             res.end();
@@ -52,10 +43,28 @@ function clubRoutes(clubMethods){
             res.status(500);
             res.end();
           });
-      }).post("/:clubId/new", parsedUrlEncoded, (req, res) => {
-        let clubId = req.params.clubId;
-        let newSessionData = req.body;
+      }).post("/:clubId/session/new", parsedUrlEncoded, (req, res) => {
+        console.log(req);
+        var clubId = req.params.clubId,
+            reqBody = req.body;
 
+        var newRR = new RoundRobinModel({
+          _clubId: clubId,
+          date: reqBody.date,
+          numOfPlayers: reqBody.numOfPlayers,
+          addedPlayers: reqBody.addedPlayers,
+          selectedSchema: reqBody.selectedSchema,
+          schemata: reqBody.schemata
+        })
+        
+        newRR.save()
+          .then((rr) => {
+            console.log(rr);
+            res.status(200).send(rr);
+          }).catch((err)=>{
+            console.log(err)
+            res.status(422).send(err);
+          })
       }).post('/new', parsedUrlEncoded, (req, res) => {
         var data = req.body;
         var newClub = new ClubModel({
