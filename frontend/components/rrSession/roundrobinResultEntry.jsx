@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import moment from 'moment'
 
 class RoundRobinResultEntry extends React.Component {
     constructor(props) {
@@ -7,29 +8,33 @@ class RoundRobinResultEntry extends React.Component {
     }
 
     static propTypes = {
-      _id: React.PropTypes.string.isRequired,
-      date: React.PropTypes.dateTime.isRequired,
+      id: React.PropTypes.string.isRequired,
+      date: React.PropTypes.string.isRequired,
       deleteResult: React.PropTypes.func.isRequired,
       finalizeResult: React.PropTypes.func.isRequired,
-      editResult: React.PropType.func.isRequired
+      editResult: React.PropTypes.func.isRequired,
+      _clubId: React.PropTypes.string.isRequired,
+      finalized: React.PropTypes.bool.isRequired
     }
-
-    //not sure if it is dateTime
+    //put a calendar at the front of the date
     render() {
-      let id = this.props._id,
-          date = this.props.date;
-
-      return <div>
+      var id = this.props.id,
+          date = moment(this.props.date).format("YYYY-MM-DD"),
+          clubId = this.props._clubId;
+      return <div className="result-entry">
           <div>{date}</div>
-          <button onClick={this.props.editResult.bind(null, date)}>
-            Edit Result
-          </button>
-          <button onClick={this.props.deleteResult.bind(null, id)}>
-            Delete
-          </button>
-          <button onClick={this.props.finalizeResult.bind(null, id)}>
-            Finalize
-          </button>
+          <div className="result-entry-buttons">
+            <button style={{backgroundColor: "#95b36b"}}onClick={this.props.editResult.bind(null, id, clubId)}>
+              Edit
+            </button>
+            <button style={{backgroundColor: "#b36b95"}}onClick={this.props.deleteResult.bind(null, id, clubId)}>
+              Delete
+            </button>
+
+            <button style={{backgroundColor: "#6bb389"}}onClick={this.props.finalizeResult.bind(null, id, clubId)}>
+              { this.props.finalized ? "View" : "Finalize" } 
+            </button>
+          </div>
         </div>;
     }
 }

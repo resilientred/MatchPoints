@@ -9,6 +9,12 @@ module.exports = {
 			token: token
 		})
 	},
+	deletedRRSession (sessionId){
+		Dispatcher.dispatch({
+			actionType: SessionConstants.DELETED_SESSION,
+			session: sessionId
+		})
+	},
 	fetchedRRSessions(sessions){
 		Dispatcher.dispatch({
 			actionType: SessionConstants.FETCHED_SESSIONS,
@@ -16,6 +22,7 @@ module.exports = {
 		})
 	},
 	fetchedRRSession(session){
+		debugger;
 		Dispatcher.dispatch({
 			actionType: SessionConstants.FETCHED_SESSION,
 			session: session

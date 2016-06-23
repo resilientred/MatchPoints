@@ -467,31 +467,69 @@ form {
 		}
 	}
 }
-
-.select-action {
+.club-body {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+.club-nav {
+	@include selected;
+	background-color: #ad6bb3;
+	width: 170px;
+	height: 100%;
+	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	font-size: 40px;
+	font-size: 18px;
 	font-family: 'varela round', sans-serif;
-
 }
-.select-action li {
-	text-align: center;
-	min-width: 300px;
-
-	margin-top: 20px;
-	a {
- 		color: black;
-	}
+.club-nav li {
+	transform: translateY(-120%);
+	text-align: left;
+	min-width: 150px;
+	min-height: 25px;
+	padding: 15px 5px;
 
 	a:hover {
-		background-color: #B4ACC0;
+		color: black;
+		border-bottom: 1px solid black;
+		font-size: 21px;
+		@include hover;
+	}
+
+}
+
+.result-entry {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 600px;
+	align-items: center;
+	padding: 15px 5px;
+	border-bottom: 1px solid #F1EFEF;
+	&> * {
+		font-size: 18px;
+		margin-right: 10px;
+	}
+	.result-entry-buttons {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	button {
+		cursor: pointer;
+		padding: 10px;
+		border-radius: 3px;
+		color: white;
+	}
+
+	button:hover {
+		color: black;
 		@include hover;
 	}
 }
-
 
 @media (max-width: 920px){
 	.player-list {
@@ -506,4 +544,25 @@ form {
 }
 
 
+@media (max-width: 535px){
+	.club-nav {
+		position: absolute;
+		left: -150px;
+		@include selected;
+	}
 
+	.club-nav:hover {
+		left: 0px;
+		@include selected;
+
+	}
+	.club-children {
+		position: relative;
+		left: 20px;
+	}
+}
+@media (max-width: 760px){
+	.result-entry {
+		max-width: 400px;
+	}
+}

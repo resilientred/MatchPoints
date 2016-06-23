@@ -27,7 +27,8 @@ class ClubMethods {
   }
   
   logOut = () => {
-    let club = this._currentClub; 
+    var club = this._currentClub;
+    if (!club) return new Promise((resolve, _) => { resolve() });
     this._currentClub = null;
     return ClubModel.resetSessionToken.call(ClubModel, club);
   }

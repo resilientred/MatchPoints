@@ -6,16 +6,21 @@ var RRSessionStore = new Store(AppDispatcher);
 var _rrSessions = {};
 
 var _resetSession = (session) => {
-  _rrSessions[session._id] = session;
+  _rrSessions[session.id] = session;
   RRSessionStore.__emitChange();
-}
+};
 
 var _resetSessions = (sessions) => {
   sessions.forEach( (session) => {
-    _rrSessions[session._id] = session;
+    _rrSessions[session.id] = session;
   } );
   RRSessionStore.__emitChange();
-}
+};
+
+var _deleteSession = (sessionId) => {
+  delete _rrSessions[sessionId];
+  RRSessionStore.__emitChange();
+};
 
 RRSessionStore.all = () => {
   var sessions = Object.keys(_rrSessions).map( (sessionId) =>
@@ -34,6 +39,9 @@ RRSessionStore.__onDispatch = (payload) => {
       break;
     case RRSessionConstants.FETCHED_SESSIONS:
       _resetSessions(payload.sessions);
+      break;
+    case RRSessionConstants.DELETED_SESSION:
+      _deleteSession(payload.session);
       break;
   }
 }

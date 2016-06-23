@@ -1,25 +1,29 @@
 import React from 'react';
-import RoundRobinSessionsList from './rrSession/roundrobinSessionsList';
+import RoundRobinSessions from './rrSession/roundrobinSessions';
 import { Link, browserHistory } from "react-router";
 class Club extends React.Component {
     constructor(props) {
         super(props);
     }
-    
-    content(){
-        if (/^\/club$/.test(this.props.location.pathname)){
-         return <ul className="select-action">
-            <li><Link to="/club/newRRSession" activeClassName="active">New Session</Link></li>
+    static propTypes = {
+        children: React.PropTypes.oneOfType([
+            React.PropTypes.arrayOf(React.PropTypes.node),
+            React.PropTypes.node
+            ])
+    }
+    clubNav() {
+        return <ul className="club-nav">
+            <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>
             <li><Link to="/club/sessions" activeClassName="active">Session Records</Link></li>
-          </ul>;
-        } else {
-            return <RoundRobinSessionsList />;
-        }
+        </ul>;
     }
     render() {
         
-        return <div>
-            { this.content() }
+        return <div className="club-body">
+            { this.clubNav() }
+            <div className="club-children">
+                { this.props.children }
+            </div>       
         </div>;
     }
 }

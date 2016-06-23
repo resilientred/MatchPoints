@@ -484,22 +484,64 @@ form {
       border-top: 1px solid #F1EFEF;
       padding: 20px 15px; }
 
-.select-action {
+.club-body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; }
+
+.club-nav {
+  -webkit-transition: all 0.6s ease-out 0.2s;
+  transition: all 0.6s ease-out 0.2s;
+  -o-transition: all 0.6s ease-out 0.2s;
+  -moz-transition: all 0.6s ease-out 0.2s;
+  background-color: #ad6bb3;
+  width: 170px;
+  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  font-size: 18px;
   font-family: 'varela round', sans-serif; }
 
-.select-action li {
-  text-align: center;
-  min-width: 300px;
-  margin-top: 20px; }
-  .select-action li a {
-    color: black; }
-  .select-action li a:hover {
-    background-color: #B4ACC0;
+.club-nav li {
+  transform: translateY(-120%);
+  text-align: left;
+  min-width: 150px;
+  min-height: 25px;
+  padding: 15px 5px; }
+  .club-nav li a:hover {
+    color: black;
+    border-bottom: 1px solid black;
+    font-size: 21px;
+    -webkit-transition: all 0.4s ease-out 0.1s;
+    transition: all 0.4s ease-out 0.1s;
+    -o-transition: all 0.4s ease-out 0.1s;
+    -moz-transition: all 0.4s ease-out 0.1s; }
+
+.result-entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 600px;
+  align-items: center;
+  padding: 15px 5px;
+  border-bottom: 1px solid #F1EFEF; }
+  .result-entry > * {
+    font-size: 18px;
+    margin-right: 10px; }
+  .result-entry .result-entry-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; }
+  .result-entry button {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 3px;
+    color: white; }
+  .result-entry button:hover {
+    color: black;
     -webkit-transition: all 0.4s ease-out 0.1s;
     transition: all 0.4s ease-out 0.1s;
     -o-transition: all 0.4s ease-out 0.1s;
@@ -515,3 +557,25 @@ form {
     -moz-transition: all 0.6s ease-out 0.2s; }
     .player-list li, .player-list .list-title {
       width: 500px; } }
+
+@media (max-width: 535px) {
+  .club-nav {
+    position: absolute;
+    left: -150px;
+    -webkit-transition: all 0.6s ease-out 0.2s;
+    transition: all 0.6s ease-out 0.2s;
+    -o-transition: all 0.6s ease-out 0.2s;
+    -moz-transition: all 0.6s ease-out 0.2s; }
+  .club-nav:hover {
+    left: 0px;
+    -webkit-transition: all 0.6s ease-out 0.2s;
+    transition: all 0.6s ease-out 0.2s;
+    -o-transition: all 0.6s ease-out 0.2s;
+    -moz-transition: all 0.6s ease-out 0.2s; }
+  .club-children {
+    position: relative;
+    left: 20px; } }
+
+@media (max-width: 760px) {
+  .result-entry {
+    max-width: 400px; } }

@@ -24,12 +24,12 @@ roundRobinSchema.statics.findRoundRobins = function(id){
   return this.find({"id": id})
 };
 
-roundRobinSchema.statics.finalizeResult = function(clubId, roundrobinId){
-  return this.update({"_clubId": clubId, "id": roundrobinId})
+roundRobinSchema.statics.finalizeResult = function(clubId, id){
+  return this.update({"_clubId": clubId, "id": id}, {$set: {"finalized": true}})
 };
 
-roundRobinSchema.methods.deleteRoundRobin = function(clubId, roundrobinId){
-  return this.find({"_clubId": clubId, "roundrobinId": roundrobinId}).remove(); 
+roundRobinSchema.statics.deleteRoundRobin = function(clubId, id){
+  return this.remove({"_clubId": clubId, "id": id}); 
 };
 
 const RoundRobin = mongoose.model('RoundRobin', roundRobinSchema);

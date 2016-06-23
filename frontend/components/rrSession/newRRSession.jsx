@@ -47,6 +47,7 @@ export default class NewRRSession extends React.Component {
   componentWillUnmount() {
     if (this.psListener) this.psListener.remove();
     if (this.usListener) this.usListener.remove();
+    if (this.rrListener) this.rrListener.remove();
   }
 
   _fetchedCSRF = () => {

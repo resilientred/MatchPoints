@@ -3,7 +3,7 @@ import ApiUtils from "../utils/apiUtil";
 export default {
   fetchRRSessions(id) {
     ApiUtils.apiService({
-      url: "/api/club/" + id + "/rrSessions",
+      url: "/api/club/" + id + "/sessions",
       success: "fetchedRRSessions"
     })
   },
@@ -21,13 +21,17 @@ export default {
 
   deleteSession(id, clubId, _csrf){
     ApiUtils.apiCSRFService({
-
-    }, _csrf)
+      url: "/api/club/" + clubId + "/sessions/" + id,
+      method: "DELETE",
+      success: "deletedRRSession"
+    }, _csrf);
   },
 
   finalizeResult(id, clubId, _csrf){
     ApiUtils.apiCSRFService({
-
+      url: "/api/club/" + clubId + "/sessions/" + id  + "/finalize",
+      method: "PATCH",
+      success: "fetchedRRSession"
     }, _csrf)
   }
 }

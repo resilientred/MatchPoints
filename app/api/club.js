@@ -16,9 +16,9 @@ function clubRoutes(clubMethods){
         }).catch((err) => {
           console.log(err);
         });
-    }).get("/:clubId/roundrobins", (req, res) => {
-        let clubId = req.params.clubId;
-        RoundRobin.findRoundRobinsByClub(clubId)
+    }).get("/:clubId/sessions", (req, res) => {
+        var clubId = req.params.clubId;
+        RoundRobinModel.findRoundRobinsByClub(clubId)
           .then((roundrobins) => {
             res.status(200).send(roundrobins);
             res.end();
@@ -27,17 +27,13 @@ function clubRoutes(clubMethods){
             res.end();
           });
 
-      }).delete("/:clubId/roundrobins/:roundrobinId", (req, res) => {
-        let clubId = req.params.clubId;
-        let roundrobinId = req.params.roundrobinId;
-        ClubModel.findClub(clubId)
-          .then((club) => {
-            return club.deleteRoundRobin(clubId, roundrobinId);
-          }).catch((err) => {
-            res.status(500);
-            res.end();
-          }).then((club) => {
-            res.status(200).send(club);
+      }).delete("/:clubId/sessions/:id", (req, res) => {
+        var clubId = req.params.clubId,
+            id = req.params.id;
+          console.log(clubId + " " + id);
+        RoundRobinModel.deleteRoundRobin(clubId, id)
+          .then((session) => {
+            res.status(200).send(id);
             res.end();
           }).catch((err) => {
             res.status(500);
@@ -87,12 +83,20 @@ function clubRoutes(clubMethods){
             res.status(422).send(err);
             res.end();
           })
-      }).post("/:clubId/finalize/:roundrobinId", parsedUrlEncoded, (req, res) => {
-        let clubId = req.params.clubId,
-            roundrobinId = req.params.roundrobinId;
-        ClubModel.finalizeResult(clubId, roundrobinId)
-          .then((club) => {
-            res.status(200).send(club);
+      }).patch("/:clubId/sessions/:id/finalize", parsedUrlEncoded, (req, res) => {
+           var id = req.params.id,
+               clubId = req.params.clubId;
+          console.log(id + " " + clubId)
+        RoundRobinModel.finalizeResult(clubId, id)
+          .then((status) => {
+            console.log(status);
+            return RoundRobinModel.findRoundRobins(id);
+        }).then((session)=> {
+          console.log(session);
+            res.status(200).send(session);
+            res.end();
+        }).catch((err)=>{
+            res.status(422).send(err);
             res.end();
         });
       })
