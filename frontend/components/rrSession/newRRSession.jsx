@@ -131,7 +131,7 @@ export default class NewRRSession extends React.Component {
       numOfPlayers: this.state.numPlayers,
       addedPlayers: this.state.addedPlayers,
       selectedSchema: selectedSchema,
-      schemata: schemata
+      schemata: schemata,
     }, this.state._csrf, club_id);
 
     //one way is to be able to adjust the counts of the players per group

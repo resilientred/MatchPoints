@@ -1,5 +1,5 @@
 import React from 'react';
-import RoundRobinSessions from './rrSession/roundrobinSessions';
+import RoundRobinSessions from './record/roundrobinSessions';
 import { Link, browserHistory } from "react-router";
 class Club extends React.Component {
     constructor(props) {

@@ -15,9 +15,9 @@ let clubSchema = new Schema({
   clubName: { type: String, required: true },
   city: { type: String, required: true },
   state: { type: String, required: true },
-  id: { type: String, default: shortid.generate }
+  id: { type: String, default: shortid.generate, index: true }
 });
-
+//change city/state to location: { city: ,  state: }
 clubSchema.statics.resetSessionToken = function(club){
     let token = URLSafeBase64.encode(crypto.randomBytes(32));
     return this.update({ "username": club.username}, {sessionToken: token});

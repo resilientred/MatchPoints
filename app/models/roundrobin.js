@@ -12,7 +12,7 @@ const roundRobinSchema = new Schema({
   selectedSchema: { type: Object},
   results: { type: Object, default: {} },
   finalized: { type: Boolean, default: false },
-  id: { type: String, default: shortid.generate, required: true }
+  id: { type: String, default: shortid.generate, required: true, index: true }
 });
 
 
