@@ -10,7 +10,7 @@ export default class Splash extends React.Component {
 				<div className="banner"></div>
 				<div>
 					<p>One-stop shop for Round Robin Tournament Management..</p>
-					<button>Learn More</button>
+					<button>Please Sign In</button>
 				</div>
 			</div>);
     }

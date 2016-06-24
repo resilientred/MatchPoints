@@ -48,8 +48,6 @@ class RoundRobinSessions extends React.Component {
     }
 
     editResult = (id, clubId) => {
-      console.log(id);
-      return;
       browserHistory.push("/club/sessions/" + id);
     }
 

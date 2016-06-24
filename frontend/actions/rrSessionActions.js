@@ -7,8 +7,11 @@ export default {
       success: "fetchedRRSessions"
     })
   },
-  fetchSession(date) {
-    
+  fetchSession(id) {
+    ApiUtils.apiService({
+      url: "/api/club/sessions/" + id,
+      success: "fetchedRRSession"
+    })
   },
   saveSession(data, _csrf, clubId){
     ApiUtils.apiCSRFService({

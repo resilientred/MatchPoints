@@ -11,6 +11,7 @@ class Club extends React.Component {
             React.PropTypes.node
             ])
     }
+
     clubNav() {
         return <ul className="club-nav">
             <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>

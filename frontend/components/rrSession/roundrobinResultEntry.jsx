@@ -17,6 +17,19 @@ class RoundRobinResultEntry extends React.Component {
       finalized: React.PropTypes.bool.isRequired
     }
     //put a calendar at the front of the date
+    lastButton() {
+      if (this.props.finalized){
+        return (<button style={{backgroundColor: "#6bb389"}}onClick={this.props.finalizeResult.bind(null, id, clubId)}>
+                "Finalize"
+              </button>);
+      } else {
+        //need to add a link
+        return (<button style={{backgroundColor: "#6bb389"}}>
+        { "View" } 
+        </button>);
+      }
+      
+    }
     render() {
       var id = this.props.id,
           date = moment(this.props.date).format("YYYY-MM-DD"),
@@ -31,9 +44,7 @@ class RoundRobinResultEntry extends React.Component {
               Delete
             </button>
 
-            <button style={{backgroundColor: "#6bb389"}}onClick={this.props.finalizeResult.bind(null, id, clubId)}>
-              { this.props.finalized ? "View" : "Finalize" } 
-            </button>
+
           </div>
         </div>;
     }

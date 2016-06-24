@@ -29,8 +29,8 @@ const Routes = (
     <Route path="login" component={LogIn} />
     <Route path="signup" component={SignUp} />
     <Route path="club" component={Club} >
-      <Route path="sessions" component={RoundRobinSessions} >
-       </Route> 
+      <Route path="sessions" component={RoundRobinSessions} />
+        <Route path="sessions/:id" component={RoundRobinSession} />
       <Route path="newSession" component={NewRRSession} >
         <Route path="players" component={Players} />
       </Route>
