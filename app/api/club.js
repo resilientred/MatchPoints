@@ -8,7 +8,6 @@ const parsedUrlEncoded = bodyParser.urlencoded({ extended: true });
 function clubRoutes(clubMethods){
   return ( 
     router.get("", (req, res) => {
-      console.log("at get ...");
       clubMethods.currentClub(req)
         .then((currentClub) => {
           res.status(200).send(currentClub);
@@ -30,7 +29,6 @@ function clubRoutes(clubMethods){
       }).delete("/:clubId/sessions/:id", (req, res) => {
         var clubId = req.params.clubId,
             id = req.params.id;
-          console.log(clubId + " " + id);
         RoundRobinModel.deleteRoundRobin(clubId, id)
           .then((session) => {
             res.status(200).send(id);
@@ -40,7 +38,6 @@ function clubRoutes(clubMethods){
             res.end();
           });
       }).post("/:clubId/session/new", parsedUrlEncoded, (req, res) => {
-        console.log(req);
         var clubId = req.params.clubId,
             reqBody = req.body;
 
@@ -48,7 +45,7 @@ function clubRoutes(clubMethods){
           _clubId: clubId,
           date: reqBody.date,
           numOfPlayers: reqBody.numOfPlayers,
-          addedPlayers: reqBody.addedPlayers,
+          players: reqBody.addedPlayers,
           selectedSchema: reqBody.selectedSchema,
           schemata: reqBody.schemata
         })
@@ -73,7 +70,7 @@ function clubRoutes(clubMethods){
         ClubModel.generatePasswordDigest(data.password)
           .then((digest) => {
             newClub.passwordDigest = digest;
-            return newClub.save();//do I need to call it?
+            return newClub.save();
           }).catch((err)=>{
             res.status(500).send(err);
             res.end();

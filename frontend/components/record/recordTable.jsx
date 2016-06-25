@@ -4,34 +4,54 @@ class RecordTable extends React.Component {
 	constructor(props){
 		super(props);
 	}
+
+  static propTypes = {
+    groupNum: React.PropTypes.number.isRequired,
+    start: React.PropTypes.number.isRequired,
+    joinedPlayers: React.PropTypes.object.isRequired,
+    sizeOfGroup: React.PropTypes.number.isRequired
+  }
+
 	render(){
       var start = this.props.start,
-          sizeOfGroup = this.props.sizeOfGroup;
-    return <table>
+          sizeOfGroup = this.props.sizeOfGroup,
+          joinedPlayers = this.props.joinedPlayers,
+          playerIds = Object.keys(joinedPlayers);
+    return <table className="record-table">
             <thead>
             <tr>
-              {[...Array(sizeOfGroup + 1)].map((_, i) => {
-                  if (i == 0) return <th>Group Num: {this.props.groupNum}</th>;
-                  return <th>vs. {i}</th>;
+              {[...Array(sizeOfGroup)].map((_, i) => {
+                  if (i == 0) return <th key={"head" + i}>Group: {this.props.groupNum}</th>;
+                  return <th key={"head" + i}>vs. {i}</th>;
                 })
               }
 
             </tr>
           </thead>
           <tbody>
-            <tr>
+            
               {
-                [,...Array(sizeOfGroup)].map( (_, m) => {
-                  [...Array(sizeOfGroup)].map( (_, n) => {
-                    if (n == 0) return <td className="cell">m</td>;
-                    if (m === n) return <td className="greyed cell">Greyed</td>;
-                    return <td className="cell">
-                        { joinedPlayers[m] + " vs. " + joinedPlayers[n] }
+                [...Array(sizeOfGroup)].map( (_, m) => {
+                  var curPlayer = joinedPlayers[playerIds[m + start]];
+                  return <tr>{[...Array(sizeOfGroup)].map( (_, n) => {
+                    var againstPlayer = joinedPlayers[playerIds[n + start]];
+
+                    if (n == 0) return <td key={"row" + m + ":" + n} className="cell">{m + 1}</td>;
+                    if (m + 1 === n) return <td key={"row" + m + ":" + n} className="greyed cell"></td>;
+
+                    return <td key={"row" + m + ":" + n} className="cell">
+                        <ul>
+                          <li>{ curPlayer.name }</li>
+                          <li>{ curPlayer.rating }</li>
+                          <li>vs.</li>
+                          <li>{ againstPlayer.name }</li> 
+                          <li>{ "Rating: "+ againstPlayer.rating }</li>
+                        </ul>
                       </td>
-                    })
+                    })}</tr>
                 })
               }
-              </tr>
+              
           </tbody>
           </table>
 	}

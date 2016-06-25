@@ -41,7 +41,7 @@ class RoundRobinSession extends React.Component {
             numOfPlayers = session.numOfPlayers,
             clubId = session._clubId,
             joinedPlayers = session.players;
-            //also need list of players
+            
         var countedPlayers = 0;
         return <div>
           <h1>Session Date: { moment(session.date).format("YYYY/MM/DD") }</h1>
@@ -50,7 +50,7 @@ class RoundRobinSession extends React.Component {
             selectedSchema.map ( (sizeOfGroup, i) => {
               countedPlayers += sizeOfGroup;
               return <RecordTable key={i} groupNum={i + 1} start={countedPlayers - sizeOfGroup}
-                  joinedPlayers={joinedPlayers} sizeOfGroup={sizeOfGroup} />
+                  joinedPlayers={joinedPlayers} sizeOfGroup={+sizeOfGroup} />
               })
           }
           </div>
