@@ -9,11 +9,13 @@ class Record extends React.component {
 	componentDidMount = () => {
 
 	}
+	calculateScore = () => {
 
+	}
 	render(){
 		return (
 			<div>
-				<RecordTable />
+				<RecordTable calculateScore={}/>
 			</div>
 		);
 	}

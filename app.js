@@ -83,7 +83,6 @@ app.get('/form', (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  console.log("rendering back public");
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
   //TODO fix this....this is causing a weird response in get request
 });  

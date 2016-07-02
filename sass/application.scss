@@ -4,7 +4,9 @@
 	-o-transition: $anim-part $duration $curve $delay;
 	-moz-transition: $anim-part $duration $curve $delay;
 }
-
+@mixin default-font {
+	font-family: 'varela round', sans-serif;
+}
 @mixin reg-anim ($name, $duration, $timing) {
 		animation-name: $name;
 		-moz-animation-name: $name;
@@ -531,9 +533,14 @@ form {
 		@include hover;
 	}
 }
-
+h1 {
+	font-size: 24px;
+	@include default-font;
+}
 .record-table {
 	color: black;
+	@include default-font;
+
 	th {
 		padding: 10px 25px;
 	}
@@ -549,7 +556,7 @@ form {
 	.greyed {
 		background-color: grey;
 	}
-	.cell {
+	ul {
 		display: flex;
 		flex-direction: column;
 		align-items: center;

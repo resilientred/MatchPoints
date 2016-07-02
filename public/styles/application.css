@@ -548,8 +548,13 @@ form {
     -o-transition: all 0.4s ease-out 0.1s;
     -moz-transition: all 0.4s ease-out 0.1s; }
 
+h1 {
+  font-size: 24px;
+  font-family: 'varela round', sans-serif; }
+
 .record-table {
-  color: black; }
+  color: black;
+  font-family: 'varela round', sans-serif; }
   .record-table th {
     padding: 10px 25px; }
   .record-table th, .record-table td {

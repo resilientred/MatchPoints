@@ -9,7 +9,8 @@ class RoundRobinSession extends React.Component {
         super(props);
         this.displayName = 'RoundRobinSession';
         this.state = {
-          session: RRSessionStore.find(this.props.params.id) || null
+          session: RRSessionStore.find(this.props.params.id) || null,
+          scoreChange: null
         }
     }
 
@@ -19,11 +20,17 @@ class RoundRobinSession extends React.Component {
         rrSessionActions.fetchSsession(this.props.params.date);
       }
     }
-
-    setRRSession = () =>{
+    updateScore = (scoreChange, i) => {
+      debugger;
+      this.setState({scoreChange: scoreChange});
+    }
+    setRRSession = () => {
+      var curSession = RRSessionStore.find(this.props.param.date);
+      var schema = curSession.selectedSchema;
       this.setState({
-        session: RRSessionStore.find(this.props.param.date)
-      })
+        session: RRSessionStore.find(this.props.param.date),
+        scoreChange: this.setUpChangeArray(schema)
+      });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -34,6 +41,12 @@ class RoundRobinSession extends React.Component {
       this.rrsListener.remove();
     }
 
+    setUpChangeArray(selectedSchema) {
+      return selectedSchema.map( (sizeOfGroup, i) => {
+          return [...Array(sizeOfGroup)].map((_) => 
+            [...Array(sizeOfGroup)].map((_) => [0]))
+        })
+    }
     render() {
         var session = this.state.session;
         var selectedSchema = session.selectedSchema,
@@ -41,7 +54,7 @@ class RoundRobinSession extends React.Component {
             numOfPlayers = session.numOfPlayers,
             clubId = session._clubId,
             joinedPlayers = session.players;
-            
+
         var countedPlayers = 0;
         return <div>
           <h1>Session Date: { moment(session.date).format("YYYY/MM/DD") }</h1>
@@ -50,13 +63,15 @@ class RoundRobinSession extends React.Component {
             selectedSchema.map ( (sizeOfGroup, i) => {
               countedPlayers += sizeOfGroup;
               return <RecordTable key={i} groupNum={i + 1} start={countedPlayers - sizeOfGroup}
-                  joinedPlayers={joinedPlayers} sizeOfGroup={+sizeOfGroup} />
+                  joinedPlayers={joinedPlayers} sizeOfGroup={+sizeOfGroup} 
+                  updateScore={this.updateScore} />
               })
           }
           </div>
         </div>;
     }
 }
-
+//TODO: have the side bar show what the current page is rather than having tabs
+//Maybe imitate what the thing 
 export default RoundRobinSession;
 

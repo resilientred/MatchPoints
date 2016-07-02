@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+var FaCalendar = require('react-icons/lib/fa/calendar');
 
 class RoundRobinResultEntry extends React.Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class RoundRobinResultEntry extends React.Component {
       _clubId: React.PropTypes.string.isRequired,
       finalized: React.PropTypes.bool.isRequired
     }
-    //put a calendar at the front of the date
+    //put a calendar icon at the front of the date
     lastButton() {
       if (this.props.finalized){
         return (<button style={{backgroundColor: "#6bb389"}}onClick={this.props.finalizeResult.bind(null, id, clubId)}>
@@ -35,7 +36,7 @@ class RoundRobinResultEntry extends React.Component {
           date = moment(this.props.date).format("YYYY-MM-DD"),
           clubId = this.props._clubId;
       return <div className="result-entry">
-          <div>{date}</div>
+          <div><FaCalendar />{date}</div>
           <div className="result-entry-buttons">
             <button style={{backgroundColor: "#95b36b"}}onClick={this.props.editResult.bind(null, id, clubId)}>
               Edit
