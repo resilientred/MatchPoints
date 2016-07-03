@@ -17,30 +17,37 @@ class RecordTable extends React.Component {
   _handleCalculate = (e) => {
     e.preventDefault();
     if (e.currentTarget.className === "calculate"){
-      this.props.updateScore(this.calculateScore());
+      this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
     }
   }
 
   shouldComponentUpdate(nextProps, nextState){
-
+    if (this.props.groupNum && this.props.state && this.props.sizeOfGroup){
+      return false;
+    }
+    return true;
   }
 
   calculateScore = () => {
     var joinedPlayers = this.props.joinedPlayers,
+        playerIds = Object.keys(joinedPlayers),
         startIdx = this.props.start,
-        calculatedScore = this.state.result.map( (indRecord, i, a) => {
-      indRecord.map( (record, j) => {
-        if (j > i) return -a[j][i]; //just mirror what the other result was
+        calculatedScore = [];
+
+    this.state.result.forEach( (indRecord, i) => {
+      var record = indRecord.map( (record, j) => {
+        if (j < i) return -calculatedScore[j][i]; //just mirror what the other result was
         if (i === j) return 0;
 
-        var sign = record[0] - record[1] >= 0 ? 1 : -1;
+        var sign = record[0] - record[1] === 0 ? 0 : record[0] - record[1] > 0 ? 1 : -1;
 
-        return Math.abs(joinedPlayers[startIdx + i].rating - joinedPlayers[startIdx + j].rating) * 
+        return Math.abs(joinedPlayers[playerIds[startIdx + i]].rating - 
+          joinedPlayers[playerIds[startIdx + j]].rating) * 
           sign * 0.04 - 2 * (record[0] - record[1]) * sign;
         
       })
+      calculatedScore.push(record);
     });
-
     return calculatedScore;
   }
   updateResult(i, j, k, e) {
@@ -54,7 +61,7 @@ class RecordTable extends React.Component {
           joinedPlayers = this.props.joinedPlayers,
           playerIds = Object.keys(joinedPlayers);
     return <table className="record-table">
-            <button className="calculate" onClick={this._handleCalculate}>
+            <button className="calculate" onClick={this._handleCalculate.bind(this)}>
               Calculate
             </button>
             <thead>
@@ -71,7 +78,7 @@ class RecordTable extends React.Component {
               {
                 [...Array(sizeOfGroup)].map( (_, m) => {
                   var curPlayer = joinedPlayers[playerIds[m + start]];
-                  return <tr>{[...Array(sizeOfGroup + 1)].map( (_, n) => {
+                  return <tr key={"row" + m}>{[...Array(sizeOfGroup + 1)].map( (_, n) => {
 
                     if (n == 0) return <td key={"row" + m + ":" + n} className="cell">{m + 1}</td>;
                     if ((m + 1) === n) return <td key={"row" + m + ":" + n} className="greyed cell"></td>;

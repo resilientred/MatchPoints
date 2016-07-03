@@ -10,25 +10,29 @@ class RoundRobinSession extends React.Component {
         this.displayName = 'RoundRobinSession';
         this.state = {
           session: RRSessionStore.find(this.props.params.id) || null,
-          scoreChange: null
+          scoreChange: null,
+          currentTab: 0
         }
     }
 
     componentDidMount() {
       this.rrsListener = RRSessionStore.addListener(this.setRRSession);
       if (!this.state.session){
-        rrSessionActions.fetchSsession(this.props.params.date);
+        rrSessionActions.fetchSession(this.props.params.date);
+      } else {
+        this.setRRSession();
       }
     }
-    updateScore = (scoreChange, i) => {
-      debugger;
+    updateScore = (scoreChangeInGroup, i) => {
+      var scoreChange = this.state.scoreChange;
+      scoreChange[i] = scoreChangeInGroup;
       this.setState({scoreChange: scoreChange});
     }
     setRRSession = () => {
-      var curSession = RRSessionStore.find(this.props.param.date);
-      var schema = curSession.selectedSchema;
+      var curSession = this.state.session || RRSessionStore.find(this.props.params.id),
+          schema = curSession.selectedSchema;
       this.setState({
-        session: RRSessionStore.find(this.props.param.date),
+        session: curSession,
         scoreChange: this.setUpChangeArray(schema)
       });
     }
@@ -36,16 +40,15 @@ class RoundRobinSession extends React.Component {
     componentWillReceiveProps(nextProps) {
       RRSessionStore.fetchSsession(nextProps.params.id);
     }
-
+    setTab = (tabNumber) => {
+      this.setState({ currentTab: tabNumber})
+    }
     componentWillUnmount() {
       this.rrsListener.remove();
     }
 
     setUpChangeArray(selectedSchema) {
-      return selectedSchema.map( (sizeOfGroup, i) => {
-          return [...Array(sizeOfGroup)].map((_) => 
-            [...Array(sizeOfGroup)].map((_) => [0]))
-        })
+      return [...Array(selectedSchema.length)];
     }
     render() {
         var session = this.state.session;
@@ -56,8 +59,10 @@ class RoundRobinSession extends React.Component {
             joinedPlayers = session.players;
 
         var countedPlayers = 0;
-        return <div>
+        return  <div>
+          <div><li onClick={this.setTab.bind(null, 0)}>Score</li><li onClick={this.setTab.bind(null, 1)}>Rating Change</li></div>
           <h1>Session Date: { moment(session.date).format("YYYY/MM/DD") }</h1>
+        { this.state.currentTab === 0 ?  
           <div>
           {
             selectedSchema.map ( (sizeOfGroup, i) => {
@@ -67,7 +72,17 @@ class RoundRobinSession extends React.Component {
                   updateScore={this.updateScore} />
               })
           }
+          </div> :
+          <div>
+            {
+              this.state.scoreChange ? <div>4321</div> :
+              <div>
+                12345
+              </div>
+            }
           </div>
+          }
+    
         </div>;
     }
 }
