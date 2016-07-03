@@ -1,4 +1,5 @@
 import React from 'react';
+import RecordChange from "./RecordChange"
 
 class RecordTable extends React.Component {
 	constructor(props){
@@ -59,70 +60,88 @@ class RecordTable extends React.Component {
       var start = this.props.start,
           sizeOfGroup = this.props.sizeOfGroup,
           joinedPlayers = this.props.joinedPlayers,
+          scoreChange = this.props.scoreChange,
           playerIds = Object.keys(joinedPlayers);
     return <table className="record-table">
-            <button className="calculate" onClick={this._handleCalculate.bind(this)}>
-              Calculate
-            </button>
-            <thead>
-            <tr>
-              {
-                [...Array(sizeOfGroup + 1)].map((_, i) => {
-                  if (i == 0) return <th key={"head" + i}>Group: {this.props.groupNum}</th>;
-                  return <th key={"head" + i}>vs. {i}</th>;
-                })
-              }
-            </tr>
-          </thead>
-          <tbody>         
-              {
-                [...Array(sizeOfGroup)].map( (_, m) => {
-                  var curPlayer = joinedPlayers[playerIds[m + start]];
-                  return <tr key={"row" + m}>{[...Array(sizeOfGroup + 1)].map( (_, n) => {
+        <button className="calculate" onClick={this._handleCalculate.bind(this)}>
+          Calculate
+        </button>
+        <thead>
+        <tr>
+          {
+            [...Array(sizeOfGroup + 1)].map((_, i) => {
+              if (i == 0) return <th key={"head" + i}>Group: {this.props.groupNum}</th>;
+              return <th key={"head" + i}>vs. {i}</th>;
+            })
+          }
+        </tr>
+        </thead>
+        <tbody className="front-side">         
+            {
+              [...Array(sizeOfGroup)].map( (_, m) => {
+                var curPlayer = joinedPlayers[playerIds[m + start]];
+                return <tr key={"row" + m}>{[...Array(sizeOfGroup + 1)].map( (_, n) => {
 
-                    if (n == 0) return <td key={"row" + m + ":" + n} className="cell">{m + 1}</td>;
-                    if ((m + 1) === n) return <td key={"row" + m + ":" + n} className="greyed cell"></td>;
+                  if (n == 0) return <td key={"row" + m + ":" + n} className="cell">{m + 1}</td>;
+                  if ((m + 1) === n) return <td key={"row" + m + ":" + n} className="greyed cell"></td>;
 
-                    var againstPlayer = joinedPlayers[playerIds[n + start - 1]];
-                    return <td key={"row" + m + ":" + n} className="cell">
-                        <ul>
-                          <li>{ curPlayer.name }</li>
-                          <li>{ "Rating: " + curPlayer.rating }</li>
-                          <li>vs.</li>
-                          <li>{ againstPlayer.name }</li> 
-                          <li>{ "Rating: " + againstPlayer.rating }</li>
-                        </ul>
-                        {
-                          n > m ?
-                          <div>
-                            <input type="number" min="0" max="3" 
-                                   key={"row" + m + ":" + n + "-1"} className="score" 
-                                   onChange={this.updateResult.bind(this, m, n - 1, 0)} 
-                                   value={this.state.result[m][n - 1][0]} />
+                  var againstPlayer = joinedPlayers[playerIds[n + start - 1]];
+                  return <td key={"row" + m + ":" + n} className="cell">
+                      <ul>
+                        <li>{ curPlayer.name }</li>
+                        <li>{ "Rating: " + curPlayer.rating }</li>
+                        <li>vs.</li>
+                        <li>{ againstPlayer.name }</li> 
+                        <li>{ "Rating: " + againstPlayer.rating }</li>
+                      </ul>
+                      {
+                        n > m ?
+                        <div>
+                          <input type="number" min="0" max="3" 
+                                 key={"row" + m + ":" + n + "-1"} className="score" 
+                                 onChange={this.updateResult.bind(this, m, n - 1, 0)} 
+                                 value={this.state.result[m][n - 1][0]} />
 
-                            <input type="number" min="0" max="3" 
-                                   key={"row" + m + ":" + n + "-2"} className="score" 
-                                   onChange={this.updateResult.bind(this, m, n - 1, 1)} 
-                                   value={this.state.result[m][n - 1][1]} />
-                          </div> :  <div>
-                            <input type="number" disabled
-                                   key={"row" + m + ":" + n + "-1"} className="score"                             
-                                   value={this.state.result[n - 1][m][1]} />
+                          <input type="number" min="0" max="3" 
+                                 key={"row" + m + ":" + n + "-2"} className="score" 
+                                 onChange={this.updateResult.bind(this, m, n - 1, 1)} 
+                                 value={this.state.result[m][n - 1][1]} />
+                        </div> :  <div>
+                          <input type="number" disabled
+                                 key={"row" + m + ":" + n + "-1"} className="score"                             
+                                 value={this.state.result[n - 1][m][1]} />
 
-                            <input type="number" min="0" max="3"  disabled
-                                   key={"row" + m + ":" + n + "-2"} className="score" 
-                                   value={this.state.result[n - 1][m][0]} />
-                          </div> 
+                          <input type="number" min="0" max="3"  disabled
+                                 key={"row" + m + ":" + n + "-2"} className="score" 
+                                 value={this.state.result[n - 1][m][0]} />
+                        </div> 
+                      }
 
-                        }
+                    </td>
+                  })}</tr>
+              })
+            }    
+        </tbody>
+        <tbody className="end-side">         
+            {
+              !this.props.scoreChange ? "" :
+              [...Array(sizeOfGroup)].map( (_, m) => {
+                var curPlayer = joinedPlayers[playerIds[m + start]];
+                return <tr key={"row" + m}>{[...Array(sizeOfGroup + 2)].map( (_, n) => {
 
-                      </td>
-                    })}</tr>
-                })
-              }
-              
-          </tbody>
-          </table>
+                  if (n === 0) return <td key={"row" + m + ":" + n} className="cell">{m + 1}</td>;
+                  if (n === 1) return <td key={"row" + m + ":" + n} className="cell">{curPlayer.name}</td>;
+                  if (m === (n - 2)) return <td key={"row" + m + ":" + n} className="greyed cell"></td>;
+
+                  var againstPlayer = joinedPlayers[playerIds[n + start - 2]];
+                  return <td key={"row" + m + ":" + n} className="cell">
+                      { scoreChange[m][n - 2] }
+                    </td>
+                  })}</tr>
+              })
+            }    
+        </tbody>
+      </table>
 	}
 }
 
