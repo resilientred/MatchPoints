@@ -1,0 +1,30 @@
+.record-table {
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 16px; }
+  .record-table .table-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap; }
+    .record-table .table-header > div {
+      width: 100px;
+      text-align: center; }
+  .record-table .front-side, .record-table .back-side {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex-wrap: nowrap; }
+  .record-table input {
+    width: 30px;
+    height: 30px; }
+  .record-table .cell {
+    width: 100px; }
+  .record-table .greyed {
+    backrgound-color: grey; }
+
+.front-side .row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  text-align: center; }

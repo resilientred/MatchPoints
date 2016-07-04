@@ -51,7 +51,6 @@ class RoundRobinSession extends React.Component {
         session: curSession,
         scoreChange: scoreChange
       });
-
       ClubActions.fetchCSRF();
     }
 
@@ -69,12 +68,19 @@ class RoundRobinSession extends React.Component {
     setUpChangeArray(selectedSchema) {
       return [...Array(selectedSchema.length)];
     }
+
     saveSession = () => {
-      if (!this.state.session) browserHistory.push("/");
-      rrSessionActions.updateSession(
-        this.state.scoreChange, this.state._csrf, this.state.session.sessionId
+      if (!this.state.session) {
+        browserHistory.push("/");
+      } else if (!this.state._csrf) {
+        forceUpdate();
+      } else {
+        rrSessionActions.updateSession(
+          this.state.scoreChange, this.state._csrf, this.state.session._id
         )
+      }
     }
+
     render() {
         var { session, scoreChange } = this.state;
 
@@ -96,7 +102,7 @@ class RoundRobinSession extends React.Component {
                      joinedPlayers={joinedPlayers} sizeOfGroup={+sizeOfGroup} 
                      updateScore={this.updateScore} 
                      scoreChange={scoreChange.length ? scoreChange[i] : []}
-                     saveSesion={this.saveSession} />
+                     saveSession={this.saveSession} />
                 )
                 })
             }

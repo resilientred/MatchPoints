@@ -139,15 +139,6 @@ export default class NewRRSession extends React.Component {
       selectedSchema: selectedSchema,
       schemata: schemata,
     }, this.state._csrf, club_id);
-
-    //one way is to be able to adjust the counts of the players per group
-    //which will automatically update the count of other group that has a deficit or overload
-    //the other way is to just have a button that rotates the count
-    //which is not viable (6544 but you want it to be 6454)
-    //another way.. draggable! totally viable I think
-    
-    // simplest way.. the first way but not adjust the other groups' players
-    //simply say not not enough player or something
   }
   newPlayer = () => {
     return this.state.tab === 0 ? 
@@ -164,7 +155,7 @@ export default class NewRRSession extends React.Component {
                 addPlayer: this.addPlayer,
                 removePlayer: this.removePlayer
               };
-    var { modalIsOpen, tab, a, date, numPlayers, ...states} = this.state;
+    var { modalIsOpen, tab, _, date, numPlayers, ...states} = this.state;
     var title, grouping;
 
     if (tab === 1){

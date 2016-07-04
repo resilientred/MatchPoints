@@ -28,11 +28,11 @@ roundRobinSchema.statics.finalizeResult = function(clubId, id){
   return this.update({"_clubId": clubId, "id": id}, {$set: {"finalized": true}})
 };
 
-roundRobinSchema.statics.deleteRoundRobin = function(clubId, id){
-  return this.remove({"_clubId": clubId, "id": id}); 
+roundRobinSchema.statics.deleteRoundRobin = function(id){
+  return this.remove({"id": id}); 
 };
-roundRobinSchema.statics.updateResult = function(clubId, id, result){
-  retunr this.update({"_clubId": clubId, "id": id}, {$set: {"results": result}});
+roundRobinSchema.statics.updateResult = function(id, result){
+  return this.update({"id": id}, {$set: {"results": result}});
 }
 const RoundRobin = mongoose.model('RoundRobin', roundRobinSchema);
 

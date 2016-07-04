@@ -26,29 +26,6 @@ function clubRoutes(clubMethods){
             res.end();
           });
 
-      }).delete("/sessions/:id", (req, res) => {
-        var clubId = req.params.clubId,
-            id = req.params.id;
-        RoundRobinModel.deleteRoundRobin(clubId, id)
-          .then((session) => {
-            res.status(200).send(id);
-            res.end();
-          }).catch((err) => {
-            res.status(500);
-            res.end();
-          });
-      }).patch("/sessions/:id", (req, res) => {
-        var clubId = req.params.clubId,
-            id = req.params.id,
-            data = req.body;
-
-        RoundRobinModel.updateRoundRobin(clubId, id, data)
-          .then((session) => {
-            console.log("Updating round robin returns...:" + session);
-          }).catch((err) => {
-            res.status(422).send(err);
-            res.end();
-          })
       }).post("/:clubId/session/new", parsedUrlEncoded, (req, res) => {
         var clubId = req.params.clubId,
             reqBody = req.body;
@@ -68,6 +45,40 @@ function clubRoutes(clubMethods){
             res.status(200).send(rr);
           }).catch((err)=>{
             console.log(err)
+            res.status(422).send(err);
+          })
+      }).patch("/:clubId/sessions/:id/finalize", parsedUrlEncoded, (req, res) => {
+           var id = req.params.id,
+               clubId = req.params.clubId;
+        RoundRobinModel.finalizeResult(clubId, id)
+          .then((status) => {
+            return RoundRobinModel.findRoundRobins(id);
+        }).then((session)=> {
+            res.status(200).send(session);
+            res.end();
+        }).catch((err)=>{
+            res.status(422).send(err);
+            res.end();
+        });
+      }).delete("/sessions/:id", (req, res) => {
+        var id = req.params.id;
+        RoundRobinModel.deleteRoundRobin(clubId, id)
+          .then((session) => {
+            res.status(200).send(id);
+            res.end();
+          }).catch((err) => {
+            res.status(500);
+            res.end();
+          });
+      }).patch("/sessions/:id", parsedUrlEncoded, (req, res) => {
+        var id = req.params.id,
+            data = req.body;
+        RoundRobinModel.updateResult(id, data)
+          .then((success) => {
+            return RoundRobinModel.findRoundRobins(id);
+          }).then((session) => {
+            res.status(200).send(session);
+          }).catch((err) => {
             res.status(422).send(err);
           })
       }).post('/new', parsedUrlEncoded, (req, res) => {
@@ -92,22 +103,6 @@ function clubRoutes(clubMethods){
             res.status(422).send(err);
             res.end();
           })
-      }).patch("/:clubId/sessions/:id/finalize", parsedUrlEncoded, (req, res) => {
-           var id = req.params.id,
-               clubId = req.params.clubId;
-          console.log(id + " " + clubId)
-        RoundRobinModel.finalizeResult(clubId, id)
-          .then((status) => {
-            console.log(status);
-            return RoundRobinModel.findRoundRobins(id);
-        }).then((session)=> {
-          console.log(session);
-            res.status(200).send(session);
-            res.end();
-        }).catch((err)=>{
-            res.status(422).send(err);
-            res.end();
-        });
       })
     );
 }

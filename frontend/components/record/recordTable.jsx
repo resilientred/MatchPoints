@@ -38,7 +38,7 @@ class RecordTable extends React.Component {
 
     this.state.result.forEach( (indRecord, i) => {
       var record = indRecord.map( (record, j) => {
-        if (j < i) return -calculatedScore[j][i]; //just mirror what the other result was
+        if (j < i) return -calculatedScore[j][i]; //just mirroring what the other result was
         if (i === j) return 0;
 
         var sign = record[0] - record[1] === 0 ? 0 : record[0] - record[1] > 0 ? 1 : -1;
@@ -54,7 +54,7 @@ class RecordTable extends React.Component {
     });
     return calculatedScore;
   }
-  updateResult(i, j, k, e) {
+  updateResult = (i, j, k, e) => {
     this.state.result[i][j][k] = e.target.value;
     this.setState({ result: this.state.result });
   }
@@ -71,27 +71,29 @@ class RecordTable extends React.Component {
         joinedPlayers: joinedPlayers,
         playerIds: playerIds
       }
-    return <table className="record-table">
+    return <div className="record-table">
         <button className="calculate" onClick={this._handleCalculate.bind(this)}>
           Calculate
         </button>
         <button className="update-record" onClick={this.props.saveSession}>
           Update
         </button>
-        <thead>
-        <tr>
+        <div className="table-header">
           {
-            [...Array(sizeOfGroup + 1)].map((_, i) => {
-              if (i == 0) return <th key={"head" + i}>Group: {this.props.groupNum}</th>;
-              return <th key={"head" + i}>vs. {i}</th>;
+            [...Array(sizeOfGroup + 2)].map((_, i) => {
+              return <div key={"head" + (i - 1)}>
+                  {
+                    i === 0 ?  "Group " + this.props.groupNum  :
+                      i === 1 ? "Name" : "vs. " + i
+                  }
+                </div>
             })
           }
-        </tr>
-        </thead>
+        </div>
         <RecordTableFront {...propsToPass} result={this.state.result}
               updateResult={this.updateResult}/>
         <RecordTableBack {...propsToPass} scoreChange={scoreChange}/>
-      </table>
+      </div>
 	}
 }
 

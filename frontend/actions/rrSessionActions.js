@@ -22,8 +22,9 @@ export default {
     }, _csrf)
   },
   updateSession(data, _csrf, id){
+    debugger;
     ApiUtils.apiCSRFService({
-      url: "/api/club/" + "/sessions/" + id,
+      url: "/api/club/sessions/" + id,
       method:"PATCH",
       data: data,
       success: "fetchedRRSession"

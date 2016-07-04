@@ -1,0 +1,40 @@
+.record-table {
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 16px;
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    & > div {
+      width: 100px;
+      text-align: center;
+    }
+  }
+  .front-side, .back-side {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  input {
+    width: 30px;
+    height: 30px;
+  }
+
+  .cell {
+    width: 100px;
+  }
+  .greyed {
+    backrgound-color: grey;
+  }
+}
+
+.front-side .row {
+  display:  flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  text-align: center;
+}

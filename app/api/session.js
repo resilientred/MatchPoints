@@ -25,8 +25,7 @@ function sessionRoutes(clubMethods) {
       }).catch((err)=>{
         res.status(404).send(err);
       });  
-    }
-  )
+    })
     )
 } 
 
