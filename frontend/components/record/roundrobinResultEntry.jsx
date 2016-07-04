@@ -41,7 +41,7 @@ class RoundRobinResultEntry extends React.Component {
             <button style={{backgroundColor: "#95b36b"}}onClick={this.props.editResult.bind(null, id, clubId)}>
               Edit
             </button>
-            <button style={{backgroundColor: "#b36b95"}}onClick={this.props.deleteResult.bind(null, id, clubId)}>
+            <button style={{backgroundColor: "#b36b95"}}onClick={this.props.deleteResult.bind(null, id)}>
               Delete
             </button>
 

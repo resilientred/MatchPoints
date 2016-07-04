@@ -51,8 +51,8 @@ class RoundRobinSessions extends React.Component {
       browserHistory.push("/club/sessions/" + id);
     }
 
-    deleteResult = (id, clubId) => {
-      RRSessionActions.deleteSession(id, clubId, this.state._csrf);
+    deleteResult = (id) => {
+      RRSessionActions.deleteSession(id, this.state._csrf);
       ClubActions.fetchCSRF();
     }
 

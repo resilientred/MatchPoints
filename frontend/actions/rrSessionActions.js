@@ -21,10 +21,17 @@ export default {
       success: "fetchedRRSession"
     }, _csrf)
   },
-
-  deleteSession(id, clubId, _csrf){
+  updateSession(data, _csrf, id){
     ApiUtils.apiCSRFService({
-      url: "/api/club/" + clubId + "/sessions/" + id,
+      url: "/api/club/" + "/sessions/" + id,
+      method:"PATCH",
+      data: data,
+      success: "fetchedRRSession"
+    }, _csrf)
+  },
+  deleteSession(id, _csrf){
+    ApiUtils.apiCSRFService({
+      url: "/api/club/sessions/" + id,
       method: "DELETE",
       success: "deletedRRSession"
     }, _csrf);
@@ -38,3 +45,8 @@ export default {
     }, _csrf)
   }
 }
+
+//instead of fetching csrf everytime, I should get the csrf everytime before I fire a request
+//I feel like this would reduce a lot of the redundancy
+//but this might defeat the purpose of csrf, since people hacking would be
+//or maybe not, since to be able to get to this request, rhey have to be on this page and click on the button

@@ -49,7 +49,13 @@ export default class NewRRSession extends React.Component {
     if (this.usListener) this.usListener.remove();
     if (this.rrListener) this.rrListener.remove();
   }
-
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState._csrf !== null && this.state._csrf === null){
+      return false;
+    } else {
+      return true;
+    }
+  }
   _fetchedCSRF = () => {
     this.setState({ _csrf: CSRFStore.getCSRF() });
   }

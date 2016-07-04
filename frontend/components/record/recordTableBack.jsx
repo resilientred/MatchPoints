@@ -15,7 +15,7 @@ class RecordTableBack extends React.Component {
     render() {
         return <tbody className="back-side">         
             {
-              !this.props.scoreChange ? "" :
+              !this.props.scoreChange.length ? "" :
               [...Array(this.props.sizeOfGroup)].map( (_, m) => {
                 var curPlayer = this.props.joinedPlayers[this.props.playerIds[m + this.props.start]],
                     ratingChangeSum = 0;

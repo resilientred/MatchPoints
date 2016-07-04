@@ -75,6 +75,9 @@ class RecordTable extends React.Component {
         <button className="calculate" onClick={this._handleCalculate.bind(this)}>
           Calculate
         </button>
+        <button className="update-record" onClick={this.props.saveSession}>
+          Update
+        </button>
         <thead>
         <tr>
           {

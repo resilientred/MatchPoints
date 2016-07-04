@@ -26,7 +26,7 @@ function clubRoutes(clubMethods){
             res.end();
           });
 
-      }).delete("/:clubId/sessions/:id", (req, res) => {
+      }).delete("/sessions/:id", (req, res) => {
         var clubId = req.params.clubId,
             id = req.params.id;
         RoundRobinModel.deleteRoundRobin(clubId, id)
@@ -37,6 +37,18 @@ function clubRoutes(clubMethods){
             res.status(500);
             res.end();
           });
+      }).patch("/sessions/:id", (req, res) => {
+        var clubId = req.params.clubId,
+            id = req.params.id,
+            data = req.body;
+
+        RoundRobinModel.updateRoundRobin(clubId, id, data)
+          .then((session) => {
+            console.log("Updating round robin returns...:" + session);
+          }).catch((err) => {
+            res.status(422).send(err);
+            res.end();
+          })
       }).post("/:clubId/session/new", parsedUrlEncoded, (req, res) => {
         var clubId = req.params.clubId,
             reqBody = req.body;
