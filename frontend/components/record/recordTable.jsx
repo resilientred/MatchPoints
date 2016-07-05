@@ -33,7 +33,9 @@ class RecordTable extends React.Component {
     var joinedPlayers = this.props.joinedPlayers,
         playerIds = Object.keys(joinedPlayers),
         startIdx = this.props.start,
-        calculatedScore = [];
+        calculatedScore = [],
+        backSide = document.getElementsByClassName("back")[0];
+    backSide.className += " rotated";
 
     this.state.result.forEach( (indRecord, i) => {
       var record = indRecord.map( (record, j) => {
