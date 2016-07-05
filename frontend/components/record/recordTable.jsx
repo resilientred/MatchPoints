@@ -1,6 +1,5 @@
 import React from 'react';
-import RecordTableBack from "./recordTableBack"
-import RecordTableFront from "./recordTableFront"
+import RecordTableDetail from "./recordTableDetail"
 
 class RecordTable extends React.Component {
 	constructor(props){
@@ -64,12 +63,15 @@ class RecordTable extends React.Component {
           sizeOfGroup = this.props.sizeOfGroup,
           joinedPlayers = this.props.joinedPlayers,
           scoreChange = this.props.scoreChange,
+          groupNum = this.props.groupNum,
           playerIds = Object.keys(joinedPlayers);
       var propsToPass = {
         start: start, 
         sizeOfGroup: sizeOfGroup,
+        scoreChange: scoreChange,
         joinedPlayers: joinedPlayers,
-        playerIds: playerIds
+        playerIds: playerIds,
+        groupNum: groupNum
       }
     return <div className="record-table">
         <button className="calculate" onClick={this._handleCalculate.bind(this)}>
@@ -78,21 +80,9 @@ class RecordTable extends React.Component {
         <button className="update-record" onClick={this.props.saveSession}>
           Update
         </button>
-        <div className="table-header">
-          {
-            [...Array(sizeOfGroup + 2)].map((_, i) => {
-              return <div key={"head" + (i - 1)}>
-                  {
-                    i === 0 ?  "Group " + this.props.groupNum  :
-                      i === 1 ? "Name" : "vs. " + i
-                  }
-                </div>
-            })
-          }
-        </div>
-        <RecordTableFront {...propsToPass} result={this.state.result}
-              updateResult={this.updateResult}/>
-        <RecordTableBack {...propsToPass} scoreChange={scoreChange}/>
+
+        <RecordTableDetail {...propsToPass} result={this.state.result}
+              updateResult={this.updateResult} />
       </div>
 	}
 }

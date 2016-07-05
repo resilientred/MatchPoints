@@ -23,7 +23,7 @@
   .record-table .greyed {
     backrgound-color: grey; }
 
-.front-side .row {
+.front-side .row, .back-side .row {
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
