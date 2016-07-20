@@ -14,6 +14,7 @@ class RoundRobinSession extends React.Component {
         this.state = {
           session: RRSessionStore.find(this.props.params.id) || null,
           scoreChange: [],
+          scoreUpdate: {},
           _csrf: null
         }
     }
@@ -38,9 +39,18 @@ class RoundRobinSession extends React.Component {
       }
     }
     updateScore = (scoreChangeInGroup, i) => {
-      var scoreChange = this.state.scoreChange;
-      scoreChange[i] = scoreChangeInGroup;
-      this.setState({scoreChange: scoreChange});
+      var scoreChange = this.state.scoreChange,
+          scoreUpdate = this.state.scoreUpdate,
+          scoreUpdateInGroup = scoreChangeInGroup[1];
+      scoreChange[i] = scoreChangeInGroup[0];
+
+      for (var playerId in scoreUpdateInGroup){
+        scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
+      }
+      this.setState({
+        scoreChange: scoreChange,
+        scoreUpdate: scoreUpdateInGroup
+      });
     }
 
     setRRSession = () => {
@@ -70,13 +80,16 @@ class RoundRobinSession extends React.Component {
     }
 
     saveSession = () => {
-      if (!this.state.session) {
+      var session = this.state.session;
+
+      if (!session) {
         browserHistory.push("/");
       } else if (!this.state._csrf) {
         forceUpdate();
       } else {
         rrSessionActions.updateSession(
-          this.state.scoreChange, this.state._csrf, this.state.session._id
+          this.state.scoreChange, this.state.scoreUpdate,
+          this.state._csrf, session._id,
         )
       }
     }

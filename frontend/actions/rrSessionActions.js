@@ -21,12 +21,15 @@ export default {
       success: "fetchedRRSession"
     }, _csrf)
   },
-  updateSession(data, _csrf, id){
+  updateSession(data, ratingUpdateList, _csrf, id){
     debugger;
     ApiUtils.apiCSRFService({
       url: "/api/club/sessions/" + id,
       method:"PATCH",
-      data: data,
+      data: {
+        data: data,
+        ratingUpdateList: ratingUpdateList
+      },
       success: "fetchedRRSession"
     }, _csrf)
   },

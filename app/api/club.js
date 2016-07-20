@@ -1,7 +1,9 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import ClubModel from '../models/club';
-import RoundRobinModel from "../models/roundrobin";
+import express from 'express'
+import bodyParser from 'body-parser'
+import ClubModel from '../models/club'
+import RoundRobinModel from "../models/roundrobin"
+import Parallel from "paralleljs"
+import PlayerModel from "../models/player"
 const router = express.Router();
 const parsedUrlEncoded = bodyParser.urlencoded({ extended: true });
 
@@ -72,7 +74,15 @@ function clubRoutes(clubMethods){
           });
       }).patch("/sessions/:id", parsedUrlEncoded, (req, res) => {
         var id = req.params.id,
-            data = req.body;
+            data = req.body.data,
+            ratingUpdateList = req.body.ratingUpdateList;
+        var p = new Parallel(ratingUpdateList);
+
+        p.map(PlayerModel.updateRating.bind(PlayerModel)).then(function() {
+          //it will be mapped with promises, which I have no use of
+          console.log("done");
+        });
+        
         RoundRobinModel.updateResult(id, data)
           .then((success) => {
             return RoundRobinModel.findRoundRobins(id);

@@ -57,6 +57,7 @@ export default class NewRRSession extends React.Component {
     }
   }
   _fetchedCSRF = () => {
+    debugger;
     this.setState({ _csrf: CSRFStore.getCSRF() });
   }
   _savedRR = () => {

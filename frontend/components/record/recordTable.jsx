@@ -34,7 +34,8 @@ class RecordTable extends React.Component {
         playerIds = Object.keys(joinedPlayers),
         startIdx = this.props.start,
         calculatedScore = [],
-        backSide = document.getElementsByClassName("back")[0];
+        backSide = document.getElementsByClassName("back")[0],
+        rc = {};
     backSide.className += " rotated";
 
     this.state.result.forEach( (indRecord, i) => {
@@ -43,21 +44,31 @@ class RecordTable extends React.Component {
         if (i === j) return 0;
 
         var sign = record[0] - record[1] === 0 ? 0 : record[0] - record[1] > 0 ? 1 : -1;
+
         if (sign === 0) return 0;
-        var modifier = sign === 1 ? -record[1] * 2 : record[0] * 2
-        return 16 * sign - (joinedPlayers[playerIds[startIdx + i]].rating - 
-          joinedPlayers[playerIds[startIdx + j]].rating) * 
+        var player1Id = playerIds[startIdx + i],
+            player2Id = playerIds[startIdx + j],
+            modifier = sign === 1 ? -record[1] * 2 : record[0] * 2;
+
+        var scoreAdjust = 16 * sign - (joinedPlayers[player1Id].rating - 
+          joinedPlayers[player2Id].rating) * 
           sign * 0.04 + modifier;
+
+        rc[player1Id] = rc[player1Id] ? rc[player1Id] : 0 + scoreAdjust;
+        rc[player2Id] = rc[player2Id] ? rc[player2Id] : 0 - scoreAdjust;
+        return scoreAdjust;
         
       })
 
       calculatedScore.push(record);
     });
-    return calculatedScore;
+    return [calculatedScore, rc];
   }
   updateResult = (i, j, k, e) => {
     this.state.result[i][j][k] = e.target.value;
-    this.setState({ result: this.state.result });
+    this.setState({ 
+      result: this.state.result
+    });
   }
 
 	render(){
@@ -79,7 +90,7 @@ class RecordTable extends React.Component {
         <button className="calculate" onClick={this._handleCalculate.bind(this)}>
           Calculate
         </button>
-        <button className="update-record" onClick={this.props.saveSession}>
+        <button className="update-record" onClick={this.props.saveSession.bind(null, this.state.ratingChange)}>
           Update
         </button>
 

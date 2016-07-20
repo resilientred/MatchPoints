@@ -6,7 +6,6 @@ class RecordTableFront extends React.Component {
         this.displayName = 'RecordTableFront';
     }
 
-
     static propTypes = {
       start: React.PropTypes.number, 
       sizeOfGroup: React.PropTypes.number,
@@ -42,7 +41,6 @@ class RecordTableFront extends React.Component {
                 [...Array(sizeOfGroup)].map( (_, m) => {
                   var curPlayer = joinedPlayers[playerIds[m + start]];
                   return <div className="row" key={"row" + m}>{[...Array(sizeOfGroup + 2)].map( (_, n) => {
-
                     if (n === 0) return <div key={"row" + m + ":" + n} className="cell">{m + 1}</div>;
                     if ((m) === n - 2) return <div key={"row" + m + ":" + n} className="greyed cell"></div>;
                     if (n === 1) return <div key={"row" + m + ":" + n} className="cell">
