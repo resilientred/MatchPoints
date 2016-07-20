@@ -7,6 +7,8 @@ import PlayerModel from "../models/player"
 const router = express.Router();
 const parsedUrlEncoded = bodyParser.urlencoded({ extended: true });
 
+
+
 function clubRoutes(clubMethods){
   return ( 
     router.get("", (req, res) => {
@@ -54,11 +56,12 @@ function clubRoutes(clubMethods){
                clubId = req.params.clubId;
         RoundRobinModel.finalizeResult(clubId, id)
           .then((status) => {
-            return RoundRobinModel.findRoundRobins(id);
+            return RoundRobinModel.findRoundRobin(id);
         }).then((session)=> {
             res.status(200).send(session);
             res.end();
-        }).catch((err)=>{
+        }).catch((err)=> {
+
             res.status(422).send(err);
             res.end();
         });
@@ -76,19 +79,25 @@ function clubRoutes(clubMethods){
         var id = req.params.id,
             data = req.body.data,
             ratingUpdateList = req.body.ratingUpdateList;
-        var p = new Parallel(ratingUpdateList);
+        // var p = new Parallel(ratingUpdateList);
 
-        p.map(PlayerModel.updateRating.bind(PlayerModel)).then(function() {
-          //it will be mapped with promises, which I have no use of
-          console.log("done");
-        });
-        
-        RoundRobinModel.updateResult(id, data)
-          .then((success) => {
-            return RoundRobinModel.findRoundRobins(id);
+        // p.map(updateRating).then(function() {
+        //   console.log("done");
+        // }); <--- parallel loses context - does not have closures
+        var promiseResults = [];
+        for (var player in ratingUpdateList){
+          promiseResults.push(PlayerModel.updateRating(player, ratingUpdateList[player])); 
+        } //wrap this in promise
+        Promise.all(promiseResults).then( (status) => {
+          console.log(status);
+          return RoundRobinModel.updateResult(id, data);
+        } ).then((success) => {
+            return RoundRobinModel.findRoundRobin(id);
           }).then((session) => {
+            console.log(session);
             res.status(200).send(session);
           }).catch((err) => {
+            console.log(err);
             res.status(422).send(err);
           })
       }).post('/new', parsedUrlEncoded, (req, res) => {

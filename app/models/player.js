@@ -9,12 +9,14 @@ let playerSchema = new Schema({
 });
 
 
-playerSchema.statics.updateRating = function(player) {
-  return this.update({ _id: player.id}, { 
-    rating: player.newRating,
-    $push: { ratingHistory: player.newRating } 
+playerSchema.statics.updateRating = function(id, newRating) {
+  //need to find the old rating and increment it...
+  return this.findOneAndUpdate({ _id: id}, { 
+    $inc: { rating: newRating },
+    $push: { ratingHistory: newRating } 
   })
 };
+
 
 playerSchema.methods.findClubs = function(cb){
   return this.model.find({_id: this.id}, {_id: false, associated_clubs: true }, cb);

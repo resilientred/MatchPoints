@@ -22,7 +22,6 @@ module.exports = {
 		})
 	},
 	fetchedRRSession(session){
-		debugger;
 		Dispatcher.dispatch({
 			actionType: SessionConstants.FETCHED_SESSION,
 			session: session

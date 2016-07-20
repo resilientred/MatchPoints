@@ -22,7 +22,6 @@ export default {
     }, _csrf)
   },
   updateSession(data, ratingUpdateList, _csrf, id){
-    debugger;
     ApiUtils.apiCSRFService({
       url: "/api/club/sessions/" + id,
       method:"PATCH",

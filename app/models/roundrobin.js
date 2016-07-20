@@ -20,8 +20,8 @@ roundRobinSchema.statics.findRoundRobinsByClub = function(clubId){
   return this.find({"_clubId": clubId});
 };
 
-roundRobinSchema.statics.findRoundRobins = function(id){
-  return this.find({"id": id})
+roundRobinSchema.statics.findRoundRobin = function(id){
+  return this.findOne({"_id": id})
 };
 
 roundRobinSchema.statics.finalizeResult = function(clubId, id){
@@ -32,7 +32,7 @@ roundRobinSchema.statics.deleteRoundRobin = function(id){
   return this.remove({"id": id}); 
 };
 roundRobinSchema.statics.updateResult = function(id, result){
-  return this.update({"id": id}, {$set: {"results": result}});
+  return this.update({"_id": id}, {$set: {"results": result}});
 }
 const RoundRobin = mongoose.model('RoundRobin', roundRobinSchema);
 
