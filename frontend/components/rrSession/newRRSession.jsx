@@ -57,7 +57,6 @@ export default class NewRRSession extends React.Component {
     }
   }
   _fetchedCSRF = () => {
-    debugger;
     this.setState({ _csrf: CSRFStore.getCSRF() });
   }
   _savedRR = () => {
@@ -81,20 +80,20 @@ export default class NewRRSession extends React.Component {
 
   addPlayer = () => {
     var curPlayer = this.state.selectedPlayer,
-        tempPlayers = this.state.addedPlayers;
+        tempPlayers = Object.assign({}, this.state.addedPlayers);
     if (tempPlayers[curPlayer._id]) return;
     tempPlayers[curPlayer._id] = curPlayer;
 
     this.state.hiddenPlayers[curPlayer._id] = true;
     this.setState({ 
-      addedPlayers: this.state.addedPlayers, 
+      addedPlayers: tempPlayers, 
       numPlayers: ++this.state.numPlayers
     });
   }
 
   removePlayer = () => {
     var curPlayer = this.state.selectedRemovePlayer;
-    var tempPlayers = this.state.addedPlayers;
+    var tempPlayers = Object.assign({}, this.state.addedPlayers);
     delete tempPlayers[curPlayer._id];
 
     delete this.state.hiddenPlayers[curPlayer._id];

@@ -54,8 +54,14 @@ class RecordTable extends React.Component {
           joinedPlayers[player2Id].rating) * 
           sign * 0.04 + modifier;
 
-        rc[player1Id] = rc[player1Id] ? rc[player1Id] : 0 + scoreAdjust;
-        rc[player2Id] = rc[player2Id] ? rc[player2Id] : 0 - scoreAdjust;
+        rc[player1Id] = {
+          change: rc[player1Id] ? rc[player1Id]["change"] : 0 + scoreAdjust,
+          ratingBefore: joinedPlayers[player1Id].rating
+        };
+        rc[player2Id] = {
+          change: rc[player2Id] ? rc[player2Id]["change"] : 0 - scoreAdjust,
+          ratingBefore: joinedPlayers[player2Id].rating
+        };
         return scoreAdjust;
         
       })

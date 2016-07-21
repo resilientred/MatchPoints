@@ -9,12 +9,16 @@ let playerSchema = new Schema({
 });
 
 
-playerSchema.statics.updateRating = function(id, newRating) {
-  //need to find the old rating and increment it...
+playerSchema.statics.updateRating = function(id, ratingDetail) {
   return this.findOneAndUpdate({ _id: id}, { 
-    $inc: { rating: newRating },
-    $push: { ratingHistory: newRating } 
+    $inc: { rating: ratingDetail.ratingChange },
+    $push: { ratingHistory: ratingDetail.ratingBefore } 
   })
+  ///issue: a new entry will be create every time we submit.
+  //solution: make two separate api calls
+  //one for the first time we submit the reuslt, and if we update it
+  //it will make a patch reqruest instead.
+  //but a problem is that we have to keep track of the old ratings
 };
 
 

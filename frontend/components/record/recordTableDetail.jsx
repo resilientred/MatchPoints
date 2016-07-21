@@ -125,7 +125,7 @@ class RecordTableFront extends React.Component {
                     if (n === sizeOfGroup + 3 || n === sizeOfGroup + 4 || n === 0 || n === 1 || n === 2){ 
                       return <div key={"row" + m + ":" + n} className="cell">{cellContent}</div>;
                     }
-                    ratingChangeSum += scoreChange[m][n - 3];
+                    ratingChangeSum += +scoreChange[m][n - 3];
                     return <div key={"row" + m + ":" + n} className="cell">
                         { scoreChange[m][n - 3] }
                       </div>

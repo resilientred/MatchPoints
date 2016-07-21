@@ -83,11 +83,11 @@ function clubRoutes(clubMethods){
 
         // p.map(updateRating).then(function() {
         //   console.log("done");
-        // }); <--- parallel loses context - does not have closures
+        // }); <--- parallel loses context 
         var promiseResults = [];
         for (var player in ratingUpdateList){
           promiseResults.push(PlayerModel.updateRating(player, ratingUpdateList[player])); 
-        } //wrap this in promise
+        } 
         Promise.all(promiseResults).then( (status) => {
           console.log(status);
           return RoundRobinModel.updateResult(id, data);

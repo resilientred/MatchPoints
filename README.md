@@ -15,7 +15,7 @@ And allow users to:
 
 ## Expected Features
  - [x] Arrange groups for players based on ratings
- - [ ] Allow organizers to enter results
+ - [x] Allow organizers to enter results
  - [ ] Allow Users to customize scoring algorithm
  - [ ] Calculate scores automatically based on default or given scoring algorithms
  - [ ] Provide a platform for participants to query results based on event date

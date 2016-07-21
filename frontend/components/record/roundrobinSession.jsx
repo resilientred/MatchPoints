@@ -39,8 +39,8 @@ class RoundRobinSession extends React.Component {
       }
     }
     updateScore = (scoreChangeInGroup, i) => {
-      var scoreChange = this.state.scoreChange,
-          scoreUpdate = this.state.scoreUpdate,
+      var scoreChange = Object.assign({}, this.state.scoreChange),
+          scoreUpdate = Object.assign({}, this.state.scoreUpdate),
           scoreUpdateInGroup = scoreChangeInGroup[1];
       scoreChange[i] = scoreChangeInGroup[0];
 
