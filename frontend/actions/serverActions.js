@@ -3,12 +3,6 @@ import PlayerConstants from "../constants/playerConstants";
 import ClubConstants from "../constants/clubConstants";
 import SessionConstants from "../constants/rrSessionConstants";
 module.exports = {
-	fetchedCSRF (token){
-		Dispatcher.dispatch({
-			actionType: ClubConstants.FETCHED_CSRF,
-			token: token
-		})
-	},
 	deletedRRSession (sessionId){
 		Dispatcher.dispatch({
 			actionType: SessionConstants.DELETED_SESSION,

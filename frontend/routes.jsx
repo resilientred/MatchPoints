@@ -1,8 +1,6 @@
 import React from "react"
 import NavBar from './components/navBar';
 import Splash from "./components/splash";
-import SignUp from "./components/clubs/signUp";
-import LogIn from "./components/clubs/logIn";
 import Club from "./components/club";
 import NewRRSession from "./components/rrSession/newRRSession";
 import RoundRobinSessions from "./components/record/roundrobinSessions";
@@ -16,8 +14,6 @@ import { Route, IndexRoute } from 'react-router'
 const Routes = (
   <Route path="/" component={App}>
     <IndexRoute component={Splash}/>
-    <Route path="login" component={LogIn} />
-    <Route path="signup" component={SignUp} />
     <Route path="club" component={Club} >
       <Route path="sessions" component={RoundRobinSessions} />
         <Route path="sessions/:id" component={RoundRobinSession} />

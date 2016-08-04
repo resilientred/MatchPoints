@@ -138,56 +138,6 @@ input {
   border: 2px solid black;
   border-radius: 4px; }
 
-/*form {
-	width: 60%;
-	margin: 0 auto;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	h3 {
-		font-size: 36px;
-		margin-bottom: 50px;
-		margin-top: 30px;
-	}
-	& > div {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: 10px;
-		font-size: 24px;
-		align-items: center;
-		& > div {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-		}
-		input {
-			margin-left: 20px;
-			font-size: 24px;
-			width: 60%;
-			min-width: 200px;
-			padding: 5px;
-			border-radius: 3px;
-		}
-	}
-		input[type="submit"] {
-			cursor: pointer;
-			align-self: center;
-			width: 100%;
-
-			margin-top: 25px;
-			color: white;
-			font-size: 20px;
-			border: 1px solid white;
-			padding: 10px 20px;
-			border-radius: 3px;
-			background-color: rgba(0, 0, 0, 0.8);
-
-			&:hover {
-				background-color: rgba(100, 100, 100, 0.9);
-			}
-		}
-
-}*/
 .new-player-modal {
   background-color: #B36B89;
   color: white;

@@ -1,17 +1,14 @@
 import React from 'react'
 import ParticipantGroup from './participantGroup'
-import CSRFStore from "../../stores/csrfStore"
 import ClubActions from "../../actions/clubActions"
 
-//need to fetch csrf..
 class Grouping extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           schemata: [],
           rangeOfPlayers: [6, 5, 4],
-          selectedGroup: [],
-          _csrf: null
+          selectedGroup: []
         }
     }
 
@@ -48,13 +45,9 @@ class Grouping extends React.Component {
         schemata: schemata || [],
         selectedGroup: schemata.length ? schemata[0] : ""
       })
-      // this.csrfListener = CSRFStore.addListener(_fetchedCSRF);
-      // ClubActions.fetchCSRF();
+
     }
 
-    // _fetchedCSRF = () => {
-    //   this.setState({ _csrf: CSRFStore.getCSRF() });
-    // }
 
     schemata() {
       if (this.state.schemata.length){

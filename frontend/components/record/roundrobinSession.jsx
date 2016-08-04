@@ -1,6 +1,5 @@
 import React from 'react'
 import RRSessionStore from "../../stores/rrSessionStore"
-import CSRFStore from "../../stores/csrfStore"
 import ClubActions from "../../actions/clubActions"
 import rrSessionActions from "../../actions/rrSessionActions"
 import moment from 'moment'
@@ -14,30 +13,20 @@ class RoundRobinSession extends React.Component {
         this.state = {
           session: RRSessionStore.find(this.props.params.id) || null,
           scoreChange: [],
-          scoreUpdate: {},
-          _csrf: null
+          scoreUpdate: {}
         }
     }
 
     componentDidMount() {
       this.rrsListener = RRSessionStore.addListener(this.setRRSession);
-      this.csrfListener = CSRFStore.addListener(this._fetchedCSRF);
       if (!this.state.session){
         rrSessionActions.fetchSession(this.props.params.id);
       } else {
         this.setRRSession();
       }
     }
-    _fetchedCSRF = () => {
-      this.setState({ _csrf: CSRFStore.getCSRF() });
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-      if (nextState._csrf !== null && this.state._csrf === null){
-        return false;
-      } else {
-        return true;
-      }
-    }
+
+
     updateScore = (scoreChangeInGroup, i) => {
       var scoreChange = Object.assign({}, this.state.scoreChange),
           scoreUpdate = Object.assign({}, this.state.scoreUpdate),
@@ -58,7 +47,6 @@ class RoundRobinSession extends React.Component {
           schema = curSession.selectedSchema,
           scoreChange = curSession.results.length ? curSession.results : this.setUpChangeArray(schema);
       this.setState({session, scoreChange});
-      ClubActions.fetchCSRF();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -69,7 +57,6 @@ class RoundRobinSession extends React.Component {
     }
     componentWillUnmount() {
       if (this.rrListener) this.rrsListener.remove();
-      if (this.csrfListener) this.csrfListener.remove();
     }
 
     setUpChangeArray(selectedSchema) {
@@ -81,12 +68,10 @@ class RoundRobinSession extends React.Component {
 
       if (!session) {
         browserHistory.push("/");
-      } else if (!this.state._csrf) {
-        forceUpdate();
       } else {
         rrSessionActions.updateSession(
           this.state.scoreChange, this.state.scoreUpdate,
-          this.state._csrf, session._id,
+          session._id,
         )
       }
     }

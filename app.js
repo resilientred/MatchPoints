@@ -13,6 +13,7 @@ import clubMethoding from './app/api/clubMethods';
 import clubRouting from "./app/api/club";
 import sessionRouting from "./app/api/session";
 import bodyParser from "body-parser"
+
 const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
 const port = process.env.PORT || 3000;
 const app = express();
@@ -28,7 +29,13 @@ app.set('view engine', 'ejs');
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
-app.use(csrf({ cookie: true, ignoreMethods: ['GET'] }));
+// app.use(csrf({ cookie: true }));
+// app.use((req, res, next) => {
+//   let token = req.csrfToken();
+//   res.cookie('XSRF-TOKEN', token);
+//   res.locals.csrfToken = token;
+//   next();
+// })
 // app.use(function (err, req, res, next) {
 //   if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
@@ -50,13 +57,9 @@ app.use('/api/club', clubRoutes);
 app.use('/session', sessionRoutes);
 // app.use('/*', (req, res, next) => {
 //   var origUrl = req.originalUrl;
-//   var redirectURL = origUrl.match(/^(\/login|\/signup|\/club)/);
-//   // if (!redirectURL){
-//   //   console.log(origUrl);
-//   //   console.log("path don't match", redirectURL);
-//   //   next();
-//   //   return;
-//   // }
+//   if (origUrl === "/") next();
+
+//   var redirectURL = origUrl.match(/^(\/login|\/signup)/);
 //   var currentClub;
 //   clubMethods.currentClub(req)
 //     .then((club) => {
@@ -64,14 +67,8 @@ app.use('/session', sessionRoutes);
 //     }).catch((err) => {
 //       currentClub = null;
 //     }).then(() => {
-//       if (!currentClub && redirectURL[0].match(/^(\/club)/)){
-//         console.log("redirecing to login");
-//         res.redirect("/login");
-//         res.end();
-//       } else if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
-//         console.log("redirecting to clubs");
-//         res.redirect("/club");
-//         res.end()
+//       if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
+//         next();
 //       } else {
 //         console.log("route check..sending to next")
 //         next();
@@ -79,18 +76,15 @@ app.use('/session', sessionRoutes);
 //     })
   
 // });
-app.post("/test", parseUrlEncoded, (req, res) => {
-  console.log(res.body);
+app.post("/test", parseUrlEncoded, csrfProtection, (req, res) => {
+  console.log(res);
 })
-app.get('/form', (req, res) => {
-  res.status(200).send({ csrfToken: req.csrfToken() })
-  res.end();
-})
+
 app.get('/login', csrfProtection, (req, res) => {
   res.render("pages/login", { csrfToken: req.csrfToken() });
 })
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+app.get('*', csrfProtection, (req, res) => {
+  res.render("pages/index", { csrfToken: req.csrfToken() });
 });  
 
 app.listen(port, () => {

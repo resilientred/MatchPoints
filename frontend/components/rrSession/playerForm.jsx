@@ -1,7 +1,6 @@
 import React from 'react';
 import ClubActions from '../../actions/clubActions';
 import Form from "../../mixins/form";
-import CSRFStore from "../../stores/csrfStore";
 import ClientActions from "../../actions/clientActions";
 import PlayerStore from "../../stores/playerStore";
 
@@ -44,9 +43,8 @@ class PlayerForm extends React.Component {
 }
 let initialState = {
       name: "",
-      rating: "0",
-      _csrf: ""
+      rating: "0"
 };
 // need to clear
-PlayerForm = Form(PlayerForm, initialState, CSRFStore, ClubActions)
+PlayerForm = Form(PlayerForm, initialState, ClubActions)
 export default PlayerForm;

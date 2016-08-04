@@ -4,23 +4,17 @@ import RRSessionStore from "../../stores/rrSessionStore"
 import RRResultEntry from "../record/roundrobinResultEntry"
 import ClubStore from "../../stores/clubStore"
 import ClubActions from "../../actions/clubActions"
-import CSRFStore from "../../stores/csrfStore"
 import { browserHistory } from 'react-router'
 
 class RoundRobinSessions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          results: [],
-          _csrf: null
+          results: []
         }
     }
     componentDidMount(){
       this.rrsListener = RRSessionStore.addListener(this._fetchedRRSessions);
-      this.csrfListener = CSRFStore.addListener(this._fetchedCSRF);
-
-      ClubActions.fetchCSRF();
-
       this.currentClub = ClubStore.getCurrentClub();
 
       if (this.currentClub){
@@ -28,9 +22,6 @@ class RoundRobinSessions extends React.Component {
       } else {
         this.csListener = ClubStore.addListener(this._fetchClubId);
       }
-    }
-    _fetchedCSRF = () => {
-      this.setState({ _csrf: CSRFStore.getCSRF() });
     }
     _fetchClubId = () =>{
       this.currentClub = ClubStore.getCurrentClub();
@@ -52,18 +43,16 @@ class RoundRobinSessions extends React.Component {
     }
 
     deleteResult = (id) => {
-      RRSessionActions.deleteSession(id, this.state._csrf);
-      ClubActions.fetchCSRF();
+      RRSessionActions.deleteSession(id);
     }
 
     finalizeResult = (id, clubId) => {
-      RRSessionActions.finalizeResult(id, clubId, this.state._csrf);
+      RRSessionActions.finalizeResult(id, clubId);
     }
 
     componentWillUnmount() {
       if (this.rrsListener) this.rrsListener.remove();
       if (this.csListener) this.csListener.remove();
-      if (this.csrfListener) this.csrfListener.remove();
     }
 
     render() {

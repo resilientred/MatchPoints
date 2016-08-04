@@ -11,7 +11,6 @@ import PlayerForm from './playerForm';
 import Modal from "react-modal";
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import ClubStore from "../../stores/clubStore";
-import CSRFStore from "../../stores/csrfStore";
 import { browserHistory } from "react-router";
 import Participants from "./participants";
 import Grouping from "./grouping";
@@ -23,7 +22,6 @@ export default class NewRRSession extends React.Component {
     this.state = {
       newPlayerModal: false,
       tab: 0,
-      _csrf: null,
       date: moment(),
       numPlayers: 0,
       hiddenPlayers: {},
@@ -37,8 +35,6 @@ export default class NewRRSession extends React.Component {
   componentDidMount(){
     this.psListener = PlayerStore.addListener(this._fetchedPlayers);
     ClientActions.fetchPlayers();
-    this.csrfListener = CSRFStore.addListener(this._fetchedCSRF);
-    ClubActions.fetchCSRF();
     this.rrListener = RRSessionStore.addListener(this._savedRR);
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
@@ -49,16 +45,7 @@ export default class NewRRSession extends React.Component {
     if (this.usListener) this.usListener.remove();
     if (this.rrListener) this.rrListener.remove();
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState._csrf !== null && this.state._csrf === null){
-      return false;
-    } else {
-      return true;
-    }
-  }
-  _fetchedCSRF = () => {
-    this.setState({ _csrf: CSRFStore.getCSRF() });
-  }
+
   _savedRR = () => {
     browserHistory.push("/club/sessions");
   }
@@ -138,7 +125,7 @@ export default class NewRRSession extends React.Component {
       addedPlayers: this.state.addedPlayers,
       selectedSchema: selectedSchema,
       schemata: schemata,
-    }, this.state._csrf, club_id);
+    }, club_id);
   }
   newPlayer = () => {
     return this.state.tab === 0 ? 
