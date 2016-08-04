@@ -17,8 +17,7 @@ export default function clubForms(Component, fields, store, action) {
     if (this.csrfListener) this.csrfListener.remove();
   },
   _updateField(name, e) {
-    let field = {};
-    field[name] = e.target.value;
+    let field = {[name]: e.target.value};
     this.setState(field);
   },
   _handleSubmit(callback, e) {

@@ -19,6 +19,20 @@ playerSchema.statics.updateRating = function(id, ratingDetail) {
   //one for the first time we submit the reuslt, and if we update it
   //it will make a patch reqruest instead.
   //but a problem is that we have to keep track of the old ratings
+
+
+  //also.. rating History should include date
+  //then it can use that and calculate the difference and update the rating accordingly
+  //and also store the rating Change
+
+  /*{ 
+    ratingHistory: {
+      date: ____,
+      ratingBefore: ___,
+      ratingChange: ___,
+      ratingAfter: ___
+    }
+  } */
 };
 
 

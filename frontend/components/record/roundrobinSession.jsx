@@ -54,13 +54,10 @@ class RoundRobinSession extends React.Component {
     }
 
     setRRSession = () => {
-      var curSession = this.state.session || RRSessionStore.find(this.props.params.id),
+      var session = this.state.session || RRSessionStore.find(this.props.params.id),
           schema = curSession.selectedSchema,
           scoreChange = curSession.results.length ? curSession.results : this.setUpChangeArray(schema);
-      this.setState({
-        session: curSession,
-        scoreChange: scoreChange
-      });
+      this.setState({session, scoreChange});
       ClubActions.fetchCSRF();
     }
 

@@ -6,7 +6,6 @@ var RRSessionStore = new Store(AppDispatcher);
 var _rrSessions = {};
 
 var _resetSession = (session) => {
-  debugger;
   _rrSessions[session.id] = session;
   RRSessionStore.__emitChange();
 };

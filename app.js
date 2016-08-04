@@ -12,7 +12,8 @@ import routes from './app/api/players';
 import clubMethoding from './app/api/clubMethods';
 import clubRouting from "./app/api/club";
 import sessionRouting from "./app/api/session";
-
+import bodyParser from "body-parser"
+const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
 const port = process.env.PORT || 3000;
 const app = express();
 const compiler = webpack(config);
@@ -20,11 +21,14 @@ const csrfProtection = csrf({ cookie: true })
 const clubMethods = new clubMethoding(app);
 const sessionRoutes = sessionRouting(clubMethods);
 const clubRoutes = clubRouting(clubMethods);
+const Transform = require('stream').Transform;
+const parser = new Transform();
 
+app.set('view engine', 'ejs');
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
-app.use(csrf({ cookie: true, ignoreMethods: ['GET', 'DELETE'] }));
+app.use(csrf({ cookie: true, ignoreMethods: ['GET'] }));
 // app.use(function (err, req, res, next) {
 //   if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
@@ -44,47 +48,49 @@ app.use(webpackMiddleware(compiler));
 app.use('/api', routes);
 app.use('/api/club', clubRoutes);
 app.use('/session', sessionRoutes);
-app.use('/*', (req, res, next) => {
-  var origUrl = req.originalUrl;
-  console.log(origUrl);
-  var redirectURL = origUrl.match(/^(\/login|\/signup|\/club|\/players)/);
-  if (!redirectURL){
-    console.log("path don't match");
-    next();
-    return;
-  }
-  var currentClub;
-  clubMethods.currentClub(req)
-    .then((club) => {
-      currentClub = club;
-    }).catch((err) => {
-      currentClub = null;
-    })
-
-  if (!currentClub && redirectURL[0].match(/^(\/club|\/players)/)){
-    console.log("redirecing to login");
-    res.redirect("/login");
-    res.end();
-  } else if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
-    console.log("redirecting to clubs");
-    res.redirect("/club");
-    res.end()
-  } else {
-    console.log("route check..sending to next")
-    next();
-  }
+// app.use('/*', (req, res, next) => {
+//   var origUrl = req.originalUrl;
+//   var redirectURL = origUrl.match(/^(\/login|\/signup|\/club)/);
+//   // if (!redirectURL){
+//   //   console.log(origUrl);
+//   //   console.log("path don't match", redirectURL);
+//   //   next();
+//   //   return;
+//   // }
+//   var currentClub;
+//   clubMethods.currentClub(req)
+//     .then((club) => {
+//       currentClub = club;
+//     }).catch((err) => {
+//       currentClub = null;
+//     }).then(() => {
+//       if (!currentClub && redirectURL[0].match(/^(\/club)/)){
+//         console.log("redirecing to login");
+//         res.redirect("/login");
+//         res.end();
+//       } else if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
+//         console.log("redirecting to clubs");
+//         res.redirect("/club");
+//         res.end()
+//       } else {
+//         console.log("route check..sending to next")
+//         next();
+//       }
+//     })
   
-});
-
+// });
+app.post("/test", parseUrlEncoded, (req, res) => {
+  console.log(res.body);
+})
 app.get('/form', (req, res) => {
-  console.log("sent csrf");
   res.status(200).send({ csrfToken: req.csrfToken() })
   res.end();
 })
-
+app.get('/login', csrfProtection, (req, res) => {
+  res.render("pages/login", { csrfToken: req.csrfToken() });
+})
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-  //TODO fix this....this is causing a weird response in get request
 });  
 
 app.listen(port, () => {

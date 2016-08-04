@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import RecordTable from './recordTable.jsx'
 
-class Record extends React.component {
+class Record extends component {
 	constructor(props){
 		super(props);
 	}

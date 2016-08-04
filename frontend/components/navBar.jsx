@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import ClubActions from '../actions/clubActions';
 import ClubStore from "../stores/clubStore";
 
-export default class NavBar extends React.Component {
+export default class NavBar extends Component {
     constructor(props) {
         super(props);
-        this.displayName = 'NavBar';
         this.state = { currentClub: null, tab: 0 };
     }
     componentDidMount() {
@@ -25,7 +24,7 @@ export default class NavBar extends React.Component {
     setCurrentClub = () => {
         var currentClub = ClubStore.getCurrentClub();
         if (currentClub){
-          this.setState({currentClub: currentClub, tab: 0});
+          this.setState({ currentClub, tab: 0 });
         } else {
           if (this.state.currentClub) this.setState({currentClub: null});
           browserHistory.push("/");

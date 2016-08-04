@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import RoundRobinSessions from './record/roundrobinSessions';
 import { Link, browserHistory } from "react-router";
-class Club extends React.Component {
+class Club extends Component {
     constructor(props) {
         super(props);
     }
