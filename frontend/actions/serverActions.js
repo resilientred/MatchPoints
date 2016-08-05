@@ -1,55 +1,55 @@
 import Dispatcher from "../dispatcher/dispatcher";
-import PlayerConstants from "../constants/playerConstants";
-import ClubConstants from "../constants/clubConstants";
-import SessionConstants from "../constants/rrSessionConstants";
+import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
+				 LOGGED_IN, FETCHED_PLAYER, FETCHED_PLAYERS, REMOVED_PLAYER } from "../constants/constants"
+
 module.exports = {
 	deletedRRSession (sessionId){
 		Dispatcher.dispatch({
-			actionType: SessionConstants.DELETED_SESSION,
+			actionType: DELETED_SESSION,
 			session: sessionId
 		})
 	},
 	fetchedRRSessions(sessions){
 		Dispatcher.dispatch({
-			actionType: SessionConstants.FETCHED_SESSIONS,
+			actionType: FETCHED_SESSIONS,
 			sessions: sessions
 		})
 	},
 	fetchedRRSession(session){
 		Dispatcher.dispatch({
-			actionType: SessionConstants.FETCHED_SESSION,
+			actionType: FETCHED_SESSION,
 			session: session
 		})
 	},
 	loggedIn(club) {
 		Dispatcher.dispatch({
-			actionType: ClubConstants.LOGGED_IN,
+			actionType: LOGGED_IN,
 			club: club
 		})
 	},
 	fetchedPlayers(players) {
 		Dispatcher.dispatch({
-			actionType: PlayerConstants.FETCHED_PLAYERS,
+			actionType: FETCHED_PLAYERS,
 			players: players
 		})
 	},
 	fetchedPlayer(player) {
 		Dispatcher.dispatch({
-			actionType: PlayerConstants.FETCHED_PLAYER,
+			actionType: FETCHED_PLAYER,
 			players: player
 		})
 	},
 	
 	updatedPlayer(player) {
 		Dispatcher.dispatch({
-			actionType: PlayerConstants.FETCHED_PLAYER,
+			actionType: FETCHED_PLAYER,
 			player: player
 		})
 	},
 
 	removedPlayer (player) {
 		Dispatcher.dispatch({
-			actionType: PlayerConstants.REMOVED_PLAYER,
+			actionType: REMOVED_PLAYER,
 			player: player
 		})
 	}

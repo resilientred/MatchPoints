@@ -1,6 +1,6 @@
-import { Store } from "flux/utils";
-import AppDispatcher from "../dispatcher/dispatcher";
-import RRSessionConstants from "../constants/rrSessionConstants";
+import { Store } from "flux/utils"
+import AppDispatcher from "../dispatcher/dispatcher"
+import { FETCHED_SESSION, FETCHED_SESSIONS, DELETED_SESSION } from "../constants/constants"
 
 var RRSessionStore = new Store(AppDispatcher);
 var _rrSessions = {};
@@ -23,9 +23,8 @@ var _deleteSession = (sessionId) => {
 };
 
 RRSessionStore.all = () => {
-  var sessions = Object.keys(_rrSessions).map( (sessionId) =>
-    _rrSessions[sessionId]);
-  return sessions;
+  return Object.keys(_rrSessions)
+    .map( sessionId => _rrSessions[sessionId]);
 }
 
 RRSessionStore.find = (id) => {
@@ -34,13 +33,13 @@ RRSessionStore.find = (id) => {
 
 RRSessionStore.__onDispatch = (payload) => {
   switch (payload.actionType){
-    case RRSessionConstants.FETCHED_SESSION:
+    case FETCHED_SESSION:
       _resetSession(payload.session);
       break;
-    case RRSessionConstants.FETCHED_SESSIONS:
+    case FETCHED_SESSIONS:
       _resetSessions(payload.sessions);
       break;
-    case RRSessionConstants.DELETED_SESSION:
+    case DELETED_SESSION:
       _deleteSession(payload.session);
       break;
   }

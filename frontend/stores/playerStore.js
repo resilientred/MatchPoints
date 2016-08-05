@@ -1,19 +1,19 @@
 import Dispatcher from '../dispatcher/dispatcher';
 import { Store } from 'flux/utils';
-import PlayerConstants from '../constants/playerConstants';
+import { FETCHED_PLAYERS, FETCHED_PLAYER, REMOVED_PLAYER }from '../constants/constants';
 let _players = {};
-let _resetPlayers = (players) => {
-  players.forEach(player=>(_players[player._id] = player));
+const _resetPlayers = (players) => {
+  players.forEach(player=> (_players[player._id] = player));
 }; 
 
-let _setPlayer = (player) => {
+const _setPlayer = (player) => {
   _players[player._id] = player;
 };
 
-let _removePlayer = (player) => {
+const _removePlayer = (player) => {
   delete _players[player._id];
 };
-let PlayerStore = new Store(Dispatcher);
+const PlayerStore = new Store(Dispatcher);
 PlayerStore.all = () => {
   return _players;
 },
@@ -24,15 +24,15 @@ PlayerStore.find = (id) => {
 
 PlayerStore.__onDispatch = (payload) => {
   switch(payload.actionType){
-    case PlayerConstants.FETCHED_PLAYERS:
+    case FETCHED_PLAYERS:
       _resetPlayers(payload.players);
       PlayerStore.__emitChange();
       break;
-    case PlayerConstants.FETCHED_PLAYER:
+    case FETCHED_PLAYER:
       _setPlayer(payload.player);
       PlayerStore.__emitChange();
       break;
-    case PlayerConstants.REMOVED_PLAYER:
+    case REMOVED_PLAYER:
       _removePlayer(payload.player);
       PlayerStore.__emitChange();
       break;

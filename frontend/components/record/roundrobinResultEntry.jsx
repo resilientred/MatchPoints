@@ -18,7 +18,7 @@ class RoundRobinResultEntry extends React.Component {
     }
     lastButton() {
       return (<button style={{backgroundColor: "#6bb389"}}>
-      { "View" } 
+      View
       </button>);
     }
     render() {

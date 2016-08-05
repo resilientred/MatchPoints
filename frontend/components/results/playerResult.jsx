@@ -3,7 +3,7 @@ import Graph from "./graph"
 import PlayerStore from "../../stores/playerStore"
 import ClientActions from "../../actions/clientActions"
 
-class PlayerQuery extends Component {
+export default class PlayerResult extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +14,9 @@ class PlayerQuery extends Component {
     const playerId = this.props.params.playerId;
 
     this.qaListener = ClientActions.addListener(fetchedPlayerRecord);
+    _checkIfCached(playerId);
+  }
+  _checkIfCached(playerId){
     let player = PlayerStore.find(playerId);
     if (player){
       this.setState({ player })
@@ -27,15 +30,10 @@ class PlayerQuery extends Component {
     } 
     return true;
   }
-  
+
   componentWillReceiveProps(nextProps) {
     const playerId = nexProps.params.playerId;
-    let player = PlayerStore.find(playerId);
-    if (player){
-      this.setState({ player })
-    } else {
-      ClientActions.fetchPlayerRecord(playerId);
-    }
+    _checkIfCached(playerId);
   }
   fetchedPlayerRecord = () => {
     this.setState({ player: PlayerStore.find(this.props.params.playerId) });
@@ -45,7 +43,7 @@ class PlayerQuery extends Component {
     return this.state.player.ratingHistory.map(history => history.newRating)
   }
   render() {
-    if (!this.state.record) return <div>Loading</div>;
+    if (!this.state.record) return <div>Loading...</div>;
 
     return (
       <div>
@@ -54,5 +52,3 @@ class PlayerQuery extends Component {
       );
   }
 }
-
-export default PlayerQuery
