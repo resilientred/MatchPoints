@@ -12,24 +12,14 @@ class RoundRobinResultEntry extends React.Component {
       id: React.PropTypes.string.isRequired,
       date: React.PropTypes.string.isRequired,
       deleteResult: React.PropTypes.func.isRequired,
-      finalizeResult: React.PropTypes.func.isRequired,
       editResult: React.PropTypes.func.isRequired,
       _clubId: React.PropTypes.string.isRequired,
       finalized: React.PropTypes.bool.isRequired
     }
-    //put a calendar icon at the front of the date
     lastButton() {
-      if (this.props.finalized){
-        return (<button style={{backgroundColor: "#6bb389"}}onClick={this.props.finalizeResult.bind(null, id, clubId)}>
-                "Finalize"
-              </button>);
-      } else {
-        //need to add a link
-        return (<button style={{backgroundColor: "#6bb389"}}>
-        { "View" } 
-        </button>);
-      }
-      
+      return (<button style={{backgroundColor: "#6bb389"}}>
+      { "View" } 
+      </button>);
     }
     render() {
       var id = this.props.id,

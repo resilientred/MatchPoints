@@ -33,6 +33,12 @@ module.exports = {
 			players: players
 		})
 	},
+	fetchedPlayer(player) {
+		Dispatcher.dispatch({
+			actionType: PlayerConstants.FETCHED_PLAYER,
+			players: player
+		})
+	},
 	
 	updatedPlayer(player) {
 		Dispatcher.dispatch({

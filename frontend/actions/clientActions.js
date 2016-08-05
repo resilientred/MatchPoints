@@ -7,7 +7,12 @@ export default {
 			success: "fetchedPlayers"
 		});
 	},
-
+	fetchPlayer(id) {
+		ApiUtil.apiService({
+			url: `/api/players/${id}`,
+			success: "fetchedPlayer"
+		})
+	},
 	addPlayer(player) {
     player.rating = +player.rating;
 		ApiUtil.apiCSRFService({

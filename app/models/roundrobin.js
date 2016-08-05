@@ -15,7 +15,6 @@ const roundRobinSchema = new Schema({
   id: { type: String, default: shortid.generate, required: true, index: true }
 });
 
-
 roundRobinSchema.statics.findRoundRobinsByClub = function(clubId){
   return this.find({"_clubId": clubId});
 };
@@ -24,8 +23,13 @@ roundRobinSchema.statics.findRoundRobin = function(id){
   return this.findOne({"_id": id})
 };
 
-roundRobinSchema.statics.finalizeResult = function(clubId, id){
-  return this.update({"_clubId": clubId, "id": id}, {$set: {"finalized": true}})
+roundRobinSchema.statics.saveResult = function(id, result){
+  return this.update({"id": id}, {
+    $set: {
+      "finalized": true,
+      "results": result
+    }
+  });
 };
 
 roundRobinSchema.statics.deleteRoundRobin = function(id){

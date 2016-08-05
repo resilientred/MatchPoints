@@ -26,7 +26,6 @@ class RoundRobinSession extends React.Component {
       }
     }
 
-
     updateScore = (scoreChangeInGroup, i) => {
       var scoreChange = Object.assign({}, this.state.scoreChange),
           scoreUpdate = Object.assign({}, this.state.scoreUpdate),
@@ -69,10 +68,17 @@ class RoundRobinSession extends React.Component {
       if (!session) {
         browserHistory.push("/");
       } else {
-        rrSessionActions.updateSession(
-          this.state.scoreChange, this.state.scoreUpdate,
-          session._id,
-        )
+        if (session.finalized){
+          rrSessionActions.updateResult(
+            this.state.scoreChange, this.state.scoreUpdate,
+            session._id, session.date
+          )
+        } else {
+          rrSessionActions.postResult(
+            this.state.scoreChange, this.state.scoreUpdate,
+            session._id, session.date
+          )
+        }
       }
     }
 

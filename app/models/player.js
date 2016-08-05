@@ -1,40 +1,52 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
+let history = new Schema({
+  date: Date,
+  newRating: Number,
+  ratingChange: Number
+})
 let playerSchema = new Schema({
-	name: { type: String, required: true },
-	rating: { type: Number, required: true },
-  ratingHistory: { type: Array, default: []},
-	updated_at: { type: Date, default: Date.now },
+  name: { type: String, required: true },
+  rating: { type: Number, required: true },
+  ratingHistory: [history],
+  updated_at: { type: Date, default: Date.now },
   associated_clubs: { type: Array, default: [] }
 });
 
-
-playerSchema.statics.updateRating = function(id, ratingDetail) {
-  return this.findOneAndUpdate({ _id: id}, { 
-    $inc: { rating: ratingDetail.ratingChange },
-    $push: { ratingHistory: ratingDetail.ratingBefore } 
+playerSchema.statics.addHistory = function(id, ratingDetail) {
+  let newHistory = new history({
+    date: ratingDetail.date, 
+    ratingChange: ratingDetail.ratingChange,
+    newRating: ratingDetail.ratingBefore + ratingDetail.ratingChange
+  });
+  return newHistory.save()
+    .then( () => {
+      this.update({ _id: id}, { 
+      $inc: { rating: ratingDetail.ratingChange },
+      $push: { ratingHistory: newHistory } 
+    });
   })
-  ///issue: a new entry will be create every time we submit.
-  //solution: make two separate api calls
-  //one for the first time we submit the reuslt, and if we update it
-  //it will make a patch reqruest instead.
-  //but a problem is that we have to keep track of the old ratings
-
-
-  //also.. rating History should include date
-  //then it can use that and calculate the difference and update the rating accordingly
-  //and also store the rating Change
-
-  /*{ 
-    ratingHistory: {
-      date: ____,
-      ratingBefore: ___,
-      ratingChange: ___,
-      ratingAfter: ___
-    }
-  } */
 };
+playerSchema.statics.updateHistory = function(id, ratingDetail){
+  let player;
 
+  return this.findOne({ _id: id})
+    .then( (player) => {
+      player = player;
+      return player.ratingHistory.find({date: ratingDetail.date })
+    }).then( (history) => {
+      return player.update({ //this might have to be another query
+        $inc: { 
+          rating: ratingDetail.ratingChange - history.ratingChange
+        }
+      })
+    })
+
+    //couple of doubts. 
+    //does findOne return a promise or do I need to call exec
+    //is find another one?
+    //not sure if I need findoneandupdate or is there an update on the instance
+}
 
 playerSchema.methods.findClubs = function(cb){
   return this.model.find({_id: this.id}, {_id: false, associated_clubs: true }, cb);

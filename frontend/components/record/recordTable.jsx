@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import RecordTableDetail from "./recordTableDetail"
 
-class RecordTable extends React.Component {
+class RecordTable extends Component {
 	constructor(props){
 		super(props);
     this.state = {
       result: [...Array(this.props.sizeOfGroup)].map((_) => 
-      [...Array(this.props.sizeOfGroup)].map((_) => [0, 0]))
+        [...Array(this.props.sizeOfGroup)].map((_) => [0, 0]))
     }
 	}
   static propTypes = {
@@ -15,6 +15,7 @@ class RecordTable extends React.Component {
     joinedPlayers: React.PropTypes.object.isRequired,
     sizeOfGroup: React.PropTypes.number.isRequired
   }
+
   _handleCalculate = (e) => {
     e.preventDefault();
     if (e.currentTarget.className === "calculate"){
@@ -105,5 +106,5 @@ class RecordTable extends React.Component {
       </div>
 	}
 }
-
+//wtf is this.state.ratingCahnge
 export default RecordTable;

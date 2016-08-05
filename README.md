@@ -9,17 +9,19 @@ And allow users to:
 * query their indiviual old results
 ## Todos
  - [x] saving schema
+ - [x] pdf generator
+ - [ ] integrate pdf generator into app
+ - [ ] find a satisfactory design
  - [ ] temporarily save schema in react-cookie and empty after sending request to store
- - [ ] pdf generator
- - [ ] deploy on heroku
+ - [ ] deploy on AWS
 
 ## Expected Features
  - [x] Arrange groups for players based on ratings
  - [x] Allow organizers to enter results
- - [ ] Allow Users to customize scoring algorithm
- - [ ] Calculate scores automatically based on default or given scoring algorithms
+ - [x] Calculate scores automatically based on default algorithms
+ - [x] Provide a platform for participants to query their individual past results
  - [ ] Provide a platform for participants to query results based on event date
- - [ ] Provide a platform for participants to query their individual past results
+ - [ ] Allow Users to customize scoring algorithm
 
 ## Languages:
  - Front-end: React.js with Flux architectural framework

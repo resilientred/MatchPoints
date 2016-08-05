@@ -5,6 +5,10 @@ class Club extends Component {
     constructor(props) {
         super(props);
     }
+
+    componentDidMount() {
+        //check whether user is logged in    
+    }
     static propTypes = {
         children: React.PropTypes.oneOfType([
             React.PropTypes.arrayOf(React.PropTypes.node),

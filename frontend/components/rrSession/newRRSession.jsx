@@ -47,7 +47,7 @@ export default class NewRRSession extends React.Component {
   }
 
   _savedRR = () => {
-    browserHistory.push("/club/sessions");
+    browserHistory.push("/club/sessions");///should be hashHistory
   }
   openModal(name){
     var modalObj = {};

@@ -46,9 +46,6 @@ class RoundRobinSessions extends React.Component {
       RRSessionActions.deleteSession(id);
     }
 
-    finalizeResult = (id, clubId) => {
-      RRSessionActions.finalizeResult(id, clubId);
-    }
 
     componentWillUnmount() {
       if (this.rrsListener) this.rrsListener.remove();

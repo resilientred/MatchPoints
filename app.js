@@ -55,27 +55,27 @@ app.use(webpackMiddleware(compiler));
 app.use('/api', routes);
 app.use('/api/club', clubRoutes);
 app.use('/session', sessionRoutes);
-// app.use('/*', (req, res, next) => {
-//   var origUrl = req.originalUrl;
-//   if (origUrl === "/") next();
+app.use('/*', (req, res, next) => {
+  var origUrl = req.originalUrl;
+  if (origUrl === "/") next();
 
-//   var redirectURL = origUrl.match(/^(\/login|\/signup)/);
-//   var currentClub;
-//   clubMethods.currentClub(req)
-//     .then((club) => {
-//       currentClub = club;
-//     }).catch((err) => {
-//       currentClub = null;
-//     }).then(() => {
-//       if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
-//         next();
-//       } else {
-//         console.log("route check..sending to next")
-//         next();
-//       }
-//     })
+  var redirectURL = origUrl.match(/^(\/login|\/signup)/);
+  var currentClub;
+  clubMethods.currentClub(req)
+    .then((club) => {
+      currentClub = club;
+    }).catch((err) => {
+      currentClub = null;
+    }).then(() => {
+      if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
+        res.redirect("/club");
+      } else {
+        console.log("not login or sign up");
+        next();
+      }
+    })
   
-// });
+});
 app.post("/test", parseUrlEncoded, csrfProtection, (req, res) => {
   console.log(res);
 })

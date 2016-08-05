@@ -51,20 +51,6 @@ function clubRoutes(clubMethods){
             console.log(err)
             res.status(422).send(err);
           })
-      }).patch("/:clubId/sessions/:id/finalize", parsedUrlEncoded, (req, res) => {
-           var id = req.params.id,
-               clubId = req.params.clubId;
-        RoundRobinModel.finalizeResult(clubId, id)
-          .then((status) => {
-            return RoundRobinModel.findRoundRobin(id);
-        }).then((session)=> {
-            res.status(200).send(session);
-            res.end();
-        }).catch((err)=> {
-
-            res.status(422).send(err);
-            res.end();
-        });
       }).delete("/sessions/:id", (req, res) => {
         var id = req.params.id;
         RoundRobinModel.deleteRoundRobin(clubId, id)
@@ -75,18 +61,37 @@ function clubRoutes(clubMethods){
             res.status(500);
             res.end();
           });
-      }).patch("/sessions/:id", parsedUrlEncoded, (req, res) => {
+      }).post("/sessions/:id", parsedUrlEncoded, (req, res) => {
+        //if finalized is false
         var id = req.params.id,
             data = req.body.data,
             ratingUpdateList = req.body.ratingUpdateList;
-        // var p = new Parallel(ratingUpdateList);
 
-        // p.map(updateRating).then(function() {
-        //   console.log("done");
-        // }); <--- parallel loses context 
         var promiseResults = [];
         for (var player in ratingUpdateList){
-          promiseResults.push(PlayerModel.updateRating(player, ratingUpdateList[player])); 
+          promiseResults.push(PlayerModel.addHistory(player, ratingUpdateList[player])); 
+        } 
+        Promise.all(promiseResults).then( (status) => {
+          console.log(status);
+          return RoundRobinModel.saveResult(id, data);
+        } ).then((success) => {
+            return RoundRobinModel.findRoundRobin(id);
+          }).then((session) => {
+            console.log(session);
+            res.status(200).send(session);
+          }).catch((err) => {
+            console.log(err);
+            res.status(422).send(err);
+          })
+      }).patch("/sessions/id", parseUrlEncoded, (req, res) => {
+          //if finalized is true
+        var id = req.params.id,
+            data = req.body.data,
+            ratingUpdateList = req.body.ratingUpdateList;
+
+        var promiseResults = [];
+        for (var player in ratingUpdateList){
+          promiseResults.push(PlayerModel.updateHistory(player, ratingUpdateList[player])); 
         } 
         Promise.all(promiseResults).then( (status) => {
           console.log(status);

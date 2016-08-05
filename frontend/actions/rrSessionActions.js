@@ -19,9 +19,20 @@ export default {
       method: "POST",
       data: data,
       success: "fetchedRRSession"
-    }, _csrf)
+    })
   },
-  updateSession(data, ratingUpdateList, id){
+  postResult(data, ratingUpdateList, id){
+    ApiUtils.apiCSRFService({
+      url: "/api/club/sessions/" + id,
+      method:"POST",
+      data: {
+        data: data,
+        ratingUpdateList: ratingUpdateList
+      },
+      success: "fetchedRRSession"
+    })
+  },
+  updateResult(data, ratingUpdateList, id){
     ApiUtils.apiCSRFService({
       url: "/api/club/sessions/" + id,
       method:"PATCH",
@@ -30,21 +41,13 @@ export default {
         ratingUpdateList: ratingUpdateList
       },
       success: "fetchedRRSession"
-    }, _csrf)
+    })
   },
   deleteSession(id){
     ApiUtils.apiCSRFService({
       url: "/api/club/sessions/" + id,
       method: "DELETE",
       success: "deletedRRSession"
-    }, _csrf);
-  },
-
-  finalizeResult(id, clubId){
-    ApiUtils.apiCSRFService({
-      url: "/api/club/" + clubId + "/sessions/" + id  + "/finalize",
-      method: "PATCH",
-      success: "fetchedRRSession"
-    }, _csrf)
+    });
   }
 }

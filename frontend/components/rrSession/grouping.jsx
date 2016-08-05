@@ -66,7 +66,7 @@ class Grouping extends React.Component {
     }
     changeSchema = (e) => {
       this.totalPlayerAdded = 0;
-      this.setState({selectedGroup: e.target.value.split(",")}); 
+      this.setState({ selectedGroup: e.target.value.split(",")}); 
     }
 
     changeNumOfPlayers = (index, num, _) => {
@@ -80,9 +80,7 @@ class Grouping extends React.Component {
       this.totalPlayerAdded = 0;
       return <div className="grouping">
         <button onClick={this.props.saveSession.bind(null, 
-                          this.state.schemata, 
-                          this.state.rangeOfPlayer,
-                          this.state.selectedGroup)
+                          ...this.state)
                         }>Save</button>
         { this.schemata() }
         { 
