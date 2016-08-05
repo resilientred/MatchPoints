@@ -12,9 +12,7 @@ import routes from './app/api/players';
 import clubMethoding from './app/api/clubMethods';
 import clubRouting from "./app/api/club";
 import sessionRouting from "./app/api/session";
-import bodyParser from "body-parser"
-
-const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
+// const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
 const port = process.env.PORT || 3000;
 const app = express();
 const compiler = webpack(config);
@@ -76,9 +74,9 @@ app.use('/*', (req, res, next) => {
     })
   
 });
-app.post("/test", parseUrlEncoded, csrfProtection, (req, res) => {
-  console.log(res);
-})
+// app.post("/test", parseUrlEncoded, csrfProtection, (req, res) => {
+//   console.log(res);
+// })
 
 app.get('/login', csrfProtection, (req, res) => {
   res.render("pages/login", { csrfToken: req.csrfToken() });

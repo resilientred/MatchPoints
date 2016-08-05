@@ -8,7 +8,7 @@ import Club from "./components/club"
 import NewRRSession from "./components/rrSession/newRRSession"
 import RoundRobinSessions from "./components/record/roundrobinSessions"
 import RoundRobinSession from "./components/record/roundrobinSession"
-import PlayerResult from "../components/results/playerResult"
+import PlayerResult from "./components/results/playerResult"
 import ErrorPage from "./errorPage"
 
 const Routes = (

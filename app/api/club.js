@@ -3,10 +3,9 @@ import bodyParser from 'body-parser'
 import ClubModel from '../models/club'
 import RoundRobinModel from "../models/roundrobin"
 import Parallel from "paralleljs"
-import PlayerModel from "../models/player"
+import { Player as PlayerModel } from "../models/player"
 const router = express.Router();
 const parsedUrlEncoded = bodyParser.urlencoded({ extended: true });
-
 
 
 function clubRoutes(clubMethods){
@@ -20,7 +19,7 @@ function clubRoutes(clubMethods){
           console.log(err);
         });
     }).get("/:clubId/sessions", (req, res) => {
-        var clubId = req.params.clubId;
+        let clubId = req.params.clubId;
         RoundRobinModel.findRoundRobinsByClub(clubId)
           .then((roundrobins) => {
             res.status(200).send(roundrobins);
@@ -31,10 +30,10 @@ function clubRoutes(clubMethods){
           });
 
       }).post("/:clubId/session/new", parsedUrlEncoded, (req, res) => {
-        var clubId = req.params.clubId,
+        let clubId = req.params.clubId,
             reqBody = req.body;
 
-        var newRR = new RoundRobinModel({
+        let newRR = new RoundRobinModel({
           _clubId: clubId,
           date: reqBody.date,
           numOfPlayers: reqBody.numOfPlayers,
@@ -51,8 +50,24 @@ function clubRoutes(clubMethods){
             console.log(err)
             res.status(422).send(err);
           })
+      }).post("/:clubId/players/new", parsedUrlEncoded, (req, res) => {
+        let clubId = req.params.clubId, 
+            data = req.body;
+        let newPlayer = new PlayerModel({
+          name: data.name,
+          rating: data.rating
+        });
+
+        newPlayer.save()
+          .then((player) => {
+            ClubModel.addPlayer(clubId, player);
+          }).then((club) => {
+            res.status(200).send(club);
+          }).err((err) => {
+            res.status(422).send(err);
+          })
       }).delete("/sessions/:id", (req, res) => {
-        var id = req.params.id;
+        let id = req.params.id;
         RoundRobinModel.deleteRoundRobin(clubId, id)
           .then((session) => {
             res.status(200).send(id);
@@ -63,12 +78,12 @@ function clubRoutes(clubMethods){
           });
       }).post("/sessions/:id", parsedUrlEncoded, (req, res) => {
         //if finalized is false
-        var id = req.params.id,
+        let id = req.params.id,
             data = req.body.data,
             ratingUpdateList = req.body.ratingUpdateList;
 
-        var promiseResults = [];
-        for (var player in ratingUpdateList){
+        let promiseResults = [];
+        for (let player in ratingUpdateList){
           promiseResults.push(PlayerModel.addHistory(player, ratingUpdateList[player])); 
         } 
         Promise.all(promiseResults).then( (status) => {
@@ -83,14 +98,14 @@ function clubRoutes(clubMethods){
             console.log(err);
             res.status(422).send(err);
           })
-      }).patch("/sessions/id", parseUrlEncoded, (req, res) => {
+      }).patch("/sessions/id", parsedUrlEncoded, (req, res) => {
           //if finalized is true
-        var id = req.params.id,
+        let id = req.params.id,
             data = req.body.data,
             ratingUpdateList = req.body.ratingUpdateList;
 
-        var promiseResults = [];
-        for (var player in ratingUpdateList){
+        let promiseResults = [];
+        for (let player in ratingUpdateList){
           promiseResults.push(PlayerModel.updateHistory(player, ratingUpdateList[player])); 
         } 
         Promise.all(promiseResults).then( (status) => {
@@ -106,8 +121,8 @@ function clubRoutes(clubMethods){
             res.status(422).send(err);
           })
       }).post('/new', parsedUrlEncoded, (req, res) => {
-        var data = req.body;
-        var newClub = new ClubModel({
+        let data = req.body;
+        let newClub = new ClubModel({
           username: data.username,
           clubName: data.club,
           city: data.city,
