@@ -44,10 +44,10 @@ export const updateResult = (data, ratingUpdateList, id) => {
   })
 }
 export const deleteSession = (id) => {
-    apiCSRFService({
-      url: "/api/clubs/sessions/" + id,
-      method: "DELETE",
-      success: "deletedRRSession"
-    });
-  }
+  apiCSRFService({
+    url: "/api/clubs/sessions/" + id,
+    method: "DELETE",
+    success: "deletedRRSession"
+  });
 }
+

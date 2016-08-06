@@ -1,9 +1,8 @@
 import express from 'express';
 import { Player } from '../models/player.js';
 import Club from "../models/club"
-import BodyParser from 'body-parser';
+import { parseUrlEncoded, csrfProtection } from "../app_modules"
 const router = express.Router();
-const parseUrlencoded = BodyParser.urlencoded({ extended: false });
 
 router.route("/players")
 	.get((req, res)=>{
@@ -14,8 +13,7 @@ router.route("/players")
       }).catch( err => {
         res.status(422).send(err);
       })
-  })
-  .post(parseUrlencoded, (req, res) => {
+  }).post(parseUrlEncoded, (req, res) => {
     let data = req.body;
     let player = new Player({
       "name": data.name,
@@ -31,11 +29,9 @@ router.route("/players")
       }
       
     })
-})
-  .delete((req, res)=>{
+  }).delete((req, res)=>{
 
-})
-  .patch((req, res)=>{
+  }).patch((req, res)=>{
 
 });
   

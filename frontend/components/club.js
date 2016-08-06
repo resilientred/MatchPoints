@@ -1,6 +1,10 @@
-import React, { Component } from 'react';
-import RoundRobinSessions from './record/roundrobinSessions';
-import { Link, browserHistory } from "react-router";
+import React, { Component } from 'react'
+import RoundRobinSessions from './record/roundrobinSessions'
+import { Link, browserHistory } from "react-router"
+import NavBar from "./navBar"
+import { fetchCurrentClub } from '../actions/clubActions'
+import ClubStore from "../stores/clubStore"
+
 class Club extends Component {
     constructor(props) {
         super(props);
@@ -8,9 +12,14 @@ class Club extends Component {
             club: null
         }
     }
-
     componentWillMount() {
-        //check whether user is logged in 
+        this.cuListener = ClubStore.addListener(this.setCurrentClub);
+        let club = ClubStore.getCurrentClub();
+        if (club){
+            this.setState({ club })
+        } else {
+            fetchCurrentClub();
+        }
     }
     static propTypes = {
         children: React.PropTypes.oneOfType([
@@ -31,6 +40,7 @@ class Club extends Component {
             return <h1>Loading...</h1>
         }
         return <div className="club-body">
+            <NavBar { ...this.state } />
             { this.clubNav() }
             <div className="club-children">
                 { this.props.children }

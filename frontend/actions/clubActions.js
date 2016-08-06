@@ -1,21 +1,22 @@
-import { apiService } from "../utils/apiUtil";
+import { apiService, apiCSRFService } from "../utils/apiUtil";
 
 
 export const fetchCurrentClub = () => {
   apiService({
-    url: "/api/club",
+    url: "/api/clubs",
     success: "loggedIn"
   })
 }
 export const logIn = (data) => {
   apiCSRFService({
-    method: "POST"
+    method: "POST",
     url: "/session/new",
-    data: { user: data },
+    data: {user: data},
     success: "loggedIn",
-    error: "failedLoggedIn"
+    error: "failedLogIn"
   })
 }
+
 export const logOut = () => {
   apiService({
     method: "DELETE",

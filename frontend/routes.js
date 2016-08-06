@@ -1,7 +1,7 @@
 import React from "react"
 import App from "./app"
 import { Route, IndexRoute } from 'react-router'
-
+import Splash from "./components/splash"
 import NavBar from './components/navBar'
 import Club from "./components/club"
 import NewRRSession from "./components/rrSession/newRRSession"
@@ -9,11 +9,13 @@ import RoundRobinSessions from "./components/record/roundrobinSessions"
 import RoundRobinSession from "./components/record/roundrobinSession"
 import PlayerResult from "./components/results/playerResult"
 import ErrorPage from "./errorPage"
-
+import LogInForm from "./components/user/logIn"
+import SignUpForm from "./components/user/signUp"
 const Routes = (
   <Route path="/" component={App}> 
-    <Route path="login" component={LogIn} />
-    <Route path="signup" component={SignUp} />
+    <IndexRoute component={Splash} />
+    <Route path="login" component={LogInForm} />
+    <Route path="signup" component={SignUpForm} />
     <Route path="club" component={Club} >
       <Route path="sessions" component={RoundRobinSessions} />
         <Route path="sessions/:id" component={RoundRobinSession} />

@@ -44,18 +44,19 @@ export default class LogInForm extends Component {
     this.csListener.remove();
   }
   render() {
-    return <div class="forms">
+    return <div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Log In</h3>
+        { this.state.error }
         <div>
-          <label for="username">Username</label>
+          <label htmlFor="username">Username</label>
           <input type="text" id="username"
                  placeholder="username" 
                  onChange={this.updateField.bind(this, "username")}
                  required/>
         </div>
         <div>
-          <label for="password">Password</label>
+          <label htmlFor="password">Password</label>
           <input type="password" id="password" 
                 placeholder="password" 
                 onChange={this.updateField.bind(this, "password")}

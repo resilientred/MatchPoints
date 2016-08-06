@@ -4,7 +4,6 @@ import RoundRobinModel from "../models/roundrobin"
 import Parallel from "paralleljs"
 import { Player as PlayerModel } from "../models/player"
 import { clubMethods, parseUrlEncoded, csrfProtection } from "../app_modules"
-
 const router = express.Router();
 
 router.get("", (req, res) => {
@@ -26,7 +25,7 @@ router.get("", (req, res) => {
           res.end();
         });
 
-    }).post("/:clubId/session/new", parsedUrlEncoded, (req, res) => {
+    }).post("/:clubId/session/new", parseUrlEncoded, (req, res) => {
       let clubId = req.params.clubId,
           reqBody = req.body;
 
@@ -47,7 +46,7 @@ router.get("", (req, res) => {
           console.log(err)
           res.status(422).send(err);
         })
-    }).post("/:clubId/players/new", parsedUrlEncoded, (req, res) => {
+    }).post("/:clubId/players/new", parseUrlEncoded, (req, res) => {
       let clubId = req.params.clubId, 
           data = req.body;
       let newPlayer = new PlayerModel({
@@ -73,7 +72,7 @@ router.get("", (req, res) => {
           res.status(500);
           res.end();
         });
-    }).post("/sessions/:id", parsedUrlEncoded, (req, res) => {
+    }).post("/sessions/:id", parseUrlEncoded, (req, res) => {
       //if finalized is false
       let id = req.params.id,
           data = req.body.data,
@@ -95,7 +94,7 @@ router.get("", (req, res) => {
           console.log(err);
           res.status(422).send(err);
         })
-    }).patch("/sessions/id", parsedUrlEncoded, (req, res) => {
+    }).patch("/sessions/id", parseUrlEncoded, (req, res) => {
         //if finalized is true
       let id = req.params.id,
           data = req.body.data,
@@ -117,7 +116,7 @@ router.get("", (req, res) => {
           console.log(err);
           res.status(422).send(err);
         })
-    }).post('/new', parsedUrlEncoded, (req, res) => {
+    }).post('/new', parseUrlEncoded, (req, res) => {
       let data = req.body;
       let newClub = new ClubModel({
         username: data.username,
@@ -141,7 +140,7 @@ router.get("", (req, res) => {
           res.end();
         })
     })
-  )
+
 
 
 export default router;

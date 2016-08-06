@@ -4,13 +4,12 @@ import webpackMiddleware from 'webpack-dev-middleware'
 import mongoose from 'mongoose'
 import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'
-
+import express from "express"
 import config from './webpack.config.js'
 import routes from './app/api/players'
-
-import clubRoutesfrom "./app/api/club"
+import clubRoutes from "./app/api/club"
 import sessionRoutes from "./app/api/session"
-import { app, csrfProtetion } from "./app/app_modules"
+import { app, csrfProtection, clubMethods } from "./app/app_modules"
 const port = process.env.PORT || 3000;
 const compiler = webpack(config);
 

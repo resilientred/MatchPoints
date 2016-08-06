@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: "./frontend/matchPoint.jsx",
+  entry: "./frontend/matchPoint.js",
   output: {
     path: "/",
     filename: "bundle.js"

@@ -1,12 +1,15 @@
 import React from 'react';
 import ClubActions from '../../actions/clubActions';
-import Form from "../../mixins/form";
 import { addPlayer } from "../../actions/clientActions";
 import PlayerStore from "../../stores/playerStore";
 
 class PlayerForm extends React.Component {
 	constructor(props){
 		super(props);
+    this.state = {
+      name: "",
+      rating: "0"
+    }
 	}
   static propTypes = {
     name: React.PropTypes.string,
@@ -17,6 +20,13 @@ class PlayerForm extends React.Component {
   }
   componentWillUnmount() {
     this.pStore.remove();
+  }
+  _updateField(name, e) {
+    this.setState({ [name]: e.target.value });
+  }
+  _handleSubmit(callback, e) {
+    e.preventDefault();
+    callback(this.state);
   }
 	render = () => {
 		  return (<div>
@@ -41,10 +51,5 @@ class PlayerForm extends React.Component {
       </div>)
 	}
 }
-let initialState = {
-      name: "",
-      rating: "0"
-};
-// need to clear
-PlayerForm = Form(PlayerForm, initialState, ClubActions)
+
 export default PlayerForm;
