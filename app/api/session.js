@@ -4,7 +4,7 @@ import { clubMethods, parseUrlEncoded, csrfProtection } from "../app_modules"
 
 const router = express.Router();
 
-router.post("/new", (req, res) => {
+router.post("/new", parseUrlEncoded, csrfProtection, (req, res) => {
   let data = req.body.user;
   console.log(data);
   clubMethods._findClub(...data)

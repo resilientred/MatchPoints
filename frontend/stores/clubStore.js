@@ -10,7 +10,7 @@ const _setCurrentClub = (club) => {
 }
 
 const _setError = (err) => {
-  _error = err;
+  _error = err.responseText ? err.responseText : null;
 }
 
 const ClubStore = new Store(AppDispatcher);
@@ -32,7 +32,7 @@ ClubStore.__onDispatch = (payload) => {
       ClubStore.__emitChange();
       break;
     case LOG_IN_ERROR:
-      _setError(payload.error);
+      _setError(payload.err);
       ClubStore.__emitChange();
       break;
   }

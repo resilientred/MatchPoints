@@ -13,7 +13,7 @@ class Club extends Component {
         }
     }
     componentWillMount() {
-        this.cuListener = ClubStore.addListener(this.setCurrentClub);
+        this.cuListener = ClubStore.addListener(this._currentClubChange);
         let club = ClubStore.getCurrentClub();
         if (club){
             this.setState({ club })
@@ -27,7 +27,14 @@ class Club extends Component {
             React.PropTypes.node
             ])
     }
-
+    _currentClubChange = () => {
+       let club = ClubStore.getCurrentClub(); 
+        if (club){
+            this.setState({ club })
+        } else {
+            browserHistory.push("/");
+        }
+    }
     clubNav() {
         return <ul className="club-nav">
             <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>
@@ -39,12 +46,14 @@ class Club extends Component {
         if (!this.state.club) {
             return <h1>Loading...</h1>
         }
-        return <div className="club-body">
+        return <div className="app">
             <NavBar { ...this.state } />
+            <div className="club-body">
             { this.clubNav() }
             <div className="club-children">
                 { this.props.children }
             </div>       
+            </div>
         </div>;
     }
 }

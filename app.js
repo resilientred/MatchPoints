@@ -50,7 +50,7 @@ app.use('/session', sessionRoutes);
 app.use('/*', (req, res, next) => {
   var origUrl = req.originalUrl;
 
-  var redirectURL = origUrl.match(/^(\/|\/login|\/signup)/);
+  var redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
   var currentClub;
 
   clubMethods.currentClub(req)
@@ -60,7 +60,9 @@ app.use('/*', (req, res, next) => {
       currentClub = null;
     }).then(() => {
       if (currentClub && redirectURL) {
+        console.log("redirecting")
         res.redirect("/club");
+        res.end();
       } else {
         console.log("not logged in", origUrl);
         next();
@@ -69,12 +71,6 @@ app.use('/*', (req, res, next) => {
   
 });
 
-// app.get('/login', csrfProtection, (req, res) => {
-//   res.render("pages/login", { csrfToken: req.csrfToken() });
-// })
-// app.get('/', (req, res) => {
-//   res.render("pages/splash");
-// })
 app.get('*', csrfProtection, (req, res) => {
   res.render("pages/index", { csrfToken: req.csrfToken() });
 });  

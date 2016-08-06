@@ -11,11 +11,13 @@ const saltRounds = 10;
 const Schema = mongoose.Schema;
 
 let clubSchema = new Schema({
-  username: {type: String, required: true, index: { unique: true }},
+  username: {type: String, required: [true, "username required"], index: { unique: true }, min: [8, "has to be 8 characters long"]},
   passwordDigest: {type: String, required: true},
   sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))},
-  clubName: { type: String, required: true },
-  location: { city: String, state: String },
+  clubName: { type: String, required: true},
+  location: { city: {type: String, required: true},
+              state: {type: String, required: true}
+            },
   id: { type: String, default: shortid.generate, index: true },
   players: [playerSchema]
 });

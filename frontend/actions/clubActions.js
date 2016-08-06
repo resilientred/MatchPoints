@@ -1,6 +1,5 @@
 import { apiService, apiCSRFService } from "../utils/apiUtil";
 
-
 export const fetchCurrentClub = () => {
   apiService({
     url: "/api/clubs",
@@ -17,6 +16,15 @@ export const logIn = (data) => {
   })
 }
 
+export const signUp = (data) => {
+  apiCSRFService({
+    method: "POST",
+    url: "/api/clubs/new",
+    data: {user: data},
+    success: "loggedIn",
+    error: "failedLogIn"
+  })
+}
 export const logOut = () => {
   apiService({
     method: "DELETE",

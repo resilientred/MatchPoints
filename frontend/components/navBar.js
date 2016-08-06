@@ -8,7 +8,7 @@ const NavBar = (props) => {
         	<div className="logo links" href="/">Match.Point</div>
             <ul><li>Welcome, { props.club.username }</li>
                 <li className="links" onClick={logOut}>Log Out</li>
-            </ul>;
+            </ul>
         </div>
     </div>;
 }

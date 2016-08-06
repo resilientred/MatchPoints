@@ -22,7 +22,12 @@ export default class LogInForm extends Component {
     }
   }
   updateField(field, e){
-    this.setState({ [field]: e.target.value })
+    let newField = {[field]: e.target.value};
+
+    if (this.state.error) { 
+      newField.error = "";
+    }
+    this.setState(newField)
   }
   _clubStoreChange = () => {
     const error = ClubStore.getError(),
@@ -30,15 +35,12 @@ export default class LogInForm extends Component {
     if (club){
       browserHistory.push("/club");
     } else if (error){
-      this.setState({ error: error });
+      this.setState({ error });
     }
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    logIn({
-      username: this.state.username,
-      password: this.state.password
-    });
+    logIn(this.state);
   }
   componentWillUnmount() {
     this.csListener.remove();

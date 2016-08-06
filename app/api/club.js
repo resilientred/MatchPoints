@@ -117,22 +117,25 @@ router.get("", (req, res) => {
           res.status(422).send(err);
         })
     }).post('/new', parseUrlEncoded, (req, res) => {
-      let data = req.body;
+      let data = req.body.user;
+      if (data.password <= 8) {
+        res.status(422).send("Password must be 8 characters long\n" +
+          "Must consist of at least:\n\t1) One special character (*!@$.^)\n\t" +
+          "2) One Capital Letter\n\t3) One Lowercase Letter\n\t4) One Number");
+      }
       let newClub = new ClubModel({
         username: data.username,
         clubName: data.club,
         location: { city: data.city,
                     state: data.stateName
-                  }
+                  },
+        clubName: data.clubName
       });
 
       ClubModel.generatePasswordDigest(data.password)
         .then((digest) => {
           newClub.passwordDigest = digest;
           return newClub.save();
-        }).catch((err)=>{
-          res.status(500).send(err);
-          res.end();
         }).then((club)=> {
           clubMethods.logIn(res, club);
         }).catch((err)=>{

@@ -4,57 +4,57 @@ import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 				 LOG_IN_ERROR } from "../constants/constants"
 
 
-export default {
-	deletedRRSession: (sessionId) => {
+module.exports = {
+	deletedRRSession(sessionId){
 		Dispatcher.dispatch({
 			actionType: DELETED_SESSION,
 			session: sessionId
 		})
 	}, 
-	fetchedRRSessions: (sessions) => {
+	fetchedRRSessions(sessions){
 		Dispatcher.dispatch({
 			actionType: FETCHED_SESSIONS,
 			sessions: sessions
 		})
 	}, 
-	fetchedRRSession: (session) => {
+	fetchedRRSession(session){
 		Dispatcher.dispatch({
 			actionType: FETCHED_SESSION,
 			session: session
 		})
 	}, 
-	loggedIn: (club) => {
+	loggedIn(club){
 		Dispatcher.dispatch({
 			actionType: LOGGED_IN,
 			club: club
 		})
 	}, 
-	failedLogIn: (err) => {
+	failedLogIn(err){
 		console.log(err)
 		Dispatcher.dispatch({
 			actionType: LOG_IN_ERROR,
 			err: err
 		})
 	}, 
-	fetchedPlayers: (players) => {
+	fetchedPlayers(players){
 		Dispatcher.dispatch({
 			actionType: FETCHED_PLAYERS,
 			players: players
 		})
 	}, 
-	fetchedPlayer: (player) => {
+	fetchedPlayer(player){
 		Dispatcher.dispatch({
 			actionType: FETCHED_PLAYER,
 			players: player
 		})
 	}, 
-	updatedPlayer: (player) => {
+	updatedPlayer(player){
 		Dispatcher.dispatch({
 			actionType: FETCHED_PLAYER,
 			player: player
 		})
 	}, 
-	removedPlayer: (player) => {
+	removedPlayer(player){
 		Dispatcher.dispatch({
 			actionType: REMOVED_PLAYER,
 			player: player
