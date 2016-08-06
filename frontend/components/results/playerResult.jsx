@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Graph from "./graph"
 import PlayerStore from "../../stores/playerStore"
-import ClientActions from "../../actions/clientActions"
+import { fetchPlayerRecord } from "../../actions/clientActions"
 
 export default class PlayerResult extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class PlayerResult extends Component {
   componentWillMount(){
     const playerId = this.props.params.playerId;
 
-    this.qaListener = ClientActions.addListener(fetchedPlayerRecord);
+    this.qaListener = PlayerStore.addListener(this.fetchedPlayerRecord);
     _checkIfCached(playerId);
   }
   _checkIfCached(playerId){
@@ -21,7 +21,7 @@ export default class PlayerResult extends Component {
     if (player){
       this.setState({ player })
     } else {
-      ClientActions.fetchPlayerRecord(playerId);
+      fetchPlayerRecord(playerId);
     }
   }
   shouldComponentUpdate(nextProps, nextState) {

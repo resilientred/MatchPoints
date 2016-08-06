@@ -1,6 +1,5 @@
 import React from 'react'
 import ParticipantGroup from './participantGroup'
-import ClubActions from "../../actions/clubActions"
 
 class Grouping extends React.Component {
     constructor(props) {

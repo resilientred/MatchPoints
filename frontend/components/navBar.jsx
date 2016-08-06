@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
-import ClubActions from '../actions/clubActions';
+import { fetchCurrentClub, logOut } from '../actions/clubActions';
 import ClubStore from "../stores/clubStore";
 
 export default class NavBar extends Component {
@@ -11,7 +11,7 @@ export default class NavBar extends Component {
     componentDidMount() {
         this.cuListener = ClubStore.addListener(this.setCurrentClub);
         if (!this.state.currentClub){
-            ClubActions.fetchCurrentClub();
+            fetchCurrentClub();
         }
     }
 
@@ -55,19 +55,19 @@ export default class NavBar extends Component {
     }
 
     logOut() {
-        ClubActions.logOut();
+        logOut();
     }
 
     render() {
         return <div className="nav-bar">
             <div>
             	<div className="logo links" href="/">Match.Point</div>
-                <ul><li><Link to="/club" className={ this.state.tab === 3 ? 
-                            "links active-tab" : "links"}
-                            onClick={this.setTab.bind(this, 3)}>Club</Link></li></ul>
                 { this.rightNav() }
             </div>
         </div>;
     }
 }
+// (<ul><li><Link to="/club" className={ this.state.tab === 3 ? 
+//             "links active-tab" : "links"}
+//             onClick={this.setTab.bind(this, 3)}>Club</Link></li></ul>)
 

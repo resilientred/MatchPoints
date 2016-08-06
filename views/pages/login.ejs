@@ -6,17 +6,17 @@
 </head>
 <body>
   <div class="forms">
-    <form action="/test" method="POST">
+    <form action="/session/new" method="POST" onsubmit="handleSubmit">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       <h3>Log In</h3>
        <div>
         <label for="username">Username</label>
-        <input type="text" id="username" 
+        <input type="text" id="username"  name="username"
                placeholder="username" required/>
       </div>
       <div>
         <label for="password">Password</label>
-        <input type="password" id="password" 
+        <input type="password" id="password"  name="password"
               placeholder="password" 
               required/>
       </div>

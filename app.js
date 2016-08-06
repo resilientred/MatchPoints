@@ -1,33 +1,24 @@
-import express from 'express';
-import path from 'path';
-import webpack from 'webpack';
-import webpackMiddleware from 'webpack-dev-middleware';
-import csrf from 'csurf';
-import mongoose from 'mongoose';
-import sassMiddleware from 'node-sass-middleware';
-import cookieParser from 'cookie-parser';
+import path from 'path'
+import webpack from 'webpack'
+import webpackMiddleware from 'webpack-dev-middleware'
+import mongoose from 'mongoose'
+import sassMiddleware from 'node-sass-middleware'
+import cookieParser from 'cookie-parser'
 
-import config from './webpack.config.js';
-import routes from './app/api/players';
-import clubMethoding from './app/api/clubMethods';
-import clubRouting from "./app/api/club";
-import sessionRouting from "./app/api/session";
-// const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
+import config from './webpack.config.js'
+import routes from './app/api/players'
+
+import clubRoutesfrom "./app/api/club"
+import sessionRoutes from "./app/api/session"
+import { app, csrfProtetion } from "./app/app_modules"
 const port = process.env.PORT || 3000;
-const app = express();
 const compiler = webpack(config);
-const csrfProtection = csrf({ cookie: true })
-const clubMethods = new clubMethoding(app);
-const sessionRoutes = sessionRouting(clubMethods);
-const clubRoutes = clubRouting(clubMethods);
-const Transform = require('stream').Transform;
-const parser = new Transform();
 
 app.set('view engine', 'ejs');
 
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
-// app.use(csrf({ cookie: true }));
+
 // app.use((req, res, next) => {
 //   let token = req.csrfToken();
 //   res.cookie('XSRF-TOKEN', token);
@@ -50,37 +41,41 @@ app.use(
 
 app.use(express.static(path.join(__dirname + "/public"), { maxAge: 86400000 }));
 app.use(webpackMiddleware(compiler));
-app.use('/api', routes);
-app.use('/api/club', clubRoutes);
+app.use('/api/clubs', clubRoutes);
+app.use('/api/clubs/:clubId', routes);
+app.use('/api/*', (req, res, next) => {
+  res.status(404).send("Invalid routes");
+  res.end();
+})
 app.use('/session', sessionRoutes);
 app.use('/*', (req, res, next) => {
   var origUrl = req.originalUrl;
-  if (origUrl === "/") next();
 
-  var redirectURL = origUrl.match(/^(\/login|\/signup)/);
+  var redirectURL = origUrl.match(/^(\/|\/login|\/signup)/);
   var currentClub;
+
   clubMethods.currentClub(req)
     .then((club) => {
       currentClub = club;
     }).catch((err) => {
       currentClub = null;
     }).then(() => {
-      if (currentClub && redirectURL[0].match(/^\/(login|signup)/)) {
+      if (currentClub && redirectURL) {
         res.redirect("/club");
       } else {
-        console.log("not login or sign up");
+        console.log("not logged in", origUrl);
         next();
       }
     })
   
 });
-// app.post("/test", parseUrlEncoded, csrfProtection, (req, res) => {
-//   console.log(res);
-// })
 
-app.get('/login', csrfProtection, (req, res) => {
-  res.render("pages/login", { csrfToken: req.csrfToken() });
-})
+// app.get('/login', csrfProtection, (req, res) => {
+//   res.render("pages/login", { csrfToken: req.csrfToken() });
+// })
+// app.get('/', (req, res) => {
+//   res.render("pages/splash");
+// })
 app.get('*', csrfProtection, (req, res) => {
   res.render("pages/index", { csrfToken: req.csrfToken() });
 });  

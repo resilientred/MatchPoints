@@ -3,7 +3,6 @@ import App from "./app"
 import { Route, IndexRoute } from 'react-router'
 
 import NavBar from './components/navBar'
-import Splash from "./components/splash"
 import Club from "./components/club"
 import NewRRSession from "./components/rrSession/newRRSession"
 import RoundRobinSessions from "./components/record/roundrobinSessions"
@@ -12,8 +11,9 @@ import PlayerResult from "./components/results/playerResult"
 import ErrorPage from "./errorPage"
 
 const Routes = (
-  <Route path="/" component={App}>
-    <IndexRoute component={Splash}/>
+  <Route path="/" component={App}> 
+    <Route path="login" component={LogIn} />
+    <Route path="signup" component={SignUp} />
     <Route path="club" component={Club} >
       <Route path="sessions" component={RoundRobinSessions} />
         <Route path="sessions/:id" component={RoundRobinSession} />

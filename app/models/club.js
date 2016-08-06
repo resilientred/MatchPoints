@@ -24,7 +24,9 @@ clubSchema.statics.resetSessionToken = function(club){
   let token = URLSafeBase64.encode(crypto.randomBytes(32));
   return this.update({ "username": club.username}, {sessionToken: token});
 }
-
+clubSchema.statics.findPlayers = function(clubId){
+  return this.find({"_id": clubId}, {"players": true });
+};
 clubSchema.statics.addPlayer = function(clubId, player){
   return this.update({"_id": clubId}, {
     "$push": {"players": player}
@@ -76,7 +78,7 @@ clubSchema.statics.generatePasswordDigest = function(password){
     return bcrypt.hash(password, saltRounds);
 }
 clubSchema.statics.findClub = function(id){
-  return this.find({"_id": id});
+  return this.find({"_id": id}, {"passwordDigest": false, "sessionToken": false} );
 };
 
 

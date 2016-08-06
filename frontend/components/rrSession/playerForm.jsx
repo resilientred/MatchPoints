@@ -1,7 +1,7 @@
 import React from 'react';
 import ClubActions from '../../actions/clubActions';
 import Form from "../../mixins/form";
-import ClientActions from "../../actions/clientActions";
+import { addPlayer } from "../../actions/clientActions";
 import PlayerStore from "../../stores/playerStore";
 
 class PlayerForm extends React.Component {
@@ -21,16 +21,16 @@ class PlayerForm extends React.Component {
 	render = () => {
 		  return (<div>
         <div className="close-icon" onClick={this.props.closeModal}>&#10006;</div>
-        <form onSubmit={this.props._handleSubmit.bind(null, ClientActions.addPlayer)}>
+        <form onSubmit={this.props._handleSubmit.bind(null, addPlayer)}>
           <h3>Player Form</h3>
           <div>
-            <label for="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input type="text" id="name" 
             				onChange={this.props._updateField.bind(null, "name")} 
             				value={this.props.name} required/>
           </div>
           <div>
-            <label for="rating">Rating</label>
+            <label htmlFor="rating">Rating</label>
             <input type="text" id="rating" 
             			 onChange={this.props._updateField.bind(null, "rating")} 
             			 value={this.props.rating} pattern="^\d{2,4}$"

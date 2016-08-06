@@ -1,7 +1,6 @@
 import React from 'react'
 import RRSessionStore from "../../stores/rrSessionStore"
-import ClubActions from "../../actions/clubActions"
-import rrSessionActions from "../../actions/rrSessionActions"
+import { fetchSession, updateResult, postResult }from "../../actions/rrSessionActions"
 import moment from 'moment'
 import RecordTable from "./RecordTable"
 import { browserHistory } from "react-router"
@@ -20,7 +19,7 @@ class RoundRobinSession extends React.Component {
     componentDidMount() {
       this.rrsListener = RRSessionStore.addListener(this.setRRSession);
       if (!this.state.session){
-        rrSessionActions.fetchSession(this.props.params.id);
+        fetchSession(this.props.params.id);
       } else {
         this.setRRSession();
       }
@@ -69,12 +68,12 @@ class RoundRobinSession extends React.Component {
         browserHistory.push("/");
       } else {
         if (session.finalized){
-          rrSessionActions.updateResult(
+          updateResult(
             this.state.scoreChange, this.state.scoreUpdate,
             session._id, session.date
           )
         } else {
-          rrSessionActions.postResult(
+          postResult(
             this.state.scoreChange, this.state.scoreUpdate,
             session._id, session.date
           )

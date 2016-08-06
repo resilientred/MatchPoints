@@ -4,10 +4,13 @@ import { Link, browserHistory } from "react-router";
 class Club extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            club: null
+        }
     }
 
-    componentDidMount() {
-        //check whether user is logged in    
+    componentWillMount() {
+        //check whether user is logged in 
     }
     static propTypes = {
         children: React.PropTypes.oneOfType([
@@ -22,8 +25,11 @@ class Club extends Component {
             <li><Link to="/club/sessions" activeClassName="active">Session Records</Link></li>
         </ul>;
     }
+
     render() {
-        
+        if (!this.state.club) {
+            return <h1>Loading...</h1>
+        }
         return <div className="club-body">
             { this.clubNav() }
             <div className="club-children">

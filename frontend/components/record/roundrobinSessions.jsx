@@ -1,9 +1,8 @@
 import React from 'react'
-import RRSessionActions from "../../actions/rrSessionActions"
+import{ fetchRRSessions, deleteSession } from "../../actions/rrSessionActions"
 import RRSessionStore from "../../stores/rrSessionStore"
 import RRResultEntry from "../record/roundrobinResultEntry"
 import ClubStore from "../../stores/clubStore"
-import ClubActions from "../../actions/clubActions"
 import { browserHistory } from 'react-router'
 
 class RoundRobinSessions extends React.Component {
@@ -18,7 +17,7 @@ class RoundRobinSessions extends React.Component {
       this.currentClub = ClubStore.getCurrentClub();
 
       if (this.currentClub){
-        RRSessionActions.fetchRRSessions(this.currentClub.id);
+        fetchRRSessions(this.currentClub.id);
       } else {
         this.csListener = ClubStore.addListener(this._fetchClubId);
       }
@@ -30,7 +29,7 @@ class RoundRobinSessions extends React.Component {
         browserHistory.push("/");
         return;
       }
-      RRSessionActions.fetchRRSessions(this.currentClub.id);
+      fetchRRSessions(this.currentClub.id);
     }
     _fetchedRRSessions = () => {
       this.setState({
@@ -43,7 +42,7 @@ class RoundRobinSessions extends React.Component {
     }
 
     deleteResult = (id) => {
-      RRSessionActions.deleteSession(id);
+      deleteSession(id);
     }
 
 

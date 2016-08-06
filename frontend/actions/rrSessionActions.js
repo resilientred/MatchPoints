@@ -1,51 +1,51 @@
-import ApiUtils from "../utils/apiUtil";
+import { apiService, apiCSRFService } from "../utils/apiUtil";
 
-export default {
-  fetchRRSessions(id) {
-    ApiUtils.apiService({
-      url: "/api/club/" + id + "/sessions",
-      success: "fetchedRRSessions"
-    })
-  },
-  fetchSession(id) {
-    ApiUtils.apiService({
-      url: "/api/club/sessions/" + id,
-      success: "fetchedRRSession"
-    })
-  },
-  saveSession(data, clubId){
-    ApiUtils.apiCSRFService({
-      url: "/api/club/" + clubId + "/session/new",
-      method: "POST",
+
+export const fetchRRSessions = (id) => {
+  apiService({
+    url: "/api/clubs/" + id + "/sessions",
+    success: "fetchedRRSessions"
+  })
+}
+export const fetchSession = (id) => {
+  apiService({
+    url: "/api/clubs/sessions/" + id,
+    success: "fetchedRRSession"
+  })
+}
+export const saveSession = (data, clubId) => {
+  apiCSRFService({
+    url: "/api/clubs/" + clubId + "/session/new",
+    method: "POST",
+    data: data,
+    success: "fetchedRRSession"
+  })
+}
+export const postResult = (data, ratingUpdateList, id) => {
+  apiCSRFService({
+    url: "/api/clubs/sessions/" + id,
+    method:"POST",
+    data: {
       data: data,
-      success: "fetchedRRSession"
-    })
-  },
-  postResult(data, ratingUpdateList, id){
-    ApiUtils.apiCSRFService({
-      url: "/api/club/sessions/" + id,
-      method:"POST",
-      data: {
-        data: data,
-        ratingUpdateList: ratingUpdateList
-      },
-      success: "fetchedRRSession"
-    })
-  },
-  updateResult(data, ratingUpdateList, id){
-    ApiUtils.apiCSRFService({
-      url: "/api/club/sessions/" + id,
-      method:"PATCH",
-      data: {
-        data: data,
-        ratingUpdateList: ratingUpdateList
-      },
-      success: "fetchedRRSession"
-    })
-  },
-  deleteSession(id){
-    ApiUtils.apiCSRFService({
-      url: "/api/club/sessions/" + id,
+      ratingUpdateList: ratingUpdateList
+    },
+    success: "fetchedRRSession"
+  })
+}
+export const updateResult = (data, ratingUpdateList, id) => {
+  apiCSRFService({
+    url: "/api/clubs/sessions/" + id,
+    method:"PATCH",
+    data: {
+      data: data,
+      ratingUpdateList: ratingUpdateList
+    },
+    success: "fetchedRRSession"
+  })
+}
+export const deleteSession = (id) => {
+    apiCSRFService({
+      url: "/api/clubs/sessions/" + id,
       method: "DELETE",
       success: "deletedRRSession"
     });
