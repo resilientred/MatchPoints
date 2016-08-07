@@ -1,5 +1,6 @@
 import React from 'react'
 import ParticipantGroup from './participantGroup'
+import { findSchemata } from "../../methods/findSchema"
 
 class Grouping extends React.Component {
     constructor(props) {
@@ -9,45 +10,15 @@ class Grouping extends React.Component {
           rangeOfPlayers: [6, 5, 4],
           selectedGroup: []
         }
-    }
-
-    static propTypes = {
-      numPlayers: React.PropTypes.number,
-      addedPlayers: React.PropTypes.array
-    }
-
-    static findSchemata(numPlayers, rangeOfPlayers = [6, 5, 4]){
-      if (numPlayers < 0) return null;
-      if (numPlayers === 0) return [[]];
-      let possibilities = [],
-          recursions = [];
-      rangeOfPlayers.forEach((range, i)=>{
-        recursions.push([range, Grouping.findSchemata(numPlayers - range, rangeOfPlayers.slice(i))]);
-      })
-
-      if (recursions.every(result => (result[1] === false))) return null;
-
-      recursions.forEach((test) => {
-        if (test[1]){
-          possibilities = possibilities.concat(test[1].map( 
-            result => [test[0]].concat(result)
-          ));  
-        }
-      })
-
-      return possibilities;
-    }
-    
+    }   
     componentDidMount() {
-      var schemata = Grouping.findSchemata(this.props.numPlayers, this.state.rangeOfPlayers);
+      let schemata = findSchemata(this.props.numPlayers, this.state.rangeOfPlayers);
       this.setState({ 
         schemata: schemata || [],
         selectedGroup: schemata.length ? schemata[0] : ""
       })
 
     }
-
-
     schemata() {
       if (this.state.schemata.length){
         return <select value="" 
@@ -60,42 +31,39 @@ class Grouping extends React.Component {
           }
         </select>;
       } else {
-        return <h3>Nothing is available...try selecting more players..</h3>;
+        return <p>Nothing is available...<br />Try selecting more players..</p>;
       }
     }
+
     changeSchema = (e) => {
       this.totalPlayerAdded = 0;
-      this.setState({ selectedGroup: e.target.value.split(",")}); 
+      this.setState({ selectedGroup: e.target.value.split(",") }); 
     }
 
     changeNumOfPlayers = (index, num, _) => {
-      var selectedGroup = this.state.selectedGroup;
+      let selectedGroup = this.state.selectedGroup.slice();
       selectedGroup[index] = num;
-      this.setState({selectedGroup: selectedGroup});
+      this.setState({ selectedGroup });
     }
 
     render() {
-      var self = this;
       this.totalPlayerAdded = 0;
       return <div className="grouping">
-        <button onClick={this.props.saveSession.bind(null, 
-                          ...this.state)
-                        }>Save</button>
+        <button className="save-session"
+                onClick={this.props.saveSession.bind(null, ...this.state)}>Save</button>
         { this.schemata() }
         { 
-           this.state.selectedGroup.map(function(numPlayers, i){
+           this.state.selectedGroup.map((numPlayers, i) => {
               this.totalPlayerAdded += +numPlayers;
               return <ParticipantGroup key={i + "" + numPlayers} groupId={i}
                         numPlayers={numPlayers}
                         changeNumOfPlayers={this.changeNumOfPlayers.bind(null, i)}
-                        players={self.props.addedPlayers.slice(
+                        players={this.props.addedPlayers.slice(
                           this.totalPlayerAdded - numPlayers, this.totalPlayerAdded
                           )}
                       />;
-           }.bind(this)
-        )
+           })
         }
-
       </div>;
     }
 }

@@ -36,4 +36,9 @@ export const removePlayer = (id) => {
 	});
 }
 
-
+export const fetchAllClubs = () => {
+	apiService({
+		url: "/api/clubs/all",
+		success: "fetchedAllClubs"
+	})
+}

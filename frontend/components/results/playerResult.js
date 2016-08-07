@@ -7,23 +7,25 @@ export default class PlayerResult extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      player: null
+      player: PlayerStore.find(this.props.params.playerId)
     }
   }
   componentWillMount(){
-    const playerId = this.props.params.playerId;
+    this.qaListener = PlayerStore.addListener(this._fetchedPlayerRecord);
+  }
+  // _checkIfCachedPlayers(playerId){
+  //   let player = PlayerStore.find(playerId);
+  //   if (player){
+  //     this.setState({ player })
+  //   } else {
+  //     fetchPlayerRecord(playerId);
+  //   }
+  // }
+  
+  // _fetchedPlayerRecord = () => {
+  //   this.setState({ player: PlayerStore.find(this.props.params.playerId) });
+  // }
 
-    this.qaListener = PlayerStore.addListener(this.fetchedPlayerRecord);
-    _checkIfCached(playerId);
-  }
-  _checkIfCached(playerId){
-    let player = PlayerStore.find(playerId);
-    if (player){
-      this.setState({ player })
-    } else {
-      fetchPlayerRecord(playerId);
-    }
-  }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.params.playerId === this.props.params.playerId){ 
       return false;
@@ -32,23 +34,20 @@ export default class PlayerResult extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const playerId = nexProps.params.playerId;
-    _checkIfCached(playerId);
+    let player = PlayerStore.find(nexProps.params.playerId);
+    this.setState({ player })
   }
-  fetchedPlayerRecord = () => {
-    this.setState({ player: PlayerStore.find(this.props.params.playerId) });
-  }
+
 
   parseData(){
     return this.state.player.ratingHistory.map(history => history.newRating)
   }
-  render() {
-    if (!this.state.record) return <div>Loading...</div>;
 
-    return (
-      <div>
-        <Graph data={parseData()} />
-      </div>
-      );
+  render() {
+    if (!this.state.player) return <div>Loading...</div>;
+   
+    return <div className="player-query">
+      <div><Graph data={this.parseData()} /></div>
+    </div>;
   }
 }

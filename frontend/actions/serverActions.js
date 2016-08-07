@@ -1,7 +1,7 @@
 import Dispatcher from "../dispatcher/dispatcher";
 import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 				 LOGGED_IN, FETCHED_PLAYER, FETCHED_PLAYERS, REMOVED_PLAYER,
-				 LOG_IN_ERROR } from "../constants/constants"
+				 LOG_IN_ERROR, FETCHED_ALL_CLUBS } from "../constants/constants"
 
 
 module.exports = {
@@ -24,7 +24,6 @@ module.exports = {
 		})
 	}, 
 	loggedIn(club){
-		debugger;
 		Dispatcher.dispatch({
 			actionType: LOGGED_IN,
 			club: club
@@ -36,28 +35,16 @@ module.exports = {
 			err: err
 		})
 	}, 
-	fetchedPlayers(players){
+	fetchedPlayers(club){
 		Dispatcher.dispatch({
 			actionType: FETCHED_PLAYERS,
-			players: players
+			club: club
 		})
-	}, 
-	fetchedPlayer(player){
+	},
+	fetchedAllClubs(clubs) {
 		Dispatcher.dispatch({
-			actionType: FETCHED_PLAYER,
-			players: player
-		})
-	}, 
-	updatedPlayer(player){
-		Dispatcher.dispatch({
-			actionType: FETCHED_PLAYER,
-			player: player
-		})
-	}, 
-	removedPlayer(player){
-		Dispatcher.dispatch({
-			actionType: REMOVED_PLAYER,
-			player: player
+			actionType: FETCHED_ALL_CLUBS,
+			clubs: clubs
 		})
 	}
 }

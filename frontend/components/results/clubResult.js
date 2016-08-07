@@ -5,13 +5,21 @@ export default class ClubQuery extends Component {
     super(props);
 
     this.state = {
-      record: null,
-      selectedDate: null
+      club: null
+      // record: null,
+      // selectedDate: null
     }
   }
 
   componentWillMount() {
-      
+      this.qaListener = PlayerStore.addListener(this._fetchedPlayerRecord);
+      this._checkIfCachedClub()
+  }
+
+  _checkIfCachedClub() {
+    let players = PlayerStore.contain(this.props.params.clubId);
+    if (players){
+    }
   }
 
   _checkIfCached(date) {
@@ -29,12 +37,14 @@ export default class ClubQuery extends Component {
   }
 
   render() {
-    if (!this.state.record || !this.state.selectedDate){
-      return <h1>Loading...</h1>;
+    if (!this.state.club) return <h1>Loading...</h1>;
+    if (!this.state.selectedDate){
+      return <h1>Please select a date</h1>;
     }
 
-    return (
-      <h1>Hello</h1>
+    return (<div className="club-result-container">
+      { this.props.children }
+      </div>
       )
   }
 }

@@ -4,7 +4,7 @@ module.exports = {
   context: __dirname,
   entry: "./frontend/matchPoint.js",
   output: {
-    path: "/",
+    path: __dirname,
     filename: "bundle.js"
   },
   module: {

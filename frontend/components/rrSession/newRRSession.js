@@ -101,9 +101,7 @@ export default class NewRRSession extends React.Component {
     this.setState({tab: tab});
   }
   handleChange = (field, moment) => {
-    var obj = {};
-    obj[field] = moment;
-    this.setState(obj);
+    this.setState({[field]: moment});
   }
   convertPlayersToArr = () => {
     var self = this;
@@ -175,8 +173,8 @@ export default class NewRRSession extends React.Component {
               format="YYYY/MM/DD"
               date={date}
               onChange={this.handleChange.bind(null, "date")}/></div>
-          <h3>Organization: To be inserted</h3>
-          <h3>{title}</h3>
+          <h3>Organization: { club.clubName }</h3>
+          <h3>{club.title}</h3>
           { this.newPlayer() }
           { grouping }
                 
