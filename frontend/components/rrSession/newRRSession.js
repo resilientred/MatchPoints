@@ -8,7 +8,7 @@ import { browserHistory } from "react-router";
 import { fetchPlayers } from '../../actions/clientActions';
 import { saveSession } from "../../actions/rrSessionActions";
 
-import PlayerStore from '../../stores/playerStore';
+// import PlayerStore from '../../stores/playerStore';
 import RRSessionStore from "../../stores/rrSessionStore";
 import PlayerForm from './playerForm';
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
@@ -21,29 +21,29 @@ export default class NewRRSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      club: ClubStore.getCurrentClub(),
       newPlayerModal: false,
       tab: 0,
       date: moment(),
       numPlayers: 0,
       hiddenPlayers: {},
-      allPlayers: {},
       addedPlayers: {},
       selectedPlayer: {},
       selectedRemovePlayer: {}
     }
-    //should fetch all these from stores, so club can save their states
   }
-  componentDidMount(){
-    this.psListener = PlayerStore.addListener(this._fetchedPlayers);
-    fetchPlayers();
+  componentDidMount() {
+    console.log("cdm in new RR Session")
+    this.csListener = ClubStore.addListener(this._clubChanged);
+    //future things to think about.. storing separate entry in player store
+    //for querying purposes
     this.rrListener = RRSessionStore.addListener(this._savedRR);
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
   }
 
   componentWillUnmount() {
-    if (this.psListener) this.psListener.remove();
-    if (this.usListener) this.usListener.remove();
+    if (this.csListener) this.csListener.remove();
     if (this.rrListener) this.rrListener.remove();
   }
 
@@ -51,19 +51,15 @@ export default class NewRRSession extends React.Component {
     browserHistory.push("/club/sessions");
   }
   openModal(name){
-    var modalObj = {};
-    modalObj[name] = true;
-    this.setState(modalObj);
+    this.setState({[name]: true});
   }
-
   closeModal(name){
-    var modalObj = {};
-    modalObj[name] = false;
-    this.setState(modalObj);
+    this.setState({[name]: false});
   }
-
-  _fetchedPlayers = () => {
-    this.setState({allPlayers: PlayerStore.all()});
+  _clubChanged = () => {
+    console.log("club change in new RR Session")
+    this.setState({ club: ClubStore.getCurrentClub(),
+      newPlayerModal: false });
   }
 
   addPlayer = () => {
@@ -135,7 +131,10 @@ export default class NewRRSession extends React.Component {
         </button> : "";
   }
   render(){
-    var allPlayers = this.state.allPlayers,
+    if (!this.state.club){ 
+      return <h3>Something went wrong...</h3>;
+      }
+    let allPlayers = this.state.club.players,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
         groupingCallbacks = {
                 selectPlayer: this.selectPlayer, 
@@ -143,8 +142,8 @@ export default class NewRRSession extends React.Component {
                 addPlayer: this.addPlayer,
                 removePlayer: this.removePlayer
               };
-    var { modalIsOpen, tab, _, date, numPlayers, ...states} = this.state;
-    var title, grouping;
+    let { club, modalIsOpen, tab, _, date, numPlayers, ...states} = this.state;
+    let title, grouping;
 
     if (tab === 1){
       title = "Grouping";
@@ -153,7 +152,7 @@ export default class NewRRSession extends React.Component {
                           saveSession={this.saveSession}/>
     } else {
       title = "Participant Registration";
-      grouping = <Participants {...states} {...groupingCallbacks} />    
+      grouping = <Participants {...states} allPlayers={allPlayers} {...groupingCallbacks} />    
     }
 
     return (
@@ -161,20 +160,20 @@ export default class NewRRSession extends React.Component {
           <ul className="player-nav">
             <li>
               <a onClick={this.changeTab.bind(null, 0)} 
-                 className={this.state.tab === 0 ? "active" : ""}>
+                 className={tab === 0 ? "active" : ""}>
                  Participants
               </a>
             </li>
             <li>
               <a onClick={this.changeTab.bind(null, 1)}
-                className={this.state.tab === 1 ? "active" : ""}>
+                className={tab === 1 ? "active" : ""}>
                 Grouping
               </a>
             </li>
           </ul>
           <div className="date">Date: <Calendar
               format="YYYY/MM/DD"
-              date={this.state.date}
+              date={date}
               onChange={this.handleChange.bind(null, "date")}/></div>
           <h3>Organization: To be inserted</h3>
           <h3>{title}</h3>

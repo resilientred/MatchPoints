@@ -24,13 +24,13 @@ module.exports = {
 		})
 	}, 
 	loggedIn(club){
+		debugger;
 		Dispatcher.dispatch({
 			actionType: LOGGED_IN,
 			club: club
 		})
 	}, 
 	failedLogIn(err){
-		console.log(err)
 		Dispatcher.dispatch({
 			actionType: LOG_IN_ERROR,
 			err: err

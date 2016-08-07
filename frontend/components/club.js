@@ -13,6 +13,7 @@ class Club extends Component {
         }
     }
     componentWillMount() {
+        console.log("cwm in club")
         this.cuListener = ClubStore.addListener(this._currentClubChange);
         let club = ClubStore.getCurrentClub();
         if (club){
@@ -21,13 +22,18 @@ class Club extends Component {
             fetchCurrentClub();
         }
     }
-    static propTypes = {
-        children: React.PropTypes.oneOfType([
-            React.PropTypes.arrayOf(React.PropTypes.node),
-            React.PropTypes.node
-            ])
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!nextState.club || !this.state.club){
+            return true;
+        } else if (nextState.club._id === this.state.club._id){
+            return false;
+        } else {
+            return true;
+        }  
     }
+
     _currentClubChange = () => {
+        console.log("current club changed in club.js")
        let club = ClubStore.getCurrentClub(); 
         if (club){
             this.setState({ club })

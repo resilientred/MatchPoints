@@ -33,9 +33,7 @@ clubSchema.statics.addPlayer = function(clubId, player){
   newPlayer.markModified("player");
   return this.findOneAndUpdate({"_id": clubId}, {
     $push: {"players": newPlayer}
-  }).then((club) => {
-    return newPlayer;
-  });
+  }, {new: true});
 }
 clubSchema.statics.updatePlayer = function(clubId, player) {
   return this.update({"_id": clubId, "players.id": player.id}, 

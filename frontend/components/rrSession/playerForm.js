@@ -1,6 +1,6 @@
 import React from 'react'
 import { addPlayer } from "../../actions/clientActions"
-import PlayerStore from "../../stores/playerStore"
+// import PlayerStore from "../../stores/playerStore"
 import ClubStore from "../../stores/clubStore"
 
 class PlayerForm extends React.Component {
@@ -15,12 +15,12 @@ class PlayerForm extends React.Component {
     name: React.PropTypes.string,
     rating: React.PropTypes.number
   }
-  componentDidMount() {
-    this.pStore = PlayerStore.addListener(this.props.closeModal);
-  }
-  componentWillUnmount() {
-    this.pStore.remove();
-  }
+  // componentDidMount() {
+  //   this.pStore = PlayerStore.addListener(this.props.closeModal);
+  // }
+  // componentWillUnmount() {
+  //   this.pStore.remove();
+  // }
   _updateField(name, e) {
     this.setState({ [name]: e.target.value });
   }

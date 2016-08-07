@@ -17,7 +17,7 @@ export const addPlayer = (clubId, player) => {
 		url: `/api/clubs/${clubId}/players/new`,
 		method: "POST",
 		data: { player },
-		success: "updatedPlayer"
+		success: "loggedIn"
 	});
 }
 export const updatePlayer = (clubId, id, player) => {

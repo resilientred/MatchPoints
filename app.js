@@ -1,6 +1,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import webpackMiddleware from 'webpack-dev-middleware'
+import minify from 'express-minify'
 import mongoose from 'mongoose'
 import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'

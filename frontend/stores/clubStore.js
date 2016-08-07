@@ -17,6 +17,7 @@ const ClubStore = new Store(AppDispatcher);
 
 
 ClubStore.getCurrentClub = () => {
+  debugger;
   return _currentClub;
 }
 

@@ -49,11 +49,9 @@ router.get("", (req, res) => {
     }).post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {
       let clubId = req.params.clubId, 
           data = req.body.player;
-          console.log(data)
       ClubModel.addPlayer(clubId, data)
-        .then((player) => {
-          console.log(player)
-          res.status(200).send(player);
+        .then((club) => {
+          res.status(200).send(club);
         }).catch((err) => {
           if (_player){
             Player.remove({"_id": _player._id});

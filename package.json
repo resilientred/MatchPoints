@@ -21,6 +21,7 @@
     "csurf": "^1.8.3",
     "ejs": "^2.5.1",
     "express": "^4.13.4",
+    "express-minify": "^0.2.0",
     "flux": "^2.1.1",
     "moment": "^2.13.0",
     "moment-range": "^2.2.0",
