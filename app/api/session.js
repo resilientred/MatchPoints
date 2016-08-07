@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post("/new", parseUrlEncoded, csrfProtection, (req, res) => {
   let data = req.body.user;
-  console.log(data);
-  clubMethods._findClub(...data)
+  clubMethods._findClub(data.username, data.password)
     .then((club) => {
+      console.log("logging in...")
       clubMethods.logIn(res, club);
     }).catch((err)=>{
       res.status(404).send("Username or password error.");
@@ -16,6 +16,7 @@ router.post("/new", parseUrlEncoded, csrfProtection, (req, res) => {
     });
 }).delete("/", (_, res) => {
   clubMethods.logOut().then(() => {
+    console.log("clearing cookie")
     res.clearCookie("matchpoint_session").send("");
     res.end();
   }).catch((err)=>{

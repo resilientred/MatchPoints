@@ -40,7 +40,24 @@ export default class LogInForm extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    logIn(this.state);
+    if (e.target.tagName !== "BUTTON"){
+      logIn(this.state);
+    }
+  }
+  guestLogIn = (e) => {
+    e.preventDefault();
+    const user = "guest",
+          password = "password";
+    let count = 0;
+    let int = setInterval( () => {
+      if (count < 5){
+        this.setState({username: this.state.username + user[count++]})
+      } else if (count < 13){
+        this.setState({password: this.state.password + password[count++ - 5]})
+      } else {
+        clearInterval(int);
+      }
+    }, 200)
   }
   componentWillUnmount() {
     this.csListener.remove();
@@ -54,6 +71,7 @@ export default class LogInForm extends Component {
           <label htmlFor="username">Username</label>
           <input type="text" id="username"
                  placeholder="username" 
+                 value={this.state.username}
                  onChange={this.updateField.bind(this, "username")}
                  required/>
         </div>
@@ -61,10 +79,14 @@ export default class LogInForm extends Component {
           <label htmlFor="password">Password</label>
           <input type="password" id="password" 
                 placeholder="password" 
+                value={this.state.password}
                 onChange={this.updateField.bind(this, "password")}
                 required/>
         </div>
-        <input type="submit" value="Log In"/>
+        <div className="button-div">
+          <input type="submit" className="button" value="Log In"/>
+          <input type="submit" className="button" onClick={this.guestLogIn} value="Guest Log In" />
+        </div>
       </form>
     </div>;
   }

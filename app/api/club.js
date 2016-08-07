@@ -2,7 +2,7 @@ import express from 'express'
 import ClubModel from '../models/club'
 import RoundRobinModel from "../models/roundrobin"
 import Parallel from "paralleljs"
-import { Player as PlayerModel } from "../models/player"
+import { Player } from "../models/player"
 import { clubMethods, parseUrlEncoded, csrfProtection } from "../app_modules"
 const router = express.Router();
 
@@ -46,21 +46,21 @@ router.get("", (req, res) => {
           console.log(err)
           res.status(422).send(err);
         })
-    }).post("/:clubId/players/new", parseUrlEncoded, (req, res) => {
+    }).post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {
       let clubId = req.params.clubId, 
-          data = req.body;
-      let newPlayer = new PlayerModel({
-        name: data.name,
-        rating: data.rating
-      });
-
-      newPlayer.save()
+          data = req.body.player;
+          console.log(data)
+      ClubModel.addPlayer(clubId, data)
         .then((player) => {
-          ClubModel.addPlayer(clubId, player);
-        }).then((club) => {
-          res.status(200).send(club);
-        }).err((err) => {
+          console.log(player)
+          res.status(200).send(player);
+        }).catch((err) => {
+          if (_player){
+            Player.remove({"_id": _player._id});
+          }
           res.status(422).send(err);
+        }).catch((err) => {
+          res.status(500).send(err);
         })
     }).delete("/sessions/:id", (req, res) => {
       let id = req.params.id;
@@ -80,7 +80,7 @@ router.get("", (req, res) => {
 
       let promiseResults = [];
       for (let player in ratingUpdateList){
-        promiseResults.push(PlayerModel.addHistory(player, ratingUpdateList[player])); 
+        promiseResults.push(Player.addHistory(player, ratingUpdateList[player])); 
       } 
       Promise.all(promiseResults).then( (status) => {
         console.log(status);
@@ -102,7 +102,7 @@ router.get("", (req, res) => {
 
       let promiseResults = [];
       for (let player in ratingUpdateList){
-        promiseResults.push(PlayerModel.updateHistory(player, ratingUpdateList[player])); 
+        promiseResults.push(Player.updateHistory(player, ratingUpdateList[player])); 
       } 
       Promise.all(promiseResults).then( (status) => {
         console.log(status);

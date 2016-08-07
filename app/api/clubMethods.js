@@ -1,7 +1,6 @@
 import ClubModel from "../models/club";
 import URLSafeBase64 from 'urlsafe-base64';
 import crypto from 'crypto';
-// import { app } from "../app_modules"
 
 class ClubMethods {
   constructor(){
@@ -35,17 +34,17 @@ class ClubMethods {
       delete this._currentClub.sessionToken;
       delete this._currentClub.passwordDigest;
       res.cookie("matchpoint_session", club.sessionToken, 
-            { maxAge: 14 * 24 * 60 * 60 * 1000 }).redirect('/club');
+            { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(this._currentClub);
     }
   }
 
   _findClub(username, password){
+    console.log(username + " " + password)
     var _club;
     return ClubModel.findByUsernameAndPassword.call(ClubModel, username)
       .then((club) => {
         _club = club;
         return club.isPassword(password);
-      }).catch((err)=>{
       }).then(() => {
         return new Promise((resolve, reject) => {
           resolve(_club);

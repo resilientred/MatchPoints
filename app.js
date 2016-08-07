@@ -29,6 +29,9 @@ app.use(cookieParser());
 
 //   res.status(403).send("Invalid session token");
 // })
+app.use('/favicon.ico', (req, res, next) => {
+  res.end();
+})
 app.use(
   sassMiddleware({
     src: __dirname + "/sass",
@@ -49,7 +52,7 @@ app.use('/api/*', (req, res, next) => {
 app.use('/session', sessionRoutes);
 app.use('/*', (req, res, next) => {
   var origUrl = req.originalUrl;
-
+  console.log(origUrl);
   var redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
   var currentClub;
 
@@ -64,11 +67,9 @@ app.use('/*', (req, res, next) => {
         res.redirect("/club");
         res.end();
       } else {
-        console.log("not logged in", origUrl);
         next();
       }
     })
-  
 });
 
 app.get('*', csrfProtection, (req, res) => {

@@ -6,7 +6,7 @@ let _currentClub = null;
 let _error = null;
 
 const _setCurrentClub = (club) => {
-  _currentClub = club;
+  _currentClub = club === "" ? null : club;
 }
 
 const _setError = (err) => {

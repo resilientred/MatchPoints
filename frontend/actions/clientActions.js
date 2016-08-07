@@ -13,11 +13,10 @@ export const fetchPlayer = (id) => {
 	});
 }
 export const addPlayer = (clubId, player) => {
-  player.rating = +player.rating;
 	apiCSRFService({
-		url: `/api/clubs/${clubId}/players`,
+		url: `/api/clubs/${clubId}/players/new`,
 		method: "POST",
-		data: player,
+		data: { player },
 		success: "updatedPlayer"
 	});
 }

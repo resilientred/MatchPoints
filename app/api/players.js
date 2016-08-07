@@ -13,8 +13,8 @@ router.route("/players")
       }).catch( err => {
         res.status(422).send(err);
       })
-  }).post(parseUrlEncoded, (req, res) => {
-    let data = req.body;
+  }).post(parseUrlEncoded, csrfProtection, (req, res) => {
+    let data = req.body.player;
     let player = new Player({
       "name": data.name,
       "rating": +data.rating

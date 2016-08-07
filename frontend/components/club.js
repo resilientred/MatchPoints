@@ -41,7 +41,9 @@ class Club extends Component {
             <li><Link to="/club/sessions" activeClassName="active">Session Records</Link></li>
         </ul>;
     }
-
+    componentWillUnmount() {
+        this.cuListener.remove();
+    }
     render() {
         if (!this.state.club) {
             return <h1>Loading...</h1>

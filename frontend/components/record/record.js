@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import RecordTable from './recordTable.jsx'
+// import React, { Component } from 'react';
+// import RecordTable from './recordTable.jsx'
 
-class Record extends component {
-	constructor(props){
-		super(props);
-	}
+// class Record extends component {
+// 	constructor(props){
+// 		super(props);
+// 	}
 
-	componentDidMount = () => {
+// 	componentDidMount = () => {
 
-	}
-	calculateScore = () => {
+// 	}
+// 	calculateScore = () => {
 
-	}
-	render(){
-		return (
-			<div>
-				<RecordTable calculateScore={}/>
-			</div>
-		);
-	}
-}
+// 	}
+// 	render(){
+// 		return (
+// 			<div>
+// 				<RecordTable calculateScore={}/>
+// 			</div>
+// 		);
+// 	}
+// }
 
-export default Record;
+// export default Record;

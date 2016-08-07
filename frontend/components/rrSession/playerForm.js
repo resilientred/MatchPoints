@@ -1,7 +1,7 @@
-import React from 'react';
-import ClubActions from '../../actions/clubActions';
-import { addPlayer } from "../../actions/clientActions";
-import PlayerStore from "../../stores/playerStore";
+import React from 'react'
+import { addPlayer } from "../../actions/clientActions"
+import PlayerStore from "../../stores/playerStore"
+import ClubStore from "../../stores/clubStore"
 
 class PlayerForm extends React.Component {
 	constructor(props){
@@ -24,26 +24,26 @@ class PlayerForm extends React.Component {
   _updateField(name, e) {
     this.setState({ [name]: e.target.value });
   }
-  _handleSubmit(callback, e) {
+  _handleSubmit = (e) => {
     e.preventDefault();
-    callback(this.state);
+    addPlayer(ClubStore.getCurrentClub()._id, this.state)
   }
 	render = () => {
 		  return (<div>
         <div className="close-icon" onClick={this.props.closeModal}>&#10006;</div>
-        <form onSubmit={this.props._handleSubmit.bind(null, addPlayer)}>
+        <form onSubmit={this._handleSubmit}>
           <h3>Player Form</h3>
           <div>
             <label htmlFor="name">Name</label>
             <input type="text" id="name" 
-            				onChange={this.props._updateField.bind(null, "name")} 
-            				value={this.props.name} required/>
+            				onChange={this._updateField.bind(this, "name")} 
+            				value={this.state.name} required/>
           </div>
           <div>
             <label htmlFor="rating">Rating</label>
             <input type="text" id="rating" 
-            			 onChange={this.props._updateField.bind(null, "rating")} 
-            			 value={this.props.rating} pattern="^\d{2,4}$"
+            			 onChange={this._updateField.bind(this, "rating")} 
+            			 value={this.state.rating} pattern="^\d{2,4}$"
             			 required/>
           </div>
           <input type="submit" value="Register Player"/>
