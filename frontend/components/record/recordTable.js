@@ -9,16 +9,9 @@ class RecordTable extends Component {
         [...Array(this.props.sizeOfGroup)].map((_) => [0, 0]))
     }
 	}
-  static propTypes = {
-    groupNum: React.PropTypes.number.isRequired,
-    start: React.PropTypes.number.isRequired,
-    joinedPlayers: React.PropTypes.object.isRequired,
-    sizeOfGroup: React.PropTypes.number.isRequired
-  }
-
-  _handleCalculate = (e) => {
+  _handleCalculate(e){
     e.preventDefault();
-    if (e.currentTarget.className === "calculate"){
+    if (e.currentTarget.className.split(" ")[1] === "calculate"){
       this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
     }
   }
@@ -94,11 +87,11 @@ class RecordTable extends Component {
         groupNum: groupNum
       }
     return <div className="record-table">
-        <button className="calculate" onClick={this._handleCalculate.bind(this)}>
+        <button className="record-btn calculate" onClick={this._handleCalculate.bind(this)}>
           Calculate
         </button>
-        <button className="update-record" onClick={this.props.saveSession.bind(null, this.state.ratingChange)}>
-          Update
+        <button className="record-btn update-record" onClick={this.props.saveSession.bind(null, this.state.ratingChange)}>
+          Save
         </button>
 
         <RecordTableDetail {...propsToPass} result={this.state.result}

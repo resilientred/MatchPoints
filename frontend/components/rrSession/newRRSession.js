@@ -8,7 +8,6 @@ import { browserHistory } from "react-router";
 import { fetchPlayers } from '../../actions/clientActions';
 import { saveSession } from "../../actions/rrSessionActions";
 
-// import PlayerStore from '../../stores/playerStore';
 import RRSessionStore from "../../stores/rrSessionStore";
 import PlayerForm from './playerForm';
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
@@ -34,8 +33,6 @@ export default class NewRRSession extends React.Component {
   }
   componentDidMount() {
     this.csListener = ClubStore.addListener(this._clubChanged);
-    //future things to think about.. storing separate entry in player store
-    //for querying purposes
     this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
@@ -111,7 +108,6 @@ export default class NewRRSession extends React.Component {
     this.setState({[field]: moment});
   }
   convertPlayersToArr = () => {
-    var self = this;
     return Object.keys(this.state.addedPlayers).map( (_id) => {
       return this.state.addedPlayers[_id];
     });
@@ -146,7 +142,7 @@ export default class NewRRSession extends React.Component {
                 addPlayer: this.addPlayer,
                 removePlayer: this.removePlayer
               };
-    let { modalIsOpen, tab, _, date, numPlayers, error, ...states} = this.state;
+    let { tab, date, numPlayers, error, ...states} = this.state;
     let title, grouping;
 
     if (tab === 1){

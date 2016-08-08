@@ -604,6 +604,15 @@ form {
     form input[type="submit"]:hover {
       background-color: rgba(100, 100, 100, 0.9); }
 
+.record-btn {
+  color: grey;
+  font-size: 16px;
+  border: 1px solid white;
+  padding: 10px 20px;
+  background-color: black;
+  border-radius: 3px;
+  cursor: pointer; }
+
 .front, .back {
   padding: 25px;
   background-color: rgba(0, 0, 0, 0.8); }

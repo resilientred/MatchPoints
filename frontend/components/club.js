@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Children, cloneElement } from 'react'
 import RoundRobinSessions from './record/roundrobinSessions'
 import { Link, browserHistory } from "react-router"
 import NavBar from "./navBar"
@@ -41,14 +41,17 @@ class Club extends Component {
     }
     render() {
         if (!this.state.club) {
-            return <h1>Loading...</h1>
+            return <h1>Loading... </h1>
         }
         return <div className="app">
             <NavBar { ...this.state } />
             <div className="club-body">
                 { this.clubNav() }
                 <div className="club-children">
-                    { React.cloneElement(this.props.children, { club: this.state.club }) }
+                    { Children.map(this.props.children, (child) => {
+                        return cloneElement(child, { club: this.state.club });
+                      }) 
+                    }
                 </div>       
             </div>
         </div>;

@@ -64,7 +64,6 @@ router.get("", (req, res) => {
           res.end();
         });
     }).post("/sessions/:id", parseUrlEncoded, (req, res) => {
-      //if finalized is false
       let id = req.params.id,
           data = req.body.data,
           ratingUpdateList = req.body.ratingUpdateList;

@@ -26,7 +26,6 @@ class RoundRobinSessions extends Component {
         results: RRSessionStore.all()
       })
     }
-
     editResult = (id, clubId) => {
       browserHistory.push("/club/sessions/" + id);
     }

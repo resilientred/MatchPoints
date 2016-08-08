@@ -1,6 +1,7 @@
 import React from 'react'
 import RRSessionStore from "../../stores/rrSessionStore"
-import { fetchSession, updateResult, postResult }from "../../actions/rrSessionActions"
+import ClubStore from "../../stores/clubStore"
+import { fetchRRSessions, updateResult, postResult }from "../../actions/rrSessionActions"
 import moment from 'moment'
 import RecordTable from "./RecordTable"
 import { browserHistory } from "react-router"
@@ -10,21 +11,21 @@ class RoundRobinSession extends React.Component {
         super(props);
         this.displayName = 'RoundRobinSession';
         this.state = {
-          session: RRSessionStore.find(this.props.params.id) || null,
+          session: null,
           scoreChange: [],
-          scoreUpdate: {}
+          scoreUpdate: {},
+          currentTab: 0
         }
     }
-
-    componentDidMount() {
+    componentWillMount() {
       this.rrsListener = RRSessionStore.addListener(this.setRRSession);
-      if (!this.state.session){
-        fetchSession(this.props.params.id);
-      } else {
+
+      if (this.props.club){
         this.setRRSession();
+      } else {
+        this.csListener = ClubStore.addListener(this.setRRSession);
       }
     }
-
     updateScore = (scoreChangeInGroup, i) => {
       var scoreChange = Object.assign({}, this.state.scoreChange),
           scoreUpdate = Object.assign({}, this.state.scoreUpdate),
@@ -34,27 +35,32 @@ class RoundRobinSession extends React.Component {
       for (var playerId in scoreUpdateInGroup){
         scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
       }
-      this.setState({
-        scoreChange: scoreChange,
-        scoreUpdate: scoreUpdateInGroup
-      });
+      this.setState({ scoreChange, scoreUpdateInGroup });
     }
 
     setRRSession = () => {
-      var session = this.state.session || RRSessionStore.find(this.props.params.id),
-          schema = curSession.selectedSchema,
-          scoreChange = curSession.results.length ? curSession.results : this.setUpChangeArray(schema);
-      this.setState({session, scoreChange});
+      let newObj = {},
+          session = this.state.session || RRSessionStore.find(this.props.params.id);
+      newObj.session = session;
+      if (session){
+        let scoreChange = session.results && session.results.length ? session.results : this.setUpChangeArray(session.selectedSchema);
+        newObj.scoreChange = scoreChange;
+        this.setState(newObj);
+      } else {
+        fetchRRSessions(this.props.club._id);
+      }
+
     }
 
     componentWillReceiveProps(nextProps) {
       RRSessionStore.fetchSsession(nextProps.params.id);
     }
-    setTab = (tabNumber) => {
-      this.setState({ currentTab: tabNumber})
+    setTab = (currentTab) => {
+      this.setState({ currentTab })
     }
     componentWillUnmount() {
-      if (this.rrListener) this.rrsListener.remove();
+      if (this.rrsListener) this.rrsListener.remove();
+      if (this.csListener) this.csListener.remove();
     }
 
     setUpChangeArray(selectedSchema) {
@@ -82,7 +88,8 @@ class RoundRobinSession extends React.Component {
     }
 
     render() {
-        var { session, scoreChange } = this.state;
+        let { session, scoreChange } = this.state;
+        if (!session) return <h1>Loading ...</h1>;
 
         var selectedSchema = session.selectedSchema,
             schemata = session.schemata,  
