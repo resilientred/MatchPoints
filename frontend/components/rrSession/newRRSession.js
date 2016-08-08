@@ -21,11 +21,11 @@ export default class NewRRSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      club: ClubStore.getCurrentClub(),
       newPlayerModal: false,
       tab: 0,
       date: moment(),
       numPlayers: 0,
+      error: null,
       hiddenPlayers: {},
       addedPlayers: {},
       selectedPlayer: {},
@@ -33,11 +33,10 @@ export default class NewRRSession extends React.Component {
     }
   }
   componentDidMount() {
-    console.log("cdm in new RR Session")
     this.csListener = ClubStore.addListener(this._clubChanged);
     //future things to think about.. storing separate entry in player store
     //for querying purposes
-    this.rrListener = RRSessionStore.addListener(this._savedRR);
+    this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
   }
@@ -47,8 +46,17 @@ export default class NewRRSession extends React.Component {
     if (this.rrListener) this.rrListener.remove();
   }
 
-  _savedRR = () => {
-    browserHistory.push("/club/sessions");
+  _rrResponseReceived = () => {
+    let error = RRSessionStore.getError();
+
+    if (error){
+      this.setState({ error });
+      setTimeout(() => {
+        this.setState({ error: null });
+      }, 2000)
+    } else {     
+      browserHistory.push("/club/sessions");
+    }
   }
   openModal(name){
     this.setState({[name]: true});
@@ -57,7 +65,6 @@ export default class NewRRSession extends React.Component {
     this.setState({[name]: false});
   }
   _clubChanged = () => {
-    console.log("club change in new RR Session")
     this.setState({ club: ClubStore.getCurrentClub(),
       newPlayerModal: false });
   }
@@ -112,12 +119,11 @@ export default class NewRRSession extends React.Component {
 
   saveSession = (schemata, rangeOfPlayer, selectedSchema, e) => {
     e.preventDefault();
-    var club_id = ClubStore.getCurrentClub().id;
-    
+    var club_id = this.props.club._id;
     saveSession({
       date: this.state.date.toDate(),
       numOfPlayers: this.state.numPlayers,
-      addedPlayers: this.state.addedPlayers,
+      players: this.state.addedPlayers,
       selectedSchema: selectedSchema,
       schemata: schemata,
     }, club_id);
@@ -129,10 +135,10 @@ export default class NewRRSession extends React.Component {
         </button> : "";
   }
   render(){
-    if (!this.state.club){ 
+    if (!this.props.club){ 
       return <h3>Something went wrong...</h3>;
       }
-    let allPlayers = this.state.club.players,
+    let allPlayers = this.props.club.players,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
         groupingCallbacks = {
                 selectPlayer: this.selectPlayer, 
@@ -140,7 +146,7 @@ export default class NewRRSession extends React.Component {
                 addPlayer: this.addPlayer,
                 removePlayer: this.removePlayer
               };
-    let { club, modalIsOpen, tab, _, date, numPlayers, ...states} = this.state;
+    let { modalIsOpen, tab, _, date, numPlayers, error, ...states} = this.state;
     let title, grouping;
 
     if (tab === 1){
@@ -155,6 +161,7 @@ export default class NewRRSession extends React.Component {
 
     return (
         <div className="player-container">
+          <h1>{ error }</h1>
           <ul className="player-nav">
             <li>
               <a onClick={this.changeTab.bind(null, 0)} 
@@ -173,8 +180,8 @@ export default class NewRRSession extends React.Component {
               format="YYYY/MM/DD"
               date={date}
               onChange={this.handleChange.bind(null, "date")}/></div>
-          <h3>Organization: { club.clubName }</h3>
-          <h3>{club.title}</h3>
+          <h3>Organization: { this.props.club.clubName }</h3>
+          <h3>{this.props.club.title}</h3>
           { this.newPlayer() }
           { grouping }
                 

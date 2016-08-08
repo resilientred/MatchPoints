@@ -1,35 +1,25 @@
-import React from 'react'
+import React, { Component } from 'react'
 import{ fetchRRSessions, deleteSession } from "../../actions/rrSessionActions"
 import RRSessionStore from "../../stores/rrSessionStore"
 import RRResultEntry from "../record/roundrobinResultEntry"
 import ClubStore from "../../stores/clubStore"
 import { browserHistory } from 'react-router'
 
-class RoundRobinSessions extends React.Component {
+class RoundRobinSessions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          results: []
+          results: null
         }
     }
-    componentDidMount(){
+    componentWillMount(){
       this.rrsListener = RRSessionStore.addListener(this._fetchedRRSessions);
-      this.currentClub = ClubStore.getCurrentClub();
-
-      if (this.currentClub){
-        fetchRRSessions(this.currentClub.id);
+      const results = RRSessionStore.all();
+      if (results) {
+        this.setState({ results })
       } else {
-        this.csListener = ClubStore.addListener(this._fetchClubId);
+        fetchRRSessions(this.props.club._id);
       }
-    }
-    _fetchClubId = () =>{
-      this.currentClub = ClubStore.getCurrentClub();
-      
-      if (!this.currentClub){
-        browserHistory.push("/");
-        return;
-      }
-      fetchRRSessions(this.currentClub.id);
     }
     _fetchedRRSessions = () => {
       this.setState({
@@ -45,10 +35,8 @@ class RoundRobinSessions extends React.Component {
       deleteSession(id);
     }
 
-
     componentWillUnmount() {
       if (this.rrsListener) this.rrsListener.remove();
-      if (this.csListener) this.csListener.remove();
     }
 
     render() {
@@ -57,9 +45,11 @@ class RoundRobinSessions extends React.Component {
           deleteResult: this.deleteResult,
           finalizeResult: this.finalizeResult
         };
-
+        if (!this.props.club || !this.state.results){
+          return <div>Loading....</div>
+        }
         return (<div>
-          <h3>Round Robin results</h3>
+          <h1>Round Robin results</h1>
           {
             this.state.results.map ( (result) => {
               return <RRResultEntry key={result.id} {...result} {...callbacksForChildren}/>

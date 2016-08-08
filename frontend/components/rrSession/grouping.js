@@ -50,7 +50,9 @@ class Grouping extends React.Component {
       this.totalPlayerAdded = 0;
       return <div className="grouping">
         <button className="save-session"
-                onClick={this.props.saveSession.bind(null, ...this.state)}>Save</button>
+                onClick={this.props.saveSession.bind(null, 
+                  this.state.schemata, this.state.rangeOfPlayer, 
+                  this.state.selectedGroup)}>Save</button>
         { this.schemata() }
         { 
            this.state.selectedGroup.map((numPlayers, i) => {

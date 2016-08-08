@@ -2,35 +2,47 @@ import { Store } from "flux/utils"
 import AppDispatcher from "../dispatcher/dispatcher"
 import { FETCHED_SESSION, FETCHED_SESSIONS, DELETED_SESSION } from "../constants/constants"
 
-var RRSessionStore = new Store(AppDispatcher);
-var _rrSessions = {};
+const RRSessionStore = new Store(AppDispatcher);
+let _rrSessions = {};
+let _error = null;
 
-var _resetSession = (session) => {
+const _resetSession = (session) => {
   _rrSessions[session.id] = session;
   RRSessionStore.__emitChange();
 };
 
-var _resetSessions = (sessions) => {
+const _resetSessions = (sessions) => {
   sessions.forEach( (session) => {
     _rrSessions[session.id] = session;
   } );
   RRSessionStore.__emitChange();
 };
 
-var _deleteSession = (sessionId) => {
+const _deleteSession = (sessionId) => {
   delete _rrSessions[sessionId];
   RRSessionStore.__emitChange();
 };
 
+const _setError = (error) => {
+  _error = error.responseText;
+}
+
 RRSessionStore.all = () => {
-  return Object.keys(_rrSessions)
-    .map( sessionId => _rrSessions[sessionId]);
+  let sessions = Object.keys(_rrSessions);
+
+  return sessions.length === 0 ? null : 
+    sessions.map( sessionId => _rrSessions[sessionId]);
 }
 
 RRSessionStore.find = (id) => {
   return _rrSessions[id];
 }
 
+RRSessionStore.getError = () => {
+  let err = _error;
+  _error = null;
+  return err;
+}
 RRSessionStore.__onDispatch = (payload) => {
   switch (payload.actionType){
     case FETCHED_SESSION:

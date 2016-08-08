@@ -3,7 +3,7 @@ import { apiService, apiCSRFService } from "../utils/apiUtil";
 
 export const fetchRRSessions = (id) => {
   apiService({
-    url: "/api/clubs/" + id + "/sessions",
+    url: `/api/clubs/${id}/sessions`,
     success: "fetchedRRSessions"
   })
 }
@@ -17,7 +17,7 @@ export const saveSession = (data, clubId) => {
   apiCSRFService({
     url: "/api/clubs/" + clubId + "/session/new",
     method: "POST",
-    data: data,
+    data: { session: data },
     success: "fetchedRRSession"
   })
 }

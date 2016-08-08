@@ -26,24 +26,17 @@ router.get("", (req, res) => {
         });
 
     }).post("/:clubId/session/new", parseUrlEncoded, (req, res) => {
-      let clubId = req.params.clubId,
-          reqBody = req.body;
-
+      let _clubId = req.params.clubId,
+          data = req.body.session;
+          
       let newRR = new RoundRobinModel({
-        _clubId: clubId,
-        date: reqBody.date,
-        numOfPlayers: reqBody.numOfPlayers,
-        players: reqBody.addedPlayers,
-        selectedSchema: reqBody.selectedSchema,
-        schemata: reqBody.schemata
-      })
+        _clubId, ...data })
       
       newRR.save()
         .then((rr) => {
           console.log(rr);
           res.status(200).send(rr);
         }).catch((err)=>{
-          console.log(err)
           res.status(422).send(err);
         })
     }).post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {

@@ -1,6 +1,6 @@
 import Dispatcher from '../dispatcher/dispatcher';
 import { Store } from 'flux/utils';
-import { FETCHED_PLAYERS, FETCHED_PLAYER, REMOVED_PLAYER }from '../constants/constants';
+import { FETCHED_PLAYERS, FETCHED_PLAYER, REMOVED_PLAYER, LOGGED_IN }from '../constants/constants';
 
 let _currentClubPlayers = {};
 let _players = {};
