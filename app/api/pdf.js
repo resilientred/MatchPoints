@@ -3,7 +3,6 @@ import { parseUrlEncoded, app, csrfProtection, client, eventNotifier } from "../
 import fs from "fs"
 const router = express.Router();
 
-
 const _handleExpired = (name) => {
   //not a correct value passed in
   fs.unlink(`/pdfs/${name}.pdf`, (err) => {
@@ -29,14 +28,19 @@ route.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   let clubId = req.params.clubId,
       { club, addedPlayers, schema } = req.body.session;
   let urls = {};
+
   schema.forEach((group, i) => {
     let players = [];
-    urls["group" + (i + 1)] = generatePDF(club, addedPlayers.splice(0, group), i + 1, group);
+    process.nextTick(() => {
+      urls["group" + (i + 1)] = generatePDF(club, addedPlayers.splice(0, group), i + 1, group);
+      if (addedPlayers.length === 0){
+        client.setex(clubId, 1, JSON.stringify(urls)).then(()=>{
+          res.status(200).send(urls);
+        }).catch(err => res.status(500).send("something went wrong.."));
+      }
+    })
   })
-  res.status(200).send(urls);
-  client.setex(clubId, 1, JSON.stringify(urls)).then((err))
 })
-//should impose a limit of 1 minute per pdf generate
 //and expire it within 15minutes
 route.get("/:clubId", (req, res) => {
   let clubId = req.params.clubId;

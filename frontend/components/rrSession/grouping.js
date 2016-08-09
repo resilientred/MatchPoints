@@ -11,7 +11,8 @@ class Grouping extends React.Component {
           schemata: [],
           rangeOfPlayers: [6, 5, 4],
           selectedGroup: [],
-          pdfs: null
+          pdfs: null,
+          generated: false
         }
     }   
     componentWillMount() {
@@ -54,7 +55,17 @@ class Grouping extends React.Component {
       this.setState({ selectedGroup: e.target.value.split(",") }); 
     }
     generatePDF = () => {
+      if (this.state.generated){
+        alert("You may only generate once every 30secs")
+        return;
+      }
+
       generatePDF(this.props.addedPlayers, this.state.selectedGroup);
+      
+      this.setState({generated: true});
+      setTimeout(() => {
+        this.setState({generated: false});
+      }, 30000);
     }
     changeNumOfPlayers = (index, num, _) => {
       let selectedGroup = this.state.selectedGroup.slice();
@@ -65,9 +76,12 @@ class Grouping extends React.Component {
     render() {
       this.totalPlayerAdded = 0;
       let pdfs = this.state.pdfs;
+
+      let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
       return <div className="grouping">
-        <button className="create-pdf" 
-                onClick={ this.generatePDF }>Create PDF</button>
+        <button className="create-pdf"
+                onClick={this.generatePDF}
+                disabled={this.state.generated}>{generatedText}</button>
         <button className="save-session"
                 onClick={this.props.saveSession.bind(null, 
                   this.state.schemata, this.state.rangeOfPlayer, 

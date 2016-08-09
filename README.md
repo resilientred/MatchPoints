@@ -26,7 +26,7 @@ And allow users to:
 ## Languages:
  - Front-end: React.js with Flux architectural framework
  - Back-end: Node.js/Express.js
- - Database: MongoDB with Mongoose ODM (with Redis caching - not implementing yet)
+ - Database: MongoDB with Mongoose ODM with Redis caching
  
 
 ## Implementation:

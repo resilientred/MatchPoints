@@ -1,10 +1,10 @@
 import React from 'react';
 
-const PlayerList = (props) => {
-   var players = props.players, playerLists = [];
+const PlayerList = ({players, ...props}) => {
+   let players = props.players, playerLists = [];
 
   for (let _id in players){
-    var hideClassName = props.hiddenPlayers[_id] ? " hidden-name" : "";
+    let hideClassName = props.hiddenPlayers[_id] ? " hidden-name" : "";
 
     if (players.hasOwnProperty(_id)){
       let cur_player = players[_id];
