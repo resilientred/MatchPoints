@@ -10,8 +10,9 @@ import config from './webpack.config.js'
 import routes from './app/api/players'
 import clubRoutes from "./app/api/club"
 import sessionRoutes from "./app/api/session"
-import { app, csrfProtection, clubMethods } from "./app/app_modules"
+import { app, csrfProtection, clubMethods, client } from "./app/app_modules"
 const port = process.env.PORT || 3000;
+
 const compiler = webpack(config);
 
 app.set('view engine', 'ejs');
@@ -35,7 +36,7 @@ app.use('/favicon.ico', (req, res, next) => {
 })
 app.use(
   sassMiddleware({
-    src: __dirname + "/sass",
+    src: __dirname + "/app/assets/sass",
     dest: __dirname + "/public/styles",
     prefix: '/styles',
     debug: true

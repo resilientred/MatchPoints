@@ -1,0 +1,95 @@
+div, body, content, header {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+ul {
+  list-style-type: none;
+  text-align: center;
+}
+ul li {
+  display: block;
+  position: relative;
+  right: 41%;
+}
+header {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+.center {
+  margin-right: 4%;
+  margin-left: 4%;
+  word-wrap: break-word;
+  width: 60%;
+}
+.center h1 {
+  text-decoration: underline;
+}
+.left, .right {
+  width: 15%;
+}
+.cf {
+  content: " ";
+  clear: both;
+  display: table;
+}
+header div {
+  float: left;
+
+}
+
+content {
+  width: 100%;
+}
+
+content ol {
+  float: left;
+  font-size: 26px;
+  font-weight: 700;
+  margin-right: 20px;
+}
+ol li {
+  margin-bottom: 10px;
+}
+content > div {
+  float: left;
+}
+.schedule {
+  float: right;
+}
+.scenario {
+  float: left;
+  border-left: 2px solid black;
+  min-height: 300px;
+  text-align: center;
+}
+.schedule:last-child {
+  border-right: 2px solid black;
+}
+
+
+.cell-div {
+  float: left;
+  margin-right: 10px;
+}
+.cell:last-child {
+  border-left: 0px;
+}
+.cell {
+  float: left;
+  border: 2px solid black;
+  height: 40px;
+  width: 50px;
+}
+.row {
+  margin-bottom: 10px;
+}
+
+.match-title {
+  text-align: center;
+  width: 102px;
+  border: 2px solid black;
+  border-bottom: 0px;
+}

@@ -30044,24 +30044,22 @@
 	    success: "fetchedRRSession"
 	  });
 	};
-	var postResult = exports.postResult = function postResult(data, ratingUpdateList, id) {
+	var postResult = exports.postResult = function postResult(clubId, data, ratingUpdateList, id) {
 	  (0, _apiUtil.apiCSRFService)({
-	    url: "/api/clubs/sessions/" + id,
+	    url: "/api/clubs/" + clubId + "/sessions/" + id,
 	    method: "POST",
 	    data: {
-	      data: data,
-	      ratingUpdateList: ratingUpdateList
+	      result: { data: data, ratingUpdateList: ratingUpdateList }
 	    },
 	    success: "fetchedRRSession"
 	  });
 	};
-	var updateResult = exports.updateResult = function updateResult(data, ratingUpdateList, id) {
+	var updateResult = exports.updateResult = function updateResult(clubId, data, ratingUpdateList, id, date) {
 	  (0, _apiUtil.apiCSRFService)({
-	    url: "/api/clubs/sessions/" + id,
+	    url: "/api/clubs/" + clubId + "/sessions/" + id,
 	    method: "PATCH",
 	    data: {
-	      data: data,
-	      ratingUpdateList: ratingUpdateList
+	      result: { date: date, data: data, ratingUpdateList: ratingUpdateList }
 	    },
 	    success: "fetchedRRSession"
 	  });
@@ -54639,7 +54637,7 @@
 /* 502 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -54651,21 +54649,25 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _rrSessionStore = __webpack_require__(273);
-	
-	var _rrSessionStore2 = _interopRequireDefault(_rrSessionStore);
-	
-	var _rrSessionActions = __webpack_require__(272);
+	var _reactRouter = __webpack_require__(168);
 	
 	var _moment = __webpack_require__(292);
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
+	var _rrSessionStore = __webpack_require__(273);
+	
+	var _rrSessionStore2 = _interopRequireDefault(_rrSessionStore);
+	
+	var _clubStore = __webpack_require__(397);
+	
+	var _clubStore2 = _interopRequireDefault(_clubStore);
+	
+	var _rrSessionActions = __webpack_require__(272);
+	
 	var _RecordTable = __webpack_require__(503);
 	
 	var _RecordTable2 = _interopRequireDefault(_RecordTable);
-	
-	var _reactRouter = __webpack_require__(168);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -54686,7 +54688,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RoundRobinSession).call(this, props));
 	
 	    _this.updateScore = function (scoreChangeInGroup, i) {
-	      var scoreChange = Object.assign({}, _this.state.scoreChange),
+	      var scoreChange = _this.state.scoreChange,
 	          scoreUpdate = Object.assign({}, _this.state.scoreUpdate),
 	          scoreUpdateInGroup = scoreChangeInGroup[1];
 	      scoreChange[i] = scoreChangeInGroup[0];
@@ -54694,24 +54696,20 @@
 	      for (var playerId in scoreUpdateInGroup) {
 	        scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
 	      }
-	      _this.setState({ scoreChange: scoreChange, scoreUpdateInGroup: scoreUpdateInGroup });
+	      _this.setState({ scoreChange: scoreChange, scoreUpdate: scoreUpdate });
 	    };
 	
 	    _this.setRRSession = function () {
 	      var newObj = {},
-	          session = _this.state.session;
-	      debugger;
-	      if (!session) {
-	        session = _rrSessionStore2.default.find(_this.props.params.id);
-	        newObj.session = session;
+	          session = _this.state.session || _rrSessionStore2.default.find(_this.props.params.id);
+	      newObj.session = session;
+	      if (session) {
+	        var scoreChange = session.results && session.results.length ? session.results : _this.setUpChangeArray(session.selectedSchema);
+	        newObj.scoreChange = scoreChange;
+	        _this.setState(newObj);
+	      } else {
+	        (0, _rrSessionActions.fetchRRSessions)(_this.props.club._id);
 	      }
-	      if (!session) {
-	        _reactRouter.browserHistory.push("/");
-	      }
-	
-	      var scoreChange = session.results.length ? session.results : _this.setUpChangeArray(session.selectedSchema);
-	      newObj.scoreChange = scoreChange;
-	      _this.setState(newObj);
 	    };
 	
 	    _this.setTab = function (currentTab) {
@@ -54720,14 +54718,13 @@
 	
 	    _this.saveSession = function () {
 	      var session = _this.state.session;
-	
 	      if (!session) {
 	        _reactRouter.browserHistory.push("/");
 	      } else {
 	        if (session.finalized) {
-	          (0, _rrSessionActions.updateResult)(_this.state.scoreChange, _this.state.scoreUpdate, session._id, session.date);
+	          (0, _rrSessionActions.updateResult)(_this.props.club._id, _this.state.scoreChange, _this.state.scoreUpdate, session._id, session.date);
 	        } else {
-	          (0, _rrSessionActions.postResult)(_this.state.scoreChange, _this.state.scoreUpdate, session._id, session.date);
+	          (0, _rrSessionActions.postResult)(_this.props.club._id, _this.state.scoreChange, _this.state.scoreUpdate, session._id, session.date);
 	        }
 	      }
 	    };
@@ -54743,28 +54740,34 @@
 	  }
 	
 	  _createClass(RoundRobinSession, [{
-	    key: "componentWillMount",
+	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      this.rrsListener = _rrSessionStore2.default.addListener(this.setRRSession);
-	      this.setRRSession();
+	
+	      if (this.props.club) {
+	        this.setRRSession();
+	      } else {
+	        this.csListener = _clubStore2.default.addListener(this.setRRSession);
+	      }
 	    }
 	  }, {
-	    key: "componentWillReceiveProps",
+	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      _rrSessionStore2.default.fetchSsession(nextProps.params.id);
 	    }
 	  }, {
-	    key: "componentWillUnmount",
+	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      if (this.rrsListener) this.rrsListener.remove();
+	      if (this.csListener) this.csListener.remove();
 	    }
 	  }, {
-	    key: "setUpChangeArray",
+	    key: 'setUpChangeArray',
 	    value: function setUpChangeArray(selectedSchema) {
 	      return [].concat(_toConsumableArray(Array(selectedSchema.length)));
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
@@ -54773,9 +54776,9 @@
 	      var scoreChange = _state.scoreChange;
 	
 	      if (!session) return _react2.default.createElement(
-	        "h1",
+	        'h1',
 	        null,
-	        "Loading ..."
+	        'Loading ...'
 	      );
 	
 	      var selectedSchema = session.selectedSchema,
@@ -54786,12 +54789,12 @@
 	
 	      var countedPlayers = 0;
 	      return _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
 	        _react2.default.createElement(
-	          "h1",
+	          'h1',
 	          null,
-	          "Session Date: ",
+	          'Session Date: ',
 	          (0, _moment2.default)(session.date).format("YYYY/MM/DD")
 	        ),
 	        selectedSchema.map(function (sizeOfGroup, i) {
@@ -54852,52 +54855,6 @@
 	
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RecordTable).call(this, props));
 	
-	    _this._handleCalculate = function (e) {
-	      e.preventDefault();
-	      if (e.currentTarget.className === "calculate") {
-	        _this.props.updateScore(_this.calculateScore(), _this.props.groupNum - 1);
-	      }
-	    };
-	
-	    _this.calculateScore = function () {
-	      var joinedPlayers = _this.props.joinedPlayers,
-	          playerIds = Object.keys(joinedPlayers),
-	          startIdx = _this.props.start,
-	          calculatedScore = [],
-	          backSide = document.getElementsByClassName("back")[0],
-	          rc = {};
-	      backSide.className += " rotated";
-	
-	      _this.state.result.forEach(function (indRecord, i) {
-	        var record = indRecord.map(function (record, j) {
-	          if (j < i) return -calculatedScore[j][i]; //just mirroring what the other result was
-	          if (i === j) return 0;
-	
-	          var sign = record[0] - record[1] === 0 ? 0 : record[0] - record[1] > 0 ? 1 : -1;
-	
-	          if (sign === 0) return 0;
-	          var player1Id = playerIds[startIdx + i],
-	              player2Id = playerIds[startIdx + j],
-	              modifier = sign === 1 ? -record[1] * 2 : record[0] * 2;
-	
-	          var scoreAdjust = 16 * sign - (joinedPlayers[player1Id].rating - joinedPlayers[player2Id].rating) * sign * 0.04 + modifier;
-	
-	          rc[player1Id] = {
-	            change: rc[player1Id] ? rc[player1Id]["change"] : 0 + scoreAdjust,
-	            ratingBefore: joinedPlayers[player1Id].rating
-	          };
-	          rc[player2Id] = {
-	            change: rc[player2Id] ? rc[player2Id]["change"] : 0 - scoreAdjust,
-	            ratingBefore: joinedPlayers[player2Id].rating
-	          };
-	          return scoreAdjust;
-	        });
-	
-	        calculatedScore.push(record);
-	      });
-	      return [calculatedScore, rc];
-	    };
-	
 	    _this.updateResult = function (i, j, k, e) {
 	      _this.state.result[i][j][k] = e.target.value;
 	      _this.setState({
@@ -54916,12 +54873,60 @@
 	  }
 	
 	  _createClass(RecordTable, [{
+	    key: "_handleCalculate",
+	    value: function _handleCalculate(e) {
+	      e.preventDefault();
+	      if (e.currentTarget.className.split(" ")[1] === "calculate") {
+	        this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
+	      }
+	    }
+	  }, {
 	    key: "shouldComponentUpdate",
 	    value: function shouldComponentUpdate(nextProps, nextState) {
 	      if (this.props.groupNum && this.props.state && this.props.sizeOfGroup) {
 	        return false;
 	      }
 	      return true;
+	    }
+	  }, {
+	    key: "calculateScore",
+	    value: function calculateScore() {
+	      var joinedPlayers = this.props.joinedPlayers,
+	          playerIds = Object.keys(joinedPlayers),
+	          startIdx = this.props.start,
+	          calculatedScore = [],
+	          backSide = document.getElementsByClassName("back")[0],
+	          rc = {};
+	      backSide.className += " rotated";
+	
+	      this.state.result.forEach(function (indRecord, i) {
+	        var record = indRecord.map(function (record, j) {
+	          if (j < i) return -calculatedScore[j][i]; //just mirroring what the other result was
+	          if (i === j) return 0;
+	
+	          var sign = record[0] - record[1] === 0 ? 0 : record[0] - record[1] > 0 ? 1 : -1;
+	
+	          if (sign === 0) return 0;
+	          var player1Id = playerIds[startIdx + i],
+	              player2Id = playerIds[startIdx + j],
+	              modifier = sign === 1 ? -record[1] * 2 : record[0] * 2;
+	
+	          var scoreAdjust = (16 * sign - (joinedPlayers[player1Id].rating - joinedPlayers[player2Id].rating) * sign * 0.04 + modifier).toFixed(2);
+	
+	          rc[player1Id] = {
+	            change: rc[player1Id] ? rc[player1Id]["change"] : 0 + scoreAdjust,
+	            ratingBefore: joinedPlayers[player1Id].rating
+	          };
+	          rc[player2Id] = {
+	            change: rc[player2Id] ? rc[player2Id]["change"] : 0 - scoreAdjust,
+	            ratingBefore: joinedPlayers[player2Id].rating
+	          };
+	          return scoreAdjust;
+	        });
+	
+	        calculatedScore.push(record);
+	      });
+	      return [calculatedScore, rc];
 	    }
 	  }, {
 	    key: "render",
@@ -54945,13 +54950,13 @@
 	        { className: "record-table" },
 	        _react2.default.createElement(
 	          "button",
-	          { className: "calculate", onClick: this._handleCalculate.bind(this) },
+	          { className: "record-btn calculate", onClick: this._handleCalculate.bind(this) },
 	          "Calculate"
 	        ),
 	        _react2.default.createElement(
 	          "button",
-	          { className: "update-record", onClick: this.props.saveSession.bind(null, this.state.ratingChange) },
-	          "Update"
+	          { className: "record-btn update-record", onClick: this.props.saveSession },
+	          "Save"
 	        ),
 	        _react2.default.createElement(_recordTableDetail2.default, _extends({}, propsToPass, { result: this.state.result,
 	          updateResult: this.updateResult }))
@@ -54961,15 +54966,7 @@
 	
 	  return RecordTable;
 	}(_react.Component);
-	//wtf is this.state.ratingCahnge
 	
-	
-	RecordTable.propTypes = {
-	  groupNum: _react2.default.PropTypes.number.isRequired,
-	  start: _react2.default.PropTypes.number.isRequired,
-	  joinedPlayers: _react2.default.PropTypes.object.isRequired,
-	  sizeOfGroup: _react2.default.PropTypes.number.isRequired
-	};
 	exports.default = RecordTable;
 
 /***/ },
