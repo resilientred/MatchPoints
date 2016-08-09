@@ -24,12 +24,12 @@ roundRobinSchema.statics.findRoundRobin = function(id){
 };
 
 roundRobinSchema.statics.saveResult = function(id, result){
-  return this.update({"id": id}, {
+  return this.findOneAndUpdate({"_id": id}, {
     $set: {
       "finalized": true,
       "results": result
     }
-  });
+  }, {new: true});
 };
 
 roundRobinSchema.statics.deleteRoundRobin = function(id){

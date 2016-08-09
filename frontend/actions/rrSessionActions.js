@@ -21,24 +21,22 @@ export const saveSession = (data, clubId) => {
     success: "fetchedRRSession"
   })
 }
-export const postResult = (data, ratingUpdateList, id) => {
+export const postResult = (clubId, data, ratingUpdateList, id) => {
   apiCSRFService({
-    url: "/api/clubs/sessions/" + id,
+    url: `/api/clubs/${clubId}/sessions/${id}`,
     method:"POST",
     data: {
-      data: data,
-      ratingUpdateList: ratingUpdateList
+      result: {data, ratingUpdateList}
     },
     success: "fetchedRRSession"
   })
 }
-export const updateResult = (data, ratingUpdateList, id) => {
+export const updateResult = (clubId, data, ratingUpdateList, id, date) => {
   apiCSRFService({
-    url: "/api/clubs/sessions/" + id,
+    url: `/api/clubs/${clubId}/sessions/${id}`,
     method:"PATCH",
     data: {
-      data: data,
-      ratingUpdateList: ratingUpdateList
+      result: {date, data, ratingUpdateList}
     },
     success: "fetchedRRSession"
   })

@@ -63,29 +63,25 @@ router.get("", (req, res) => {
           res.status(500);
           res.end();
         });
-    }).post("/sessions/:id", parseUrlEncoded, (req, res) => {
+    }).post("/:clubId/sessions/:id", parseUrlEncoded, csrfProtection, (req, res) => {
       let id = req.params.id,
-          data = req.body.data,
-          ratingUpdateList = req.body.ratingUpdateList;
-
+          clubId = req.params.clubId,
+          { date, data, ratingUpdateList } = req.body.result;
+      
       let promiseResults = [];
-      for (let player in ratingUpdateList){
-        promiseResults.push(Player.addHistory(player, ratingUpdateList[player])); 
-      } 
-      Promise.all(promiseResults).then( (status) => {
-        console.log(status);
-        return RoundRobinModel.saveResult(id, data);
-      } ).then((success) => {
-          return RoundRobinModel.findRoundRobin(id);
-        }).then((session) => {
-          console.log(session);
-          res.status(200).send(session);
-        }).catch((err) => {
-          console.log(err);
-          res.status(422).send(err);
-        })
-    }).patch("/sessions/id", parseUrlEncoded, (req, res) => {
-        //if finalized is true
+      ClubModel.postPlayersRating(clubId, ratingUpdateList, date)
+        .then((club) => {
+            console.log("save successfully...")
+            console.log(club);
+            return RoundRobinModel.saveResult(id, data);
+          }).then((session) => {
+            console.log(session);
+            res.status(200).send(session);
+          }).catch((err) => {
+            console.log(err);
+            res.status(422).send(err);
+          })
+    }).patch("/:clubId/sessions/:id", parseUrlEncoded, csrfProtection, (req, res) => {
       let id = req.params.id,
           data = req.body.data,
           ratingUpdateList = req.body.ratingUpdateList;
@@ -94,18 +90,19 @@ router.get("", (req, res) => {
       for (let player in ratingUpdateList){
         promiseResults.push(Player.updateHistory(player, ratingUpdateList[player])); 
       } 
-      Promise.all(promiseResults).then( (status) => {
-        console.log(status);
-        return RoundRobinModel.updateResult(id, data);
-      } ).then((success) => {
-          return RoundRobinModel.findRoundRobin(id);
-        }).then((session) => {
-          console.log(session);
-          res.status(200).send(session);
-        }).catch((err) => {
-          console.log(err);
-          res.status(422).send(err);
-        })
+
+      // Promise.all(promiseResults).then( (status) => {
+      //   console.log(status);
+      //   return RoundRobinModel.updateResult(id, data);
+      // } ).then((success) => {
+      //     return RoundRobinModel.findRoundRobin(id);
+      //   }).then((session) => {
+      //     console.log(session);
+      //     res.status(200).send(session);
+      //   }).catch((err) => {
+      //     console.log(err);
+      //     res.status(422).send(err);
+      //   })
     }).post('/new', parseUrlEncoded, (req, res) => {
       let data = req.body.user;
       if (data.password <= 8) {

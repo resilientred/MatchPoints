@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 export const historySchema = new Schema({
   date: Date,
+  oldRating: Number,
   newRating: Number,
   ratingChange: Number
 });

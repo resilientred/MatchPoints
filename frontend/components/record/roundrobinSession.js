@@ -1,10 +1,10 @@
 import React from 'react'
+import { browserHistory } from "react-router"
+import moment from 'moment'
 import RRSessionStore from "../../stores/rrSessionStore"
 import ClubStore from "../../stores/clubStore"
 import { fetchRRSessions, updateResult, postResult }from "../../actions/rrSessionActions"
-import moment from 'moment'
 import RecordTable from "./RecordTable"
-import { browserHistory } from "react-router"
 
 class RoundRobinSession extends React.Component {
     constructor(props) {
@@ -27,7 +27,7 @@ class RoundRobinSession extends React.Component {
       }
     }
     updateScore = (scoreChangeInGroup, i) => {
-      var scoreChange = Object.assign({}, this.state.scoreChange),
+      var scoreChange = this.state.scoreChange,
           scoreUpdate = Object.assign({}, this.state.scoreUpdate),
           scoreUpdateInGroup = scoreChangeInGroup[1];
       scoreChange[i] = scoreChangeInGroup[0];
@@ -35,7 +35,7 @@ class RoundRobinSession extends React.Component {
       for (var playerId in scoreUpdateInGroup){
         scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
       }
-      this.setState({ scoreChange, scoreUpdateInGroup });
+      this.setState({ scoreChange, scoreUpdate });
     }
 
     setRRSession = () => {
@@ -69,19 +69,18 @@ class RoundRobinSession extends React.Component {
 
     saveSession = () => {
       var session = this.state.session;
-
       if (!session) {
         browserHistory.push("/");
       } else {
         if (session.finalized){
           updateResult(
-            this.state.scoreChange, this.state.scoreUpdate,
-            session._id, session.date
+            this.props.club._id, this.state.scoreChange, 
+            this.state.scoreUpdate, session._id, session.date
           )
         } else {
           postResult(
-            this.state.scoreChange, this.state.scoreUpdate,
-            session._id, session.date
+            this.props.club._id, this.state.scoreChange, 
+            this.state.scoreUpdate, session._id, session.date
           )
         }
       }

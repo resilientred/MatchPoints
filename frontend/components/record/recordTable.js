@@ -23,7 +23,7 @@ class RecordTable extends Component {
     return true;
   }
 
-  calculateScore = () => {
+  calculateScore(){
     var joinedPlayers = this.props.joinedPlayers,
         playerIds = Object.keys(joinedPlayers),
         startIdx = this.props.start,
@@ -44,9 +44,9 @@ class RecordTable extends Component {
             player2Id = playerIds[startIdx + j],
             modifier = sign === 1 ? -record[1] * 2 : record[0] * 2;
 
-        var scoreAdjust = 16 * sign - (joinedPlayers[player1Id].rating - 
+        var scoreAdjust = (16 * sign - (joinedPlayers[player1Id].rating - 
           joinedPlayers[player2Id].rating) * 
-          sign * 0.04 + modifier;
+          sign * 0.04 + modifier).toFixed(2);
 
         rc[player1Id] = {
           change: rc[player1Id] ? rc[player1Id]["change"] : 0 + scoreAdjust,
@@ -90,7 +90,7 @@ class RecordTable extends Component {
         <button className="record-btn calculate" onClick={this._handleCalculate.bind(this)}>
           Calculate
         </button>
-        <button className="record-btn update-record" onClick={this.props.saveSession.bind(null, this.state.ratingChange)}>
+        <button className="record-btn update-record" onClick={this.props.saveSession}>
           Save
         </button>
 
@@ -99,5 +99,4 @@ class RecordTable extends Component {
       </div>
 	}
 }
-//wtf is this.state.ratingCahnge
 export default RecordTable;

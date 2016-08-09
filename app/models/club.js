@@ -39,23 +39,28 @@ clubSchema.statics.updatePlayer = function(clubId, player) {
   return this.update({"_id": clubId, "players.id": player.id}, 
     { $set: { "players.$": player }})
 }
-
-clubSchema.statics.addHistory = function(clubId, playerId, ratingDetail) {
-  let newHistory = new History({
-    date: ratingDetail.date, 
-    ratingChange: ratingDetail.ratingChange,
-    newRating: ratingDetail.ratingBefore + ratingDetail.ratingChange
-  });
-
-  return newHistory.save()
-    .then( () => {
-      this.update({ "_id": clubId, "players.id": playerId }, { 
-        $inc: { "players.$.rating": ratingDetail.ratingChange },
-        $push: { "players.$.ratingHistory": newHistory } 
-      });
+clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
+  return this.findOne({"_id": clubId}).then((club) => {
+      let players = club.players;
+      for (let i = 0; i < players.length; i++) {
+        let curPlayer = players[i];
+        if (updateList[curPlayer._id]){
+          let updatedRating = +updateList[curPlayer._id].change + curPlayer.rating;
+          let newHistory = new History({
+            date: date, 
+            oldRating: curPlayer.rating, 
+            newRating: updatedRating,
+            ratingChange: +updateList[curPlayer._id].change});
+          newHistory.markModified("history");
+          curPlayer.ratingHistory.push(newHistory);
+          curPlayer.rating = updatedRating;//-history.change
+          curPlayer.markModified("player");
+        }
+      }
+      console.log("saving....")
+      return club.save();
     })
 }
-
 
 clubSchema.statics.updateHistory = function(clubId, playerId, ratingDetail) {
   this.update({ "_id": clubId, "players.id": playerId, "players.history.id": historyId }, {
