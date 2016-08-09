@@ -42,3 +42,21 @@ export const fetchAllClubs = () => {
 		success: "fetchedAllClubs"
 	})
 }
+
+export const generatePDF = (addedPlayers, schema) => {
+	apiCSRFService({
+		url: "/api/pdfs",
+		type: "POST",
+		data: {
+			session: {addedPlayers, schema}
+		},
+		success: "generatedPDF"
+	})
+}
+
+export const fetchPDFLinks = () => {
+	apiService({
+		url: "/api/pdfs",
+		success: "generatedPDF"
+	})
+}

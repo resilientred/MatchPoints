@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 const _handleExpired = (name) => {
-  //not a correct name
+  //not a correct value passed in
   fs.unlink(`/pdfs/${name}.pdf`, (err) => {
     if (err) return console.log(err);
     console.log("removed an old file");
@@ -16,7 +16,8 @@ eventNotifier.on('message', (pattern, channelPattern, emittedKey) => {
   //is there a channel.value?
   switch (channel.key) {
     case 'expired':
-      _handleExpired(emittedKey);
+      console.log("expired channael", channel);
+      // _handleExpired(emittedKey);
       break;
     default:
       logger.debug("Unrecognized Channel Type:" + channel.type);

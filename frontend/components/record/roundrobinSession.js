@@ -3,7 +3,7 @@ import { browserHistory } from "react-router"
 import moment from 'moment'
 import RRSessionStore from "../../stores/rrSessionStore"
 import ClubStore from "../../stores/clubStore"
-import { fetchRRSessions, updateResult, postResult }from "../../actions/rrSessionActions"
+import { fetchRRSessions, updateResult, postResult } from "../../actions/rrSessionActions"
 import RecordTable from "./RecordTable"
 
 class RoundRobinSession extends React.Component {

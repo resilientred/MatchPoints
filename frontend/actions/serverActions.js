@@ -1,7 +1,7 @@
 import Dispatcher from "../dispatcher/dispatcher";
 import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 				 LOGGED_IN, FETCHED_PLAYER, FETCHED_PLAYERS, REMOVED_PLAYER,
-				 LOG_IN_ERROR, FETCHED_ALL_CLUBS } from "../constants/constants"
+				 LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF } from "../constants/constants"
 
 
 module.exports = {
@@ -45,6 +45,12 @@ module.exports = {
 		Dispatcher.dispatch({
 			actionType: FETCHED_ALL_CLUBS,
 			clubs: clubs
+		})
+	},
+	generatedPDF(pdfs) {
+		Dispatcher.dispatch({
+			actionType: GENERATED_PDF,
+			pdfs: pdfs
 		})
 	}
 }
