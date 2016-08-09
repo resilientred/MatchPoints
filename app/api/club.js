@@ -3,7 +3,7 @@ import ClubModel from '../models/club'
 import RoundRobinModel from "../models/roundrobin"
 import Parallel from "paralleljs"
 import { Player } from "../models/player"
-import { clubMethods, parseUrlEncoded, csrfProtection } from "../app_modules"
+import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/app_modules"
 const router = express.Router();
 
 router.get("", (req, res) => {

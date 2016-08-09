@@ -1,9 +1,8 @@
 import React from 'react'
 import ParticipantGroup from './participantGroup'
 import { findSchemata } from "../../methods/findSchema"
-import { generatePDF, fetchPDFLinks } from "../../actions/clientActions"
+import { generatePDF, fetchPDFLinks, downloadPDF } from "../../actions/clientActions"
 import PDFStore from "../../stores/pdfStore"
-
 
 class Grouping extends React.Component {
     constructor(props) {
@@ -25,7 +24,7 @@ class Grouping extends React.Component {
         pdfs
       })
       if (!pdfs){
-        fetchPDFLinks();
+        fetchPDFLinks(this.props.club._id);
       }
     }
     componentWillUnmount() {
@@ -65,6 +64,7 @@ class Grouping extends React.Component {
 
     render() {
       this.totalPlayerAdded = 0;
+      let pdfs = this.state.pdfs;
       return <div className="grouping">
         <button className="create-pdf" 
                 onClick={ this.generatePDF }>Create PDF</button>
@@ -72,6 +72,14 @@ class Grouping extends React.Component {
                 onClick={this.props.saveSession.bind(null, 
                   this.state.schemata, this.state.rangeOfPlayer, 
                   this.state.selectedGroup)}>Save</button>
+        <div>
+        { 
+          !pdfs ? "" :
+            Object.keys(pdfs).map((group, i) => {
+              return <div key={i} onClick={() => downloadPDF(pdfs[group])}>{group}</div>;
+            })
+        }
+        </div>
         { this.schemata() }
         { 
            this.state.selectedGroup.map((numPlayers, i) => {

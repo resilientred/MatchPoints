@@ -52,6 +52,16 @@ module.exports = {
 			actionType: GENERATED_PDF,
 			pdfs: pdfs
 		})
+	},
+	pdfNotFound(err){
+		console.log(err);
+		Dispatcher.dispatch({
+			actionType: GENERATED_PDF,
+			pdfs: null
+		})
+	},
+	pdfError(err){
+		console.log(err)
 	}
 }
 

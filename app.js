@@ -10,6 +10,7 @@ import config from './webpack.config.js'
 import routes from './app/api/players'
 import clubRoutes from "./app/api/club"
 import sessionRoutes from "./app/api/session"
+import pdfRoutes from "./app/api/pdf"
 import { app, csrfProtection, clubMethods, client } from "./app/app_modules"
 const port = process.env.PORT || 3000;
 
@@ -48,6 +49,7 @@ app.use(express.static(path.join(__dirname + "/public")));
 app.use(webpackMiddleware(compiler));
 app.use('/api/clubs', clubRoutes);
 app.use('/api/clubs/:clubId', routes);
+app.use('/api/pdfs', pdfRoutes)
 app.use('/api/*', (req, res, next) => {
   res.status(404).send("Invalid routes");
   res.end();

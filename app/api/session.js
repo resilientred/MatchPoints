@@ -1,6 +1,6 @@
 import express from 'express'
 import ClubModel from '../models/club';
-import { clubMethods, parseUrlEncoded, csrfProtection } from "../app_modules"
+import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/app_modules"
 
 const router = express.Router();
 

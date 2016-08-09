@@ -2,23 +2,23 @@ import fs from "fs"
 import html5pdf from "html5-to-pdf"
 import shortid from "shortid"
 
-const generatePDF = (date, organization, num, players) => {
+const generatePDF = ({date, clubName}, num, players, numOfPlayers) => {
     var header = '<header class="cf"><div class="left"><h4>Date: ' + date + 
-      '</h4></div><div class="center"><h2>' + organization + 
+      '</h4></div><div class="center"><h2>' + clubName + 
       '</h2></div><div class="right">' +
-      '<h3>Group ' + num + '</h3></div></header>',
-      numOfPlayers = Object.keys(players).length;
+      '<h3>Group ' + num + '</h3></div></header>';
     var content = "<content>" + playerList(numOfPlayers, players);
 
     content += schedule(numOfPlayers) + "</content>";
     content += scoreBoxes(numOfPlayers);
-
+    const shortid = shortid.generate();
     html5pdf({
       paperFormat: "letter",
       cssPath: "../assets/css-pdf/pdf.css"
-    }).from.string(header + content).to(`/pdfs/${shortid.generate()}.pdf`, function() {
+    }).from.string(header + content).to(`/pdfs/${shortid}.pdf`, function() {
       console.log("done");
     })
+    return shortid;
   }
 
 const playerList = (numOfPlayers, players) => {

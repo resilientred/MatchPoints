@@ -6,6 +6,13 @@ export const fetchPlayers = (clubId) => {
 		success: "fetchedPlayers"
 	});
 }
+export const downloadPDF = (file) => {
+	apiService({
+		url: `/api/pdfs/download/${file}`,
+		success: "downloadedPDF",
+		error: "pdfError"
+	});
+}
 export const fetchPlayer = (id) => {
 	apiService({
 		url: `/api/players/${id}`,
@@ -54,9 +61,10 @@ export const generatePDF = (addedPlayers, schema) => {
 	})
 }
 
-export const fetchPDFLinks = () => {
+export const fetchPDFLinks = (sessionId) => {
 	apiService({
-		url: "/api/pdfs",
-		success: "generatedPDF"
+		url: `/api/pdfs/${sessionId}`,
+		success: "generatedPDF",
+		error: "pdfNotFound"
 	})
 }

@@ -1,5 +1,5 @@
-import { generatePDF } from "../pdf_module/pdf.js"
-import { parseUrlEncoded, app, csrfProtection, client, eventNotifier } from "../app_modules"
+import { generatePDF } from "../helpers/pdf_modules.js"
+import { parseUrlEncoded, app, csrfProtection, client, eventNotifier } from "../helpers/app_modules"
 import fs from "fs"
 const router = express.Router();
 
@@ -25,29 +25,31 @@ eventNotifier.on('message', (pattern, channelPattern, emittedKey) => {
   }
 })
 
-route.post("/", parseUrlEncoded, csrfProtection, (req, res) => {
-  let { session } = req.body;
-
-  generatePDF();
+route.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
+  let clubId = req.params.clubId,
+      { club, addedPlayers, schema } = req.body.session;
   let urls = {};
-  /* 
-  client.setex(session._id, 24*60*60, urls.to_json).then((err))
-  does setex exist?
-  {
-    group1: url,
-    group2: url
-    use redis?
-  */
-  }
+  schema.forEach((group, i) => {
+    let players = [];
+    urls["group" + (i + 1)] = generatePDF(club, addedPlayers.splice(0, group), i + 1, group);
+  })
+  res.status(200).send(urls);
+  client.setex(clubId, 1, JSON.stringify(urls)).then((err))
 })
-//should impose a limit of 1 minute for pdf generate
-//and expire it within 30minutes
-route.get("/:sessionId", (req, res) => {
-  let session = req.params.session;
+//should impose a limit of 1 minute per pdf generate
+//and expire it within 15minutes
+route.get("/:clubId", (req, res) => {
+  let clubId = req.params.clubId;
   client.hget(session)
     .then((data) => res.status(200).send(JSON.parse(data)))
     .catch((err) => res.status(404).send("Expired or does not exist"))
     //somehow need to delete all the entry that are not
 
+})
+
+route.get("/download/:file", (req, res) => {
+  res.download(`/pdfs/${req.params.file}.pdf`, (err) => {
+    res.status(404).send("File expired or does not exist");
+  })
 })
 export default router
