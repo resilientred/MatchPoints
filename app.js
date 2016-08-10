@@ -11,7 +11,7 @@ import routes from './app/api/players'
 import clubRoutes from "./app/api/club"
 import sessionRoutes from "./app/api/session"
 import pdfRoutes from "./app/api/pdf"
-import { app, csrfProtection, clubMethods, client } from "./app/app_modules"
+import { app, csrfProtection, clubMethods, client } from "./app/helpers/app_modules"
 const port = process.env.PORT || 3000;
 
 const compiler = webpack(config);
@@ -21,12 +21,6 @@ app.set('view engine', 'ejs');
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
 
-// app.use((req, res, next) => {
-//   let token = req.csrfToken();
-//   res.cookie('XSRF-TOKEN', token);
-//   res.locals.csrfToken = token;
-//   next();
-// })
 // app.use(function (err, req, res, next) {
 //   if (err.code !== 'EBADCSRFTOKEN') return next(err);
 

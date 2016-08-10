@@ -16,7 +16,7 @@ PDFStore.__onDispatch = (payload) => {
   switch (payload.actionType){
     case GENERATED_PDF:
       _setPDF(payload.pdfs);
-      PDFStore.__emitchange();
+      PDFStore.__emitChange();
       break; 
   }
 }

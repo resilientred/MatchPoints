@@ -48,6 +48,7 @@ module.exports = {
 		})
 	},
 	generatedPDF(pdfs) {
+		debugger;
 		Dispatcher.dispatch({
 			actionType: GENERATED_PDF,
 			pdfs: pdfs
@@ -62,6 +63,9 @@ module.exports = {
 	},
 	pdfError(err){
 		console.log(err)
+	},
+	downloadedPDF(data){
+		console.log(data)
 	}
 }
 

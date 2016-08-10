@@ -3,7 +3,6 @@ import ParticipantGroup from './participantGroup'
 import { findSchemata } from "../../methods/findSchema"
 import { generatePDF, fetchPDFLinks, downloadPDF } from "../../actions/clientActions"
 import PDFStore from "../../stores/pdfStore"
-
 class Grouping extends React.Component {
     constructor(props) {
         super(props);
@@ -60,7 +59,7 @@ class Grouping extends React.Component {
         return;
       }
 
-      generatePDF(this.props.addedPlayers, this.state.selectedGroup);
+      generatePDF(this.props.addedPlayers, this.state.selectedGroup, this.props.club, this.props.date);
       
       this.setState({generated: true});
       setTimeout(() => {
@@ -76,7 +75,6 @@ class Grouping extends React.Component {
     render() {
       this.totalPlayerAdded = 0;
       let pdfs = this.state.pdfs;
-
       let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
       return <div className="grouping">
         <button className="create-pdf"
@@ -90,7 +88,7 @@ class Grouping extends React.Component {
         { 
           !pdfs ? "" :
             Object.keys(pdfs).map((group, i) => {
-              return <div key={i} onClick={() => downloadPDF(pdfs[group])}>{group}</div>;
+              return <div key={i} onClick={() => window.open(`/api/pdfs/download/${pdfs[group]}`)}>{group}</div>;
             })
         }
         </div>

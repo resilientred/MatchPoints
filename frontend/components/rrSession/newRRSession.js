@@ -149,7 +149,9 @@ export default class NewRRSession extends React.Component {
       title = "Grouping";
       grouping =  <Grouping numPlayers={numPlayers} 
                           addedPlayers={addedPlayers} 
-                          saveSession={this.saveSession}/>
+                          saveSession={this.saveSession}
+                          club={this.props.club}
+                          date={moment(this.state.date).format("YYYY-MM-DD")}/>
     } else {
       title = "Participant Registration";
       grouping = <Participants {...states} allPlayers={allPlayers} {...groupingCallbacks} />    

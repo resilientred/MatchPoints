@@ -1,31 +1,34 @@
 import fs from "fs"
 import html5pdf from "html5-to-pdf"
 import shortid from "shortid"
-
-const generatePDF = ({date, clubName}, num, players, numOfPlayers) => {
-    var header = '<header class="cf"><div class="left"><h4>Date: ' + date + 
+import path from "path"
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
+export const generatePDF = ({clubName}, num, players, numOfPlayers, date) => {
+    console.log("date: ", date, "clubName: ", clubName, "num: ", num, "players: ", players, "numOfPlayers: ", numOfPlayers); 
+    let header = '<header class="cf"><div class="left"><h4>Date: ' + date + 
       '</h4></div><div class="center"><h2>' + clubName + 
       '</h2></div><div class="right">' +
       '<h3>Group ' + num + '</h3></div></header>';
-    var content = "<content>" + playerList(numOfPlayers, players);
+    let content = "<content>" + playerList(numOfPlayers, players);
 
     content += schedule(numOfPlayers) + "</content>";
     content += scoreBoxes(numOfPlayers);
-    const shortid = shortid.generate();
+    const generatedId = shortid.generate();
     html5pdf({
       paperFormat: "letter",
-      cssPath: "../assets/css-pdf/pdf.css"
-    }).from.string(header + content).to(`/pdfs/${shortid}.pdf`, function() {
+      cssPath: path.join(__dirname, "..", "assets", "css-pdf", "pdf.css")
+    }).from.string(header + content).to(`./pdfs/${generatedId}.pdf`, function(err) {
+      console.log(err);
       console.log("done");
     })
-    return shortid;
-  }
+
+    return generatedId;
+}
 
 const playerList = (numOfPlayers, players) => {
-    var list = "<ol>";
-
-    Object.keys(players).forEach((playerId) => {
-      list += "<li>" + players[playerId].name + " " + players[playerId].rating + "</li>";
+    let list = "<ol>";
+    players.forEach((player) => {
+      list += "<li>" + player.name + " " + +player.rating.toFixed() + "</li>";
     })
     list += "</ol>";
 
@@ -33,7 +36,7 @@ const playerList = (numOfPlayers, players) => {
   }
 
 const schedule = (numOfPlayers) => {
-    var schedule = "<div class='schedule'><div class='scenario'><div>" + 
+    let schedule = "<div class='schedule'><div class='scenario'><div>" + 
       numOfPlayers + " Players</div>" + "<ul>";
 
     schedule += '<li>1 vs 4</li><li>2 vs 3</li><li>1 vs 3</li><li>2 vs 4</li>' +
@@ -45,22 +48,22 @@ const schedule = (numOfPlayers) => {
   }
 
 const scoreBoxes = (numOfPlayers) => {
-    var boxes = "<div class='score-boxes'>";
+  let boxes = "<div class='score-boxes'>";
 
-    for (var k = 2, i, j; k <= numOfPlayers; k++){
-      boxes += "<div class='row cf'>";
-      for (i = 1; i < k; i++){
-        boxes += "<div class='cell-div'><div class='match-title'>" +
-          i + " vs " + k + "</div><div class='cell-group'>" + 
-          "<div class='cell'></div><div class='cell'></div></div></div>";
-      } 
-      boxes += "</div>";   
-    }
-
-    boxes += "</div>";
-    return boxes;
+  for (let k = 2, i, j; k <= numOfPlayers; k++){
+    boxes += "<div class='row cf'>";
+    for (i = 1; i < k; i++){
+      boxes += "<div class='cell-div'><div class='match-title'>" +
+        i + " vs " + k + "</div><div class='cell-group'>" + 
+        "<div class='cell'></div><div class='cell'></div></div></div>";
+    } 
+    boxes += "</div>";   
   }
+
+  boxes += "</div>";
+  return boxes;
 }
+
  
 
 
@@ -95,4 +98,3 @@ const findSchedule = () => {
   return matches;
 }
 
-export const generatePDF;

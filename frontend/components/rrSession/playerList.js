@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PlayerList = ({players, ...props}) => {
+const PlayerList = (props) => {
    let players = props.players, playerLists = [];
 
   for (let _id in players){
