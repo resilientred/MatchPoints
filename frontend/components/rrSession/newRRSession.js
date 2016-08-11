@@ -25,10 +25,7 @@ export default class NewRRSession extends React.Component {
       date: moment(),
       numPlayers: 0,
       error: null,
-      hiddenPlayers: {},
-      addedPlayers: {},
-      selectedPlayer: {},
-      selectedRemovePlayer: {}
+      addedPlayers: {}
     }
   }
   componentDidMount() {
@@ -36,6 +33,7 @@ export default class NewRRSession extends React.Component {
     this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
+    //maybe cache in redis?
   }
 
   componentWillUnmount() {
@@ -65,42 +63,33 @@ export default class NewRRSession extends React.Component {
     this.setState({ club: ClubStore.getCurrentClub(),
       newPlayerModal: false });
   }
+  handleToggle = (_id) => {
+    let addedPlayers = Object.assign({}, this.state.addedPlayers),
+        selectedPlayer = this.props.club.players.find((player) => {
+          return player._id === _id;
+        });
 
-  addPlayer = () => {
-    var curPlayer = this.state.selectedPlayer,
-        tempPlayers = Object.assign({}, this.state.addedPlayers);
-    if (tempPlayers[curPlayer._id]) return;
-    tempPlayers[curPlayer._id] = curPlayer;
-
-    this.state.hiddenPlayers[curPlayer._id] = true;
+    if (addedPlayers[selectedPlayer]){
+      delete addedPlayers[selectedPlayer];
+    } else {
+      addedPlayers[selectedPlayer] = selectedPlayer;
+    }
     this.setState({ 
-      addedPlayers: tempPlayers, 
+      addedPlayers, 
       numPlayers: ++this.state.numPlayers
     });
   }
 
-  removePlayer = () => {
-    var curPlayer = this.state.selectedRemovePlayer;
-    var tempPlayers = Object.assign({}, this.state.addedPlayers);
-    delete tempPlayers[curPlayer._id];
+  // selectPlayer = (player, e) => {
+  //   this.setState({
+  //     selectedPlayer: player, 
+  //     selectedPlayerTarget: e.target
+  //   });
+  // }
 
-    delete this.state.hiddenPlayers[curPlayer._id];
-    this.setState({ 
-      addedPLayers: tempPlayers,
-      numPlayers: --this.state.numPlayers
-    });
-  }
-
-  selectPlayer = (player, e) => {
-    this.setState({
-      selectedPlayer: player, 
-      selectedPlayerTarget: e.target
-    });
-  }
-
-  selectRemovePlayer = (player) => {
-    this.setState({selectedRemovePlayer: player});
-  }
+  // selectRemovePlayer = (player) => {
+  //   this.setState({selectedRemovePlayer: player});
+  // }
   changeTab = (tab) => {
     this.setState({tab: tab});
   }
@@ -136,14 +125,8 @@ export default class NewRRSession extends React.Component {
       }
     let allPlayers = this.props.club.players,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
-        groupingCallbacks = {
-                selectPlayer: this.selectPlayer, 
-                selectRemovePlayer: this.selectRemovePlayer, 
-                addPlayer: this.addPlayer,
-                removePlayer: this.removePlayer
-              };
-    let { tab, date, numPlayers, error, ...states} = this.state;
-    let title, grouping;
+        { tab, date, numPlayers, error } = this.state,
+        title, grouping;
 
     if (tab === 1){
       title = "Grouping";
@@ -154,7 +137,9 @@ export default class NewRRSession extends React.Component {
                           date={moment(this.state.date).format("YYYY-MM-DD")}/>
     } else {
       title = "Participant Registration";
-      grouping = <Participants {...states} allPlayers={allPlayers} {...groupingCallbacks} />    
+      grouping = <Participants addedPlayers={addedPlayers} 
+                                allPlayers={allPlayers} 
+                                handleToggle={this.handleToggle} />    
     }
 
     return (

@@ -63,14 +63,31 @@ MatchPoint uses mongoose CDM to help with data validations and to construct sche
 
 ```javascript
 const clubSchema = new Schema({
-  username: {type: String, required: true, index: { unique: true }},
+  username: {type: String, required: [true, "username required"], index: { unique: [ true, "Username has been taken."] }, min: [8, "has to be 8 characters long"]},
   passwordDigest: {type: String, required: true},
   sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))},
-  clubName: { type: String, required: true },
-  city: { type: String, required: true },
-  state: { type: String, required: true },
-  id: { type: String, default: shortid.generate }
-});
+  clubName: { type: String, required: true},
+  location: { city: {type: String, required: true},
+              state: {type: String, required: true}
+            },
+  id: { type: String, default: shortid.generate, index: true },
+  players: [playerSchema]
+})
+
+const playerSchema = new Schema({
+  name: { type: String, required: true },
+  rating: { type: Number, required: true, max: 3000, min: 0 },
+  ratingHistory: [historySchema],
+  updated_at: { type: Date, default: Date.now },
+  associated_clubs: { type: Array, default: [] }
+})
+
+const historySchema = new Schema({
+  date: Date,
+  oldRating: Number,
+  newRating: Number,
+  ratingChange: Number
+})
 
 const roundRobinSchema = new Schema({
   _clubId: { type: String, required: true},
@@ -79,10 +96,34 @@ const roundRobinSchema = new Schema({
   players: { type: Object },
   schemata: { type: Object },
   selectedSchema: { type: Object},
-  results: { type: Object, default: {} },
+  results: { type: Array, default: [] },
   finalized: { type: Boolean, default: false },
-  id: { type: String, default: shortid.generate, required: true }
-});
+  id: { type: String, default: shortid.generate, required: true, index: true }
+})
 
 ```
 
+Matchpoint allows users to create schedules in pdfs and provide it to the players. It does so using html5-to-pdf library. Redis provides a platform for caching pdf links, expiring and cleaning up of old pdfs.
+
+Upon creation of pdfs, the filename is stored in the Redis store and set ot expire after 15 minutes. Once expired, the listener which is listening on the expiring event, will remove the file.
+
+```js
+client.setex(url, 60*15, "true", (err) => {
+            if (err) console.log(err);
+          }) 
+subscriber.on('pmessage', (pattern, channel, message) => {
+  switch (message){
+    case "expired":
+      const key = channel.split(":")[1];
+      _handleExpired(key);
+      break;
+  }
+})
+
+const _handleExpired = (name) => {
+  const filePath = path.join(__dirname, "..", "..", "pdfs", `${name}.pdf`);
+  fs.unlink(filePath, (err) => {
+    if (err) return console.log(err);
+  })
+};
+```

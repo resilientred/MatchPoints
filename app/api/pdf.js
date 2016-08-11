@@ -5,8 +5,6 @@ import { parseUrlEncoded, app, csrfProtection } from "../helpers/app_modules"
 import fs from "fs"
 import bluebird from "bluebird"
 import path from "path"
-bluebird.promisifyAll(redis.RedisClient.prototype);
-bluebird.promisifyAll(redis.Multi.prototype);
 
 const client = redis.createClient();
 client.config("SET", "notify-keyspace-events", "KA");
@@ -25,7 +23,6 @@ const _handleExpired = (name) => {
 subscriber.on('pmessage', (pattern, channel, message) => {
   switch (message){
     case "expired":
-      console.log("Expired: redis channel: ", channel);
       const key = channel.split(":")[1];
       _handleExpired(key);
       break;

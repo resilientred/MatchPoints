@@ -233,21 +233,33 @@ input {
 	margin-top: 30px;
 }
 
-
-/* Player List */
 .player-container {
   position: relative;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	border: 1px solid #dad7de;
-	border-radius: 4px;
-	background-color: #f7f5fa;
-	width: 70%;
-	min-width: 600px;
-	margin: 5% auto 0 auto;
-	min-height: 700px;
-	@include reg-anim(fade-in, 1s, ease-out);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #dad7de;
+  border-radius: 4px;
+  /*background-color: #f7f5fa;*/
+  width: 70%;
+  min-width: 350px;
+  margin: 5% auto 0 auto;
+  @include reg-anim(fade-in, 1s, ease-out);
+}
+/* Player List */
+/*.player-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #dad7de;
+  border-radius: 4px;
+  background-color: #f7f5fa;
+  width: 70%;
+  min-width: 600px;
+  margin: 5% auto 0 auto;
+  min-height: 700px;
+  @include reg-anim(fade-in, 1s, ease-out);
 
 	h3 {
 		margin-top: 20px;
@@ -365,17 +377,6 @@ input {
 .remove .list-title, .remove .player-buttons {
 	background-color: #6BB389;
 }
-.add .player-buttons {
-			background-color: #6B89B3;
-}
-.add .player-buttons:hover {
-	background-color: #859EC0;
-	color: #666;
-}
-.remove .player-buttons:hover {
-	background-color: #8DC4A4;
-	color: #666;
-}
 
 
 .player-nav {
@@ -406,7 +407,7 @@ input {
 	}
 
 }
-
+*/
 .grouping {
 	margin-top: 30px;
 	display: flex;

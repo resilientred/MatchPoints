@@ -243,7 +243,6 @@ input {
 .date {
   margin-top: 30px; }
 
-/* Player List */
 .player-container {
   position: relative;
   display: flex;
@@ -251,11 +250,10 @@ input {
   align-items: center;
   border: 1px solid #dad7de;
   border-radius: 4px;
-  background-color: #f7f5fa;
+  /*background-color: #f7f5fa;*/
   width: 70%;
-  min-width: 600px;
+  min-width: 350px;
   margin: 5% auto 0 auto;
-  min-height: 700px;
   animation-name: fade-in;
   -moz-animation-name: fade-in;
   -webkit-animation-name: fade-in;
@@ -268,170 +266,169 @@ input {
   -moz-animation-timing-function: ease-out;
   -webkit-animation-timing-function: ease-out;
   -o-animation-timing-function: ease-out; }
-  .player-container h3 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 24px; }
-  .player-container .buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; }
 
-.player-container > .participant-reg > div {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: space-around;
-  margin-top: 5px; }
-
-.selected {
-  -webkit-transition: all 0.6s ease-out 0.2s;
-  transition: all 0.6s ease-out 0.2s;
-  -o-transition: all 0.6s ease-out 0.2s;
-  -moz-transition: all 0.6s ease-out 0.2s;
-  background-color: #B3896B;
-  color: white; }
-
-.not-selected {
-  -webkit-transition: all 0.6s ease-out 0.2s;
-  transition: all 0.6s ease-out 0.2s;
-  -o-transition: all 0.6s ease-out 0.2s;
-  -moz-transition: all 0.6s ease-out 0.2s;
-  background-color: white;
-  color: #989898; }
-
-.not-selected:hover {
-  -webkit-transition: all 0.4s ease-out 0.1s;
-  transition: all 0.4s ease-out 0.1s;
-  -o-transition: all 0.4s ease-out 0.1s;
-  -moz-transition: all 0.4s ease-out 0.1s;
-  color: black;
-  background-color: #CCC; }
-
-.participant-reg {
-  display: flex;
-  flex-direction: column; }
-  .participant-reg > div > div {
-    display: flex;
-    flex-direction: column; }
-
-.player-list {
+/* Player List */
+/*.player-container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  border: 1px solid tranparent;
+  align-items: center;
+  border: 1px solid #dad7de;
   border-radius: 4px;
-  padding: 10px;
-  font-size: 20px;
-  text-align: center;
-  width: 300px;
-  margin: 0 auto;
-  margin-top: 5%;
-  height: 400px;
-  overflow-y: scroll;
-  transition: all 0.4s ease-out 0.4s; }
-  .player-list .list-title {
-    background-color: #6B89B3;
-    width: 100%;
-    color: white;
-    padding: 35px 15px;
-    animation-name: added-player-sm;
-    -moz-animation-name: added-player-sm;
-    -webkit-animation-name: added-player-sm;
-    -o-animation-name: added-player-sm;
-    animation-duration: 1s;
-    -moz-animation-duration: 1s;
-    -webkit-animation-duration: 1s;
-    -o-animation-duration: 1s;
-    animation-timing-function: ease-out;
-    -moz-animation-timing-function: ease-out;
-    -webkit-animation-timing-function: ease-out;
-    -o-animation-timing-function: ease-out; }
-  .player-list li {
-    width: 280px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 20px 15px;
-    cursor: pointer;
-    animation-name: added-player-sm;
-    -moz-animation-name: added-player-sm;
-    -webkit-animation-name: added-player-sm;
-    -o-animation-name: added-player-sm;
-    animation-duration: 1s;
-    -moz-animation-duration: 1s;
-    -webkit-animation-duration: 1s;
-    -o-animation-duration: 1s;
-    animation-timing-function: ease-out;
-    -moz-animation-timing-function: ease-out;
-    -webkit-animation-timing-function: ease-out;
-    -o-animation-timing-function: ease-out;
-    border-bottom: 1px solid #F1EFEF; }
+  background-color: #f7f5fa;
+  width: 70%;
+  min-width: 600px;
+  margin: 5% auto 0 auto;
+  min-height: 700px;
+  @include reg-anim(fade-in, 1s, ease-out);
 
+	h3 {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-size: 24px;
+	}
+	.buttons {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+}
+
+.player-container > .participant-reg > div{
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: space-around;
+	margin-top: 5px;
+}
+
+.selected {
+	@include selected;
+	background-color:  #B3896B;
+	color: white;
+
+}
+.not-selected {
+	@include selected;
+	background-color: white;
+	color: 	#989898;
+}
+.not-selected:hover {
+	@include hover;
+	color: black;
+	background-color: #CCC;
+}
+
+.participant-reg {
+	display: flex;
+	flex-direction: column;		
+		& > div > div {
+			display: flex;
+			flex-direction: column;
+		}
+}
+
+.player-list {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid tranparent;
+	border-radius: 4px;
+	padding: 10px;
+	font-size: 20px;
+	text-align: center;
+	width: 300px;
+	margin: 0 auto;
+	margin-top: 5%;
+	height: 400px;
+	overflow-y: scroll;
+	transition: all 0.4s ease-out 0.4s;
+
+	.list-title {
+		background-color: #6B89B3;
+		width: 100%;
+		color: white;
+		padding: 35px 15px;	
+		@include reg-anim(added-player-sm, 1s, ease-out);
+
+	}
+	li {
+		width: 280px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 20px 15px;
+		cursor: pointer;
+		@include reg-anim(added-player-sm, 1s, ease-out);
+		border-bottom: 1px solid #F1EFEF;
+	}
+}
 .hidden-name {
-  opacity: 0;
-  transform: translateX(-300px);
-  display: none;
-  margin-bottom: -61px;
-  position: relative;
-  transition-duration: 1.0s;
-  -moz-transition-duration: 1.0s;
-  -webkit-transition-duration: 1.0s;
-  transition-timing-function: ease-out;
-  -moz-transition-timing-function: ease-out;
-  -webkit-transition-timing-function: ease-out; }
+	opacity: 0;
+	transform: translateX(-300px);
+	display: none;
+	margin-bottom: -61px;
+	position: relative;
+
+	transition-duration: 1.0s;
+	-moz-transition-duration: 1.0s;
+	-webkit-transition-duration: 1.0s;
+	transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+}
 
 .player-buttons {
-  cursor: pointer;
-  font-family: 'Titillium Web', sans-serif;
-  padding: 10px 15px;
-  font-size: 20px;
-  font-weight: 700;
-  border-radius: 3px;
-  width: 65%;
-  border: none;
-  color: white;
-  letter-spacing: 1.1px;
-  align-self: center;
-  margin-top: 5px; }
-  .player-buttons:hover {
-    -webkit-transition: all 0.4s ease-out 0.1s;
-    transition: all 0.4s ease-out 0.1s;
-    -o-transition: all 0.4s ease-out 0.1s;
-    -moz-transition: all 0.4s ease-out 0.1s; }
+	cursor: pointer;
+	font-family: 'Titillium Web', sans-serif;
+	padding: 10px 15px;
+	font-size: 20px;
+	font-weight: 700;
+	border-radius: 3px;
+	width: 65%;
+	border: none;
+	color: white;
+	letter-spacing: 1.1px;
+	align-self: center;
+	margin-top: 5px;
 
+	&:hover {
+		@include hover;
+	}
+}
 .remove .list-title, .remove .player-buttons {
-  background-color: #6BB389; }
+	background-color: #6BB389;
+}
 
-.add .player-buttons {
-  background-color: #6B89B3; }
-
-.add .player-buttons:hover {
-  background-color: #859EC0;
-  color: #666; }
-
-.remove .player-buttons:hover {
-  background-color: #8DC4A4;
-  color: #666; }
 
 .player-nav {
-  position: relative;
-  top: 15px;
-  display: flex;
-  flex-direction: row; }
-  .player-nav li {
-    width: 100%; }
-  .player-nav a {
-    font-family: 'varela round', sans-serif;
-    font-size: 24px;
-    color: white;
-    background-color: #332842;
-    padding: 10px;
-    cursor: pointer; }
-    .player-nav a:hover {
-      background-color: rgba(51, 40, 66, 0.8); }
-    .player-nav a.active {
-      background-color: #443659; }
+	position: relative;
+	top: 15px;
+	display: flex;
+	flex-direction: row;
 
+	li {
+		width: 100%;
+	}
+
+	a {	
+		font-family: 'varela round', sans-serif;
+		font-size: 24px;
+		color: white;
+		background-color: rgb(51, 40, 66);
+		padding: 10px;
+		cursor: pointer;
+
+		&:hover {
+			background-color: rgba(51, 40, 66, 0.8);
+		}
+
+		&.active {
+			background-color: rgb(68,54,89);
+		}
+	}
+
+}
+*/
 .grouping {
   margin-top: 30px;
   display: flex;

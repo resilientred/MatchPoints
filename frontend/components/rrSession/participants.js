@@ -6,24 +6,22 @@ const PlayerGroup = (props) => {
     <div>
       <div className="add">
         <PlayerList players={props.allPlayers}
-                    selectPlayer={props.selectPlayer}
-                    selectedPlayer={props.selectedPlayer}
-                    hiddenPlayers={props.hiddenPlayers}
-                    title="All Players"/>
-        <button className="player-buttons"
-                onClick={props.addPlayer}>Add</button>
+                    handleToggle={props.handleToggle}
+                    title="All Players"
+                    selectable={true} />
       </div>
       <div className="remove">
         <PlayerList players={props.addedPlayers} 
-                    selectPlayer={props.selectRemovePlayer}
-                    selectedPlayer={props.selectedRemovePlayer}
-                    hiddenPlayers={{}}
-                    title="Selected Players"/>
-        <button className="player-buttons"
-                onClick={props.removePlayer}>Remove</button>              
+                    handleToggle={props.handleToggle}
+                    title="Selected Players"
+                    selectable={false}/>   
       </div>
     </div>
   </div>);
 }
+        // (<button className="player-buttons"
+        //         onClick={props.addPlayer}>Add</button>
+        //                 <button className="player-buttons"
+        //         onClick={props.removePlayer}>Remove</button>)
 
 export default PlayerGroup;

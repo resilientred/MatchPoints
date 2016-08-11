@@ -9,7 +9,7 @@ import shortid from 'shortid'
 mongoose.Promise = require('bluebird');
 const saltRounds = 10;
 const Schema = mongoose.Schema;
-let clubSchema = new Schema({
+const clubSchema = new Schema({
   username: {type: String, required: [true, "username required"], index: { unique: [ true, "Username has been taken."] }, min: [8, "has to be 8 characters long"]},
   passwordDigest: {type: String, required: true},
   sessionToken: {type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))},

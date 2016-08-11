@@ -67,11 +67,6 @@ const scoreBoxes = (numOfPlayers) => {
  
 
 
-//so this should create a file to the a folder containing the pdfs
-//and the pdf names should be randomly generated
-//once generated, create the link
-
-
 const findSchedule = () => {
   var matches = [];
   var scheduleAdded = {};
