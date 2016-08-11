@@ -7,7 +7,7 @@ class Grouping extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          schemata: [],
+          schemata: [[]],
           rangeOfPlayers: [6, 5, 4],
           selectedGroup: [],
           pdfs: null,
@@ -19,7 +19,7 @@ class Grouping extends React.Component {
           pdfs = PDFStore.getPDF();
       this.pListener = PDFStore.addListener(this._fetchedPDF);
       this.setState({ 
-        schemata: schemata || [],
+        schemata: schemata.length ? schemata : [[]],
         selectedGroup: schemata.length ? schemata[0] : "",
         pdfs
       })
@@ -58,7 +58,10 @@ class Grouping extends React.Component {
         alert("You may only generate once every 30secs")
         return;
       }
-
+      if (!this.schemata[0].length){
+        alert("There are no players yet :(.")
+        return;
+      }
       generatePDF(this.props.addedPlayers, this.state.selectedGroup, this.props.club, this.props.date);
       
       this.setState({generated: true});
@@ -73,13 +76,17 @@ class Grouping extends React.Component {
     }
 
     render() {
+      if (this.state.schemata[0].length === 0){
+        return <h2>You must select more players...</h2>;
+      }
       this.totalPlayerAdded = 0;
       let pdfs = this.state.pdfs;
       let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
-      return <div className="grouping">
-        <button className="create-pdf"
+      let createPDFButton = <button className="create-pdf"
                 onClick={this.generatePDF}
                 disabled={this.state.generated}>{generatedText}</button>
+      return <div className="grouping">
+        { this.totalPlayerAdded ? createPDFButton : ""}
         <button className="save-session"
                 onClick={this.props.saveSession.bind(null, 
                   this.state.schemata, this.state.rangeOfPlayer, 

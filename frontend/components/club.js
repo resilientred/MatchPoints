@@ -46,7 +46,6 @@ class Club extends Component {
         return <div className="app">
             <NavBar { ...this.state } />
             <div className="club-body">
-                { this.clubNav() }
                 <div className="club-children">
                     { Children.map(this.props.children, (child) => {
                         return cloneElement(child, { club: this.state.club });

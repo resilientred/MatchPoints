@@ -29,7 +29,6 @@ export default class ClubQuery extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    //return false if date are the same
     return true;
   }
   componentWillReceiveProps(nextProps) {

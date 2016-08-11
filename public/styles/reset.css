@@ -9,12 +9,15 @@ form, label, table, tr, th, td, button{
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	font-family: 'Titillium Web', sans-serif;
+	font-family: 'Roboto', sans-serif;
 	text-decoration: none;
 }
 
 a {
-	color: white;
+	color: #3D5AFE;
+}
+a:hover {
+  color: #303F9F;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 

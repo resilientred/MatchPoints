@@ -10,7 +10,7 @@ And allow users to:
 ## Todos
  - [x] saving schema
  - [x] pdf generator
- - [ ] integrate pdf generator into app
+ - [x] integrate pdf generator into app
  - [ ] find a satisfactory design
  - [ ] temporarily save schema in react-cookie and empty after sending request to store
  - [ ] deploy on AWS
@@ -24,7 +24,7 @@ And allow users to:
  - [ ] Allow Users to customize scoring algorithm
 
 ## Languages:
- - Front-end: React.js with Flux architectural framework
+ - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM with Redis caching
  

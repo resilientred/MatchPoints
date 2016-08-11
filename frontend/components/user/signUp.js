@@ -2,7 +2,8 @@ import React, { Component } from "react"
 import { fetchCurrentClub, signUp } from "../../actions/clubActions"
 import ClubStore from "../../stores/clubStore"
 import { browserHistory } from 'react-router'  
-
+import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
 export default class SignUpForm extends Component {
   constructor(props){
     super(props);
@@ -48,44 +49,49 @@ export default class SignUpForm extends Component {
   render() {
     return <div className="forms">
       <form onSubmit={this.handleSubmit}>
-        <h3>Log In</h3>
+        <h3>Sign Up</h3>
         { this.state.error }
         <div>
-          <label htmlFor="clubName">Club Name</label>
-          <input type="text" id="clubName"
-                 placeholder="clubName" 
+          <TextField type="text"
+                 hintText="clubName" 
+                 floatingLabelText="Club Name"
                  onChange={this.updateField.bind(this, "clubName")}
                  required/>
         </div>
         <div>
-          <label htmlFor="city">City</label>
-          <input type="text" id="city"
-                 placeholder="city" 
+          <TextField type="text"
+                 hintText="city" 
+                 floatingLabelText="City"
                  onChange={this.updateField.bind(this, "city")}
                  required/>
         </div>
         <div>
-          <label htmlFor="stateName">State</label>
-          <input type="text" id="stateName"
-                 placeholder="State" 
+          <TextField type="text"
+                 hintText="State" 
+                 floatingLabelText="State"
                  onChange={this.updateField.bind(this, "stateName")}
                  required/>
         </div>
         <div>
-          <label htmlFor="username">Username</label>
-          <input type="text" id="username"
-                 placeholder="username" 
+          <TextField type="text"
+                 hintText="username" 
+                 floatingLabelText="Username"
                  onChange={this.updateField.bind(this, "username")}
                  required/>
         </div>
         <div>
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" 
-                placeholder="password" 
+          <TextField type="password" 
+                hintText="password" 
+                floatingLabelText="Password"
                 onChange={this.updateField.bind(this, "password")}
                 required/>
         </div>
-        <input type="submit" value="Log In"/>
+        <div className="button-div">
+          <RaisedButton onClick={this.handleSubmit} label="Sign Up"/>
+        </div>
+        <div className="redirect-signup">
+          Already have an account yet?&nbsp;&nbsp;<a onClick={() => this.props.setTab(1)}>Log In</a>
+        </div>
       </form>
     </div>;
   }

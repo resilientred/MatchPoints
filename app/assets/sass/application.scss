@@ -5,7 +5,7 @@
 	-moz-transition: $anim-part $duration $curve $delay;
 }
 @mixin default-font {
-	font-family: 'varela round', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 @mixin reg-anim ($name, $duration, $timing) {
 		animation-name: $name;
@@ -77,6 +77,9 @@
 	0% {opacity: 0; }
 	100% {opacity: 1;}
 }
+h3 {
+  @include default-font;
+}
 .banner-container:after {
   clear: both;
   display: block;
@@ -85,7 +88,7 @@
 .banner-container {
   position: relative;
   z-index: 2;
-  div:last-child {
+  .banner-text {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -118,7 +121,7 @@
   width: 100%;
   max-height: 800px;
   height: 100vw;
-  opacity: 0.7;
+  opacity: 0.9;
   -webkit-filter: blur(0.2px);
   -moz-filter: blur(0.2px);
   -o-filter: blur(0.2px);
@@ -177,7 +180,7 @@ input {
 		}
 }
 .links {
-	color: white;
+	color: black;
 	cursor: pointer;
 }
 
@@ -191,8 +194,13 @@ input {
 
 
 .nav-bar {
-	color: white;
-	background-color: #896bb3;
+	color: black;
+	background-color: #00BCD4;
+  opacity: 0.9;
+  font-weight: 300;
+  a {
+    color: black;
+  }
 	&> div {
 		height: 60px;
 		width: 70%;
@@ -203,16 +211,16 @@ input {
 		align-items: center;
 
 		.logo {
-			font-family: 'varela round', sans-serif;
-			font-size: 30px;
+			font-family: 'Roboto', sans-serif;
+			font-size: 25px;
 			cursor: pointer;
 		}
 		ul {
 			display: flex;
 			justify-content: space-around;
-			font-size: 22px;
+			font-size: 16px;
 			li {
-				font-family: 'varela round', sans-serif;
+				font-family: 'Roboto', sans-serif;
 				margin-left: 15px;
 			}
 		}
@@ -226,7 +234,7 @@ input {
 }
 
 
-/* Player list */
+/* Player List */
 .player-container {
   position: relative;
 	display: flex;
@@ -444,7 +452,7 @@ input {
 }
 .club-nav {
 	@include selected;
-	background-color: #ad6bb3;
+	background-color: #00BCD4;
 	width: 170px;
 	height: 100%;
 	min-height: 100vh;
@@ -547,18 +555,34 @@ input {
   border: 2px solid black;
   border-radius: 4px;
 }
+.forms {
+
+position: absolute;
+left: 50%;
+top: 20%;
+-webkit-transform: translateX(-60%);
+transform: translateX(-60%)
+}
 form {
-  width: 60%;
+  max-height: 430px;
+  overflow: scroll;
+  @include reg-transition(opacity, 0.5s, ease-in-out, 0.5s)
+  position: relative;
+  width: 100%;
   margin: 0 auto;
+  padding: 40px 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #E0E0E0;
+  background-color: white;
+  box-shadow: 2px 2px 5px #E0E0E0;
+  z-index: 999;
   h3 {
     font-size: 36px;
-    margin-bottom: 50px;
-    margin-top: 30px;
+    font-weight: 200;
   }
-  & > div {
+/*  & > div {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -568,36 +592,12 @@ form {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-    }
-    input {
-      margin-left: 20px;
-      font-size: 24px;
-      width: 60%;
-      min-width: 200px;
-      padding: 5px;
-      border-radius: 3px;
-    }
-  }
-  .button-div {
+    }*/
+
+.button-div {
     display: flex;
-    flex-wrap: nowrap;
-  }
-  input[type="submit"] {
-    cursor: pointer;
-    align-self: center;
-    width: 100%;
-
-    margin-top: 25px;
-    color: white;
-    font-size: 20px;
-    border: 1px solid white;
-    padding: 10px 20px;
-    border-radius: 3px;
-    background-color: rgba(0, 0, 0, 0.8);
-
-    &:hover {
-      background-color: rgba(100, 100, 100, 0.9);
-    }
+    margin-top: 30px;
+    margin-bottom: 50px;
   }
 
 }
@@ -620,7 +620,7 @@ form {
 }
 .front {
   z-index: 999;
-  -webkit-backface-visibility: hidden; /* Chrome, Safari, Opera */
+  -webkit-backface-visibility: hidden; 
   backface-visibility: hidden;
 }
 .record-table {
@@ -682,8 +682,8 @@ form {
   @include rotate(0deg, 0px);
   opacity: 1;
   z-index: 1;
-      -webkit-backface-visibility: hidden; /* Chrome, Safari, Opera */
-    backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* Chrome, Safari, Opera */
+  backface-visibility: hidden;
 }
 
 @media (max-width: 920px){
@@ -698,7 +698,18 @@ form {
 
 }
 
+.redirect-signup {
+  margin-bottom: -20px;
+  color: #212121;
+  font-weight: 100;
+  font-size: 14px;
+  a {
+    text-indent: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
 
+}
 @media (max-width: 535px){
 	.club-nav {
 		position: absolute;

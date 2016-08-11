@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import Modal from "react-modal"
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export default class App extends Component {
   componentWillMount() {
@@ -8,8 +9,10 @@ export default class App extends Component {
   }
 
   render() {
-    return (<div>
+    return (<MuiThemeProvider>
+      <div>
       { this.props.children }
-    </div>);
+    </div>
+    </MuiThemeProvider>);
   }
 }

@@ -7,8 +7,10 @@ let _players = {};
 
 const _resetPlayers = (club) => {
   const players = club.players;
-  _players[club.id] = {};  
-  players.forEach(player => (_players[club.id][player._id] = player));
+  _players[club.id] = {};
+  if (players){
+    players.forEach(player => (_players[club.id][player._id] = player));
+  }  
 }; 
 
 // const _setClub = (club) => {

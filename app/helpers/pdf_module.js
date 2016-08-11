@@ -28,7 +28,7 @@ export const generatePDF = ({clubName}, num, players, numOfPlayers, date) => {
 const playerList = (numOfPlayers, players) => {
     let list = "<ol>";
     players.forEach((player) => {
-      list += "<li>" + player.name + " " + +player.rating.toFixed() + "</li>";
+      list += "<li>" + player.name + " " + parseInt(player.rating) + "</li>";
     })
     list += "</ol>";
 

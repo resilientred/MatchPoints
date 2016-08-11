@@ -2,7 +2,8 @@ import React, { Component } from "react"
 import { fetchCurrentClub, logIn } from "../../actions/clubActions"
 import ClubStore from "../../stores/clubStore"
 import { browserHistory } from 'react-router'  
-
+import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
 export default class LogInForm extends Component {
   constructor(props){
     super(props);
@@ -39,9 +40,13 @@ export default class LogInForm extends Component {
     }
   }
   handleSubmit = (e) => {
-    e.preventDefault();
-    if (e.target.tagName !== "BUTTON"){
+    if (e) {
+      e.preventDefault();
+     if (e.target.tagName !== "BUTTON"){
       logIn(this.state);
+      }
+    } else {
+      logIn(this.state)
     }
   }
   guestLogIn = (e) => {
@@ -56,6 +61,7 @@ export default class LogInForm extends Component {
         this.setState({password: this.state.password + password[count++ - 5]})
       } else {
         clearInterval(int);
+        this.handleSubmit();
       }
     }, 200)
   }
@@ -67,25 +73,26 @@ export default class LogInForm extends Component {
       <form onSubmit={this.handleSubmit}>
         <h3>Log In</h3>
         { this.state.error }
-        <div>
-          <label htmlFor="username">Username</label>
-          <input type="text" id="username"
-                 placeholder="username" 
+        <div>     
+          <TextField type="text"
+                 hintText="username" 
+                 floatingLabelText="Username"
                  value={this.state.username}
-                 onChange={this.updateField.bind(this, "username")}
-                 required/>
+                 onChange={this.updateField.bind(this, "username")} />
         </div>
         <div>
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" 
-                placeholder="password" 
+          <TextField type="password"
+                hintText="password" 
+                floatingLabelText="Password"
                 value={this.state.password}
-                onChange={this.updateField.bind(this, "password")}
-                required/>
+                onChange={this.updateField.bind(this, "password")} />
         </div>
         <div className="button-div">
-          <input type="submit" className="button" value="Log In"/>
-          <input type="submit" className="button" onClick={this.guestLogIn} value="Guest Log In" />
+          <RaisedButton label="Log In" style={{marginRight: '10px'}} onClick={this.handleSubmit}/>
+          <RaisedButton label="Guest" onClick={this.guestLogIn} />
+        </div>
+        <div className="redirect-signup">
+          Don't have an account yet?&nbsp;&nbsp;<a onClick={() => this.props.setTab(2)}>Sign Up</a>
         </div>
       </form>
     </div>;

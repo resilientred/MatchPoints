@@ -6,12 +6,12 @@ import mongoose from 'mongoose'
 import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'
 import express from "express"
+import { app, csrfProtection, clubMethods } from "./app/helpers/app_modules"
 import config from './webpack.config.js'
 import routes from './app/api/players'
 import clubRoutes from "./app/api/club"
 import sessionRoutes from "./app/api/session"
 import pdfRoutes from "./app/api/pdf"
-import { app, csrfProtection, clubMethods, client } from "./app/helpers/app_modules"
 const port = process.env.PORT || 3000;
 
 const compiler = webpack(config);
@@ -26,6 +26,7 @@ app.use(cookieParser());
 
 //   res.status(403).send("Invalid session token");
 // })
+
 app.use('/favicon.ico', (req, res, next) => {
   res.end();
 })

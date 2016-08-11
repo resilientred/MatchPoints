@@ -17,8 +17,6 @@ import SignUpForm from "./components/user/signUp"
 const Routes = (
   <Route path="/" component={App}> 
     <IndexRoute component={Splash} />
-    <Route path="login" component={LogInForm} />
-    <Route path="signup" component={SignUpForm} />
     <Route path="club" component={Club} >
       <Route path="sessions" component={RoundRobinSessions} />
         <Route path="sessions/:id" component={RoundRobinSession} />

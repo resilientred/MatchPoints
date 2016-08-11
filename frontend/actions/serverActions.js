@@ -48,7 +48,6 @@ module.exports = {
 		})
 	},
 	generatedPDF(pdfs) {
-		debugger;
 		Dispatcher.dispatch({
 			actionType: GENERATED_PDF,
 			pdfs: pdfs
