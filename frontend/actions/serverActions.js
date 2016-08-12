@@ -5,6 +5,9 @@ import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 
 
 module.exports = {
+	log(err){
+		console.log(err);
+	},
 	deletedRRSession(sessionId){
 		Dispatcher.dispatch({
 			actionType: DELETED_SESSION,
@@ -59,12 +62,7 @@ module.exports = {
 			actionType: GENERATED_PDF,
 			pdfs: null
 		})
-	},
-	pdfError(err){
-		console.log(err)
-	},
-	downloadedPDF(data){
-		console.log(data)
 	}
+
 }
 

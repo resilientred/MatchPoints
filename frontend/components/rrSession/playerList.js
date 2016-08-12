@@ -3,6 +3,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
   from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+import Divider from 'material-ui/Divider';
 
 class PlayerList extends Component {
   constructor(props){
@@ -14,8 +15,8 @@ class PlayerList extends Component {
   cellClickHandler = (id) => {
     this.props.handleToggle(id);
     let checked = Object.assign({}, this.state.checked);
-    checked[id] = true;
-    this.setState({checked})
+    checked[id] = checked[id] ? false : true;
+    this.setState({ checked })
   }
   render(){
     let players = this.props.players,
@@ -30,16 +31,12 @@ class PlayerList extends Component {
 
     return (
       <div>
+        <h3 className="table-title">{ this.props.title }</h3>
         <Table height='400px' fixedHeader={true} 
-          selectable={this.props.selectable} 
+          selectable={true} 
           multiSelectable={this.props.selectable} 
           onCellClick={(i) => this.cellClickHandler(idRef[i])}>
           <TableHeader displaySelectAll={false}>
-            <TableRow>
-              <TableHeaderColumn colSpan="2" style={{textAlign: 'center'}}>
-                { this.props.title }
-              </TableHeaderColumn>
-            </TableRow>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
               <TableHeaderColumn>Rating</TableHeaderColumn>
@@ -54,9 +51,5 @@ class PlayerList extends Component {
   }
 }
 
-    // (<div className="player-list">
-    //   <div className="list-title">{props.title}</div>
-    //   <ul>{playerLists}</ul>
-    // </div>)
 
 export default PlayerList;

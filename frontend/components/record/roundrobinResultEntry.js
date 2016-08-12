@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-var FaCalendar = require('react-icons/lib/fa/calendar');
+const FaCalendar = require('react-icons/lib/fa/calendar');
 
 const RoundRobinResultEntry = (props) => {
   var id = props.id,

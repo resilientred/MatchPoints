@@ -3,6 +3,8 @@ import ParticipantGroup from './participantGroup'
 import { findSchemata } from "../../methods/findSchema"
 import { generatePDF, fetchPDFLinks, downloadPDF } from "../../actions/clientActions"
 import PDFStore from "../../stores/pdfStore"
+import RaisedButton from "material-ui/RaisedButton"
+
 class Grouping extends React.Component {
     constructor(props) {
         super(props);
@@ -15,14 +17,9 @@ class Grouping extends React.Component {
         }
     }   
     componentWillMount() {
-      let schemata = findSchemata(this.props.numPlayers, this.state.rangeOfPlayers),
-          pdfs = PDFStore.getPDF();
+      let pdfs = PDFStore.getPDF();
       this.pListener = PDFStore.addListener(this._fetchedPDF);
-      this.setState({ 
-        schemata: schemata.length ? schemata : [[]],
-        selectedGroup: schemata.length ? schemata[0] : "",
-        pdfs
-      })
+      this.setState({pdfs})
       if (!pdfs){
         fetchPDFLinks(this.props.club._id);
       }
@@ -32,6 +29,16 @@ class Grouping extends React.Component {
     }
     _fetchedPDF = () => {
       this.setState({pdfs: PDFStore.getPDF()})
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+      if (nextProps.numPlayers === this.props.numPlayers){
+        return false; //doubtful.. what if player changes
+      } else {
+        let schemata = findSchemata(nextProps.numPlayers, this.state.rangeOfPlayers)
+        this.state.schemata = schemata.length ? schemata : [[]];
+        this.state.selectedGroup = schemata.length ? schemata[0] : "";
+        return true;
+     }
     }
     schemata() {
       if (this.state.schemata.length){
@@ -75,8 +82,15 @@ class Grouping extends React.Component {
       this.setState({ selectedGroup });
     }
 
+    handleSave = () => {
+      this.props.saveSession(this.state.schemata, 
+                  this.state.rangeOfPlayer, 
+                  this.state.selectedGroup)
+    }
     render() {
       if (this.state.schemata[0].length === 0){
+        //so the button should be disabled
+        //with a tooltip telling the user that they need to select more players       
         return <h2>You must select more players...</h2>;
       }
       this.totalPlayerAdded = 0;
@@ -85,12 +99,11 @@ class Grouping extends React.Component {
       let createPDFButton = <button className="create-pdf"
                 onClick={this.generatePDF}
                 disabled={this.state.generated}>{generatedText}</button>
+                
       return <div className="grouping">
         { this.totalPlayerAdded ? createPDFButton : ""}
-        <button className="save-session"
-                onClick={this.props.saveSession.bind(null, 
-                  this.state.schemata, this.state.rangeOfPlayer, 
-                  this.state.selectedGroup)}>Save</button>
+        <RaisedButton  onClick={this.handleSave}
+                secondary={true} label="Save"/>
         <div>
         { 
           !pdfs ? "" :

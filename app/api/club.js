@@ -2,7 +2,8 @@ import express from 'express'
 import ClubModel from '../models/club'
 import RoundRobinModel from "../models/roundrobin"
 import { Player } from "../models/player"
-import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/app_modules"
+import { clubMethods, parseUrlEncoded, csrfProtection, client } from "../helpers/app_modules"
+
 const router = express.Router();
 
 router.get("", (req, res) => {
@@ -24,7 +25,7 @@ router.get("", (req, res) => {
           res.end();
         });
 
-    }).post("/:clubId/session/new", parseUrlEncoded, (req, res) => {
+    }).post("/:clubId/session/new", parseUrlEncoded, csrfProtection, (req, res) => {
       let _clubId = req.params.clubId,
           data = req.body.session;
           
@@ -38,6 +39,23 @@ router.get("", (req, res) => {
         }).catch((err)=>{
           res.status(422).send(err);
         })
+    }).post("/:clubId/temp", parseUrlEncoded, csrfProtection, (req, res) => {
+      let _clubId = req.params.clubId,
+          data = JSON.stringify(req.body.session);
+          client.setex("tempsess#" + _clubId, 300, data, err => console.log(err));
+          res.status(200)
+          res.end();
+    }).get("/:clubId/temp", (req, res) => {
+      let _clubId = req.params.clubId;
+      client.get("tempsess#" + _clubId, (data, err) => {
+        if (data){
+          res.status(200).send(JSON.parse(data));
+        } else {
+          console.log(err);
+          res.status(200).send("no data cached");
+          res.end();
+        }
+      })
     }).post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {
       let clubId = req.params.clubId, 
           data = req.body.player;
@@ -90,18 +108,7 @@ router.get("", (req, res) => {
         promiseResults.push(Player.updateHistory(player, ratingUpdateList[player])); 
       } 
 
-      // Promise.all(promiseResults).then( (status) => {
-      //   console.log(status);
-      //   return RoundRobinModel.updateResult(id, data);
-      // } ).then((success) => {
-      //     return RoundRobinModel.findRoundRobin(id);
-      //   }).then((session) => {
-      //     console.log(session);
-      //     res.status(200).send(session);
-      //   }).catch((err) => {
-      //     console.log(err);
-      //     res.status(422).send(err);
-      //   })
+
     }).post('/new', parseUrlEncoded, (req, res) => {
       let data = req.body.user;
       if (data.password <= 8) {

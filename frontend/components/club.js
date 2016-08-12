@@ -9,11 +9,15 @@ class Club extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            club: null
+            club: null,
+            innerWidth: null
         }
     }
     componentWillMount() {
         this.cuListener = ClubStore.addListener(this._currentClubChange);
+        window.onresize = (event) => {
+            this.setState({innerWidth: event.target.innerWidth});   
+        }
         let club = ClubStore.getCurrentClub();
         if (club){
             this.setState({ club })
@@ -48,7 +52,7 @@ class Club extends Component {
             <div className="club-body">
                 <div className="club-children">
                     { Children.map(this.props.children, (child) => {
-                        return cloneElement(child, { club: this.state.club });
+                        return cloneElement(child, { club: this.state.club, innerWidth: this.state.innerWidth });
                       }) 
                     }
                 </div>       

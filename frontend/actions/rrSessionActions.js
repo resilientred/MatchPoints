@@ -21,6 +21,14 @@ export const saveSession = (data, clubId) => {
     success: "fetchedRRSession"
   })
 }
+export const temporarySession = (data, clubId) => {
+  apiCSRFService({
+    url: "/api/clubs/" + clubId + "/temp",
+    method: "POST",
+    data: { session: data },
+    success: "log"
+  })
+}
 export const postResult = (clubId, data, ratingUpdateList, id) => {
   apiCSRFService({
     url: `/api/clubs/${clubId}/sessions/${id}`,

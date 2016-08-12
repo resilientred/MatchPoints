@@ -11,7 +11,9 @@ import redis from "redis"
 //   expired : true,
 //   logLevel : 'DEBUG' //Defaults To INFO 
 // });
-
+const client = redis.createClient();
+client.config("SET", "notify-keyspace-events", "KA");
+export { client };
 export const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
 export const app = express();
 export const clubMethods = new clubMethoding(app)

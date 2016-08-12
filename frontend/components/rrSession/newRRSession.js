@@ -1,28 +1,26 @@
 import React from 'react';
-import moment from "moment";
-import 'moment-range'
-import Modal from "react-modal";
-import Calendar from "react-input-calendar";
 import { browserHistory } from "react-router";
 
 import { fetchPlayers } from '../../actions/clientActions';
-import { saveSession } from "../../actions/rrSessionActions";
-
+import { saveSession, temporarySession } from "../../actions/rrSessionActions";
+import moment from "moment"
 import RRSessionStore from "../../stores/rrSessionStore";
 import PlayerForm from './playerForm';
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import ClubStore from "../../stores/clubStore";
 import Participants from "./participants";
 import Grouping from "./grouping";
-
-
+import { Tabs, Tab } from "material-ui/Tabs"
+import CircularProgress from 'material-ui/CircularProgress';
+import RaisedButton from "material-ui/RaisedButton"
+import DatePicker from 'material-ui/DatePicker';
 export default class NewRRSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       newPlayerModal: false,
-      tab: 0,
-      date: moment(),
+      tab: "1",
+      date: new Date(),
       numPlayers: 0,
       error: null,
       addedPlayers: {}
@@ -53,11 +51,11 @@ export default class NewRRSession extends React.Component {
       browserHistory.push("/club/sessions");
     }
   }
-  openModal(name){
-    this.setState({[name]: true});
+  openModal = () =>{
+    this.setState({newPlayerModal: true});
   }
-  closeModal(name){
-    this.setState({[name]: false});
+  closeModal = () =>{
+    this.setState({newPlayerModal: false});
   }
   _clubChanged = () => {
     this.setState({ club: ClubStore.getCurrentClub(),
@@ -69,10 +67,10 @@ export default class NewRRSession extends React.Component {
           return player._id === _id;
         });
 
-    if (addedPlayers[selectedPlayer]){
-      delete addedPlayers[selectedPlayer];
+    if (addedPlayers[_id]){
+      delete addedPlayers[_id];
     } else {
-      addedPlayers[selectedPlayer] = selectedPlayer;
+      addedPlayers[_id] = selectedPlayer;
     }
     this.setState({ 
       addedPlayers, 
@@ -80,22 +78,10 @@ export default class NewRRSession extends React.Component {
     });
   }
 
-  // selectPlayer = (player, e) => {
-  //   this.setState({
-  //     selectedPlayer: player, 
-  //     selectedPlayerTarget: e.target
-  //   });
-  // }
+  toggleTab = (tab) => {
+    this.setState({ tab });
+  }
 
-  // selectRemovePlayer = (player) => {
-  //   this.setState({selectedRemovePlayer: player});
-  // }
-  changeTab = (tab) => {
-    this.setState({tab: tab});
-  }
-  handleChange = (field, moment) => {
-    this.setState({[field]: moment});
-  }
   convertPlayersToArr = () => {
     return Object.keys(this.state.addedPlayers).map( (_id) => {
       return this.state.addedPlayers[_id];
@@ -104,81 +90,77 @@ export default class NewRRSession extends React.Component {
 
   saveSession = (schemata, rangeOfPlayer, selectedSchema, e) => {
     e.preventDefault();
-    var club_id = this.props.club._id;
+
     saveSession({
       date: this.state.date.toDate(),
       numOfPlayers: this.state.numPlayers,
       players: this.state.addedPlayers,
       selectedSchema: selectedSchema,
       schemata: schemata,
-    }, club_id);
+    }, this.props.club._id);
   }
-  newPlayer = () => {
-    return this.state.tab === 0 ? 
-        <button className="new-player-modal" onClick={this.openModal.bind(this, "newPlayerModal")}>
-          New Player
-        </button> : "";
+  temporarilySaveSession = (schemata, rangeOfPlayer, selectedSchema, e) => {
+    e.preventDefault();
+
+    temporarySession({
+      date: this.state.date.toDate(),
+      numOfPlayers: this.state.numPlayers,
+      players: this.state.addedPlayers,
+      selectedSchema: selectedSchema,
+      schemata: schemata,
+    }, this.props.club._id);
   }
+
   render(){
     if (!this.props.club){ 
-      return <h3>Something went wrong...</h3>;
+      return <CircularProgress size={2} />
       }
     let allPlayers = this.props.club.players,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
-        { tab, date, numPlayers, error } = this.state,
-        title, grouping;
-
-    if (tab === 1){
-      title = "Grouping";
-      grouping =  <Grouping numPlayers={numPlayers} 
-                          addedPlayers={addedPlayers} 
-                          saveSession={this.saveSession}
-                          club={this.props.club}
-                          date={moment(this.state.date).format("YYYY-MM-DD")}/>
-    } else {
-      title = "Participant Registration";
-      grouping = <Participants addedPlayers={addedPlayers} 
+        { tab, date, numPlayers, error } = this.state;
+  
+    let playerContent = (<div>
+          <RaisedButton 
+              onClick={this.openModal} 
+              label="New Player" 
+              secondary={true}
+              style={{position: "absolute", right: 0}}/>
+          <div className="date">
+            <DatePicker floatingLabelText="Date of Session"
+                hintText="Date" value={this.state.date}
+                onChange={(e, date) => this.setState({date}) }/>
+          </div>
+          <Participants addedPlayers={addedPlayers} 
                                 allPlayers={allPlayers} 
-                                handleToggle={this.handleToggle} />    
-    }
+                                handleToggle={this.handleToggle}/> 
+        </div>);
+    let groupContent = (<Grouping numPlayers={numPlayers} 
+                        addedPlayers={addedPlayers} 
+                        saveSession={this.saveSession}
+                        club={this.props.club}
+                        date={moment(this.state.date).format("YYYY-MM-DD")}/>);
 
     return (
-        <div className="player-container">
-          <h1>{ error }</h1>
-          <ul className="player-nav">
-            <li>
-              <a onClick={this.changeTab.bind(null, 0)} 
-                 className={tab === 0 ? "active" : ""}>
-                 Participants
-              </a>
-            </li>
-            <li>
-              <a onClick={this.changeTab.bind(null, 1)}
-                className={tab === 1 ? "active" : ""}>
-                Grouping
-              </a>
-            </li>
-          </ul>
-          <div className="date">Date: <Calendar
-              format="YYYY/MM/DD"
-              date={date}
-              onChange={this.handleChange.bind(null, "date")}/></div>
-          <h3>Organization: { this.props.club.clubName }</h3>
-          <h3>{this.props.club.title}</h3>
-          { this.newPlayer() }
-          { grouping }
-                
-          <Modal isOpen={this.state.newPlayerModal} 
-                  onRequestClose={this.closeModal.bind(this, "newPlayerModal")}
-                  style={NewPlayerStyle}>
-                  <PlayerForm closeModal={
-                    this.closeModal.bind(this, "newPlayerModal")
-                  }/>
-          </Modal>
-        </div>
+      <div className="tab-container">
+         <Tabs contentContainerStyle={{  padding: "20px",
+   border: "1px solid #E0E0E0" }} 
+              value={this.state.tab} 
+              onChange={this.toggleTab}
+              initialSelectedIndex={1}>
+          <Tab label="Registration" value="1">
+            { playerContent }
+            <PlayerForm modalOpen={this.state.newPlayerModal} 
+                      closeModal={this.closeModal}/>
+          </Tab>
+          <Tab label="Grouping" value="2"> 
+            { groupContent }
+          </Tab>
+        </Tabs>
+      </div>
     )
   }
 }
+
 
 
 export default NewRRSession;

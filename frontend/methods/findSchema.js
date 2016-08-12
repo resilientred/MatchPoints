@@ -1,3 +1,4 @@
+const schema = {} //should store dynamic programming result here;
 export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
   if (numPlayers < 0) return null;
   if (numPlayers === 0) return [[]];

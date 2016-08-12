@@ -1,18 +1,14 @@
-import React, { Component } from "react"
-import Modal from "react-modal"
+import React from "react"
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-export default class App extends Component {
-  componentWillMount() {
-    var el = document.getElementById("root");
-    Modal.setAppElement(el);    
-  }
+  // var el = document.getElementById("root");
+  // Modal.setAppElement(el);  
+const App = (props) => (
+  <MuiThemeProvider>
+    <div>
+    { props.children }
+  </div>
+  </MuiThemeProvider>
+)
 
-  render() {
-    return (<MuiThemeProvider>
-      <div>
-      { this.props.children }
-    </div>
-    </MuiThemeProvider>);
-  }
-}
+export default App

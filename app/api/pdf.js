@@ -1,13 +1,12 @@
 import express from "express"
 import redis from "redis"
 import { generatePDF } from "../helpers/pdf_module.js"
-import { parseUrlEncoded, app, csrfProtection } from "../helpers/app_modules"
+import { parseUrlEncoded, app, csrfProtection, client } from "../helpers/app_modules"
 import fs from "fs"
 import bluebird from "bluebird"
 import path from "path"
 
-const client = redis.createClient();
-client.config("SET", "notify-keyspace-events", "KA");
+
 const subscriber = redis.createClient();
 const router = express.Router();
 
@@ -24,7 +23,10 @@ subscriber.on('pmessage', (pattern, channel, message) => {
   switch (message){
     case "expired":
       const key = channel.split(":")[1];
-      _handleExpired(key);
+      const file = key.split("#");
+      if (file[1] && file[0] === "pdf"){
+        _handleExpired(file[1]);
+      }
       break;
   }
   console.log("redis pattern: ", pattern);
@@ -49,7 +51,7 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
       if (addedPlayers.length === 0){
         client.set(clubId, JSON.stringify(urls), (err) => {
           if (err) console.log("err: ", err);
-          client.setex(url, 60*15, "true", (err) => {
+          client.setex("pdf#" + url, 60*15, "true", (err) => {
             if (err) console.log(err);
           })
           res.status(200).send(urls);
