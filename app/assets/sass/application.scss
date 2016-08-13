@@ -199,14 +199,14 @@ input {
 
 
 .nav-bar {
-	color: black;
+	color: white;
 	background-color: #00BCD4;
   opacity: 0.9;
   font-weight: 300;
 
   position: relative;
   a {
-    color: black;
+    color: white;
   }
 	&> div {
 		height: 60px;
@@ -221,6 +221,7 @@ input {
 			font-family: 'Roboto', sans-serif;
 			font-size: 25px;
 			cursor: pointer;
+      color: white;
 		}
   }
 
@@ -588,7 +589,16 @@ form {
     margin-bottom: 10px;
   }
 }
-
+.save {
+  position: absolute;
+  top: -20px;
+  right: -10px;
+}
+.create {
+  position: absolute;
+  top: -20px;
+  left: 0;
+}
 .redirect-signup {
   margin-bottom: -20px;
   color: #212121;
@@ -612,6 +622,10 @@ form {
       text-align: right;
       padding: 20px;
       z-index: 1001;
+      color: black;
+      a {
+        color: black;
+      }
     }
     &:hover {
       display: flex;

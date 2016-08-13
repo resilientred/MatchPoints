@@ -44,12 +44,13 @@ export const fetchAllClubs = () => {
 	})
 }
 
-export const generatePDF = (addedPlayers, schema, club, date) => {
+export const generatePDF = (addedPlayers, schemas, club, date) => {
+	debugger;
 	apiCSRFService({
 		url: `/api/pdfs/${club._id}`,
 		method: "POST",
 		data: {
-			session: {addedPlayers, schema, club, date}
+			session: {addedPlayers, schemas, club, date}
 		},
 		success: "generatedPDF"
 	})

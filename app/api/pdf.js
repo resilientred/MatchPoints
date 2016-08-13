@@ -29,8 +29,6 @@ subscriber.on('pmessage', (pattern, channel, message) => {
       }
       break;
   }
-  console.log("redis pattern: ", pattern);
-  console.log("redis message: ", message);
 });
 
 subscriber.psubscribe("__keyspace@0__:*", (err) => {
@@ -41,9 +39,9 @@ subscriber.psubscribe("__keyspace@0__:*", (err) => {
 
 router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   let clubId = req.params.clubId,
-      { club, addedPlayers, schema, date } = req.body.session;
+      { club, addedPlayers, schemas, date } = req.body.session;
   let urls = {};
-  schema.forEach((group, i) => {
+  schemas.forEach((group, i) => {
     let players = [];
     process.nextTick(() => {
       let url = generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
@@ -54,6 +52,7 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
           client.setex("pdf#" + url, 60*15, "true", (err) => {
             if (err) console.log(err);
           })
+          console.log(urls);
           res.status(200).send(urls);
           res.end();
         });

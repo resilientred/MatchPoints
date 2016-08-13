@@ -14,11 +14,13 @@ import { Tabs, Tab } from "material-ui/Tabs"
 import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from "material-ui/RaisedButton"
 import DatePicker from 'material-ui/DatePicker';
+
 export default class NewRRSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       newPlayerModal: false,
+      groupTabEnabled: false,
       tab: "1",
       date: new Date(),
       numPlayers: 0,

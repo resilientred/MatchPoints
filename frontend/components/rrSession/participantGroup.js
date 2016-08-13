@@ -3,15 +3,21 @@ import { Table, TableBody, TableRow, TableHeader, TableHeaderColumn, TableRowCol
 import SelectField from "material-ui/SelectField"
 import MenuItem from "material-ui/MenuItem"
 import TextField from "material-ui/TextField"
-const rangeOfPlayers = [4, 5, 6, 7];
-//this should be passed down from the server
-
+import FlatButton from "material-ui/FlatButton"
+import IconButton from "material-ui/IconButton/IconButton"
+import PdfIcon from 'react-icons/lib/md/picture-as-pdf'
 const ParticipantGroup = (props) => {
   return (<div>
+    <IconButton iconClassName="material-icons" 
+      style={{position: "absolute", right: "0", top: "100px", zIndex: 10}}
+        onClick={props.pdfDownload} 
+        disabled={!props.pdfs}
+        tooltip={!props.pdfs ? "You must generate first" : "Download pdf" }><PdfIcon  /></IconButton>
     <Table selectable={false}
             multiSelectable={false}
             fixedHeader={true}> 
-     <TableHeader displaySelectAll={false} enableSelectAll={false}>
+     <TableHeader displaySelectAll={false} enableSelectAll={false}
+                      adjustForCheckbox={false}>
        <TableRow>
           <TableHeaderColumn>Group {props.groupId + 1}</TableHeaderColumn>
           <TableHeaderColumn>Name</TableHeaderColumn>
@@ -30,11 +36,6 @@ const ParticipantGroup = (props) => {
       }
     </TableBody>
     </Table>
-    <SelectField value={props.numPlayers} onChange={() => props.changeNumOfPlayers(props.numPlayers)}>
-      {
-        rangeOfPlayers.map((i) => <MenuItem value={i} key={i}text={i} />)
-      }
-    </SelectField>
   </div>);
 }
 
