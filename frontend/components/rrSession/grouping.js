@@ -44,7 +44,6 @@ class Grouping extends React.Component {
       if (value) this.setState({[field]: value});
     }
     shouldComponentUpdate(nextProps, nextState) {
-      debugger;
       if (this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
         return true;
       }

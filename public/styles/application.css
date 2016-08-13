@@ -185,19 +185,6 @@ input {
   border: 2px solid black;
   border-radius: 4px; }
 
-.new-player-modal {
-  background-color: #B36B89;
-  color: white;
-  cursor: pointer;
-  padding: 20px 20px;
-  border-radius: 4px; }
-  .new-player-modal:hover {
-    -webkit-transition: all 0.4s ease-out 0.1s;
-    transition: all 0.4s ease-out 0.1s;
-    -o-transition: all 0.4s ease-out 0.1s;
-    -moz-transition: all 0.4s ease-out 0.1s;
-    background-color: #724558; }
-
 .links {
   color: black;
   cursor: pointer; }
@@ -215,8 +202,8 @@ input {
 .nav-bar {
   color: white;
   background-color: #673AB7;
-  opacity: 0.9;
-  font-weight: 300;
+  font-weight: 400;
+  display: flex;
   position: relative; }
   .nav-bar a {
     color: white; }
@@ -288,7 +275,7 @@ input {
       margin-top: 20px; }
 
 @media (max-width: 700px) {
-  .tab.container {
+  .tab-container {
     width: 80%;
     /*min-width: 350px;*/ }
   .player-lists {
@@ -440,7 +427,7 @@ form {
   border: 1px solid #E0E0E0;
   background-color: white;
   box-shadow: 2px 2px 5px #E0E0E0;
-  z-index: 999; }
+  z-index: 400; }
   form h3 {
     font-size: 36px;
     font-weight: 200; }
@@ -467,7 +454,7 @@ form {
   background-color: #212121; }
 
 .front {
-  z-index: 999;
+  z-index: 400;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden; }
 
@@ -577,50 +564,12 @@ form {
 @media only screen and (max-width: 800px) {
   .nav {
     display: none; }
-    .nav li {
-      text-align: right;
-      padding: 20px;
-      z-index: 1001;
-      color: black; }
-      .nav li a {
-        color: black; }
-    .nav:hover {
-      display: flex;
-      flex-direction: column;
-      background-color: white;
-      position: absolute;
-      top: 60px;
-      right: 15%;
-      box-shadow: 2px 2px 3px #E0E0E0; }
-      .nav:hover:before {
-        content: " ";
-        width: 150px;
-        height: 20px;
-        background-color: transparent;
-        position: absolute;
-        bottom: 100%; }
   .collapsed-icon {
-    display: block;
-    position: relative; }
+    margin-right: -40%;
+    display: flex;
+    cursor: pointer; }
     .collapsed-icon:hover {
-      color: white;
-      cursor: pointer; }
-      .collapsed-icon:hover + .nav {
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        position: absolute;
-        top: 60px;
-        right: 15%;
-        box-shadow: 2px 2px 3px #E0E0E0;
-        z-index: 1001; }
-        .collapsed-icon:hover + .nav:before {
-          content: " ";
-          width: 150px;
-          height: 20px;
-          background-color: transparent;
-          position: absolute;
-          bottom: 100%; } }
+      color: black; } }
 
 @media (max-width: 535px) {
   .club-nav {

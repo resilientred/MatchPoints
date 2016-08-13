@@ -4,19 +4,19 @@ import Divider from 'material-ui/Divider';
 
 const PlayerGroup = (props) => {
   return (<div className="player-lists">
-      <Divider />
+      <Divider style={{position: "relative"}}/>
       <PlayerList players={props.allPlayers}
                   handleToggle={props.handleToggle}
                   title="All Players"
                   selectable={true} 
                   addedPlayers={props.objAddedPlayers}/>
-      <Divider />    
+      <Divider style={{position: "relative"}}/>    
       <PlayerList players={props.addedPlayers} 
                   handleToggle={props.handleToggle}
                   title="Selected Players"
                   selectable={false}
                   addedPlayers={props.objAddedPlayers}/>   
-      <Divider />    
+      <Divider style={{position: "relative"}}/>    
   </div>);
 }
 
