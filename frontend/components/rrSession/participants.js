@@ -8,12 +8,14 @@ const PlayerGroup = (props) => {
       <PlayerList players={props.allPlayers}
                   handleToggle={props.handleToggle}
                   title="All Players"
-                  selectable={true} />
+                  selectable={true} 
+                  addedPlayers={props.objAddedPlayers}/>
       <Divider />    
       <PlayerList players={props.addedPlayers} 
                   handleToggle={props.handleToggle}
                   title="Selected Players"
-                  selectable={false}/>   
+                  selectable={false}
+                  addedPlayers={props.objAddedPlayers}/>   
       <Divider />    
   </div>);
 }

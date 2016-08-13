@@ -17,18 +17,20 @@ class Grouping extends React.Component {
         super(props);
         this.state = {
           schemata: [[]],
-          max: 6, 
-          min: 4,
+          max: null,
+          min: null,
           selectedGroup: [],
           pdfs: null,
-          generated: false
+          generated: false,
+          stepIndex: 0
         }
     }   
     componentWillMount() {
-      let pdfs = PDFStore.getPDF();
       this.pListener = PDFStore.addListener(this._fetchedPDF);
-      this.setState({pdfs})
-      if (!pdfs){
+      let pdfs = PDFStore.getPDF();
+      if (pdfs){
+        this.setState({pdfs})
+      } else {
         fetchPDFLinks(this.props.club._id);
       }
     }
@@ -39,70 +41,87 @@ class Grouping extends React.Component {
       this.setState({ pdfs: PDFStore.getPDF() })
     }
     handleChange = (field, e, idx, value) => {
-      this.setState(Object.defineProperty({}, field, {value: value}))
+      if (value) this.setState({[field]: value});
     }
     shouldComponentUpdate(nextProps, nextState) {
+      debugger;
       if (this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
         return true;
       }
-      if (nextProps.numPlayers !== this.props.numPlayers || this.state.min !== nextState.min || this.state.max !== nextState.max) {
-        let range = [];
-        for (let i = this.state.min; i <= this.state.max; i++){
-          range.push(i);
-        }
-        
-        let schemata = findSchemata(nextProps.numPlayers, range)
-        this.state.schemata = schemata.length ? schemata : [[]];
-        this.state.selectedGroup = schemata.length ? schemata[0] : "";
+      if (this.state.schemata.toString() !== nextState.schemata.toString()){
         return true;
       }
+      let {min, max} = this.state;
+      if (max !== nextState.max && (!min)) return true;
+
+      if ((max !== nextState.max) || (max && (min !== nextState.min)) || (this.props.numPlayers !== nextProps.numPlayers && max && min)){
+        let range = [];
+        for (let i = max; i >= (min || nextState.min); i--){
+          range.push(i);
+        }
+        process.nextTick(() => {
+          let numPlayers = nextProps.numPlayers;
+          let range2 = range.slice();
+          let schemata = findSchemata(numPlayers, range2);
+          console.log(schemata);
+          this.setState({schemata: schemata.length ? schemata : [[]]});  
+        })   
+        return true;
+      }
+
       return false; 
     }
     schemata() {
       let schemata = this.state.schemata;
       if (schemata.length){
-        return <SelectField value={this.state.selectedGroup} 
+        return <div>
+          <SelectField value={this.state.selectedGroup} 
                        onChange={this.changeSchema} 
                        floatingLabelText="Select a schema"
                        floatingLabelFixed={true}>
           {
-            schemata.map( (schema, i)=>{
-              return <MenuItem key={schema} value={schema} primaryText={schema.join(", ")}/>;
-            })
+            schemata ? 
+                schemata.map( (schema, i)=>{
+                  return <MenuItem key={schema} value={schema} primaryText={schema.join(", ")}/>;
+                })
+              :
+                <MenuItem key={"noth"} disabled={true} primaryText="No Available Schemas..."/>
           }
-        </SelectField>;
-      } else {
-        return <p>Nothing is available...<br />Try selecting more players..</p>;
-      }
+        </SelectField>
+        </div>;
+      } 
     }
     numOfPlayers() {
       let { min, max } = this.state;
-      return (<div>
-        <SelectField value={min} 
-                     floatingLabelFixed={true}
-                     floatingLabelText="Min"
-                     onChange={this.handleChange.bind(this, "min")}>
-            {
-              rangeOfPlayers.map((num) => (
-                <MenuItem key={num} value={num} primaryText={num} disabled={num >= max}/>
-              ))
-            }
-         </SelectField>
+
+      return (<div className="min-max">
         <SelectField value={max}
                      floatingLabelFixed={true}
-                     floatingLabelText="Max"
+                     floatingLabelText="Max Players"
                      onChange={this.handleChange.bind(this, "max")}>
             {
               rangeOfPlayers.map((num) => (
-                <MenuItem key={num} value={num} primaryText={num} disabled={num <= min }/>
+                <MenuItem key={num} value={num} primaryText={num} disabled={num < min }/>
               ))
             }
         </SelectField>
+        <SelectField value={min} 
+                     floatingLabelFixed={true}
+                     floatingLabelText="Min Players"
+                     onChange={this.handleChange.bind(this, "min")}>
+            {
+              rangeOfPlayers.map((num) => (
+                <MenuItem key={num} value={num} primaryText={num} disabled={num > max}/>
+              ))
+            }
+         </SelectField>
       </div>)
     }
     changeSchema = (e, _, selectedGroup) => {
-      this.totalPlayerAdded = 0;
-      this.setState({ selectedGroup }); 
+      if (selectedGroup){
+        this.totalPlayerAdded = 0;
+        this.setState({ selectedGroup }); 
+      }
     }
     generatePDF = () => {
       if (this.state.generated){
@@ -129,27 +148,25 @@ class Grouping extends React.Component {
     download = (link) => {
       window.open(`/api/pdfs/download/${link}`)
     }
-    render() {
-      if (this.state.schemata[0].length === 0){
-        return <h2>You must select more players...</h2>;
-      } 
-      this.totalPlayerAdded = 0;
+    moveUp = (group) => {
+      if (group === 0) return;
+      let selectedGroup = this.state.selectedGroup.slice();
+      selectedGroup[group - 1] += 1;
+      selectedGroup[group] -= 1;
+      this.setState({ selectedGroup });
+    }
+    moveDown = (group) => {
+      let selectedGroup = this.state.selectedGroup.slice();
+      if (group === selectedGroup.length - 1) return;
+      selectedGroup[group + 1] += 1;
+      selectedGroup[group] -= 1;
+      this.setState({ selectedGroup });
+    }
+    groupTables(){
       let pdfs = this.state.pdfs;
-      let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
-
-      return <div className="grouping">
-        <IconMenu style={{position: "absolute", right: 0, top: "-20px"}}
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          >
-            <MenuItem primaryText="Generate PDF" onClick={this.generatePDF} disabled={this.props.generated}/>
-            <MenuItem primaryText="Save" onClick={this.handleSave}/>
-        </IconMenu>
-        { this.numOfPlayers() }
-        { this.schemata() }
-        { 
-           this.state.selectedGroup.map((numPlayers, i) => {
+      return (<div> 
+           {
+            this.state.selectedGroup.map((numPlayers, i, arr) => {
               this.totalPlayerAdded += +numPlayers;
               return <ParticipantGroup key={i + "" + numPlayers} groupId={i}
                         pdfDownload={ !pdfs ? () => {} : this.download.bind(this, pdfs["group" + (i + 1)])}
@@ -158,9 +175,37 @@ class Grouping extends React.Component {
                         players={this.props.addedPlayers.slice(
                           this.totalPlayerAdded - numPlayers, this.totalPlayerAdded
                           )}
+                        moveUp={i === 0 ? null : this.moveUp}
+                        moveDown={i === arr.length - 1 ? null : this.moveDown}
                       />;
-           })
-        }
+             })
+            }
+        </div>);
+    }
+    render() {
+      if (this.state.max && this.state.min){
+        var schemata = this.schemata();
+        if (this.state.selectedGroup){
+          var groupTables = this.groupTables();            
+        } 
+      }
+
+      this.totalPlayerAdded = 0;
+      
+      let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
+
+      return <div className="grouping">
+        <IconMenu style={{position: "absolute", right: 0, top: "-20px"}}
+        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+          >
+            <MenuItem primaryText="Generate PDF" onClick={this.generatePDF} disabled={this.props.generated || !this.state.selectedGroup.length}/>
+            <MenuItem primaryText="Save" onClick={this.handleSave} disabled={!this.state.selectedGroup.length} />
+        </IconMenu>
+        { this.numOfPlayers() }
+        { schemata }
+        { groupTables }
       </div>;
     }
 }

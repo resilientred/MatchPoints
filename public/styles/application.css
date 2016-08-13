@@ -214,7 +214,7 @@ input {
 
 .nav-bar {
   color: white;
-  background-color: #00BCD4;
+  background-color: #673AB7;
   opacity: 0.9;
   font-weight: 300;
   position: relative; }
@@ -300,26 +300,6 @@ input {
       .player-lists > div:nth-child(even) {
         margin-top: 20px;
         margin-bottom: 20px; } }
-
-.grouping {
-  margin-top: 30px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  flex-wrap: wrap; }
-  .grouping table {
-    font-size: 24px;
-    min-width: 500px;
-    width: 100%;
-    font-family: 'varela round', sans-serif; }
-    .grouping table th {
-      color: white;
-      text-align: left;
-      background-color: #AD6BB3;
-      padding: 20px 15px; }
-    .grouping table td {
-      border-top: 1px solid #F1EFEF;
-      padding: 20px 15px; }
 
 .save-session {
   position: absolute;
@@ -586,6 +566,13 @@ form {
 .table-title {
   text-align: center;
   display: block; }
+
+.min-max {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; }
+  .min-max :first-child {
+    margin-right: 20px; }
 
 @media only screen and (max-width: 800px) {
   .nav {

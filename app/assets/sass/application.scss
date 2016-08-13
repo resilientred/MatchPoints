@@ -200,7 +200,7 @@ input {
 
 .nav-bar {
 	color: white;
-	background-color: #00BCD4;
+	background-color: #673AB7;
   opacity: 0.9;
   font-weight: 300;
 
@@ -308,30 +308,7 @@ input {
   }
 }
 
-.grouping {
-	margin-top: 30px;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	flex-wrap: wrap;
 
-	table {
-		font-size: 24px;
-		min-width: 500px;
-		width: 100%;
-		font-family: 'varela round', sans-serif;
-		th {
-			color: white;
-			text-align: left;
-			background-color: #AD6BB3;
-			padding: 20px 15px;
-		}
-		td {
-			border-top: 1px solid #F1EFEF;
-			padding: 20px 15px;
-		}
-	}
-}
 .save-session {
   position: absolute;
   top: 0;
@@ -614,6 +591,14 @@ form {
 .table-title {
   text-align: center;
   display: block;
+}
+.min-max {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  :first-child {
+    margin-right: 20px; 
+  }
 }
 @media only screen and (max-width: 800px){
   .nav {

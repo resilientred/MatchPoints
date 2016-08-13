@@ -132,19 +132,19 @@ export default class NewRRSession extends React.Component {
                 hintText="Date" value={this.state.date}
                 onChange={(e, date) => this.setState({date}) }/>
           </div>
-          <Participants addedPlayers={addedPlayers} 
+          <Participants objAddedPlayers={this.state.addedPlayers} addedPlayers={addedPlayers} 
                                 allPlayers={allPlayers} 
                                 handleToggle={this.handleToggle}/> 
         </div>);
     let groupContent = (<Grouping numPlayers={numPlayers} 
-                        addedPlayers={addedPlayers} 
-                        saveSession={this.saveSession}
-                        club={this.props.club}
-                        date={moment(this.state.date).format("YYYY-MM-DD")}/>);
+                          addedPlayers={addedPlayers} 
+                          saveSession={this.saveSession}
+                          club={this.props.club}
+                          date={moment(this.state.date).format("YYYY-MM-DD")}/>);
 
     return (
       <div className="tab-container">
-         <Tabs contentContainerStyle={{  padding: "20px",
+         <Tabs tabItemContainerStyle={{backgroundColor: "#673AB7"}}contentContainerStyle={{  padding: "20px",
    border: "1px solid #E0E0E0" }} 
               value={this.state.tab} 
               onChange={this.toggleTab}
