@@ -5,6 +5,14 @@ import RRSessionStore from "../../stores/rrSessionStore"
 import ClubStore from "../../stores/clubStore"
 import { fetchRRSessions, updateResult, postResult } from "../../actions/rrSessionActions"
 import RecordTable from "./RecordTable"
+import AppBar from 'material-ui/AppBar'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import IconButton from 'material-ui/IconButton'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 class RoundRobinSession extends React.Component {
     constructor(props) {
@@ -14,7 +22,9 @@ class RoundRobinSession extends React.Component {
           session: null,
           scoreChange: [],
           scoreUpdate: {},
-          currentTab: 0
+          currentTab: 0,
+          open: false,
+          saved: false
         }
     }
     componentWillMount() {
@@ -85,33 +95,71 @@ class RoundRobinSession extends React.Component {
         }
       }
     }
-
+    handleClose = () => {
+      this.setState({open: false});
+    }
+    handleDelete = () => {
+      this.props.deleteSession(this.props.params.id);
+    }
+    handleBack = () => {
+      history.back();
+    }
+    iconMenu () {
+      return <IconMenu 
+                iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+              >
+                <MenuItem primaryText="Update" onClick={() => this.setState({open: true})}/>
+                <MenuItem primaryText="Save" onClick={this.saveSesion}/>
+                <MenuItem primaryText="Delete" onClick={() => this.setState({open: true})}/>
+              </IconMenu>
+    }
     render() {
+      const actions = [
+        <FlatButton
+          label="Cancel"
+          primary={true}
+          onTouchTap={this.handleClose}
+          label="Update"
+        />,
+        <FlatButton
+          primary={true}
+          keyboardFocused={true}
+          onTouchTap={this.handleDelete}
+        />,
+      ];
         let { session, scoreChange } = this.state;
         if (!session) return <h1>Loading ...</h1>;
-
-        var selectedSchema = session.selectedSchema,
-            schemata = session.schemata,  
-            numOfPlayers = session.numOfPlayers,
-            clubId = session._clubId,
-            joinedPlayers = session.players;
+        let { selectedSchema, schemata, numOfPlayers, clubId, players } = session;
 
         var countedPlayers = 0;
-        return <div>
-          <h1>Session Date: { moment(session.date).format("YYYY/MM/DD") }</h1>
+        return <div className="session-container">
+          <AppBar
+            title={ "Date: " + moment(session.date).format("MMMM DD, YYYY") }
+            iconElementLeft={<IconButton onClick={this.handleBack}><NavigationClose /></IconButton>}
+            iconElementRight={this.iconMenu()}
+          />
             {
               selectedSchema.map ( (sizeOfGroup, i) => {
                 countedPlayers += sizeOfGroup;
                 return (
                     <RecordTable key={i} groupNum={i + 1} 
                      start={countedPlayers - sizeOfGroup}
-                     joinedPlayers={joinedPlayers} sizeOfGroup={+sizeOfGroup} 
+                     joinedPlayers={players} sizeOfGroup={+sizeOfGroup} 
                      updateScore={this.updateScore} 
                      scoreChange={scoreChange.length ? scoreChange[i] : []}
                      saveSession={this.saveSession} />
                 )
                 })
             }
+        <Dialog
+          title="Delete Session"
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+          Are you sure you want to delete the session?
+        </Dialog>
         </div>;
     }
 }

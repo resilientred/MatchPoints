@@ -12,14 +12,30 @@ class NavBar extends Component {
       tab: 0
     }
   }
+  componentWillMount() {
+    let tab;
+    switch (this.props.curPage){
+      case "/club/newSession":
+        tab = 1;
+        break;
+      case "/club/sessions":
+        tab = 2;
+        break;
+      default:
+        tab = 0;
+        break;
+    }
+    this.setState({tab})
+  } 
   handleOpen = () => {
     this.setState({ opened: !this.state.opened })
   }
-  handleLink(link){
+  handleLink(link, tab){
+    this.setState({ tab })
     browserHistory.push(link);
   }
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.opened !== nextState.opened){
+    if (this.state.opened !== nextState.opened || this.state.tab !== nextState.tab){
       return true
     }
     if ((!this.props.club && nextProps.club) || (!nextProps.club && this.props.club)){
@@ -35,11 +51,24 @@ class NavBar extends Component {
                          onRequestChange={this.handleOpen}
                          zDepth={5}
                          >    
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club")} primaryText="Home" focusState="focused" />
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club/newSession")} primaryText="New Session" />
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club/sessions")} primaryText="Old Sessions" />
-                  <MenuItem primaryText="Browse Results"/>
-                  <MenuItem onTouchTap={logOut} primaryText="Log Out"/>
+                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club", 0)} 
+                            primaryText="Home" 
+                            insetChildren={true}
+                            checked={this.state.tab === 0} />
+                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club/newSession", 1)} 
+                            primaryText="New Session" 
+                            insetChildren={true}
+                            checked={this.state.tab === 1}/>
+                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club/sessions", 2)} 
+                            primaryText="Old Sessions" 
+                            insetChildren={true}
+                            checked={this.state.tab === 2}/>
+                  <MenuItem primaryText="Browse Results"
+                            insetChildren={true}
+                            checked={this.state.tab === 3}/>
+                  <MenuItem onTouchTap={logOut} 
+                            primaryText="Log Out"
+                            insetChildren={true}/>
               </Drawer>)
     } else {
       return (<Drawer open={this.state.opened } 
@@ -47,8 +76,15 @@ class NavBar extends Component {
                          docked={false}
                          onRequestChange={this.handleOpen}
                          >
-                <MenuItem primaryText="Browse Results"/>
-                <MenuItem primaryText="Log In"/>
+                <MenuItem onTouchTap={this.handleLink.bind(this, "/", 0)} 
+                          primaryText="Home" 
+                          checked={this.state.tab === 0} 
+                          insetChildren={true}/>
+                <MenuItem primaryText="Browse Results"
+                          insetChildren={true}
+                          checked={this.state.tab === 3}/>
+                <MenuItem primaryText="Log In"
+                          insetChildren={true}/>
             </Drawer>)
     }
   }

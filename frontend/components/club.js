@@ -4,20 +4,21 @@ import { Link, browserHistory } from "react-router"
 import NavBar from "./navBar"
 import { fetchCurrentClub } from '../actions/clubActions'
 import ClubStore from "../stores/clubStore"
-
+let curPage;
 class Club extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            club: null,
-            innerWidth: null
+            club: null
+            // innerWidth: null
         }
     }
     componentWillMount() {
+        curPage = this.props.location.pathname;
         this.cuListener = ClubStore.addListener(this._currentClubChange);
-        window.onresize = (event) => {
-            this.setState({innerWidth: event.target.innerWidth});   
-        }
+        // window.onresize = (event) => {
+        //     this.setState({innerWidth: event.target.innerWidth});   
+        // }
         let club = ClubStore.getCurrentClub();
         if (club){
             this.setState({ club })
@@ -34,12 +35,6 @@ class Club extends Component {
             browserHistory.push("/");
         }
     }
-    clubNav() {
-        return <ul className="club-nav">
-            <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>
-            <li><Link to="/club/sessions" activeClassName="active">Session Records</Link></li>
-        </ul>;
-    }
     componentWillUnmount() {
         this.cuListener.remove();
     }
@@ -48,11 +43,11 @@ class Club extends Component {
             return <h1>Loading... </h1>
         }
         return <div className="app">
-            <NavBar { ...this.state } />
+            <NavBar { ...this.state } curPage={curPage}/>
             <div className="club-body">
                 <div className="club-children">
                     { Children.map(this.props.children, (child) => {
-                        return cloneElement(child, { club: this.state.club, innerWidth: this.state.innerWidth });
+                        return cloneElement(child, { club: this.state.club });
                       }) 
                     }
                 </div>       

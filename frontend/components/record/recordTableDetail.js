@@ -1,12 +1,13 @@
 import React from 'react';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 const RecordTableDetail = (props) => {
-  var sizeOfGroup = this.props.sizeOfGroup,
-      start = this.props.start,
-      joinedPlayers = this.props.joinedPlayers,
-      playerIds = this.props.playerIds,
-      scoreChange = this.props.scoreChange,
-      result = this.props.result;
+  var sizeOfGroup = props.sizeOfGroup,
+      start = props.start,
+      joinedPlayers = props.joinedPlayers,
+      playerIds = props.playerIds,
+      scoreChange = props.scoreChange,
+      result = props.result;
   return (<div>
     <div className="front">
       <div className="table-header">
@@ -14,7 +15,7 @@ const RecordTableDetail = (props) => {
           [...Array(sizeOfGroup + 2)].map((_, i) => {
             return <div key={"head" + (i - 1)}>
                 {
-                  i === 0 ?  "Group " + this.props.groupNum  :
+                  i === 0 ?  "Group " + props.groupNum  :
                     i === 1 ? "Name" : "vs. " + (i - 1)
                 }
               </div>
@@ -40,12 +41,12 @@ const RecordTableDetail = (props) => {
                       <div>
                         <input type="number" min="0" max="3" 
                                key={"row" + m + ":" + n + "-1"} className="score" 
-                               onChange={this.props.updateResult.bind(this, m, n - 2, 0)} 
+                               onChange={props.updateResult.bind(null, m, n - 2, 0)} 
                                value={result[m][n - 2][0]} />
 
                         <input type="number" min="0" max="3" 
                                key={"row" + m + ":" + n + "-2"} className="score" 
-                               onChange={this.props.updateResult.bind(this, m, n - 2, 1)} 
+                               onChange={props.updateResult.bind(null, m, n - 2, 1)} 
                                value={result[m][n - 2][1]} />
                       </div> :  <div>
                         <input type="number" disabled
@@ -71,7 +72,7 @@ const RecordTableDetail = (props) => {
             [...Array(sizeOfGroup + 5)].map((_, i) => {
               return <div key={"head" + (i - 1)}>
                   {
-                    i === 0 ?  "Group " + this.props.groupNum  :
+                    i === 0 ?  "Group " + props.groupNum  :
                       i === 1 ? "Name" : 
                         i === 2 ? "Rating Before" : 
                           i === sizeOfGroup + 3 ? "Change" :

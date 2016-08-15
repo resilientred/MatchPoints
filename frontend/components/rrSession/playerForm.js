@@ -3,7 +3,8 @@ import { addPlayer } from "../../actions/clientActions"
 import ClubStore from "../../stores/clubStore"
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
-
+import IconButton from 'material-ui/IconButton/IconButton'
+import Close from 'react-icons/lib/md/close'
 class PlayerForm extends React.Component {
 	constructor(props){
 		super(props);
@@ -21,8 +22,12 @@ class PlayerForm extends React.Component {
   }
 	render(){
       return (<div className="player-form" style={{display: this.props.modalOpen ? "block" : "none"}}>
-        <div className="close-icon" onClick={this.props.closeModal}>&#10006;</div>
         <form onSubmit={this._handleSubmit}>
+          <IconButton style={{position: "absolute", right: "10px", top: "10px"}} 
+                      iconClassName="material-icons" 
+                      onClick={this.props.closeModal}
+                      tooltip="Close Form" touch={true} 
+                      ><Close /></IconButton>
           <h3>Player Form</h3>
           <div>
             <TextField type="text"

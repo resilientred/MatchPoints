@@ -87,16 +87,15 @@ class RecordTable extends Component {
         groupNum: groupNum
       }
     return <div className="record-table">
-        <button className="record-btn calculate" onClick={this._handleCalculate.bind(this)}>
-          Calculate
-        </button>
-        <button className="record-btn update-record" onClick={this.props.saveSession}>
-          Save
-        </button>
-
         <RecordTableDetail {...propsToPass} result={this.state.result}
               updateResult={this.updateResult} />
       </div>
-	}
+  }
 }
+// (        <button className="record-btn calculate" onClick={this._handleCalculate.bind(this)}>
+//           Calculate
+//         </button>
+//         <button className="record-btn update-record" onClick={this.props.saveSession}>
+//           Save
+//         </button>)
 export default RecordTable;
