@@ -119,9 +119,9 @@ class RoundRobinSession extends React.Component {
           label="Cancel"
           primary={true}
           onTouchTap={this.handleClose}
-          label="Update"
         />,
         <FlatButton
+          label="Update"
           primary={true}
           keyboardFocused={true}
           onTouchTap={this.handleDelete}
@@ -138,6 +138,7 @@ class RoundRobinSession extends React.Component {
             iconElementLeft={<IconButton onClick={this.handleBack}><NavigationClose /></IconButton>}
             iconElementRight={this.iconMenu()}
           />
+          <div className="session-container-body">
             {
               selectedSchema.map ( (sizeOfGroup, i) => {
                 countedPlayers += sizeOfGroup;
@@ -151,6 +152,7 @@ class RoundRobinSession extends React.Component {
                 )
                 })
             }
+          </div>
         <Dialog
           title="Delete Session"
           actions={actions}

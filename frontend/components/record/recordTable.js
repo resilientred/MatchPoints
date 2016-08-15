@@ -64,8 +64,8 @@ class RecordTable extends Component {
     });
     return [calculatedScore, rc];
   }
-  updateResult = (i, j, k, e) => {
-    this.state.result[i][j][k] = e.target.value;
+  updateResult = (i, j, k, e, idx, val) => {
+    this.state.result[i][j][k] = val;
     this.setState({ 
       result: this.state.result
     });
@@ -86,7 +86,7 @@ class RecordTable extends Component {
         playerIds: playerIds,
         groupNum: groupNum
       }
-    return <div className="record-table">
+    return <div>
         <RecordTableDetail {...propsToPass} result={this.state.result}
               updateResult={this.updateResult} />
       </div>

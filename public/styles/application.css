@@ -303,36 +303,15 @@ input {
 
 .session-container {
   margin: 5% auto 0 auto;
-  width: 80%; }
+  width: 80%;
+  border: 1px solid #E0E0E0; }
 
-/*.club-nav {
-	@include selected;
-	background-color: #00BCD4;
-	width: 170px;
-	height: 100%;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	font-size: 18px;
-	font-family: 'varela round', sans-serif;
-}
-.club-nav li {
-	transform: translateY(-120%);
-	text-align: left;
-	min-width: 150px;
-	min-height: 25px;
-	padding: 15px 5px;
+.session-container-body {
+  padding: 20px; }
 
-	a:hover {
-		color: black;
-		border-bottom: 1px solid black;
-		font-size: 21px;
-		@include hover;
-	}
+.group-table {
+  margin-bottom: 5%; }
 
-}*/
 .result-entry {
   display: flex;
   flex-direction: row;
@@ -440,47 +419,61 @@ form {
   border-radius: 3px;
   cursor: pointer; }
 
-.front, .back {
+/*.front, .back {
   padding: 25px;
-  background-color: rgba(0, 0, 0, 0.8); }
-
+  background-color: rgba(0, 0, 0, 0.8);
+}
 .back {
   margin-top: 5px;
-  background-color: #212121; }
-
+  background-color: rgba(33, 33, 33, 1);
+}
 .front {
   z-index: 400;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden; }
-
+  -webkit-backface-visibility: hidden; 
+  backface-visibility: hidden;
+}
 .record-table {
   color: white;
-  font-size: 16px; }
-  .record-table .table-header {
+  font-size: 16px;
+  .table-header {
     display: flex;
     justify-content: space-between;
-    flex-wrap: nowrap; }
-    .record-table .table-header > div {
+    flex-wrap: nowrap;
+    & > div {
       width: 100px;
-      text-align: center; }
-  .record-table .front-table, .record-table .back-table {
+      text-align: center;
+    }
+  }
+  .front-table, .back-table {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    flex-wrap: nowrap; }
-  .record-table input {
-    width: 30px;
-    height: 30px; }
-  .record-table .cell {
-    width: 100px; }
-  .record-table .greyed {
-    backrgound-color: grey; }
+    flex-wrap: nowrap;
+  }
 
-.front-table .row, .back-table .row {
-  display: flex;
+  input {
+    width: 30px;
+    height: 30px;
+  }
+
+  .cell {
+    width: 100px;
+  }
+  .greyed {
+    backrgound-color: grey;
+  }
+}
+
+.front-table .row, .back-table .row{
+  display:  flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-  text-align: center; }
+  text-align: center;
+}*/
+.score-div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; }
 
 .back {
   transform: rotate3d(1, 0, 0, 180deg);
