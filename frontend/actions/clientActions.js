@@ -1,19 +1,19 @@
 import { apiService, apiCSRFService } from "../utils/apiUtil";
 
-export const fetchPlayers = (clubId) => {
+const fetchPlayers = (clubId) => {
 	apiService({
 		url: `/api/clubs/${clubId}/players`,
 		success: "fetchedPlayers"
 	});
 }
 
-export const fetchPlayer = (id) => {
+const fetchPlayer = (id) => {
 	apiService({
 		url: `/api/players/${id}`,
 		success: "fetchedPlayer"
 	});
 }
-export const addPlayer = (clubId, player) => {
+const addPlayer = (clubId, player) => {
 	apiCSRFService({
 		url: `/api/clubs/${clubId}/players/new`,
 		method: "POST",
@@ -21,7 +21,7 @@ export const addPlayer = (clubId, player) => {
 		success: "loggedIn"
 	});
 }
-export const updatePlayer = (clubId, id, player) => {
+const updatePlayer = (clubId, id, player) => {
 apiService({
 		url: `/api/clubs/${clubId}/players/${id}`,
 		method: "PATCH",
@@ -29,7 +29,7 @@ apiService({
 		success: "updatedPlayer"
 	});
 }
-export const removePlayer = (id) => {
+const removePlayer = (id) => {
 	apiService({
 		url: "/api/players/" + id,
 		method: "DELETE",
@@ -37,15 +37,14 @@ export const removePlayer = (id) => {
 	});
 }
 
-export const fetchAllClubs = () => {
+const fetchAllClubs = () => {
 	apiService({
 		url: "/api/clubs/all",
 		success: "fetchedAllClubs"
 	})
 }
 
-export const generatePDF = (addedPlayers, schemas, club, date) => {
-	debugger;
+const generatePDF = (addedPlayers, schemas, club, date) => {
 	apiCSRFService({
 		url: `/api/pdfs/${club._id}`,
 		method: "POST",
@@ -56,10 +55,27 @@ export const generatePDF = (addedPlayers, schemas, club, date) => {
 	})
 }
 
-export const fetchPDFLinks = (sessionId) => {
+const fetchPDFLinks = (sessionId) => {
 	apiService({
 		url: `/api/pdfs/${sessionId}`,
 		success: "generatedPDF",
 		error: "log"
 	})
 }
+
+const fetchAllPlayersFromClub = (clubId) => {
+	console.log(clubId)
+	apiService({
+		url: `/api/clubs/${clubId}/players`,
+		success: "fetchedPlayers"
+	})
+}
+
+const fetchClubDetail = (clubId) => {
+	apiService({
+		url: `/api/clubs/${clubId}`,
+		success: "fetchedClubDetail"
+	})
+}
+
+export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, removePlayer, fetchAllClubs, generatePDF, fetchPDFLinks, fetchAllPlayersFromClub, fetchClubDetail }

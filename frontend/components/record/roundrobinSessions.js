@@ -40,9 +40,7 @@ class RoundRobinSessions extends Component {
     deleteResult = (id) => {
       deleteSession(id);
     }
-    viewResult(id){
 
-    }
     componentWillUnmount() {
       if (this.rrsListener) this.rrsListener.remove();
     }
@@ -71,7 +69,7 @@ class RoundRobinSessions extends Component {
           {
             this.state.results.filter(r => r.finalized).map( (result) => (
               <ListItem key={result.id} 
-                onClick={this.viewResult.bind(this, result.id)}
+                onClick={this.editResult.bind(this, result.id)}
                 leftAvatar={<Avatar icon={<Event />} />} 
                 primaryText={moment(result.date).format("MMMM DD, YYYY")}
                 rightIcon={<View />}

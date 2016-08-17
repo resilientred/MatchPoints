@@ -129,7 +129,7 @@ class RoundRobinSession extends React.Component {
       ];
         let { session, scoreChange } = this.state;
         if (!session) return <h1>Loading ...</h1>;
-        let { selectedSchema, schemata, numOfPlayers, clubId, players } = session;
+        let { selectedSchema, schemata, numOfPlayers, clubId, players, finalized } = session;
 
         var countedPlayers = 0;
         return <div className="session-container">
@@ -145,6 +145,7 @@ class RoundRobinSession extends React.Component {
                 return (
                     <RecordTable key={i} groupNum={i + 1} 
                      start={countedPlayers - sizeOfGroup}
+                     finalized={ finalized }
                      joinedPlayers={players} sizeOfGroup={+sizeOfGroup} 
                      updateScore={this.updateScore} 
                      scoreChange={scoreChange.length ? scoreChange[i] : []}

@@ -2,32 +2,20 @@ import React, { Component } from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import SelectField from "material-ui/SelectField"
 import MenuItem from "material-ui/MenuItem"
-import {Tabs, Tab} from 'material-ui/Tabs';
-class RecordTableDetail extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      tab: 0
-    }
-  }
-  changeTab = (tab) => {
-    this.setState({ tab });
-  }
-  render(){
-    var { sizeOfGroup, start, joinedPlayers, playerIds, scoreChange, result } = this.props;
+import {Tabs, Tab} from 'material-ui/Tabs'
 
-    return (<div className="group-table">
-      <Tabs value={ this.state.tab }
-            onChange={ this.changeTab }>
-        <Tab label="Enter Result" value={0}>
-          <Table selectable={false} multiSelectable={false}>
+const RecordTableDetail = (props) => {
+
+    var { sizeOfGroup, start, joinedPlayers, playerIds, scoreChange, result } = props;
+
+    return (<Table selectable={false} multiSelectable={false}>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
                 { 
                   [...Array(sizeOfGroup + 2)].map((_, i) => {
                     return <TableHeaderColumn key={"head" + (i - 1)}>
                         {
-                          i === 0 ?  "Group " + this.props.groupNum  :
+                          i === 0 ?  "Group " + props.groupNum  :
                             i === 1 ? "Name" : "vs. " + (i - 1)
                         }
                       </TableHeaderColumn>
@@ -41,7 +29,7 @@ class RecordTableDetail extends Component {
                     let curPlayer = joinedPlayers[playerIds[m + start]];
                     return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 2)].map( (_, n) => {
                       let content, disabled = false;
-                      (function(i, j, props){
+                      (function(i, j){
                         switch(i){
                           case 0:
                             content = j + 1;
@@ -97,96 +85,15 @@ class RecordTableDetail extends Component {
                             }
                             break;
                         }
-                      })(n, m, this.props);
+                      })(n, m);
 
-                      return <TableRowColumn key={"row" + m + ":" + n} disabled={disabled}>{content}</TableRowColumn>;
+                      return <TableRowColumn className="trc" key={"row" + m + ":" + n} disabled={disabled}>{content}</TableRowColumn>;
 
                       })
                   }</TableRow>
                 })         
               }    
             </TableBody>
-          </Table>
-        </Tab>
-        <Tab label="View Result" value={1}>
-          <Table selectable={false} multiSelectable={false}>
-            <TableHeader 
-                  displaySelectAll={false} 
-                  adjustForCheckbox={false}>
-              <TableRow>
-                { 
-                  !scoreChange || !scoreChange.length ? "" :
-                    [...Array(sizeOfGroup + 5)].map((_, i) => {
-                      let content;
-                      switch (i) {
-                        case 0:
-                          content = "Group " + this.props.groupNum;
-                          break;
-                        case 1:
-                          content = "Name";
-                          break;
-                        case 2:
-                          content = "Rating Before";
-                          break;
-                        case sizeOfGroup + 3:
-                          content = "Change";
-                          break;
-                        case sizeOfGroup + 4:
-                          content = "Rating After";
-                          break;
-                        default:
-                          content = i - 2;
-                          break;
-
-                      }
-                      return <TableHeaderColumn key={"head" + (i - 1)}>
-                          { content }
-                        </TableHeaderColumn>
-                    })
-                }
-              </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>         
-                {
-                  !scoreChange || !scoreChange.length ? "" :
-                  [...Array(sizeOfGroup)].map( (_, m) => {
-                    var curPlayer = joinedPlayers[playerIds[m + start]],
-                        ratingChangeSum = 0;
-                    return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 5)].map( (_, n) => {
-                      if (m === (n - 3)) return <TableRowColumn key={"row" + m + ":" + n}>0</TableRowColumn>;
-                      switch(n) {
-                        case 0:
-                          var cellContent = m + 1;
-                          break;
-                        case 1:
-                          var cellContent = curPlayer.name;
-                          break;
-                        case 2:
-                          var cellContent = curPlayer.rating;
-                          break;
-                        case sizeOfGroup + 3:
-                          var cellContent = ratingChangeSum;
-                          break;
-                        case sizeOfGroup + 4:
-                          var cellContent = ratingChangeSum + +curPlayer.rating;
-                          break;
-                      }
-                      if (n === sizeOfGroup + 3 || n === sizeOfGroup + 4 || n === 0 || n === 1 || n === 2){ 
-                        return <TableRowColumn key={"row" + m + ":" + n}>{cellContent}</TableRowColumn>;
-                      }
-                      ratingChangeSum += +scoreChange[m][n - 3];
-                      return <TableRowColumn key={"row" + m + ":" + n}>
-                          { scoreChange[m][n - 3] }
-                        </TableRowColumn>
-                      })}</TableRow>
-                  })
-                }    
-            </TableBody>
-          </Table>
-        </Tab>
-      </Tabs>
-    </div>);
-      
-  }  
+          </Table>); 
 }
 export default RecordTableDetail;

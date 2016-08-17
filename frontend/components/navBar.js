@@ -21,6 +21,9 @@ class NavBar extends Component {
       case "/club/sessions":
         tab = 2;
         break;
+      case "/results":
+        tab = 3;
+        break;
       default:
         tab = 0;
         break;
@@ -63,7 +66,8 @@ class NavBar extends Component {
                             primaryText="Old Sessions" 
                             insetChildren={true}
                             checked={this.state.tab === 2}/>
-                  <MenuItem primaryText="Browse Results"
+                  <MenuItem onTouchTap={this.handleLink.bind(this, "/results", 3)} 
+                            primaryText="Browse Results"
                             insetChildren={true}
                             checked={this.state.tab === 3}/>
                   <MenuItem onTouchTap={logOut} 
@@ -80,7 +84,8 @@ class NavBar extends Component {
                           primaryText="Home" 
                           checked={this.state.tab === 0} 
                           insetChildren={true}/>
-                <MenuItem primaryText="Browse Results"
+                <MenuItem onTouchTap={this.handleLink.bind(this, "/results", 3)} 
+                          primaryText="Browse Results"
                           insetChildren={true}
                           checked={this.state.tab === 3}/>
                 <MenuItem primaryText="Log In"
@@ -93,12 +98,12 @@ class NavBar extends Component {
       return (<ul className="nav">
                   <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>
                   <li><Link to="/club/sessions" activeClassName="active">Old Sessions</Link></li>
-                  <li>Browse Results</li>
+                  <li><Link to="/results" activeClassName="active">Browse Results</Link></li>
                   <li className="links" onClick={logOut}><a>Log Out</a></li>
               </ul>)
     } else {
       return (<ul className="nav">
-                <li className="links">Browse Results</li>
+                <li className="links"><Link to="/results" activeClassName="active">Browse Results</Link></li>
                 <li className="links">Log In</li>
             </ul>)
     }

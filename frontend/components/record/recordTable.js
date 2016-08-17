@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import RecordTableDetail from "./recordTableDetail"
+import RecordTableEnter from "./recordTableEnter"
+import RecordTableView from "./recordTableView"
+import { Tabs, Tab } from "material-ui/Tabs"
 
 class RecordTable extends Component {
 	constructor(props){
 		super(props);
     this.state = {
       result: [...Array(this.props.sizeOfGroup)].map((_) => 
-        [...Array(this.props.sizeOfGroup)].map((_) => [0, 0]))
+        [...Array(this.props.sizeOfGroup)].map((_) => [0, 0])),
+      tab: 0
     }
-	}
+	} 
+  changeTab = (tab) => {
+    this.setState({ tab });
+  }
   _handleCalculate(e){
     e.preventDefault();
     if (e.currentTarget.className.split(" ")[1] === "calculate"){
@@ -72,30 +78,30 @@ class RecordTable extends Component {
   }
 
 	render(){
-      var start = this.props.start,
-          sizeOfGroup = this.props.sizeOfGroup,
-          joinedPlayers = this.props.joinedPlayers,
-          scoreChange = this.props.scoreChange,
-          groupNum = this.props.groupNum,
+      let { start,
+            sizeOfGroup,
+            joinedPlayers,
+            scoreChange,
+            groupNum } = this.props,
           playerIds = Object.keys(joinedPlayers);
-      var propsToPass = {
-        start: start, 
-        sizeOfGroup: sizeOfGroup,
-        scoreChange: scoreChange,
-        joinedPlayers: joinedPlayers,
-        playerIds: playerIds,
-        groupNum: groupNum
+      var propsToPass = {start, sizeOfGroup, scoreChange, joinedPlayers, playerIds, groupNum } 
+
+      if (this.props.finalized){
+        return <div><RecordTableView {...propsToPass} result={this.state.result}/></div>
+      } else {
+        return (<Tabs value={ this.state.tab }
+                  onChange={ this.changeTab } 
+                  contentContainerStyle={{ padding: "20px", border: "1px solid #E0E0E0"}}>
+                <Tab label="Enter Result" value={0}>
+                  <RecordTableEnter {...propsToPass} result={this.state.result}
+                        updateResult={this.updateResult} />
+                </Tab>
+                <Tab label="View Result" value={1}>
+                  <RecordTableView {...propsToPass} result={this.state.result}/>
+                </Tab>
+              </Tabs>)        
       }
-    return <div>
-        <RecordTableDetail {...propsToPass} result={this.state.result}
-              updateResult={this.updateResult} />
-      </div>
   }
 }
-// (        <button className="record-btn calculate" onClick={this._handleCalculate.bind(this)}>
-//           Calculate
-//         </button>
-//         <button className="record-btn update-record" onClick={this.props.saveSession}>
-//           Save
-//         </button>)
+
 export default RecordTable;

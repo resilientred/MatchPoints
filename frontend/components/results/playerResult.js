@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import Graph from "./graph"
 import PlayerStore from "../../stores/playerStore"
 import { fetchPlayerRecord } from "../../actions/clientActions"
-
+import { Table, TableBody, TableRow, TableHeader, TableHeaderColumn, TableRowColumn } from "material-ui/Table"
+import moment from "moment"
+import SelectField from "material-ui/SelectField"
+import MenuItem from "material-ui/MenuItem"
 export default class PlayerResult extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      player: PlayerStore.find(this.props.params.playerId)
+      player: null
     }
   }
-  componentWillMount(){
-    this.qaListener = PlayerStore.addListener(this._fetchedPlayerRecord);
-  }
+
   // _checkIfCachedPlayers(playerId){
   //   let player = PlayerStore.find(playerId);
   //   if (player){
@@ -26,28 +27,52 @@ export default class PlayerResult extends Component {
   //   this.setState({ player: PlayerStore.find(this.props.params.playerId) });
   // }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.params.playerId === this.props.params.playerId){ 
-      return false;
-    } 
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (nextProps.params.playerId === this.props.params.playerId){ 
+  //     return false;
+  //   } 
+  //   return true;
+  // }
 
   componentWillReceiveProps(nextProps) {
-    let player = PlayerStore.find(nexProps.params.playerId);
-    this.setState({ player })
+    if (nextProps.player){
+      let player = PlayerStore.find(nextProps.player);
+      this.setState({ player })
+    }
   }
-
 
   parseData(){
     return this.state.player.ratingHistory.map(history => history.newRating)
   }
 
   render() {
-    if (!this.state.player) return <div>Loading...</div>;
-   
+    let player = this.state.player;
+    if (!player) return <div className="player-query">No players are selected.</div>;
+    let history = player.ratingHistory;
     return <div className="player-query">
-      <div><Graph data={this.parseData()} /></div>
+      <Table selectable={false} multiSelectable={false}>
+        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <TableRow>
+            <TableHeaderColumn>Date</TableHeaderColumn>
+            <TableHeaderColumn>Rating Before</TableHeaderColumn>
+            <TableHeaderColumn>Rating Change</TableHeaderColumn>
+            <TableHeaderColumn>Rating After</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody displayRowCheckbox={false}>
+          { 
+            history.map( date => {
+              return (<TableRow key={date._id}>
+                  <TableRowColumn>{ moment(date.date).format("MMMM DD, YYYY")}</TableRowColumn>
+                  <TableRowColumn>{ date.oldRating }</TableRowColumn>
+                  <TableRowColumn>{ date.ratingChange }</TableRowColumn>
+                  <TableRowColumn>{ date.newRating }</TableRowColumn>
+                </TableRow>)
+            })
+          }
+        </TableBody>
+      </Table>
+      <div className="big-container"><Graph data={this.parseData()} /></div>
     </div>;
   }
 }

@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname + "/public")));
 // { maxAge: 86400000 }
 app.use(webpackMiddleware(compiler));
 app.use('/api/clubs', clubRoutes);
-app.use('/api/clubs/:clubId', routes);
+app.use('/api/clubs', routes);
 app.use('/api/pdfs', pdfRoutes)
 app.use('/api/*', (req, res, next) => {
   res.status(404).send("Invalid routes");

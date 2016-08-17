@@ -4,32 +4,28 @@ import { FETCHED_PLAYERS, FETCHED_PLAYER, REMOVED_PLAYER, LOGGED_IN }from '../co
 
 let _currentClubPlayers = {};
 let _players = {};
-
+let _currentClub = null;
 const _resetPlayers = (club) => {
   const players = club.players;
-  _players[club.id] = {};
+  _players[club._id] = {};
   if (players){
-    players.forEach(player => (_players[club.id][player._id] = player));
+    players.forEach(player => (_players[club._id][player._id] = player));
   }  
 }; 
 
-// const _setClub = (club) => {
-//   _players[club.id] = player;
-// };
-
-// const _removePlayer = (player) => {
-//   delete _players[player._id];
-// };
 const PlayerStore = new Store(Dispatcher);
 
 PlayerStore.setClub = (clubId) => {
-  _currentClubPlayers = Object.assign({}, _players[clubId]);
+  _currentClubPlayers = _players[clubId];
 };
-PlayerStore.allPlayerInClub = () => {
+PlayerStore.allPlayersInClub = () => {
   return _currentClubPlayers;
 };
-PlayerStore.contain = (id) => {
+PlayerStore.containClub = (id) => {
   return !!_players[id];
+}
+PlayerStore.currentClub = () => {
+  return _currentClub;
 }
 PlayerStore.find = (id) => {
   return _currentClubPlayers[id];

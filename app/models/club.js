@@ -26,7 +26,8 @@ clubSchema.statics.resetSessionToken = function(club){
   return this.update({ "username": club.username}, {sessionToken: token});
 }
 clubSchema.statics.findPlayers = function(clubId){
-  return this.find({"_id": clubId}, {"players": true });
+  console.log("finding players...", clubId)
+  return this.findOne({_id: clubId}, {players: true});
 };
 clubSchema.statics.addPlayer = function(clubId, player){
   let newPlayer = new Player({name: player.name, rating: player.rating})
@@ -88,7 +89,9 @@ clubSchema.statics.generatePasswordDigest = function(password){
 clubSchema.statics.findClub = function(id){
   return this.find({"_id": id}, {"passwordDigest": false, "sessionToken": false} );
 };
-
+clubSchema.statics.findAll = function(){
+  return this.find({}, { "clubName": true });
+};
 
 const Club = mongoose.model('Club', clubSchema);
 

@@ -14,6 +14,14 @@ router.get("", (req, res) => {
       }).catch((err) => {
         console.log(err);
       });
+  }).get("/all", (req, res) => {
+      ClubModel.findAll()
+        .then(roundrobins => {
+          res.status(200).send(roundrobins);
+        }).catch(err => {
+          res.status(404);
+          res.end();
+        })
   }).get("/:clubId/sessions", (req, res) => {
       let clubId = req.params.clubId;
       RoundRobinModel.findRoundRobinsByClub(clubId)

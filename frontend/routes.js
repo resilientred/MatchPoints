@@ -20,14 +20,9 @@ const Routes = (
     <Route path="club" component={Club} >
       <Route path="sessions" component={RoundRobinSessions} />
         <Route path="sessions/:id" component={RoundRobinSession} />
-      <Route path="newSession" component={NewRRSession} >
-      </Route>
+      <Route path="newSession" component={NewRRSession} />
     </Route>
-    <Route path="results" component={ResultQuery}>
-      <Route path=":clubId" component={ClubResult}>
-        <Route path=":playerId" component={PlayerResult} />
-      </Route>
-    </Route>
+    <Route path="results" component={ResultQuery}/>
     <Route path="*" component={ ErrorPage } />
   </Route>
 )

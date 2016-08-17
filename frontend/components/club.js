@@ -16,9 +16,6 @@ class Club extends Component {
     componentWillMount() {
         curPage = this.props.location.pathname;
         this.cuListener = ClubStore.addListener(this._currentClubChange);
-        // window.onresize = (event) => {
-        //     this.setState({innerWidth: event.target.innerWidth});   
-        // }
         let club = ClubStore.getCurrentClub();
         if (club){
             this.setState({ club })

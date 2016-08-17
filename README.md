@@ -11,7 +11,7 @@ And allow users to:
  - [x] dynamic programming for arrangement
  - [x] set a progressive workflow of creating schema (first select the range of players, then select the available schema)
  - [x] Style NavBar (more)
- - [ ] Style the ResultList
+ - [x] Style the ResultList
  - [ ] Make pdf works // remove the option to retrieve pdf for them.. unless I can implement caching
  - [ ] temporarily save session in react-cookie/redis 
  - [ ] deploy on AWS

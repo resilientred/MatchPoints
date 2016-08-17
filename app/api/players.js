@@ -4,11 +4,13 @@ import Club from "../models/club"
 import { parseUrlEncoded, csrfProtection } from "../helpers/app_modules"
 const router = express.Router();
 
-router.route("/players")
+router.route("/:clubId/players")
 	.get((req, res)=>{
     const clubId = req.params.clubId;
-    Club.findPlayers(clubId).
-      then( players => {
+    console.log("reaced routes")
+    Club.findPlayers(clubId)
+      .then( (players) => {
+        console.log(players)
         res.status(200).send(players);
       }).catch( err => {
         res.status(422).send(err);
