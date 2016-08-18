@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RecordTableEnter from "./recordTableEnter"
 import RecordTableView from "./recordTableView"
 import { Tabs, Tab } from "material-ui/Tabs"
+import FlatButton from 'material-ui/FlatButton';
 
 class RecordTable extends Component {
 	constructor(props){
@@ -15,11 +16,8 @@ class RecordTable extends Component {
   changeTab = (tab) => {
     this.setState({ tab });
   }
-  _handleCalculate(e){
-    e.preventDefault();
-    if (e.currentTarget.className.split(" ")[1] === "calculate"){
-      this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
-    }
+  _handleCalculate = (e) => {
+    this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -34,9 +32,7 @@ class RecordTable extends Component {
         playerIds = Object.keys(joinedPlayers),
         startIdx = this.props.start,
         calculatedScore = [],
-        backSide = document.getElementsByClassName("back")[0],
         rc = {};
-    backSide.className += " rotated";
 
     this.state.result.forEach( (indRecord, i) => {
       var record = indRecord.map( (record, j) => {
@@ -50,9 +46,9 @@ class RecordTable extends Component {
             player2Id = playerIds[startIdx + j],
             modifier = sign === 1 ? -record[1] * 2 : record[0] * 2;
 
-        var scoreAdjust = (16 * sign - (joinedPlayers[player1Id].rating - 
+        var scoreAdjust = parseInt(16 * sign - (joinedPlayers[player1Id].rating - 
           joinedPlayers[player2Id].rating) * 
-          sign * 0.04 + modifier).toFixed(2);
+          sign * 0.04 + modifier);
 
         rc[player1Id] = {
           change: rc[player1Id] ? rc[player1Id]["change"] : 0 + scoreAdjust,
@@ -78,6 +74,7 @@ class RecordTable extends Component {
   }
 
 	render(){
+
       let { start,
             sizeOfGroup,
             joinedPlayers,
@@ -89,7 +86,9 @@ class RecordTable extends Component {
       if (this.props.finalized){
         return <div><RecordTableView {...propsToPass} result={this.state.result}/></div>
       } else {
-        return (<Tabs value={ this.state.tab }
+        return (<div>
+                <FlatButton secondary={true} label="Update" onTouchTap={this._handleCalculate}/>
+                <Tabs value={ this.state.tab }
                   onChange={ this.changeTab } 
                   contentContainerStyle={{ padding: "20px", border: "1px solid #E0E0E0", overflow: "scroll"}}>
                 <Tab label="Enter Result" value={0}>
@@ -99,7 +98,8 @@ class RecordTable extends Component {
                 <Tab label="View Result" value={1}>
                   <RecordTableView {...propsToPass} result={this.state.result}/>
                 </Tab>
-              </Tabs>)        
+              </Tabs>
+            </div>)        
       }
   }
 }

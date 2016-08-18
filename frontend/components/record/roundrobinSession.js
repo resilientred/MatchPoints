@@ -108,7 +108,6 @@ class RoundRobinSession extends React.Component {
       return <IconMenu 
                 iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
               >
-                <MenuItem primaryText="Update" onClick={() => this.setState({open: true})}/>
                 <MenuItem primaryText="Save" onClick={this.saveSesion}/>
                 <MenuItem primaryText="Delete" onClick={() => this.setState({open: true})}/>
               </IconMenu>
@@ -121,7 +120,7 @@ class RoundRobinSession extends React.Component {
           onTouchTap={this.handleClose}
         />,
         <FlatButton
-          label="Update"
+          label="Delete"
           primary={true}
           keyboardFocused={true}
           onTouchTap={this.handleDelete}
