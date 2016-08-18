@@ -5,18 +5,16 @@ import ClubResultView from "./clubResultView"
 const ClubResultDetails = (props) => {
   if (!props.finalized) return <div>Please select a date...</div>
   let countedPlayers = 0;
-  let player = Object.keys(props.players);
-  return  <div>
+  return  <div style={{overflow: "scroll"}}>
       { 
         props.selectedSchema.map ( (sizeOfGroup, i) => {
-                countedPlayers += sizeOfGroup;
+                countedPlayers += +sizeOfGroup;
                 return (
                     <ClubResultView key={i} groupNum={i + 1} 
                      start={countedPlayers - sizeOfGroup}
                      finalized={ props.finalized }
-                     result={props.results}
+                     result={props.results[i]}
                      joinedPlayers={props.players} sizeOfGroup={+sizeOfGroup} 
-                     scoreChange={props.scoreChange && props.scoreChange.length ? props.scoreChange[i] : []}
                      />
                 )
                 })

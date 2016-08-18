@@ -84,11 +84,12 @@ class RoundRobinSession extends React.Component {
         browserHistory.push("/");
       } else {
         if (session.finalized){
-          updateResult(
-            this.props.club._id, this.state.scoreChange, 
-            this.state.scoreUpdate, session._id, session.date
-          )
+          // updateResult(
+          //   this.props.club._id, this.state.scoreChange, 
+          //   this.state.scoreUpdate, session._id, session.date
+          // )
         } else {
+          debugger;
           postResult(
             this.props.club._id, this.state.scoreChange, 
             this.state.scoreUpdate, session._id, session.date

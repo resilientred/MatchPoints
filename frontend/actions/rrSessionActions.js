@@ -30,7 +30,6 @@ export const temporarySession = (data, clubId) => {
   })
 }
 export const postResult = (clubId, data, ratingUpdateList, id) => {
-  debugger;
   apiCSRFService({
     url: `/api/clubs/${clubId}/sessions/${id}`,
     method:"POST",

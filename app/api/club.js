@@ -109,7 +109,7 @@ router.get("", (req, res) => {
         .then((club) => {
             console.log("save successfully...")
             console.log(club);
-            return RoundRobinModel.saveResult(id, data, ratingUpdateList);
+            return RoundRobinModel.saveResult(id, data);
           }).then((session) => {
             console.log(session);
             res.status(200).send(session);

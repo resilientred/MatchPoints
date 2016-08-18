@@ -3,32 +3,27 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import SelectField from "material-ui/SelectField"
 import MenuItem from "material-ui/MenuItem"
 
-const cellStyle = {paddingRight: 0, paddingLeft: "5px", width: "7px"};
 
 const ClubResultView = (props) => {
 
-  var { sizeOfGroup, start, joinedPlayers, scoreChange, result } = props;
-  return (<Table selectable={false} multiSelectable={false}>
+  var { sizeOfGroup, start, joinedPlayers, result } = props;
+  return (<Table selectable={false} multiSelectable={false} wrapperStyle={{minWidth: "1000px"}}>
             <TableHeader 
                   displaySelectAll={false} 
                   adjustForCheckbox={false}
                   enableSelectAll={false}>
-              <TableRow>
-                <TableHeaderColumn colSpan="9" tooltip="Super Header" style={{textAlign: 'center'}}>
-                   { "Group " + props.groupNum }
-                </TableHeaderColumn>
-              </TableRow>
               <TableRow>
                 { 
                     [...Array(sizeOfGroup + 5)].map((_, i) => {
                       let content, style = {};
                       switch (i) {
                         case 0:
-                          content = "1";
-                          style = cellStyle;
+                          content = "Group " + props.groupNum;
+                          style = {paddingLeft: "5px", paddingRight: "5px"};
                           break
                         case 1:
                           content = "Name";
+                          style = { paddingLeft: "0"};
                           break;
                         case 2:
                           content = "Before";
@@ -58,12 +53,12 @@ const ClubResultView = (props) => {
                         ratingChangeSum = 0;
 
                     return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 5)].map( (_, n) => {
-                      if (n === 0) return <TableRowColumn key={"row" + m + ":" + n} style={{paddingRight: 0, paddingLeft: "5px", width: "7px"}}>{ m + 1}</TableRowColumn>
+                      if (n === 0) return <TableRowColumn key={"row" + m + ":" + n} style={{paddingLeft: "5px", paddingRight: "5px"}}>{ m + 1}</TableRowColumn>
                       if (n === m + 3) return <TableRowColumn key={"row" + m + ":" + n}>0</TableRowColumn>
                       let cellContent, style;
                       switch(n) {
                         case 1:
-                          style = {whiteSpace: "initial", width: "20%", paddingRight: "0"}
+                          style = {whiteSpace: "initial", paddingLeft: "0"}
                           cellContent = curPlayer.name;
                           break;
                         case 2:
@@ -80,12 +75,12 @@ const ClubResultView = (props) => {
                         return <TableRowColumn key={"row" + m + ":" + n} style={style}>{cellContent}</TableRowColumn>;
                       }
                       
-                      if (!scoreChange) {
+                      if (!result[m]) {
                         return <TableRowColumn key={"row" + m + ":" + n}>0</TableRowColumn>
                       }
-                      ratingChangeSum += +scoreChange[m][n - 3];
+                      ratingChangeSum += +result[m][n - 3];
                       return <TableRowColumn key={"row" + m + ":" + n}>
-                          { scoreChange[m][n - 3] }
+                          { result[m][n - 3] }
                         </TableRowColumn>
                       })}</TableRow>
                   })
