@@ -90,22 +90,18 @@ export default class NewRRSession extends React.Component {
     });
   }
 
-  saveSession = (schemata, rangeOfPlayer, selectedSchema, e) => {
-    e.preventDefault();
-
+  saveSession = (schemata, selectedSchema) => {
     saveSession({
-      date: this.state.date.toDate(),
+      date: this.state.date,
       numOfPlayers: this.state.numPlayers,
       players: this.state.addedPlayers,
       selectedSchema: selectedSchema,
       schemata: schemata,
     }, this.props.club._id);
   }
-  temporarilySaveSession = (schemata, rangeOfPlayer, selectedSchema, e) => {
-    e.preventDefault();
-
+  temporarilySaveSession = (schemata, selectedSchema) => {
     temporarySession({
-      date: this.state.date.toDate(),
+      date: this.state.date,
       numOfPlayers: this.state.numPlayers,
       players: this.state.addedPlayers,
       selectedSchema: selectedSchema,

@@ -3,27 +3,32 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import SelectField from "material-ui/SelectField"
 import MenuItem from "material-ui/MenuItem"
 
+const cellStyle = {paddingRight: 0, paddingLeft: "5px", width: "7px"};
 
 const RecordTableDetail = (props) => {
 
-  var { sizeOfGroup, start, joinedPlayers, playerIds, scoreChange, result } = props;
-  return (<Table selectable={false} multiSelectable={false}  wrapperStyle={{minWidth: "1000px"}}>
+  var { sizeOfGroup, start, joinedPlayers, scoreChange, result } = props;
+  return (<Table selectable={false} multiSelectable={false}>
             <TableHeader 
                   displaySelectAll={false} 
                   adjustForCheckbox={false}
                   enableSelectAll={false}>
+              <TableRow>
+                <TableHeaderColumn colSpan="9" tooltip="Super Header" style={{textAlign: 'center'}}>
+                   { "Group " + props.groupNum }
+                </TableHeaderColumn>
+              </TableRow>
               <TableRow>
                 { 
                     [...Array(sizeOfGroup + 5)].map((_, i) => {
                       let content, style = {};
                       switch (i) {
                         case 0:
-                          content = "Group " + (i + 1);
-                          style = {paddingLeft: "5px", paddingRight: "5px"}
+                          content = "1";
+                          style = cellStyle;
                           break
                         case 1:
                           content = "Name";
-                          style = { paddingLeft: "0"}
                           break;
                         case 2:
                           content = "Before";
@@ -49,16 +54,16 @@ const RecordTableDetail = (props) => {
             <TableBody displayRowCheckbox={false}>         
                 {
                   [...Array(sizeOfGroup)].map( (_, m) => {
-                    let curPlayer = joinedPlayers[playerIds[m + start]],
+                    let curPlayer = joinedPlayers[m + start],
                         ratingChangeSum = 0;
 
                     return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 5)].map( (_, n) => {
-                      if (n === 0) return <TableRowColumn key={"row" + m + ":" + n} style={{paddingLeft: "5px", paddingRight: "5px"}}>{(m + 1)}</TableRowColumn>
+                      if (n === 0) return <TableRowColumn key={"row" + m + ":" + n} style={{paddingRight: 0, paddingLeft: "5px", width: "7px"}}>{ m + 1}</TableRowColumn>
                       if (n === m + 3) return <TableRowColumn key={"row" + m + ":" + n}>0</TableRowColumn>
                       let cellContent, style;
                       switch(n) {
                         case 1:
-                          style = {whiteSpace: "initial", paddingLeft: "0"}
+                          style = {whiteSpace: "initial", width: "20%", paddingRight: "0"}
                           cellContent = curPlayer.name;
                           break;
                         case 2:

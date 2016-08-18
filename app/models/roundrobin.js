@@ -12,6 +12,7 @@ const roundRobinSchema = new Schema({
   selectedSchema: { type: Object},
   results: { type: Array, default: [] },
   finalized: { type: Boolean, default: false },
+  scoreChange: { type: Array, default: [] },
   id: { type: String, default: shortid.generate, required: true, index: true }
 });
 
@@ -23,11 +24,12 @@ roundRobinSchema.statics.findRoundRobin = function(id){
   return this.findOne({"_id": id})
 };
 
-roundRobinSchema.statics.saveResult = function(id, result){
+roundRobinSchema.statics.saveResult = function(id, result, scoreChange){
   return this.findOneAndUpdate({"_id": id}, {
     $set: {
       "finalized": true,
-      "results": result
+      "results": result,
+      "scoreChange": scoreChange 
     }
   }, {new: true});
 };
@@ -35,8 +37,8 @@ roundRobinSchema.statics.saveResult = function(id, result){
 roundRobinSchema.statics.deleteRoundRobin = function(id){
   return this.remove({"id": id}); 
 };
-roundRobinSchema.statics.updateResult = function(id, result){
-  return this.update({"_id": id}, {$set: {"results": result}});
+roundRobinSchema.statics.updateResult = function(id, result, scoreChange){
+  return this.update({"_id": id}, {$set: {"results": result, "scoreChange": scoreChange }});
 }
 const RoundRobin = mongoose.model('RoundRobin', roundRobinSchema);
 

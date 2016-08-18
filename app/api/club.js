@@ -33,6 +33,17 @@ router.get("", (req, res) => {
           res.end();
         });
 
+    }).get("/:clubId/roundrobins", (req, res) => {
+      let clubId = req.params.clubId;
+      RoundRobinModel.findRoundRobinsByClub(clubId)
+        .then((roundrobins) => {
+          res.status(200).send({clubId, roundrobins});
+          res.end();
+        }).catch((err)=>{
+          res.status(500);
+          res.end();
+        });
+
     }).post("/:clubId/session/new", parseUrlEncoded, csrfProtection, (req, res) => {
       let _clubId = req.params.clubId,
           data = req.body.session;
@@ -98,7 +109,7 @@ router.get("", (req, res) => {
         .then((club) => {
             console.log("save successfully...")
             console.log(club);
-            return RoundRobinModel.saveResult(id, data);
+            return RoundRobinModel.saveResult(id, data, ratingUpdateList);
           }).then((session) => {
             console.log(session);
             res.status(200).send(session);

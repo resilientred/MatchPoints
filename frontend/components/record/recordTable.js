@@ -82,8 +82,8 @@ class RecordTable extends Component {
             sizeOfGroup,
             joinedPlayers,
             scoreChange,
-            groupNum } = this.props,
-          playerIds = Object.keys(joinedPlayers);
+            groupNum } = this.props;
+      let playerIds = Object.keys(joinedPlayers);
       var propsToPass = {start, sizeOfGroup, scoreChange, joinedPlayers, playerIds, groupNum } 
 
       if (this.props.finalized){
@@ -91,7 +91,7 @@ class RecordTable extends Component {
       } else {
         return (<Tabs value={ this.state.tab }
                   onChange={ this.changeTab } 
-                  contentContainerStyle={{ padding: "20px", border: "1px solid #E0E0E0"}}>
+                  contentContainerStyle={{ padding: "20px", border: "1px solid #E0E0E0", overflow: "scroll"}}>
                 <Tab label="Enter Result" value={0}>
                   <RecordTableEnter {...propsToPass} result={this.state.result}
                         updateResult={this.updateResult} />

@@ -20,7 +20,7 @@ export default class ResultQuery extends Component {
   componentWillUnmount(){
     this.allCListener.remove();
   }
-  handleTabChange = (e, i, tab) => {
+  handleTabChange = (tab, e, i) => {
     this.setState({ tab });
   }
   _checkIfCachedClubs(){
@@ -42,7 +42,11 @@ export default class ResultQuery extends Component {
       <div className="result-query-container">
         <Tabs 
           value={this.state.tab}
-          onChange={this.handleTabChange}>
+          onChange={this.handleTabChange}
+          contentContainerStyle={{  
+            padding: "20px",
+            border: "1px solid #E0E0E0" 
+          }} >
           <Tab label="Players" value={0}>
             <PlayerResultQuery clubs={this.state.clubs}/>
           </Tab>

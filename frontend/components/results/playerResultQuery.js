@@ -49,7 +49,7 @@ export default class PlayerResultQuery extends Component {
   render() {
     if (!this.props.clubs) return <CircularProgress size={2} />
 
-    return <div className="player-result-main-container">
+    return <div>
       <div className="name-select-div">
         <SelectField 
           value={this.state.selectedClub} 
@@ -57,7 +57,7 @@ export default class PlayerResultQuery extends Component {
           floatingLabelText="Select a club" 
           floatingLabelFixed={true}
           menuStyle={{ textOverflow: "ellipsis"}}
-          >
+        >
             {
               this.props.clubs.map( (club, i) => {
                 return <MenuItem key={club._id} value={club._id} primaryText={club.clubName}/>;
@@ -69,7 +69,7 @@ export default class PlayerResultQuery extends Component {
           onChange={this.selectPlayer} 
           floatingLabelText="Select a club" 
           floatingLabelFixed={true}
-          >
+        >
             {
               this.state.players ? 
                 Object.keys(this.state.players).map( (playerId, i) => {
@@ -84,4 +84,3 @@ export default class PlayerResultQuery extends Component {
     </div>
   }
 }
-      // <ClubResult club={this.state.selectedClub} />

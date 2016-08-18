@@ -71,11 +71,11 @@ const fetchAllPlayersFromClub = (clubId) => {
 	})
 }
 
-const fetchClubDetail = (clubId) => {
+const fetchClubRoundrobins = (clubId) => {
 	apiService({
-		url: `/api/clubs/${clubId}`,
-		success: "fetchedClubDetail"
+		url: `/api/clubs/${clubId}/roundrobins`,
+		success: "fetchedClubRoundrobins"
 	})
 }
 
-export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, removePlayer, fetchAllClubs, generatePDF, fetchPDFLinks, fetchAllPlayersFromClub, fetchClubDetail }
+export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, removePlayer, fetchAllClubs, generatePDF, fetchPDFLinks, fetchAllPlayersFromClub, fetchClubRoundrobins }

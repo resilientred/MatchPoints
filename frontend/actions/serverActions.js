@@ -1,7 +1,7 @@
 import Dispatcher from "../dispatcher/dispatcher";
 import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 				 LOGGED_IN, FETCHED_PLAYER, FETCHED_PLAYERS, REMOVED_PLAYER,
-				 LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF, FETCHED_CLUB_DETAIL } from "../constants/constants"
+				 LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF, FETCHED_CLUB_ROUNDROBINS } from "../constants/constants"
 
 
 module.exports = {
@@ -63,10 +63,10 @@ module.exports = {
 			pdfs: null
 		})
 	},
-	fetchedClubDetail(club){
+	fetchedClubRoundrobins(roundrobins){
 		Dispatcher.dispatch({
-			actionType: FETCHED_CLUB_DETAIL,
-			club: club
+			actionType: FETCHED_CLUB_ROUNDROBINS,
+			roundrobins: roundrobins
 		})
 	}
 }

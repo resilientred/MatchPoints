@@ -63,13 +63,7 @@ clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
     })
 }
 
-clubSchema.statics.updateHistory = function(clubId, playerId, ratingDetail) {
-  this.update({ "_id": clubId, "players.id": playerId, "players.history.id": historyId }, {
-    $inc: { "players.$.rating": ratingDetail.ratingChange - history.ratingChange },
-    $update: { "players.$.history.$": 1 }
-  })
-  //get logic working
-}
+
 clubSchema.methods.isPassword = function(password){
   return bcrypt.compare(password, this.passwordDigest); 
 }
@@ -90,7 +84,11 @@ clubSchema.statics.findClub = function(id){
   return this.find({"_id": id}, {"passwordDigest": false, "sessionToken": false} );
 };
 clubSchema.statics.findAll = function(){
-  return this.find({}, { "clubName": true });
+  return this.find({}, { "passwordDigest": false, 
+            "sessionToken": false, 
+            "username": false,
+            "players": false,
+           });
 };
 
 const Club = mongoose.model('Club', clubSchema);

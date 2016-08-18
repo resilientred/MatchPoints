@@ -3,17 +3,16 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import SelectField from "material-ui/SelectField"
 import MenuItem from "material-ui/MenuItem"
 import {Tabs, Tab} from 'material-ui/Tabs'
-
+const style = {paddingLeft: "0"}
 const RecordTableDetail = (props) => {
 
     var { sizeOfGroup, start, joinedPlayers, playerIds, scoreChange, result } = props;
-
-    return (<Table selectable={false} multiSelectable={false}>
+    return (<Table selectable={false} multiSelectable={false} wrapperStyle={{minWidth: "650px" }}>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
                 { 
                   [...Array(sizeOfGroup + 2)].map((_, i) => {
-                    return <TableHeaderColumn key={"head" + (i - 1)}>
+                    return <TableHeaderColumn key={"head" + (i - 1)} style={ i === 1 ? style : {}}>
                         {
                           i === 0 ?  "Group " + props.groupNum  :
                             i === 1 ? "Name" : "vs. " + (i - 1)
@@ -28,7 +27,7 @@ const RecordTableDetail = (props) => {
                   [...Array(sizeOfGroup)].map( (_, m) => {
                     let curPlayer = joinedPlayers[playerIds[m + start]];
                     return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 2)].map( (_, n) => {
-                      let content, disabled = false;
+                      let content, cellStyle, disabled = false;
                       (function(i, j){
                         switch(i){
                           case 0:
@@ -43,6 +42,7 @@ const RecordTableDetail = (props) => {
                                         { curPlayer.name }<br />
                                         { "Rating: " + curPlayer.rating }
                                       </h3>)
+                            cellStyle = style
                             break;
                           default:
                             if ((i - 2) > j){
@@ -87,7 +87,7 @@ const RecordTableDetail = (props) => {
                         }
                       })(n, m);
 
-                      return <TableRowColumn className="trc" key={"row" + m + ":" + n} disabled={disabled}>{content}</TableRowColumn>;
+                      return <TableRowColumn style={cellStyle} key={"row" + m + ":" + n} disabled={disabled}>{content}</TableRowColumn>;
 
                       })
                   }</TableRow>

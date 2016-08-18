@@ -141,7 +141,7 @@ class RoundRobinSession extends React.Component {
           <div className="session-container-body">
             {
               selectedSchema.map ( (sizeOfGroup, i) => {
-                countedPlayers += sizeOfGroup;
+                countedPlayers += +sizeOfGroup;
                 return (
                     <RecordTable key={i} groupNum={i + 1} 
                      start={countedPlayers - sizeOfGroup}
