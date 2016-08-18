@@ -104,15 +104,15 @@ class NavBar extends Component {
   normalNav() {
     if (this.state.club){
       return (<ul className="nav">
-                  <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>
-                  <li><Link to="/club/sessions" activeClassName="active">Old Sessions</Link></li>
-                  <li><Link to="/results" activeClassName="active">Browse Results</Link></li>
-                  <li className="links" onClick={logOut}><a>Log Out</a></li>
+                  <li><Link to="/club/newSession" className="activeLink">New Session</Link></li>
+                  <li><Link to="/club/sessions" className="activeLink">Old Sessions</Link></li>
+                  <li><Link to="/results" className="activeLink">Browse Results</Link></li>
+                  <li onClick={logOut}><a className="activeLink" >Log Out</a></li>
               </ul>)
     } else {
       return (<ul className="nav">
-                <li className="links"><Link to="/results" activeClassName="active">Browse Results</Link></li>
-                <li className="links">Log In</li>
+                <li className="activeLink"><Link to="/results" className="activeLink">Browse Results</Link></li>
+                <li className="activeLink">Log In</li>
             </ul>)
     }
 
@@ -123,7 +123,7 @@ class NavBar extends Component {
 
     return <div className="nav-bar">
         <div>
-        	<div className="logo links" href="/">Match.Point</div>
+        	<div className="logo"><Link to="/" className="activeLink">Match.Point</Link></div>
           { collapsedIcon }
           { this.normalNav() }
           { this.slideNav() }

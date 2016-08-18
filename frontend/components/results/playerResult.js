@@ -14,26 +14,6 @@ export default class PlayerResult extends Component {
     }
   }
 
-  // _checkIfCachedPlayers(playerId){
-  //   let player = PlayerStore.find(playerId);
-  //   if (player){
-  //     this.setState({ player })
-  //   } else {
-  //     fetchPlayerRecord(playerId);
-  //   }
-  // }
-  
-  // _fetchedPlayerRecord = () => {
-  //   this.setState({ player: PlayerStore.find(this.props.params.playerId) });
-  // }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   if (nextProps.params.playerId === this.props.params.playerId){ 
-  //     return false;
-  //   } 
-  //   return true;
-  // }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.player){
       let player = PlayerStore.find(nextProps.player);

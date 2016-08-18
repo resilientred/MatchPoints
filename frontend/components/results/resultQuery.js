@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import NavBar from "../navBar"
 import { Tabs, Tab } from "material-ui/Tabs"
 import PlayerResultQuery from "./playerResultQuery"
-import ClubResult from "./clubResult"
+import ClubResultQuery from "./clubResultQuery"
 import { fetchAllClubs  } from "../../actions/clientActions"
 import AllClubsStore from "../../stores/allClubsStore"
 export default class ResultQuery extends Component {
@@ -44,13 +44,13 @@ export default class ResultQuery extends Component {
           onChange={this.handleTabChange}
           contentContainerStyle={{  
             padding: "20px",
-            border: "1px solid #E0E0E0" 
+            border: "1px solid #E0E0E0",
           }} >
           <Tab label="Players" value={0}>
             <PlayerResultQuery clubs={this.state.clubs}/>
           </Tab>
           <Tab label="Club" value={1}>
-            <ClubResult clubs={this.state.clubs}/>
+            <ClubResultQuery clubs={this.state.clubs}/>
           </Tab>
         </Tabs>
       </div>

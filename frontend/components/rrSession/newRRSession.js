@@ -1,6 +1,5 @@
 import React from 'react';
 import { browserHistory } from "react-router";
-
 import { fetchPlayers } from '../../actions/clientActions';
 import { saveSession, temporarySession } from "../../actions/rrSessionActions";
 import moment from "moment"
@@ -13,7 +12,10 @@ import Grouping from "./grouping";
 import { Tabs, Tab } from "material-ui/Tabs"
 import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
 import DatePicker from 'material-ui/DatePicker';
+import SnackBar from "material-ui/SnackBar"
+import Dialog from 'material-ui/Dialog';
 
 export default class NewRRSession extends React.Component {
   constructor(props) {
@@ -25,12 +27,15 @@ export default class NewRRSession extends React.Component {
       date: new Date(),
       numPlayers: 0,
       error: null,
+      snackBarOpen: false,
+      dialogOpen: false,
       addedPlayers: {}
     }
   }
   componentDidMount() {
     this.csListener = ClubStore.addListener(this._clubChanged);
     this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
+
     //possibly run a method that will save the page every a couple of minutes
     //and flash a notice
     //maybe cache in redis?
@@ -62,6 +67,12 @@ export default class NewRRSession extends React.Component {
   _clubChanged = () => {
     this.setState({ club: ClubStore.getCurrentClub(),
       newPlayerModal: false });
+  }
+  handleOpen(field){
+    this.setState({ [field]: true });
+  }
+  handleClose(field){
+    this.setState({ [field]: false});
   }
   handleToggle = (_id) => {
     let addedPlayers = Object.assign({}, this.state.addedPlayers),
@@ -99,16 +110,16 @@ export default class NewRRSession extends React.Component {
       schemata: schemata,
     }, this.props.club._id);
   }
-  temporarilySaveSession = (schemata, selectedSchema) => {
+  temporarilySaveSession = (schemata, selectedSchema, players) => {
+    this.handleOpen("snackBarOpen");
     temporarySession({
-      date: this.state.date,
-      numOfPlayers: this.state.numPlayers,
-      players: this.state.addedPlayers,
-      selectedSchema: selectedSchema,
-      schemata: schemata,
+      ...this.state, players, selectedSchema, schemata,
     }, this.props.club._id);
   }
-
+  destroyTempSession = () => {
+    destroyTemp(this.props.club._id);
+    this.handleClose("dialogOpen");
+  }
   render(){
     if (!this.props.club){ 
       return <CircularProgress size={2} />
@@ -116,7 +127,15 @@ export default class NewRRSession extends React.Component {
     let allPlayers = this.props.club.players,
         addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
         { tab, date, numPlayers, error } = this.state;
-  
+    
+    const actions = [
+      <FlatButton label="Cancel"
+                  secondary={true}
+                  onTouchTap={this.destroyTempSession} />,
+      <FlatButton label="Retrieve"
+                  secondary={true}
+                  onTouchTap={this.restoreSession} />
+    ];
     let playerContent = (<div>
           <RaisedButton 
               onClick={this.openModal} 
@@ -135,12 +154,13 @@ export default class NewRRSession extends React.Component {
     let groupContent = (<Grouping numPlayers={numPlayers} 
                           addedPlayers={addedPlayers} 
                           saveSession={this.saveSession}
+                          temporarilySaveSession={this.temporarilySaveSession}
                           club={this.props.club}
                           date={moment(this.state.date).format("YYYY-MM-DD")}/>);
 
     return (
       <div className="tab-container">
-         <Tabs tabItemContainerStyle={{backgroundColor: "#673AB7"}}contentContainerStyle={{  padding: "20px",
+         <Tabs tabItemContainerStyle={{backgroundColor: "#673AB7"}} contentContainerStyle={{  padding: "20px",
    border: "1px solid #E0E0E0" }} 
               value={this.state.tab} 
               onChange={this.toggleTab}
@@ -154,6 +174,19 @@ export default class NewRRSession extends React.Component {
             { groupContent }
           </Tab>
         </Tabs>
+        <Snackbar open={this.state.open}
+                  message="Session has been temporarily saved"
+                  atuoHideDuration={4000}
+                  onRequestClose={this.handleClose.bind(this, "snackBarOpen")} />
+        <Dialog
+          title="Session found"
+          actions={actions}
+          modal={false}
+          open={this.state.dialogOpen}
+          onRequestClose={this.handleClose.bind(this, "dialogOpen")}
+        >
+          Would you like to restore your previous session?
+        </Dialog>
       </div>
     )
   }

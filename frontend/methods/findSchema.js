@@ -4,6 +4,7 @@ export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
   if (numPlayers === 0) return [[]];
   let possibilities = [],
       recursions = [];
+      
   if (!schema[numPlayers]){
     schema[numPlayers] = {};
   }

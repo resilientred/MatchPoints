@@ -196,8 +196,12 @@ input {
 	background-color: #673AB7;
   font-weight: 400;
   display: flex;
-
-  position: relative;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  height: 60px;
+  content: " ";
+  /*position: relative;*/
   a {
     color: white;
   }
@@ -259,7 +263,7 @@ input {
 
 .tab-container {
   width: 90%;
-  margin: 5% auto 0;
+  margin: 5% auto 0 auto;
 
 /*  min-width: 400px;*/
 }
@@ -280,9 +284,11 @@ input {
 }
 @media (max-width: 700px){
   .tab-container {
-    width: 80%;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
     /*min-width: 350px;*/
-
+  
   }
   .player-lists {
   display: flex;
@@ -307,11 +313,7 @@ input {
   margin: 5% auto;
   width: 80%;
 }
-.club-body {
-	/*display: flex;*/
-	/*flex-direction: row;*/
-	/*flex-wrap: nowrap;*/
-}
+
 .session-container {
   margin: 5% auto 0 auto;
   width: 80%;
@@ -387,6 +389,12 @@ input {
   top: 20%;
   -webkit-transform: translateX(-60%);
   transform: translateX(-60%)
+}
+.activeLink {
+  cursor: pointer;
+}
+.activeLink:hover {
+  color: #A1887F;
 }
 form {
   max-height: 430px;
@@ -534,7 +542,16 @@ form {
     margin-right: 20px;
   }
 }
+.club-info-container {
+  margin-top: 5%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
+  > div {
+    margin-top: 10px;
+  }
+}
 @media only screen and (max-width: 800px){
     .nav {
     display: none;

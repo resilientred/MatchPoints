@@ -33,9 +33,15 @@ class Grouping extends React.Component {
       } else {
         fetchPDFLinks(this.props.club._id);
       }
+      this.int = setInterval(this.props.temporarilySaveSession
+                    .bind(null, this.state.schemata, 
+                      this.state.selectedGroup, 
+                      this.props.addedPlayers), 
+                  6000);
     }
     componentWillUnmount() {
      this.pListener.remove(); 
+     clearInterval(this.int);
     }
     _fetchedPDF = () => {
       this.setState({ pdfs: PDFStore.getPDF() })

@@ -2,13 +2,10 @@ import React from "react"
 import App from "./app"
 import { Route, IndexRoute } from 'react-router'
 import Splash from "./components/splash"
-import NavBar from './components/navBar'
 import Club from "./components/club"
 import NewRRSession from "./components/rrSession/newRRSession"
 import RoundRobinSessions from "./components/record/roundrobinSessions"
 import RoundRobinSession from "./components/record/roundrobinSession"
-import PlayerResult from "./components/results/playerResult"
-import ClubResult from "./components/results/clubResult"
 import ResultQuery from "./components/results/resultQuery"
 import ErrorPage from "./errorPage"
 import LogInForm from "./components/user/logIn"

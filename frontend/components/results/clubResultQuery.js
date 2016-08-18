@@ -51,17 +51,18 @@ export default class ClubQuery extends Component {
   clubInfo = () => {
     let currentClub = this.state.currentClub;
     if (currentClub){
-      return <div>
-        <h3>Club: { currentClub.clubName }</h3>
-        <h3>Location: { currentClub.location.city + ", " + currentClub.location.state}</h3>
+      return <div className="club-info-container">
+        <h1>Club: { currentClub.clubName }</h1>
+        <div>Location: { currentClub.location.city + ", " + currentClub.location.state}</div>
       </div>
     }
   }
   render() {
     let clubs = this.props.clubs;
-    if (!clubs) return <h1>Loading...</h1>;
+    if (!clubs) return <div className="club-info-container">Select a club..</div>;
     
     return (<div className="club-result-container">
+      <div className="name-select-div">
       <SelectField 
             value={this.state.currentClub ? this.state.currentClub._id : null} 
             onChange={this.changeClub}
@@ -86,6 +87,7 @@ export default class ClubQuery extends Component {
           <MenuItem key="empty" value={null} primaryText="No dates available" />
         }
       </SelectField>
+      </div>
       { this.clubInfo() }
       <ClubResultDetails {...this.state.selectedDate}/>
       </div>
