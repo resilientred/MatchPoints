@@ -8,20 +8,26 @@ And allow users to:
 * query results based on date
 * query their indiviual old results
 ## Todos
- - [x] dynamic programming for arrangement
- - [x] set a progressive workflow of creating schema (first select the range of players, then select the available schema)
- - [x] Style NavBar (more)
- - [x] Style the ResultList
+ - [ ] Refactor Navbar
+ - [ ] Run bug test on save
  - [ ] Make pdf works // remove the option to retrieve pdf for them.. unless I can implement caching
+ - [ ] buggg tests
  - [ ] temporarily save session in react-cookie/redis 
  - [ ] deploy on AWS
 
-## Expected Features
+## Expected Features (MVP)
  - [x] Arrange groups for players based on ratings
  - [x] Allow organizers to enter results
+ - [x] Generate Score Sheets (pdf) for users
  - [x] Calculate scores automatically based on default algorithms
  - [x] Provide a platform for participants to query their individual past results
- - [ ] Provide a platform for participants to query results based on event date
+ - [x] Provide a platform for participants to query results based on event date
+
+## Bonus features
+ - [ ] Temporary Save sessions and allow users to retrieve results
+ - [ ] Allow users to import players in csv, json, (or xml?) formats
+ - [ ] Allow Users to update previous saved results
+ - [ ] Adjust results automatically if an older session is saved after the newer one
  - [ ] Allow Users to customize scoring algorithm
 
 ## Languages:
