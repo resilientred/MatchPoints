@@ -27,6 +27,7 @@ const _setError = (error) => {
   _error = error.responseText;
 }
 
+
 RRSessionStore.all = () => {
   let sessions = Object.keys(_rrSessions);
 
@@ -43,6 +44,7 @@ RRSessionStore.getError = () => {
   _error = null;
   return err;
 }
+
 RRSessionStore.__onDispatch = (payload) => {
   switch (payload.actionType){
     case FETCHED_SESSION:

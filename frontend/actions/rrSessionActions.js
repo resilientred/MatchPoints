@@ -29,6 +29,19 @@ export const temporarySession = (data, clubId) => {
     success: "log"
   })
 }
+export cosnt fetchTempSession = (clubId) => {
+  apiService({
+    url: "/api/clubs/" + clubId + "/temp",
+    success: "receivedCachedSession"
+  })
+} 
+export const destroyTempSession = (clubId) => {
+  apiCSRFService({
+    url: "/api/clubs/" + clubId + "/temp",
+    method: "DELETE",
+    success: "log"
+  })
+}
 export const postResult = (clubId, data, ratingUpdateList, id) => {
   apiCSRFService({
     url: `/api/clubs/${clubId}/sessions/${id}`,

@@ -35,8 +35,7 @@ class Grouping extends React.Component {
       }
       this.int = setInterval(this.props.temporarilySaveSession
                     .bind(null, this.state.schemata, 
-                      this.state.selectedGroup, 
-                      this.props.addedPlayers), 
+                      this.state.selectedGroup), 
                   6000);
     }
     componentWillUnmount() {
@@ -49,6 +48,14 @@ class Grouping extends React.Component {
     handleChange = (field, e, idx, value) => {
       if (value) this.setState({[field]: value});
     }
+    componentWillReceiveProps(nextProps) {
+      if (this.props.cached !== nextProps.cached){
+        this.setState({ 
+          schemata: nextProps.schemata, 
+          selectedGroup: nextProps.selectedGroup 
+        });
+      }
+    } 
     shouldComponentUpdate(nextProps, nextState) {
       if (this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
         return true;
@@ -57,7 +64,7 @@ class Grouping extends React.Component {
         return true;
       }
       let {min, max} = this.state;
-      if (max !== nextState.max && (!min)) return true;
+      if (max !== nextState.max && !min) return true;
 
       if ((max !== nextState.max) || (max && (min !== nextState.min)) || (this.props.numPlayers !== nextProps.numPlayers && max && min)){
         let range = [];

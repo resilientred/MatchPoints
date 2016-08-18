@@ -1,9 +1,10 @@
 import React from 'react';
 import { browserHistory } from "react-router";
-import { fetchPlayers } from '../../actions/clientActions';
+import { fetchPlayers, destroyTempSession, fetchTempSession } from '../../actions/clientActions';
 import { saveSession, temporarySession } from "../../actions/rrSessionActions";
 import moment from "moment"
 import RRSessionStore from "../../stores/rrSessionStore";
+import TempSessionStore from "../../stores/tempSessionStore";
 import PlayerForm from './playerForm';
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import ClubStore from "../../stores/clubStore";
@@ -33,12 +34,11 @@ export default class NewRRSession extends React.Component {
     }
   }
   componentDidMount() {
+    this.cached = false;
     this.csListener = ClubStore.addListener(this._clubChanged);
     this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
-
-    //possibly run a method that will save the page every a couple of minutes
-    //and flash a notice
-    //maybe cache in redis?
+    this.tslistener = TempSessionStore.addListener(this._tempSessionFetched);
+    fetchTempSession();
   }
 
   componentWillUnmount() {
@@ -58,6 +58,22 @@ export default class NewRRSession extends React.Component {
       browserHistory.push("/club/sessions");
     }
   }
+
+  _tempSessionFetched = () => {
+    let session = TempSessionStore.findCachedSession();
+    if (session){
+      this.selectedSchema = session.selectedSchema;
+      this.schemata = session.schemata;
+      this.cached = true;
+      this.setState({      
+        tab: this.state.tab,
+        date: this.state.date,
+        numPlayers: this.state.numPlayers,
+        addedPlayers: this.state.addedPlayers
+      })
+    }
+  }
+
   openModal = () =>{
     this.setState({newPlayerModal: true});
   }
@@ -110,14 +126,14 @@ export default class NewRRSession extends React.Component {
       schemata: schemata,
     }, this.props.club._id);
   }
-  temporarilySaveSession = (schemata, selectedSchema, players) => {
+  temporarilySaveSession = (schemata, selectedSchema) => {
     this.handleOpen("snackBarOpen");
     temporarySession({
-      ...this.state, players, selectedSchema, schemata,
+      ...this.state, selectedSchema, schemata,
     }, this.props.club._id);
   }
   destroyTempSession = () => {
-    destroyTemp(this.props.club._id);
+    destroyTempSession(this.props.club._id);
     this.handleClose("dialogOpen");
   }
   render(){
@@ -129,7 +145,7 @@ export default class NewRRSession extends React.Component {
         { tab, date, numPlayers, error } = this.state;
     
     const actions = [
-      <FlatButton label="Cancel"
+      <FlatButton label="Discard"
                   secondary={true}
                   onTouchTap={this.destroyTempSession} />,
       <FlatButton label="Retrieve"
@@ -152,6 +168,9 @@ export default class NewRRSession extends React.Component {
                                 handleToggle={this.handleToggle}/> 
         </div>);
     let groupContent = (<Grouping numPlayers={numPlayers} 
+                          cached={this.cached}
+                          selectedGroup={this.selectedSchema}
+                          schemata={this.schemata}
                           addedPlayers={addedPlayers} 
                           saveSession={this.saveSession}
                           temporarilySaveSession={this.temporarilySaveSession}

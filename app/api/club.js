@@ -62,13 +62,24 @@ router.get("", (req, res) => {
       let _clubId = req.params.clubId,
           data = JSON.stringify(req.body.session);
           client.setex("tempsess#" + _clubId, 300, data, err => console.log(err));
-          res.status(200)
+          res.status(202)
           res.end();
     }).get("/:clubId/temp", (req, res) => {
       let _clubId = req.params.clubId;
       client.get("tempsess#" + _clubId, (data, err) => {
         if (data){
           res.status(200).send(JSON.parse(data));
+        } else {
+          console.log(err);
+          res.status(200).send("no data cached");
+          res.end();
+        }
+      })
+    }).delete("/:clubId/temp", (req, res) => {
+      let _clubId = req.params.clubId;
+      client.del("tempsess#" + _clubId, (data, err) => {
+        if (data){
+          res.status(202);
         } else {
           console.log(err);
           res.status(200).send("no data cached");
@@ -107,11 +118,8 @@ router.get("", (req, res) => {
       let promiseResults = [];
       ClubModel.postPlayersRating(clubId, ratingUpdateList, date)
         .then((club) => {
-            console.log("save successfully...")
-            console.log(club);
             return RoundRobinModel.saveResult(id, data);
           }).then((session) => {
-            console.log(session);
             res.status(200).send(session);
           }).catch((err) => {
             console.log(err);

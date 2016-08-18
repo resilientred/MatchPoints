@@ -12,6 +12,7 @@ And allow users to:
  - [x] Run bug test on save
  - [ ] Make pdf works // remove the option to retrieve pdf for them.. unless I can implement caching
  - [ ] buggg tests
+ - [ ] from validations
  - [ ] temporarily save session in react-cookie/redis 
  - [ ] deploy on AWS
 
