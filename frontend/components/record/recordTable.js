@@ -52,11 +52,11 @@ class RecordTable extends Component {
 
         rc[player1Id] = {
           change: rc[player1Id] ? rc[player1Id]["change"] : 0 + scoreAdjust,
-          ratingBefore: joinedPlayers[player1Id].rating
+          ratingBefore: +joinedPlayers[player1Id].rating
         };
         rc[player2Id] = {
           change: rc[player2Id] ? rc[player2Id]["change"] : 0 - scoreAdjust,
-          ratingBefore: joinedPlayers[player2Id].rating
+          ratingBefore: +joinedPlayers[player2Id].rating
         };
         return scoreAdjust;
         
@@ -74,17 +74,10 @@ class RecordTable extends Component {
   }
 
 	render(){
+      let { finalized, updateScore, ...propsToPass } = this.props;
 
-      let { start,
-            sizeOfGroup,
-            joinedPlayers,
-            scoreChange,
-            groupNum } = this.props;
-      let playerIds = Object.keys(joinedPlayers);
-      var propsToPass = {start, sizeOfGroup, scoreChange, joinedPlayers, playerIds, groupNum } 
-
-      if (this.props.finalized){
-        return <div><RecordTableView {...propsToPass} result={this.state.result}/></div>
+      if (finalized){
+        return <div style={{overflow: "scroll"}}><RecordTableView {...propsToPass} result={this.state.result}/></div>
       } else {
         return (<div>
                 <FlatButton secondary={true} label="Update" onTouchTap={this._handleCalculate}/>

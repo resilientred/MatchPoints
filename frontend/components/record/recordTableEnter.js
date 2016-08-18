@@ -25,7 +25,7 @@ const RecordTableDetail = (props) => {
             <TableBody displayRowCheckbox={false}>
                 {
                   [...Array(sizeOfGroup)].map( (_, m) => {
-                    let curPlayer = joinedPlayers[playerIds[m + start]];
+                    let curPlayer = joinedPlayers[m + start];
                     return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 2)].map( (_, n) => {
                       let content, cellStyle, disabled = false;
                       (function(i, j){
@@ -74,13 +74,23 @@ const RecordTableDetail = (props) => {
                                        style={{marginRight: "5px", width: "50%"}}
                                        key={"row" + j + ":" + i + "-1"}                             
                                        value={result[i - 2][j][1]} 
-                                       disabled/>
+                                       disabled>
+                                        <MenuItem value={0} primaryText="0" />
+                                        <MenuItem value={1} primaryText="1" />
+                                        <MenuItem value={2} primaryText="2" />
+                                        <MenuItem value={3} primaryText="3" />
+                                       </SelectField>
 
                                 <SelectField 
                                        style={{width: "50%"}}
                                        key={"row" + j + ":" + i + "-2"}
                                        value={result[i - 2][j][0]} 
-                                       disabled/>
+                                       disabled>
+                                        <MenuItem value={0} primaryText="0" />
+                                        <MenuItem value={1} primaryText="1" />
+                                        <MenuItem value={2} primaryText="2" />
+                                        <MenuItem value={3} primaryText="3" />
+                                       </SelectField>
                               </div>)
                             }
                             break;

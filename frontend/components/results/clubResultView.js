@@ -5,7 +5,7 @@ import MenuItem from "material-ui/MenuItem"
 
 const cellStyle = {paddingRight: 0, paddingLeft: "5px", width: "7px"};
 
-const RecordTableDetail = (props) => {
+const ClubResultView = (props) => {
 
   var { sizeOfGroup, start, joinedPlayers, scoreChange, result } = props;
   return (<Table selectable={false} multiSelectable={false}>
@@ -95,4 +95,4 @@ const RecordTableDetail = (props) => {
       
 }  
 
-export default RecordTableDetail;
+export default ClubResultView;

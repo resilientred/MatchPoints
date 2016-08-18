@@ -7,7 +7,7 @@ const roundRobinSchema = new Schema({
   _clubId: { type: String, required: true},
   date: { type: Date, default: Date.now, required: true },
   numOfPlayers: { type: Number, required: true },
-  players: { type: Object },
+  players: { type: Array, default: [] },
   schemata: { type: Object },
   selectedSchema: { type: Object},
   results: { type: Array, default: [] },

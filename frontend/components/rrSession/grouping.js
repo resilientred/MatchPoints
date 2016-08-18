@@ -141,7 +141,7 @@ class Grouping extends React.Component {
 
     handleSave = () => {
       this.props.saveSession(this.state.schemata, 
-                  this.state.selectedGroup)
+                  this.state.selectedGroup, this.props.addedPlayers)
     }
     download = (link) => {
       window.open(`/api/pdfs/download/${link}`)

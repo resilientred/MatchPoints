@@ -90,11 +90,11 @@ export default class NewRRSession extends React.Component {
     });
   }
 
-  saveSession = (schemata, selectedSchema) => {
+  saveSession = (schemata, selectedSchema, players) => {
     saveSession({
       date: this.state.date,
       numOfPlayers: this.state.numPlayers,
-      players: this.state.addedPlayers,
+      players: players,
       selectedSchema: selectedSchema,
       schemata: schemata,
     }, this.props.club._id);

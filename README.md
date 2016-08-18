@@ -9,7 +9,7 @@ And allow users to:
 * query their indiviual old results
 ## Todos
  - [x] Refactor Navbar
- - [ ] Run bug test on save
+ - [x] Run bug test on save
  - [ ] Make pdf works // remove the option to retrieve pdf for them.. unless I can implement caching
  - [ ] buggg tests
  - [ ] temporarily save session in react-cookie/redis 

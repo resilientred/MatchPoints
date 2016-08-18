@@ -1,5 +1,5 @@
 import React from 'react'
-import RecordTableView from "../record/recordTableView"
+import ClubResultView from "./clubResultView"
 
 
 const ClubResultDetails = (props) => {
@@ -11,7 +11,7 @@ const ClubResultDetails = (props) => {
         props.selectedSchema.map ( (sizeOfGroup, i) => {
                 countedPlayers += sizeOfGroup;
                 return (
-                    <RecordTableView key={i} groupNum={i + 1} 
+                    <ClubResultView key={i} groupNum={i + 1} 
                      start={countedPlayers - sizeOfGroup}
                      finalized={ props.finalized }
                      result={props.results}

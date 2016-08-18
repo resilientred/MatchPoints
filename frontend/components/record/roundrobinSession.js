@@ -13,6 +13,7 @@ import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class RoundRobinSession extends React.Component {
     constructor(props) {
@@ -108,9 +109,14 @@ class RoundRobinSession extends React.Component {
       return <IconMenu 
                 iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
               >
-                <MenuItem primaryText="Save" onClick={this.saveSesion}/>
+                <MenuItem primaryText="Save"  onClick={this.saveSession}/>
                 <MenuItem primaryText="Delete" onClick={() => this.setState({open: true})}/>
               </IconMenu>
+    }
+    loader() {
+      if (this.state.session) return;
+      return <CircularProgress size={2} />
+
     }
     render() {
       const actions = [
@@ -127,7 +133,7 @@ class RoundRobinSession extends React.Component {
         />,
       ];
         let { session, scoreChange } = this.state;
-        if (!session) return <h1>Loading ...</h1>;
+        if (!session) return <div>{ this.loader() }</div>;
         let { selectedSchema, schemata, numOfPlayers, clubId, players, finalized } = session;
 
         var countedPlayers = 0;
@@ -148,7 +154,7 @@ class RoundRobinSession extends React.Component {
                      joinedPlayers={players} sizeOfGroup={+sizeOfGroup} 
                      updateScore={this.updateScore} 
                      scoreChange={scoreChange.length ? scoreChange[i] : []}
-                     saveSession={this.saveSession} />
+                   />
                 )
                 })
             }

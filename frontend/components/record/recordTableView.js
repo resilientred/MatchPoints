@@ -6,7 +6,7 @@ import MenuItem from "material-ui/MenuItem"
 
 const RecordTableDetail = (props) => {
 
-  var { sizeOfGroup, start, joinedPlayers, playerIds, scoreChange, result } = props;
+  var { sizeOfGroup, start, joinedPlayers, playerIds, scoreChange, result, groupNum } = props;
   return (<Table selectable={false} multiSelectable={false}  wrapperStyle={{minWidth: "1000px"}}>
             <TableHeader 
                   displaySelectAll={false} 
@@ -18,7 +18,7 @@ const RecordTableDetail = (props) => {
                       let content, style = {};
                       switch (i) {
                         case 0:
-                          content = "Group " + (i + 1);
+                          content = "Group " + groupNum;
                           style = {paddingLeft: "5px", paddingRight: "5px"}
                           break
                         case 1:
@@ -49,7 +49,7 @@ const RecordTableDetail = (props) => {
             <TableBody displayRowCheckbox={false}>         
                 {
                   [...Array(sizeOfGroup)].map( (_, m) => {
-                    let curPlayer = joinedPlayers[playerIds[m + start]],
+                    let curPlayer = joinedPlayers[m + start],
                         ratingChangeSum = 0;
 
                     return <TableRow key={"row" + m}>{[...Array(sizeOfGroup + 5)].map( (_, n) => {
