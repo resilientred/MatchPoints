@@ -3,33 +3,41 @@ import { browserHistory, Link } from 'react-router'
 import { logOut } from '../actions/clubActions'
 import Drawer from "material-ui/Drawer"
 import MenuItem from "material-ui/MenuItem"
+import ClubStore from "../stores/clubStore"
 
 class NavBar extends Component {
   constructor(props){
     super(props);
     this.state = {
+      club: null,
       opened: false,
       tab: 0
     }
   }
   componentWillMount() {
-    let tab;
-    switch (this.props.curPage){
-      case "/club/newSession":
-        tab = 1;
-        break;
-      case "/club/sessions":
-        tab = 2;
-        break;
-      case "/results":
-        tab = 3;
-        break;
-      default:
-        tab = 0;
-        break;
+    this.cuListener = ClubStore.addListener(this._currentClubChange);
+    let club = ClubStore.getCurrentClub();
+    if (club){
+        this.setState({ club })
+    } 
+    let tab, path = window.location.pathname;
+    if (path === "/club/newSession"){
+      tab = 1;
+    } else if (/^\/club\/sessions.*/.test(path)){
+      tab = 2;
+    } else if (path === "/results"){
+      tab = 3;  
+    } else {
+      tab = 0;
     }
     this.setState({tab})
   } 
+  _currentClubChange = () => {
+   let club = ClubStore.getCurrentClub(); 
+    if (club){
+      this.setState({ club })
+    } 
+  }
   handleOpen = () => {
     this.setState({ opened: !this.state.opened })
   }
@@ -41,13 +49,13 @@ class NavBar extends Component {
     if (this.state.opened !== nextState.opened || this.state.tab !== nextState.tab){
       return true
     }
-    if ((!this.props.club && nextProps.club) || (!nextProps.club && this.props.club)){
+    if ((!this.state.club && nextState.club) || (!nextState.club && this.state.club)){
       return true;
     }
     return false;
   }
   slideNav() {
-    if (this.props.club){
+    if (this.state.club){
       return (<Drawer open={this.state.opened } 
                          openSecondary={true}
                          docked={false}
@@ -94,7 +102,7 @@ class NavBar extends Component {
     }
   }
   normalNav() {
-    if (this.props.club){
+    if (this.state.club){
       return (<ul className="nav">
                   <li><Link to="/club/newSession" activeClassName="active">New Session</Link></li>
                   <li><Link to="/club/sessions" activeClassName="active">Old Sessions</Link></li>

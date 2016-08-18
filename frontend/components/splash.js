@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { Link } from "react-router"
-import NavBar from "./navBar"
 import LogInForm from "./user/logIn"
 import SignUpForm from "./user/signUp"
 
@@ -38,7 +37,6 @@ export default class Splash extends Component {
 
     return  (<div>
         <div className="banner-container">
-          <NavBar club={null} />
           <div className="banner"></div>
           { content }
         </div>

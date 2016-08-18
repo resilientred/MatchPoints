@@ -38,7 +38,6 @@ export default class ResultQuery extends Component {
 
   render() {
     return <div>
-      <NavBar />
       <div className="result-query-container">
         <Tabs 
           value={this.state.tab}

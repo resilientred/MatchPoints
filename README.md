@@ -8,7 +8,7 @@ And allow users to:
 * query results based on date
 * query their indiviual old results
 ## Todos
- - [ ] Refactor Navbar
+ - [x] Refactor Navbar
  - [ ] Run bug test on save
  - [ ] Make pdf works // remove the option to retrieve pdf for them.. unless I can implement caching
  - [ ] buggg tests

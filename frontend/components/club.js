@@ -4,7 +4,7 @@ import { Link, browserHistory } from "react-router"
 import NavBar from "./navBar"
 import { fetchCurrentClub } from '../actions/clubActions'
 import ClubStore from "../stores/clubStore"
-let curPage;
+
 class Club extends Component {
     constructor(props) {
         super(props);
@@ -14,7 +14,6 @@ class Club extends Component {
         }
     }
     componentWillMount() {
-        curPage = this.props.location.pathname;
         this.cuListener = ClubStore.addListener(this._currentClubChange);
         let club = ClubStore.getCurrentClub();
         if (club){
@@ -40,7 +39,6 @@ class Club extends Component {
             return <h1>Loading... </h1>
         }
         return <div className="app">
-            <NavBar { ...this.state } curPage={curPage}/>
             <div className="club-body">
                 <div className="club-children">
                     { Children.map(this.props.children, (child) => {
