@@ -9,26 +9,24 @@ import PdfIcon from 'react-icons/lib/md/picture-as-pdf'
 import UpArrow from 'react-icons/lib/md/keyboard-arrow-up'
 import DownArrow from 'react-icons/lib/md/keyboard-arrow-down'
 
-const moveDownArrow = (moveDown, i, bool) => {
-  return !moveDown || !bool ? "" :
-    <TableRowColumn style={{position: "absolute", left: "0", zIndex: 10 }}>
-      <IconButton iconClassName="material-icons" 
-                  tooltip="Move one player down"
-                  onClick={moveDown.bind(null, i)}>
-        <DownArrow />
-      </IconButton>
-    </TableRowColumn>    
+const moveDownArrow = (moveDown, i) => {
+  return !moveDown ? "" :
+    <IconButton iconClassName="material-icons" 
+                tooltip="Move one player down"
+                onClick={moveDown.bind(null, i)}
+                style={{position: "absolute", left: "30px", bottom: "1px", zIndex: 10 }}>
+      <DownArrow />
+    </IconButton>
 }
 
-const moveUpArrow = (moveUp, i, bool) => {
-  return !moveUp || !bool ? "" :
-    <TableRowColumn style={{position: "absolute", left: "0", zIndex: 10 }}>
-      <IconButton iconClassName="material-icons" 
+const moveUpArrow = (moveUp, i) => {
+  return !moveUp ? "" :
+    <IconButton iconClassName="material-icons" 
                   tooltip="Move one player up"
-                  onClick={moveUp.bind(null, i)}>
-        <UpArrow />
-      </IconButton>
-    </TableRowColumn>    
+                  onClick={moveUp.bind(null, i)}
+                  style={{position: "absolute", left: "30px", top: "57px", zIndex: 10 }}>
+      <UpArrow />
+    </IconButton>
 
 }
 
@@ -57,13 +55,13 @@ const ParticipantGroup = (props) => {
                     <TableRowColumn>{i + 1}</TableRowColumn>
                     <TableRowColumn>{player.name}</TableRowColumn>
                     <TableRowColumn>{player.rating}</TableRowColumn>
-                    { moveUpArrow(props.moveUp, props.groupId, i === 0)}
-                    { moveDownArrow(props.moveDown, props.groupId, i === a.length - 1) }
                    </TableRow>;              
         })
       }
     </TableBody>
     </Table>
+    { moveUpArrow(props.moveUp, props.groupId) } 
+    { moveDownArrow(props.moveDown, props.groupId) }
   </div>);
 }
 
