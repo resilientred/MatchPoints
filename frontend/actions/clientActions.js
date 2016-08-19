@@ -51,20 +51,12 @@ const generatePDF = (addedPlayers, schemas, club, date) => {
 		data: {
 			session: {addedPlayers, schemas, club, date}
 		},
-		success: "generatedPDF"
-	})
-}
-
-const fetchPDFLinks = (sessionId) => {
-	apiService({
-		url: `/api/pdfs/${sessionId}`,
 		success: "generatedPDF",
-		error: "log"
+		error: "PDFError"
 	})
 }
 
 const fetchAllPlayersFromClub = (clubId) => {
-	console.log(clubId)
 	apiService({
 		url: `/api/clubs/${clubId}/players`,
 		success: "fetchedPlayers"
@@ -78,4 +70,4 @@ const fetchClubRoundrobins = (clubId) => {
 	})
 }
 
-export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, removePlayer, fetchAllClubs, generatePDF, fetchPDFLinks, fetchAllPlayersFromClub, fetchClubRoundrobins }
+export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, removePlayer, fetchAllClubs, generatePDF, fetchAllPlayersFromClub, fetchClubRoundrobins }

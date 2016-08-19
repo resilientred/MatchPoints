@@ -1,7 +1,7 @@
 import React from 'react'
 import ParticipantGroup from './participantGroup'
 import { findSchemata } from "../../methods/findSchema"
-import { generatePDF, fetchPDFLinks, downloadPDF } from "../../actions/clientActions"
+import { generatePDF, downloadPDF } from "../../actions/clientActions"
 import PDFStore from "../../stores/pdfStore"
 import RaisedButton from "material-ui/RaisedButton"
 import SelectField from "material-ui/SelectField"
@@ -9,6 +9,7 @@ import MenuItem from "material-ui/MenuItem"
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import SnackBar from 'material-ui/SnackBar';
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 
@@ -22,28 +23,42 @@ class Grouping extends React.Component {
           selectedGroup: [],
           pdfs: null,
           generated: false,
-          stepIndex: 0
+          stepIndex: 0, 
+          open: false
         }
     }   
     componentWillMount() {
       this.pListener = PDFStore.addListener(this._fetchedPDF);
-      let pdfs = PDFStore.getPDF();
-      if (pdfs){
-        this.setState({pdfs})
-      } else {
-        fetchPDFLinks(this.props.club._id);
-      }
-      this.int = setInterval(this.props.temporarilySaveSession
-                    .bind(null, this.state.schemata, 
-                      this.state.selectedGroup), 
-                  6000);
+
+      this.int = setInterval(this.tempSave, 30000);
     }
     componentWillUnmount() {
      this.pListener.remove(); 
      clearInterval(this.int);
     }
+    tempSave = () => {
+      this.props.temporarilySaveSession(
+        this.state.min,
+        this.state.max,
+        this.state.schemata, 
+        this.state.selectedGroup, 
+        this.state.pdfs
+      );
+    }
+    handleOpen(){
+      this.setState({open: true});
+    }   
+    handleClose = () => {
+      this.setState({open: false});
+    }
     _fetchedPDF = () => {
-      this.setState({ pdfs: PDFStore.getPDF() })
+      let error = PDFStore.getError();
+      if (error){
+        this.error = error;
+        handleOpen();
+      } else {
+        this.setState({ pdfs: PDFStore.getPDF() })
+      }
     }
     handleChange = (field, e, idx, value) => {
       if (value) this.setState({[field]: value});
@@ -51,16 +66,24 @@ class Grouping extends React.Component {
     componentWillReceiveProps(nextProps) {
       if (this.props.cached !== nextProps.cached){
         this.setState({ 
-          schemata: nextProps.schemata, 
-          selectedGroup: nextProps.selectedGroup 
+          schemata: nextProps.schemata ? 
+            (typeof nextProps.schemata === "string" || 
+              typeof nextProps.schemata === "number" ? 
+                [+nextProps.schemata] : nextProps.schemata.map( arr => (arr.map( el => +el)))) : [[]], 
+          selectedGroup: nextProps.selectedGroup ? nextProps.selectedGroup.map(el => +el) : [],
+          pdfs: nextProps.pdfs === "" ? null : nextProps.pdfs,
+          min: nextProps.min ? +nextProps.min : null,
+          max: nextProps.max ? +nextProps.max : null
         });
       }
     } 
     shouldComponentUpdate(nextProps, nextState) {
-      if (this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
+      if (this.state.selectedGroup && nextState.selectedGroup && 
+            this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
         return true;
       }
-      if (this.state.schemata.toString() !== nextState.schemata.toString()){
+      if (this.state.schemata && nextState.schemata && 
+            this.state.schemata.toString() !== nextState.schemata.toString()){
         return true;
       }
       let {min, max} = this.state;
@@ -87,14 +110,14 @@ class Grouping extends React.Component {
       let schemata = this.state.schemata;
       if (schemata.length){
         return <div>
-          <SelectField value={this.state.selectedGroup} 
+          <SelectField value={this.state.selectedGroup.join(",")} 
                        onChange={this.changeSchema} 
                        floatingLabelText="Select a schema"
                        floatingLabelFixed={true}>
           {
             schemata ? 
                 schemata.map( (schema, i)=>{
-                  return <MenuItem key={schema} value={schema} primaryText={schema.join(", ")}/>;
+                  return <MenuItem key={schema} value={schema.join(",")} primaryText={schema.join(", ")}/>;
                 })
               :
                 <MenuItem key={"noth"} disabled={true} primaryText="No Available Schemas..."/>
@@ -157,7 +180,11 @@ class Grouping extends React.Component {
                   this.state.selectedGroup, this.props.addedPlayers)
     }
     download = (link) => {
-      window.open(`/api/pdfs/download/${link}`)
+      try {
+        window.open(`/api/pdfs/download/${link}`)
+      } catch(e) {
+        debugger;
+      }
     }
     moveUp = (group) => {
       if (group === 0) return;
@@ -217,6 +244,12 @@ class Grouping extends React.Component {
         { this.numOfPlayers() }
         { schemata }
         { groupTables }
+        <SnackBar
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+          message={this.error || ""}
+          autoHideDuration={3000}
+        />
       </div>;
     }
 }

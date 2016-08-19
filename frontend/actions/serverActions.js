@@ -22,11 +22,14 @@ module.exports = {
 		})
 	}, 
 	receivedCachedSession(session){
+		if (session === "no data cached"){
+			return;
+		}
 		Dispatcher.dispatch({
 			actionType: RECEIVED_CACHED_SESSION,
 			session: session
 		})
-	}
+	},
 	fetchedRRSession(session){
 		Dispatcher.dispatch({
 			actionType: FETCHED_SESSION,
@@ -61,6 +64,12 @@ module.exports = {
 		Dispatcher.dispatch({
 			actionType: GENERATED_PDF,
 			pdfs: pdfs
+		})
+	},
+	PDFError(error) {
+		Dispatcher.dispatch({
+			actiontype: PDF_ERROR,
+			error: error
 		})
 	},
 	pdfNotFound(err){

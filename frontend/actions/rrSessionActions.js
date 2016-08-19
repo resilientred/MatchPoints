@@ -29,7 +29,7 @@ export const temporarySession = (data, clubId) => {
     success: "log"
   })
 }
-export cosnt fetchTempSession = (clubId) => {
+export const fetchTempSession = (clubId) => {
   apiService({
     url: "/api/clubs/" + clubId + "/temp",
     success: "receivedCachedSession"

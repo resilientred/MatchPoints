@@ -1,10 +1,11 @@
 import React from 'react';
 import { browserHistory } from "react-router";
-import { fetchPlayers, destroyTempSession, fetchTempSession } from '../../actions/clientActions';
-import { saveSession, temporarySession } from "../../actions/rrSessionActions";
+import { fetchPlayers } from '../../actions/clientActions';
+import { saveSession, temporarySession, destroyTempSession, fetchTempSession } from "../../actions/rrSessionActions";
 import moment from "moment"
 import RRSessionStore from "../../stores/rrSessionStore";
 import TempSessionStore from "../../stores/tempSessionStore";
+import PDFStore from "../../stores/pdfStore"
 import PlayerForm from './playerForm';
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import ClubStore from "../../stores/clubStore";
@@ -33,12 +34,12 @@ export default class NewRRSession extends React.Component {
       addedPlayers: {}
     }
   }
-  componentDidMount() {
+  componentWillMount() {
     this.cached = false;
     this.csListener = ClubStore.addListener(this._clubChanged);
     this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
     this.tslistener = TempSessionStore.addListener(this._tempSessionFetched);
-    fetchTempSession();
+    fetchTempSession(this.props.club._id);
   }
 
   componentWillUnmount() {
@@ -64,12 +65,15 @@ export default class NewRRSession extends React.Component {
     if (session){
       this.selectedSchema = session.selectedSchema;
       this.schemata = session.schemata;
+      this.pdfs = session.pdfs;
+      this.max = session.max;
+      this.min = session.min;
       this.cached = true;
       this.setState({      
-        tab: this.state.tab,
-        date: this.state.date,
-        numPlayers: this.state.numPlayers,
-        addedPlayers: this.state.addedPlayers
+        tab: session.tab,
+        date: new Date(session.date),
+        numPlayers: +session.numPlayers,
+        addedPlayers: session.addedPlayers ? session.addedPlayers : {}
       })
     }
   }
@@ -111,7 +115,7 @@ export default class NewRRSession extends React.Component {
     this.setState({ tab });
   }
 
-  convertPlayersToArr = () => {
+  convertPlayersToArr() {
     return Object.keys(this.state.addedPlayers).map( (_id) => {
       return this.state.addedPlayers[_id];
     });
@@ -125,14 +129,16 @@ export default class NewRRSession extends React.Component {
       selectedSchema: selectedSchema,
       schemata: schemata,
     }, this.props.club._id);
+    destroyTempSession(this.props.club._id);
   }
-  temporarilySaveSession = (schemata, selectedSchema) => {
+  temporarilySaveSession = (min, max, schemata, selectedSchema, pdfs) => {
     this.handleOpen("snackBarOpen");
     temporarySession({
-      ...this.state, selectedSchema, schemata,
+      ...this.state, min, max, selectedSchema, schemata, pdfs
     }, this.props.club._id);
   }
   destroyTempSession = () => {
+    PDFStore.clearPDF();
     destroyTempSession(this.props.club._id);
     this.handleClose("dialogOpen");
   }
@@ -169,6 +175,9 @@ export default class NewRRSession extends React.Component {
         </div>);
     let groupContent = (<Grouping numPlayers={numPlayers} 
                           cached={this.cached}
+                          pdfs={this.pdfs}
+                          min={this.min}
+                          max={this.max}
                           selectedGroup={this.selectedSchema}
                           schemata={this.schemata}
                           addedPlayers={addedPlayers} 
@@ -193,9 +202,9 @@ export default class NewRRSession extends React.Component {
             { groupContent }
           </Tab>
         </Tabs>
-        <Snackbar open={this.state.open}
+        <SnackBar open={this.state.snackBarOpen}
                   message="Session has been temporarily saved"
-                  atuoHideDuration={4000}
+                  autoHideDuration={8000}
                   onRequestClose={this.handleClose.bind(this, "snackBarOpen")} />
         <Dialog
           title="Session found"

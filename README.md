@@ -42,29 +42,35 @@ MatchPoint allows users to dynamically change the range of players that can be i
 
       
 ```javascript
-  static findSchemata(numPlayers, start = 0, rangeOfPlayers = [6, 5, 4]){
-      if (numPlayers < 0) return null;
-      if (numPlayers === 0) return [[]];
-      let possibilities = [],
-          recursions = [];
-      for (var i = 0; i < rangeOfPlayers.length - start; i++){
-        var range = rangeOfPlayers[i + start];
-        recursions.push([range, findSchemata(
-              numPlayers - range, start + i, rangeOfPlayers)]);
+const schema = {} 
+export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
+  if (numPlayers < 0) return null;
+  if (numPlayers === 0) return [[]];
+  let possibilities = [],
+      recursions = [];
+      
+  if (!schema[numPlayers]){
+    schema[numPlayers] = {};
+  }
+  if (!schema[numPlayers][rangeOfPlayers[0]]){
+    rangeOfPlayers.forEach((range, i) => {
+      recursions.push([range, findSchemata(numPlayers - range, rangeOfPlayers.slice(i))]);
+    })
+
+    if (recursions.every(result => !result[1])) return null;
+
+    recursions.forEach((test) => {
+      if (test[1]){
+        possibilities = possibilities.concat(test[1].map( 
+          result => [test[0]].concat(result)
+        ));  
       }
+    })
+    schema[numPlayers][rangeOfPlayers] = possibilities;
+  }
 
-      if (recursions.every(result => (result[1] === false))) return null;
-
-      recursions.forEach((test) => {
-        if (test[1]){
-          possibilities = possibilities.concat(test[1].map( 
-            result => [test[0]].concat(result)
-          ));  
-        }
-      })
-
-      return possibilities;
-    }
+  return schema[numPlayers][rangeOfPlayers];
+}
 ```
 
 MatchPoint uses mongoose CDM to help with data validations and to construct schemata. Mongoose is used with Bluebird module to avoid a maze of callbacks. The schemata are constructed as follows:

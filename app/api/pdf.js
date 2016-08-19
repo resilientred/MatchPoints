@@ -44,39 +44,34 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   schemas.forEach((group, i) => {
     let players = [];
     process.nextTick(() => {
-      let url = generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
-      urls["group" + (i + 1)] = url
-      if (addedPlayers.length === 0){
-        client.set(clubId, JSON.stringify(urls), (err) => {
-          if (err) console.log("err: ", err);
-          client.setex("pdf#" + url, 60*15, "true", (err) => {
-            if (err) console.log(err);
-          })
-          console.log(urls);
-          res.status(200).send(urls);
-          res.end();
+      try {
+        let url = generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
+
+        client.setex("pdf#" + url, 60*15, "true", (err) => {
+          if (err) console.log(err);
         });
+        urls["group" + (i + 1)] = url
+        if (addedPlayers.length === 0){
+          res.status(200).send(urls);
+        }
+      } catch(e){
+        res.status(500).send("Unable to generate pdfs. Please try again later.")
       }
     })
   })
 })
-router.get("/:clubId", (req, res) => {
-  let clubId = req.params.clubId;
-  client.get(clubId, (err, data) => {
-    if (!err){
-      console.log(err);
-      res.status(200).send(JSON.parse(data));
-      res.end();
-    } else {
-      res.status(404).send("Expired or does not exist");
-    }
-  });
-})
+
 
 router.get("/download/:file", (req, res) => {
-  const filePath = path.join(__dirname, "..", "..", "pdfs", `${req.params.file}.pdf`);
-  res.setHeader('Content-Disposition', 'attachment; filename=' + req.params.file + '.pdf');
-  res.setHeader('Content-Type', 'application/pdf');
-  res.download(filePath);
+  const filepath = path.join(__dirname, "..", "..", "pdfs", `${req.params.file}.pdf`);
+  fs.access(filepath, fs.constants.F_OK, (err) => {
+    if (err){
+      res.status(404).send("File have expired or does not exist");
+    } else {
+      res.setHeader('Content-Disposition', 'attachment; filename=' + req.params.file + '.pdf');
+      res.setHeader('Content-Type', 'application/pdf');
+      res.download(filepath);
+    }
+  })
 })
 export default router

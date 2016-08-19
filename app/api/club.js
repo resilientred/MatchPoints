@@ -59,32 +59,29 @@ router.get("", (req, res) => {
           res.status(422).send(err);
         })
     }).post("/:clubId/temp", parseUrlEncoded, csrfProtection, (req, res) => {
+      console.log("saving temp")
       let _clubId = req.params.clubId,
           data = JSON.stringify(req.body.session);
-          client.setex("tempsess#" + _clubId, 300, data, err => console.log(err));
+          client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
           res.status(202)
           res.end();
     }).get("/:clubId/temp", (req, res) => {
       let _clubId = req.params.clubId;
-      client.get("tempsess#" + _clubId, (data, err) => {
+      client.get("tempsess#" + _clubId, (err, data) => {
+        client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
         if (data){
           res.status(200).send(JSON.parse(data));
         } else {
-          console.log(err);
           res.status(200).send("no data cached");
           res.end();
         }
       })
     }).delete("/:clubId/temp", (req, res) => {
       let _clubId = req.params.clubId;
-      client.del("tempsess#" + _clubId, (data, err) => {
-        if (data){
+      client.del(_clubId, () => {
+        client.del("tempsess#" + _clubId, () => {
           res.status(202);
-        } else {
-          console.log(err);
-          res.status(200).send("no data cached");
-          res.end();
-        }
+        })
       })
     }).post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {
       let clubId = req.params.clubId, 

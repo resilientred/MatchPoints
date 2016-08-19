@@ -8,7 +8,6 @@ let _error = null;
 const _setCurrentClub = (club) => {
   _currentClub = club === "" ? null : club;
 }
-
 const _setError = (err) => {
   _error = err.responseText ? err.responseText : null;
 }
