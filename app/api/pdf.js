@@ -64,7 +64,7 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
 
 router.get("/download/:file", (req, res) => {
   const filepath = path.join(__dirname, "..", "..", "pdfs", `${req.params.file}.pdf`);
-  fs.access(filepath, fs.constants.F_OK, (err) => {
+  fs.access(filepath, (err) => {
     if (err){
       res.status(404).send("File have expired or does not exist");
     } else {

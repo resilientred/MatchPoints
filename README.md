@@ -10,10 +10,9 @@ And allow users to:
 ## Todos
  - [x] Refactor Navbar
  - [x] Run bug test on save
- - [ ] Make pdf works // remove the option to retrieve pdf for them.. unless I can implement caching
- - [ ] buggg tests
- - [ ] from validations
- - [ ] temporarily save session in react-cookie/redis 
+ - [x] temporarily save session in redis 
+ - [x] Make pdf works
+ - [ ] form validations
  - [ ] deploy on AWS
 
 ## Expected Features (MVP)
@@ -25,7 +24,7 @@ And allow users to:
  - [x] Provide a platform for participants to query results based on event date
 
 ## Bonus features
- - [ ] Temporary Save sessions and allow users to retrieve results
+ - [x] Temporary Save sessions and allow users to retrieve results
  - [ ] Allow users to import players in csv, json, (or xml?) formats
  - [ ] Allow Users to update previous saved results
  - [ ] Adjust results automatically if an older session is saved after the newer one

@@ -33,9 +33,9 @@ const moveUpArrow = (moveUp, i, bool) => {
 }
 
 const ParticipantGroup = (props) => {
-  return (<div>
+  return (<div style={{position: "relative"}}>
     <IconButton iconClassName="material-icons" 
-      style={{position: "absolute", right: "0", top: "100px", zIndex: 10}}
+      style={{position: "absolute", right: "0", top: "5px", zIndex: 10}}
         onClick={props.pdfDownload} 
         disabled={!props.pdfs}
         tooltip={!props.pdfs ? "You must generate first" : "Download pdf" }><PdfIcon  /></IconButton>

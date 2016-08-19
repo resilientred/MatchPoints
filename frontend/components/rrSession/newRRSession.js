@@ -62,22 +62,27 @@ export default class NewRRSession extends React.Component {
 
   _tempSessionFetched = () => {
     let session = TempSessionStore.findCachedSession();
+
     if (session){
-      this.selectedSchema = session.selectedSchema;
-      this.schemata = session.schemata;
-      this.pdfs = session.pdfs;
-      this.max = session.max;
-      this.min = session.min;
-      this.cached = true;
-      this.setState({      
-        tab: session.tab,
-        date: new Date(session.date),
-        numPlayers: +session.numPlayers,
-        addedPlayers: session.addedPlayers ? session.addedPlayers : {}
-      })
+      this.session = session;
+      this.handleOpen("dialogOpen");
     }
   }
-
+  restoreSession = () => {
+    this.selectedSchema = this.session.selectedSchema;
+    this.schemata = this.session.schemata;
+    this.pdfs = this.session.pdfs;
+    this.max = this.session.max;
+    this.min = this.session.min;
+    this.cached = true;
+    this.setState({      
+      tab: this.session.tab,
+      date: new Date(this.session.date),
+      numPlayers: +this.session.numPlayers,
+      addedPlayers: this.session.addedPlayers ? this.session.addedPlayers : {}
+    })
+    this.handleClose("dialogOpen")
+  }
   openModal = () =>{
     this.setState({newPlayerModal: true});
   }
@@ -138,6 +143,7 @@ export default class NewRRSession extends React.Component {
     }, this.props.club._id);
   }
   destroyTempSession = () => {
+    this.session = null;
     PDFStore.clearPDF();
     destroyTempSession(this.props.club._id);
     this.handleClose("dialogOpen");

@@ -68,8 +68,8 @@ router.get("", (req, res) => {
     }).get("/:clubId/temp", (req, res) => {
       let _clubId = req.params.clubId;
       client.get("tempsess#" + _clubId, (err, data) => {
-        client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
         if (data){
+          client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
           res.status(200).send(JSON.parse(data));
         } else {
           res.status(200).send("no data cached");

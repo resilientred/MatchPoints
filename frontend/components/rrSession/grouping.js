@@ -13,6 +13,11 @@ import SnackBar from 'material-ui/SnackBar';
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 
+const objToString = (obj) => {
+  return Object.keys(obj).reduce( (a, b) => { 
+     a += b + obj[b]
+  }, "")
+}
 class Grouping extends React.Component {
     constructor(props) {
         super(props);
@@ -78,6 +83,10 @@ class Grouping extends React.Component {
       }
     } 
     shouldComponentUpdate(nextProps, nextState) {
+      if ((!this.state.pdfs && nextState.pdfs) || 
+            (nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs))){
+        return true;
+      }
       if (this.state.selectedGroup && nextState.selectedGroup && 
             this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
         return true;
@@ -155,7 +164,7 @@ class Grouping extends React.Component {
     changeSchema = (e, _, selectedGroup) => {
       if (selectedGroup){
         this.totalPlayerAdded = 0;
-        this.setState({ selectedGroup }); 
+        this.setState({ selectedGroup: selectedGroup.split(",").map(el => +el) }); 
       }
     }
     generatePDF = () => {
