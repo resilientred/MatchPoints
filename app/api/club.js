@@ -63,7 +63,7 @@ router.get("", (req, res) => {
       let _clubId = req.params.clubId,
           data = JSON.stringify(req.body.session);
           client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
-          res.status(202)
+          res.status(202);
           res.end();
     }).get("/:clubId/temp", (req, res) => {
       let _clubId = req.params.clubId;

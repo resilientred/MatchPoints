@@ -1,5 +1,5 @@
-# MatchPoint
-MatchPoint is a Full-stack web Round-Robin rating systems. It is expected to provide a platform for round-robin organizers to:
+# MatchPoints
+MatchPoints is a Full-stack web Round-Robin rating systems. It is expected to provide a platform for round-robin organizers to:
 * group players
 * record results
 * calculate score
@@ -8,13 +8,9 @@ And allow users to:
 * query results based on date
 * query their indiviual old results
 ## Todos
- - [x] Refactor Navbar
- - [x] Run bug test on save
- - [x] temporarily save session in redis 
- - [x] Make pdf works
+ - [ ] deploy on AWS (transpile code to es5 with babel...)
  - [ ] form validations
- - [ ] deploy on AWS
-
+ 
 ## Expected Features (MVP)
  - [x] Arrange groups for players based on ratings
  - [x] Allow organizers to enter results
@@ -23,7 +19,7 @@ And allow users to:
  - [x] Provide a platform for participants to query their individual past results
  - [x] Provide a platform for participants to query results based on event date
 
-## Bonus features
+## Bonus features (Will be implemented in the future)
  - [x] Temporary Save sessions and allow users to retrieve results
  - [ ] Allow users to import players in csv, json, (or xml?) formats
  - [ ] Allow Users to update previous saved results
@@ -33,13 +29,12 @@ And allow users to:
 ## Languages:
  - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js
- - Database: MongoDB with Mongoose ODM with Redis caching
+ - Database: MongoDB with Mongoose ODM + Redis as a temporary store
  
-
 ## Implementation:
 MatchPoint allows users to dynamically change the range of players that can be in a single group. It also offers the possible schemata that fulfills the condition of the range of players.
 
-      
+### Helper Methods
 ```javascript
 const schema = {} 
 export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
@@ -72,6 +67,7 @@ export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
 }
 ```
 
+### MongoDB
 MatchPoint uses mongoose CDM to help with data validations and to construct schemata. Mongoose is used with Bluebird module to avoid a maze of callbacks. The schemata are constructed as follows:
 
 ```javascript
@@ -116,9 +112,10 @@ const roundRobinSchema = new Schema({
 
 ```
 
+### Redis as a temporary store
 Matchpoint allows users to create schedules in pdfs and provide it to the players. It does so using html5-to-pdf library. Redis provides a platform for caching pdf links, expiring and cleaning up of old pdfs.
 
-Upon creation of pdfs, the filename is stored in the Redis store and set ot expire after 15 minutes. Once expired, the listener which is listening on the expiring event, will remove the file.
+Upon creation of pdfs, the filename is stored in the Redis store and is set to expire after 15 minutes. Once expired, the listener which is listening on the "expired" event, will remove the file.
 
 ```js
 client.setex(url, 60*15, "true", (err) => {
@@ -139,4 +136,50 @@ const _handleExpired = (name) => {
     if (err) return console.log(err);
   })
 };
+```
+
+Every time a new session has started, the stringified verison of the data will be saved temporarily every 30 seconds in the Redis store, and it is made available for as long as the user is active or 15 minutes after leaving the page.  
+
+```js
+this.int = setInterval(this.tempSave, 30000);
+
+let data = JSON.stringify(req.body.session);
+client.setex("tempsess#" + _clubId, 300, data, (err) => {
+  if(err) console.log(err)
+});
+
+
+```
+
+Every time a user opened the new session page, a request will be sent to the server to see whether or not a previous session is available. A dialog will be opened to ask whether or not a user want to restore the session. If a user decides to retrieve the session, the expire time of the data stored in Redis will be extended. 
+
+Since this component, which has sub-components, does not have direct control to all the data, I utilized this technique with componentWillReceiveProps: I rely on the change of a prop (this.cached) passed down to allow the sub-components to decide whether or not they should use the props. The moment when this.props.cache changed from false to true, the sub-component will update itself with the other props passed down.
+
+```js
+client.get("tempsess#" + _clubId, (err, data) => {
+        if (data){
+          client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
+          res.status(200).send(JSON.parse(data));
+        } else {
+          res.status(200).send("no data cached");
+          res.end();
+        }
+      })
+
+// how I implemented restore session
+restoreSession = () => {
+  this.selectedSchema = this.session.selectedSchema;
+  this.schemata = this.session.schemata;
+  this.pdfs = this.session.pdfs;
+  this.max = this.session.max;
+  this.min = this.session.min;
+  this.cached = true;
+  this.setState({      
+    tab: this.session.tab,
+    date: new Date(this.session.date),
+    numPlayers: +this.session.numPlayers,
+    addedPlayers: this.session.addedPlayers ? this.session.addedPlayers : {}
+  })
+  this.handleClose("dialogOpen")
+}
 ```
