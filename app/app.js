@@ -1,24 +1,20 @@
 import path from 'path'
-// import webpack from 'webpack'
-// import webpackMiddleware from 'webpack-dev-middleware'
 import minify from 'express-minify'
 import mongoose from 'mongoose'
 import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'
 import express from "express"
 import { app, csrfProtection, clubMethods } from "./helpers/app_modules"
-// import config from '../webpack.config.js'
 import routes from './api/players'
 import clubRoutes from "./api/club"
 import sessionRoutes from "./api/session"
 import pdfRoutes from "./api/pdf"
-const port = process.env.PORT || 3000;
+const port = 80;
 
-// const compiler = webpack(config);
 
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "..", "public", "views"));
-mongoose.connect('mongodb://localhost/roundrobindb');
+mongoose.connect('mongodb://127.0.0.1:27017/roundrobindb');
 app.use(cookieParser());
 
 // app.use(function (err, req, res, next) {
@@ -39,9 +35,7 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "..", "public")));
-// { maxAge: 86400000 }
-// app.use(webpackMiddleware(compiler));
+app.use(express.static(path.join(__dirname, "..", "public"), { maxAge: 20000000 }));
 app.use('/api/clubs', clubRoutes);
 app.use('/api/clubs', routes);
 app.use('/api/pdfs', pdfRoutes)
@@ -77,7 +71,7 @@ app.get('*', csrfProtection, (req, res) => {
 });  
 
 app.listen(port, () => {
-  console.log('listening on port 3000...');
+  console.log('listening on port 80...');
 });
 
 

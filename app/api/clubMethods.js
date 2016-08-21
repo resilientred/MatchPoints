@@ -30,11 +30,18 @@ class ClubMethods {
     if (!club) {
       throw new Error("log In error");
     } else {
-      this._currentClub = Object.assign({}, club.toObject());
+      let sessionToken = club.sessionToken; 
+      this._currentClub = club;
+      
       delete this._currentClub.sessionToken;
       delete this._currentClub.passwordDigest;
-      res.cookie("matchpoint_session", club.sessionToken, 
+
+      console.log("sending cookie");
+      res.cookie("matchpoint_session", sessionToken, 
             { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(this._currentClub);
+      return new Promise((resolve, reject) => {
+		resolve("ok");
+	});
     }
   }
 
@@ -46,6 +53,7 @@ class ClubMethods {
         _club = club;
         return club.isPassword(password);
       }).then(() => {
+	console.log("password correct");
         return new Promise((resolve, reject) => {
           resolve(_club);
         })

@@ -16,7 +16,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import DatePicker from 'material-ui/DatePicker';
-import SnackBar from "material-ui/SnackBar"
+import SnackBar from "material-ui/Snackbar"
 import Dialog from 'material-ui/Dialog';
 
 export default class NewRRSession extends React.Component {

@@ -6,8 +6,9 @@
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "build-server": "babel -d ./build ./app",
-    "build": "npm run clean && npm run build-server && webpack",
-    "start": "node ./build/app.js",
+    "webpack": "node node_modules/webpack/bin/webpack.js",
+    "build": "npm run clean && npm run build-server && npm run webpack",
+    "start": "sudo node ./build/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -40,7 +41,8 @@
     "react-tap-event-plugin": "^1.0.0",
     "redis": "^2.6.2",
     "redis-notifier": "^1.0.0",
-    "shortid": "^2.2.6"
+    "shortid": "^2.2.6",
+    "urlsafe-base64": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -49,7 +51,6 @@
     "babel-core": "^6.9.0",
     "babel-loader": "^6.2.4",
     "babel-preset-react": "^6.5.0",
-    "webpack": "^1.13.1",
-    "webpack-dev-middleware": "^1.6.1"
+    "webpack": "^1.13.1"
   }
 }

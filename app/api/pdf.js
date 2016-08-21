@@ -7,7 +7,7 @@ import bluebird from "bluebird"
 import path from "path"
 
 
-const subscriber = redis.createClient();
+const subscriber = redis.createClient("redis://matchpoints.ho1ans.ng.0001.usw1.cache.amazonaws.com:6379");
 const router = express.Router();
 
 

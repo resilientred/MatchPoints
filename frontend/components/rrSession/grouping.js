@@ -9,7 +9,7 @@ import MenuItem from "material-ui/MenuItem"
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import SnackBar from 'material-ui/SnackBar';
+import SnackBar from 'material-ui/Snackbar';
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 

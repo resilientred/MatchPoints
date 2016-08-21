@@ -4,7 +4,7 @@ import moment from 'moment'
 import RRSessionStore from "../../stores/rrSessionStore"
 import ClubStore from "../../stores/clubStore"
 import { fetchRRSessions, updateResult, postResult } from "../../actions/rrSessionActions"
-import RecordTable from "./RecordTable"
+import RecordTable from "./recordTable"
 import AppBar from 'material-ui/AppBar'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
