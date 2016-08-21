@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "babel -d ./build ./app",
+    "build": "npm run clean && npm run build-server && webpack",
+    "start": "node ./build/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel-core": "^6.9.0",
-    "babel-loader": "^6.2.4",
-    "babel-preset-react": "^6.5.0",
     "bcrypt": "^0.8.7",
     "bcrypt-as-promised": "^1.1.0",
     "bluebird": "^3.4.1",
@@ -39,13 +40,16 @@
     "react-tap-event-plugin": "^1.0.0",
     "redis": "^2.6.2",
     "redis-notifier": "^1.0.0",
-    "shortid": "^2.2.6",
-    "webpack": "^1.13.1",
-    "webpack-dev-middleware": "^1.6.1"
+    "shortid": "^2.2.6"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-0": "^6.5.0"
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-core": "^6.9.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-react": "^6.5.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-middleware": "^1.6.1"
   }
 }

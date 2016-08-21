@@ -1,23 +1,23 @@
 import path from 'path'
-import webpack from 'webpack'
-import webpackMiddleware from 'webpack-dev-middleware'
+// import webpack from 'webpack'
+// import webpackMiddleware from 'webpack-dev-middleware'
 import minify from 'express-minify'
 import mongoose from 'mongoose'
 import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'
 import express from "express"
-import { app, csrfProtection, clubMethods } from "./app/helpers/app_modules"
-import config from './webpack.config.js'
-import routes from './app/api/players'
-import clubRoutes from "./app/api/club"
-import sessionRoutes from "./app/api/session"
-import pdfRoutes from "./app/api/pdf"
+import { app, csrfProtection, clubMethods } from "./helpers/app_modules"
+// import config from '../webpack.config.js'
+import routes from './api/players'
+import clubRoutes from "./api/club"
+import sessionRoutes from "./api/session"
+import pdfRoutes from "./api/pdf"
 const port = process.env.PORT || 3000;
 
-const compiler = webpack(config);
+// const compiler = webpack(config);
 
 app.set('view engine', 'ejs');
-
+app.set("views", path.join(__dirname, "..", "public", "views"));
 mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
 
@@ -32,16 +32,16 @@ app.use('/favicon.ico', (req, res, next) => {
 })
 app.use(
   sassMiddleware({
-    src: __dirname + "/app/assets/sass",
-    dest: __dirname + "/public/styles",
+    src: path.join(__dirname, "assets", "sass"),
+    dest: path.join(__dirname, "..", "public", "styles"),
     prefix: '/styles',
     debug: true
   })
 );
 
-app.use(express.static(path.join(__dirname + "/public")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 // { maxAge: 86400000 }
-app.use(webpackMiddleware(compiler));
+// app.use(webpackMiddleware(compiler));
 app.use('/api/clubs', clubRoutes);
 app.use('/api/clubs', routes);
 app.use('/api/pdfs', pdfRoutes)
@@ -73,7 +73,7 @@ app.use('/*', (req, res, next) => {
 });
 
 app.get('*', csrfProtection, (req, res) => {
-  res.render("pages/index", { csrfToken: req.csrfToken() });
+  res.render("index", { csrfToken: req.csrfToken() });
 });  
 
 app.listen(port, () => {

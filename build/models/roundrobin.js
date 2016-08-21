@@ -1,0 +1,59 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _mongoose = require('mongoose');
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _shortid = require('shortid');
+
+var _shortid2 = _interopRequireDefault(_shortid);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_mongoose2.default.Promise = require('bluebird');
+var Schema = _mongoose2.default.Schema;
+
+var roundRobinSchema = new Schema({
+  _clubId: { type: String, required: true },
+  date: { type: Date, default: Date.now, required: true },
+  numOfPlayers: { type: Number, required: true },
+  players: { type: Array, default: [] },
+  schemata: { type: Object },
+  selectedSchema: { type: Object },
+  results: { type: Array, default: [] },
+  finalized: { type: Boolean, default: false },
+  scoreChange: { type: Array, default: [] },
+  id: { type: String, default: _shortid2.default.generate, required: true, index: true }
+});
+
+roundRobinSchema.statics.findRoundRobinsByClub = function (clubId) {
+  return this.find({ "_clubId": clubId });
+};
+
+roundRobinSchema.statics.findRoundRobin = function (id) {
+  return this.findOne({ "_id": id });
+};
+
+roundRobinSchema.statics.saveResult = function (id, result, scoreChange) {
+  return this.findOneAndUpdate({ "_id": id }, {
+    $set: {
+      "finalized": true,
+      "results": result,
+      "scoreChange": scoreChange
+    }
+  }, { new: true });
+};
+
+roundRobinSchema.statics.deleteRoundRobin = function (id) {
+  return this.remove({ "id": id });
+};
+roundRobinSchema.statics.updateResult = function (id, result, scoreChange) {
+  return this.update({ "_id": id }, { $set: { "results": result, "scoreChange": scoreChange } });
+};
+var RoundRobin = _mongoose2.default.model('RoundRobin', roundRobinSchema);
+
+exports.default = RoundRobin;
