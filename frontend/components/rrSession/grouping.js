@@ -35,7 +35,7 @@ class Grouping extends React.Component {
     componentWillMount() {
       this.pListener = PDFStore.addListener(this._fetchedPDF);
 
-      this.int = setInterval(this.tempSave, 30000);
+      this.int = setInterval(this.tempSave, 60000);
     }
     componentWillUnmount() {
      this.pListener.remove(); 

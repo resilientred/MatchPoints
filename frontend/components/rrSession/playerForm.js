@@ -16,13 +16,12 @@ class PlayerForm extends React.Component {
   _updateField(name, e) {
     this.setState({ [name]: e.target.value });
   }
-  _handleSubmit = (e) => {
-    e.preventDefault();
+  _handleSubmit = () => {
     addPlayer(ClubStore.getCurrentClub()._id, this.state)
   }
 	render(){
       return (<div className="player-form" style={{display: this.props.modalOpen ? "block" : "none"}}>
-        <form onSubmit={this._handleSubmit}>
+        <form>
           <IconButton style={{position: "absolute", right: "10px", top: "10px"}} 
                       iconClassName="material-icons" 
                       onClick={this.props.closeModal}
@@ -44,7 +43,11 @@ class PlayerForm extends React.Component {
             			 value={this.state.rating} pattern="^\d{2,4}$"
             			 required/>
           </div>
-          <RaisedButton fullWidth={true} label="Register Player" style={{marginTop: "20px"}}/>
+          <RaisedButton 
+            fullWidth={true} 
+            label="Register Player" 
+            style={{marginTop: "20px"}}
+            onTouchTap={this._handleSubmit}/>
         </form>
       </div>)
 	}

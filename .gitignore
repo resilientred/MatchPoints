@@ -40,3 +40,9 @@ pdfs
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+build
+app.js
+app_modules.js
+pdf.js
+package.json
+webpack.config.js

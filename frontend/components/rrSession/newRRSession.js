@@ -45,8 +45,11 @@ export default class NewRRSession extends React.Component {
   componentWillUnmount() {
     if (this.csListener) this.csListener.remove();
     if (this.rrListener) this.rrListener.remove();
+    if (this.tslistener) this.tslistener.remove();
   }
-
+  shouldComponentUpdate(nextProps, nextState) {
+    return true;
+  } 
   _rrResponseReceived = () => {
     let error = RRSessionStore.getError();
 
@@ -201,8 +204,6 @@ export default class NewRRSession extends React.Component {
               initialSelectedIndex={1}>
           <Tab label="Registration" value="1">
             { playerContent }
-            <PlayerForm modalOpen={this.state.newPlayerModal} 
-                      closeModal={this.closeModal}/>
           </Tab>
           <Tab label="Grouping" value="2"> 
             { groupContent }
@@ -221,6 +222,8 @@ export default class NewRRSession extends React.Component {
         >
           Would you like to restore your previous session?
         </Dialog>
+        <PlayerForm modalOpen={this.state.newPlayerModal} 
+                  closeModal={this.closeModal}/>
       </div>
     )
   }

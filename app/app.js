@@ -9,12 +9,15 @@ import routes from './api/players'
 import clubRoutes from "./api/club"
 import sessionRoutes from "./api/session"
 import pdfRoutes from "./api/pdf"
-const port = 80;
-
+const port = 3000;
+import webpack from 'webpack'
+import webpackMiddleware from 'webpack-dev-middleware'
+import config from '../webpack.config.js'
+const compiler = webpack(config);
 
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "..", "public", "views"));
-mongoose.connect('mongodb://127.0.0.1:27017/roundrobindb');
+mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
 
 // app.use(function (err, req, res, next) {
@@ -36,6 +39,7 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, "..", "public"), { maxAge: 20000000 }));
+app.use(webpackMiddleware(compiler));
 app.use('/api/clubs', clubRoutes);
 app.use('/api/clubs', routes);
 app.use('/api/pdfs', pdfRoutes)
