@@ -62,7 +62,19 @@ clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
       return club.save();
     })
 }
-
+clubSchema.statics.removePlayer = function(clubId, id){
+  return this.findOneAndUpdate({"_id": clubId}, {
+    $pull: {players: {_id: id}}
+  }, {new: true});
+}
+clubSchema.statics.updatePlayer = function(clubId, id, player){
+  return this.findOneAndUpdate({"_id": clubId, "players._id": id}, {
+    $set: {
+      players.$.rating: player.rating,
+      players.$.name: player.name
+    }
+  }, {new: true});
+}
 
 clubSchema.methods.isPassword = function(password){
   return bcrypt.compare(password, this.passwordDigest); 

@@ -1,6 +1,6 @@
 import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
-import { LOGGED_IN, LOG_IN_ERROR } from "../constants/constants"
+import { LOGGED_IN, LOG_IN_ERROR, UPDATED_CLUB } from "../constants/constants"
 
 let _currentClub = null;
 let _error = null;
@@ -32,6 +32,10 @@ ClubStore.__onDispatch = (payload) => {
       break;
     case LOG_IN_ERROR:
       _setError(payload.err);
+      ClubStore.__emitChange();
+      break;
+    case UPDATED_CLUB:
+      _setCurrentClub(payload.club);
       ClubStore.__emitChange();
       break;
   }

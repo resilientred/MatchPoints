@@ -1,6 +1,6 @@
 import React from 'react';
 import { browserHistory } from "react-router";
-import { fetchPlayers } from '../../actions/clientActions';
+import { fetchPlayers, deletePlayer, updatePlayer } from '../../actions/clientActions';
 import { saveSession, temporarySession, destroyTempSession, fetchTempSession } from "../../actions/rrSessionActions";
 import moment from "moment"
 import RRSessionStore from "../../stores/rrSessionStore";
@@ -47,9 +47,7 @@ export default class NewRRSession extends React.Component {
     if (this.rrListener) this.rrListener.remove();
     if (this.tslistener) this.tslistener.remove();
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
-  } 
+ 
   _rrResponseReceived = () => {
     let error = RRSessionStore.getError();
 
@@ -62,7 +60,13 @@ export default class NewRRSession extends React.Component {
       browserHistory.push("/club/sessions");
     }
   }
-
+  deletePlayer = (_id) => {
+    delete this.state.addedPlayers[_id];
+    deletePlayer(this.props.club._id, _id);
+  }
+  updatePlayer = (_id, name, rating) => {
+    updatePlayer(this.props.club_id, _id, {name, rating});
+  }
   _tempSessionFetched = () => {
     let session = TempSessionStore.findCachedSession();
 
@@ -118,7 +122,6 @@ export default class NewRRSession extends React.Component {
       numPlayers: ++this.state.numPlayers
     });
   }
-
   toggleTab = (tab) => {
     this.setState({ tab });
   }

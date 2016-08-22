@@ -22,18 +22,18 @@ const addPlayer = (clubId, player) => {
 	});
 }
 const updatePlayer = (clubId, id, player) => {
-apiService({
+	apiCSRFService({
 		url: `/api/clubs/${clubId}/players/${id}`,
 		method: "PATCH",
-		data: player,
-		success: "updatedPlayer"
+		data: {player},
+		success: "updatedClub"
 	});
 }
-const removePlayer = (id) => {
-	apiService({
-		url: "/api/players/" + id,
+const deletePlayer = (clubId, id) => {
+	apiCSRFService({
+		url: `/api/clubs/${clubId}/players/${id}`,
 		method: "DELETE",
-		success: "removedPlayer"
+		success: "updatedClub"
 	});
 }
 

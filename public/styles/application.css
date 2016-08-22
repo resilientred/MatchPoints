@@ -457,9 +457,6 @@ form {
   position: absolute;
   top: 0%;
   left: 20%;
-  /*transition: translateX(50%);*/
-  /*-moz-transition: translate(50%, 50%);*/
-  /*-webkit-transition: translateX(-50%);*/
   padding: 30px;
   width: 300px;
   z-index: 300; }
@@ -514,7 +511,7 @@ form {
 
 .result-query-container {
   margin: 5% auto 0 auto;
-  width: 90%;
+  width: 80%;
   border: 1px solid #E0E0E0; }
 
 .name-select-div {
@@ -565,4 +562,6 @@ form {
 
 @media (max-width: 760px) {
   .result-entry {
-    max-width: 400px; } }
+    max-width: 400px; }
+  .result-query-container {
+    width: 90%; } }

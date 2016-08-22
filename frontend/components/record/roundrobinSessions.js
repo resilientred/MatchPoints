@@ -11,6 +11,7 @@ import IconButton from 'material-ui/IconButton/IconButton'
 import Edit from 'react-icons/lib/md/edit'
 import View from 'react-icons/lib/md/pageview'
 import Event from 'react-icons/lib/md/event'
+import Warning from 'react-icons/lib/md/warning'
 import moment from 'moment'
 class RoundRobinSessions extends Component {
     constructor(props) {
@@ -46,28 +47,44 @@ class RoundRobinSessions extends Component {
     }
 
     render() {
-      if (!this.props.club || !this.state.results){
+      if (!this.props.club){
         return <div>Loading....</div>
       }
       return (<div className="sessions-list">
         <List>
+          <Subheader style={{fontSize: "24px", textAlign: "center", marginBottom: "10px" }}>Previous Sessions</Subheader>
+          <Divider />
           <Subheader inset={true}>Pending Sessions</Subheader>
           {
-            this.state.results.filter(r => !r.finalized).map( (result) => (
-             <ListItem key={result.id} 
-              onClick={this.editResult.bind(this, result.id)}
-              leftAvatar={<Avatar icon={<Event />} />} 
-              primaryText={moment(result.date).format("MMMM DD, YYYY")}
-              rightIcon={<Edit />}
-              />
-            ))
+            !this.state.results ?
+              <ListItem key={"noth"}
+                  primaryText="There have not been any sessions..."
+                  leftAvatar={<Avatar icon={<Warning />} />}
+                  disabled
+                />
+            :
+              this.state.results.filter(r => !r.finalized).map( (result) => (
+               <ListItem key={result.id} 
+                onClick={this.editResult.bind(this, result.id)}
+                leftAvatar={<Avatar icon={<Event />} />} 
+                primaryText={moment(result.date).format("MMMM DD, YYYY")}
+                rightIcon={<Edit />}
+                />
+              ))
           }
         </List>
         <Divider inset={true} />
         <List>
           <Subheader inset={true}>Saved Sessions</Subheader>
           {
-            this.state.results.filter(r => r.finalized).map( (result) => (
+            !this.state.results ?
+              <ListItem key={"noth"}
+                  primaryText="There have not been any sessions..."
+                  leftAvatar={<Avatar icon={<Warning />} />}
+                  disabled
+                />
+            :
+              this.state.results.filter(r => r.finalized).map( (result) => (
               <ListItem key={result.id} 
                 onClick={this.editResult.bind(this, result.id)}
                 leftAvatar={<Avatar icon={<Event />} />} 

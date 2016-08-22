@@ -2,7 +2,7 @@ import Dispatcher from "../dispatcher/dispatcher";
 import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 				 LOGGED_IN, FETCHED_PLAYER, FETCHED_PLAYERS, REMOVED_PLAYER,
 				 LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF, 
-				 FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION } from "../constants/constants"
+				 FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION, UPDATED_CLUB } from "../constants/constants"
 
 
 module.exports = {
@@ -15,6 +15,12 @@ module.exports = {
 			session: sessionId
 		})
 	}, 
+	updatedClub(club){
+		Dispatcher.dispatch({
+			actionType: UPDATED_CLUB,
+			club: club
+		})
+	},
 	fetchedRRSessions(sessions){
 		Dispatcher.dispatch({
 			actionType: FETCHED_SESSIONS,

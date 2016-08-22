@@ -6,8 +6,8 @@ import ClubResultQuery from "./clubResultQuery"
 import { fetchAllClubs  } from "../../actions/clientActions"
 import AllClubsStore from "../../stores/allClubsStore"
 export default class ResultQuery extends Component {
-  constructor(props){
-    super(props)
+  constructor(props, context){
+    super(props, context)
     this.state = {
       clubs: null,
       tab: 0
@@ -20,6 +20,7 @@ export default class ResultQuery extends Component {
   componentWillUnmount(){
     this.allCListener.remove();
   }
+
   handleTabChange = (tab, e, i) => {
     this.setState({ tab });
   }
@@ -35,7 +36,6 @@ export default class ResultQuery extends Component {
   _fetchedAllClubs = () => {
     this.setState({ clubs: AllClubsStore.all() })
   }
-
   render() {
     return <div>
       <div className="result-query-container">
@@ -57,3 +57,4 @@ export default class ResultQuery extends Component {
     </div>;
   }
 }
+

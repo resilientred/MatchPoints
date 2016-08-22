@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton/IconButton'
 import Close from 'react-icons/lib/md/close'
+
 class PlayerForm extends React.Component {
 	constructor(props){
 		super(props);
@@ -13,11 +14,17 @@ class PlayerForm extends React.Component {
       rating: "0"
     }
 	}
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.modalOpen && this.props.modalOpen){
+      document.getElementById("name").focus();
+    }
+  }
   _updateField(name, e) {
     this.setState({ [name]: e.target.value });
   }
   _handleSubmit = () => {
     addPlayer(ClubStore.getCurrentClub()._id, this.state)
+    this.setState({ name: "", rating: "0" });
   }
 	render(){
       return (<div className="player-form" style={{display: this.props.modalOpen ? "block" : "none"}}>
@@ -29,11 +36,13 @@ class PlayerForm extends React.Component {
                       ><Close /></IconButton>
           <h3>Player Form</h3>
           <div>
-            <TextField type="text"
+            <TextField type="text" 
                     floatingLabelText="Name" 
+                    id="name"
                     hintText="Name"
             				onChange={this._updateField.bind(this, "name")} 
-            				value={this.state.name} required/>
+            				value={this.state.name} 
+                    required />
           </div>
           <div>
             <TextField type="text"

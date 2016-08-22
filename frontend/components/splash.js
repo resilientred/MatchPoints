@@ -3,9 +3,9 @@ import { Link } from "react-router"
 import LogInForm from "./user/logIn"
 import SignUpForm from "./user/signUp"
 
-export default class Splash extends Component {
-  constructor(props) {
-    super(props);
+class Splash extends Component {
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       tab: 0
     }
@@ -14,7 +14,11 @@ export default class Splash extends Component {
   setTab = (tab) => {
     this.setState({ tab });
   }
-
+  componentDidMount() {
+    if (this.props.location.query.login){
+      this.setState({ tab: 1 })
+    }
+  }
   render() {
     let content;
     (function(that){
@@ -44,3 +48,9 @@ export default class Splash extends Component {
   }
 
 }
+
+Splash.contextTypes = {
+    router: React.PropTypes.object.isRequired
+};
+
+export default Splash;

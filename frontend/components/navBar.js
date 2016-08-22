@@ -6,14 +6,15 @@ import MenuItem from "material-ui/MenuItem"
 import ClubStore from "../stores/clubStore"
 
 class NavBar extends Component {
-  constructor(props){
-    super(props);
+  constructor(props, context){
+    super(props, context);
     this.state = {
       club: null,
       opened: false,
       tab: 0
     }
   }
+
   componentWillMount() {
     this.cuListener = ClubStore.addListener(this._currentClubChange);
     let club = ClubStore.getCurrentClub();
@@ -97,6 +98,7 @@ class NavBar extends Component {
                           insetChildren={true}
                           checked={this.state.tab === 3}/>
                 <MenuItem primaryText="Log In"
+                          onTouchTap={this.props.openLogin}
                           insetChildren={true}/>
             </Drawer>)
     }
@@ -112,7 +114,7 @@ class NavBar extends Component {
     } else {
       return (<ul className="nav">
                 <li className="activeLink"><Link to="/results" className="activeLink">Browse Results</Link></li>
-                <li className="activeLink">Log In</li>
+                <li className="activeLink" onClick={this.props.openLogin}>Log In</li>
             </ul>)
     }
 
@@ -123,7 +125,7 @@ class NavBar extends Component {
 
     return <div className="nav-bar">
         <div>
-        	<div className="logo"><Link to="/" className="activeLink">Match.Point</Link></div>
+        	<div className="logo"><Link to={this.state.club ? "/club" : "/"} className="activeLink">MatchPoints</Link></div>
           { collapsedIcon }
           { this.normalNav() }
           { this.slideNav() }

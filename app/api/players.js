@@ -31,10 +31,26 @@ router.route("/:clubId/players")
       }
       
     })
-  }).delete((req, res)=>{
+  });
+router.route("/:clubId/players/:id")
+  .delete((req, res)=>{
+    let { clubId, id } = req.params;
 
+    Club.removePlayer(clubId, id)
+      .then(club => {
+        res.status(200).send(club);
+      }).catch( err  => {
+        res.status(422).send("Unable to remove player");
+      })
   }).patch((req, res)=>{
-
+    let { clubId, id } = req.params;
+    let player = req.body.player;
+    Club.updatePlayer(clubId, id, player)
+      .then(club => {
+        res.status(200).send(club);
+      }).catch(err => {
+        res.status(422).send("Unable to update player");
+      })
 });
   
 export default router;
