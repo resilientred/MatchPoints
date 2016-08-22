@@ -70,4 +70,4 @@ const fetchClubRoundrobins = (clubId) => {
 	})
 }
 
-export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, removePlayer, fetchAllClubs, generatePDF, fetchAllPlayersFromClub, fetchClubRoundrobins }
+export { fetchPlayers, fetchPlayer, addPlayer, updatePlayer, deletePlayer, fetchAllClubs, generatePDF, fetchAllPlayersFromClub, fetchClubRoundrobins }

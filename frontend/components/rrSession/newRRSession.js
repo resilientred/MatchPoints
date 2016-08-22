@@ -181,9 +181,12 @@ export default class NewRRSession extends React.Component {
                 hintText="Date" value={this.state.date}
                 onChange={(e, date) => this.setState({date}) }/>
           </div>
-          <Participants objAddedPlayers={this.state.addedPlayers} addedPlayers={addedPlayers} 
-                                allPlayers={allPlayers} 
-                                handleToggle={this.handleToggle}/> 
+          <Participants objAddedPlayers={this.state.addedPlayers} 
+                        addedPlayers={addedPlayers} 
+                        deletePlayer={this.deletePlayer}
+                        updatePlayer={this.updatePlayer}
+                        allPlayers={allPlayers} 
+                        handleToggle={this.handleToggle}/> 
         </div>);
     let groupContent = (<Grouping numPlayers={numPlayers} 
                           cached={this.cached}

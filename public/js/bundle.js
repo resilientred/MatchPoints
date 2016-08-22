@@ -66698,7 +66698,10 @@
 	              return _this3.setState({ date: date });
 	            } })
 	        ),
-	        _react2.default.createElement(_participants2.default, { objAddedPlayers: this.state.addedPlayers, addedPlayers: addedPlayers,
+	        _react2.default.createElement(_participants2.default, { objAddedPlayers: this.state.addedPlayers,
+	          addedPlayers: addedPlayers,
+	          deletePlayer: this.deletePlayer,
+	          updatePlayer: this.updatePlayer,
 	          allPlayers: allPlayers,
 	          handleToggle: this.handleToggle })
 	      );
@@ -66772,7 +66775,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.fetchClubRoundrobins = exports.fetchAllPlayersFromClub = exports.generatePDF = exports.fetchAllClubs = exports.removePlayer = exports.updatePlayer = exports.addPlayer = exports.fetchPlayer = exports.fetchPlayers = undefined;
+	exports.fetchClubRoundrobins = exports.fetchAllPlayersFromClub = exports.generatePDF = exports.fetchAllClubs = exports.deletePlayer = exports.updatePlayer = exports.addPlayer = exports.fetchPlayer = exports.fetchPlayers = undefined;
 
 	var _apiUtil = __webpack_require__(399);
 
@@ -66850,7 +66853,7 @@
 	exports.fetchPlayer = fetchPlayer;
 	exports.addPlayer = addPlayer;
 	exports.updatePlayer = updatePlayer;
-	exports.removePlayer = removePlayer;
+	exports.deletePlayer = deletePlayer;
 	exports.fetchAllClubs = fetchAllClubs;
 	exports.generatePDF = generatePDF;
 	exports.fetchAllPlayersFromClub = fetchAllPlayersFromClub;
@@ -67213,7 +67216,9 @@
 	                                    handleToggle: props.handleToggle,
 	                                    title: 'All Players',
 	                                    selectable: true,
-	                                    addedPlayers: props.objAddedPlayers }),
+	                                    addedPlayers: props.objAddedPlayers,
+	                                    updatePlayer: props.updatePlayer,
+	                                    deletePlayer: props.deletePlayer }),
 	                        _react2.default.createElement(_Divider2.default, { style: { position: "relative" } }),
 	                        _react2.default.createElement(_playerList2.default, { players: props.addedPlayers,
 	                                    handleToggle: props.handleToggle,
@@ -67246,6 +67251,10 @@
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
+	var _IconButton = __webpack_require__(457);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
 	var _Toggle = __webpack_require__(639);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
@@ -67253,6 +67262,14 @@
 	var _Divider = __webpack_require__(508);
 
 	var _Divider2 = _interopRequireDefault(_Divider);
+
+	var _close = __webpack_require__(622);
+
+	var _close2 = _interopRequireDefault(_close);
+
+	var _create = __webpack_require__(716);
+
+	var _create2 = _interopRequireDefault(_create);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -67273,6 +67290,24 @@
 	        _Table.TableRowColumn,
 	        null,
 	        player.rating
+	      ),
+	      !props.updatePlayer ? "" : _react2.default.createElement(
+	        _Table.TableRowColumn,
+	        null,
+	        _react2.default.createElement(
+	          _IconButton2.default,
+	          { onClick: props.deletePlayer.bind(null, player._id),
+	            iconClassName: 'material-icons',
+	            tooltip: 'Remove Player' },
+	          _react2.default.createElement(_close2.default, null)
+	        ),
+	        _react2.default.createElement(
+	          _IconButton2.default,
+	          { onClick: props.updatePlayer.bind(null, player._id),
+	            iconClassName: 'material-icons',
+	            tooltip: 'Update Player' },
+	          _react2.default.createElement(_create2.default, null)
+	        )
 	      )
 	    );
 	  });
@@ -67309,7 +67344,8 @@
 	            _Table.TableHeaderColumn,
 	            null,
 	            'Rating'
-	          )
+	          ),
+	          !props.updatePlayer ? "" : _react2.default.createElement(_Table.TableHeaderColumn, null)
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -81726,6 +81762,59 @@
 	};
 
 	module.exports = keyOf;
+
+/***/ },
+/* 716 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var React = __webpack_require__(170);
+	var IconBase = __webpack_require__(511);
+
+	var MdCreate = function (_React$Component) {
+	    _inherits(MdCreate, _React$Component);
+
+	    function MdCreate() {
+	        _classCallCheck(this, MdCreate);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MdCreate).apply(this, arguments));
+	    }
+
+	    _createClass(MdCreate, [{
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                IconBase,
+	                _extends({ viewBox: '0 0 40 40' }, this.props),
+	                React.createElement(
+	                    'g',
+	                    null,
+	                    React.createElement('path', { d: 'm34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z' })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return MdCreate;
+	}(React.Component);
+
+	exports.default = MdCreate;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

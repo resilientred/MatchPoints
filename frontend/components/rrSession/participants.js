@@ -9,7 +9,9 @@ const PlayerGroup = (props) => {
                   handleToggle={props.handleToggle}
                   title="All Players"
                   selectable={true} 
-                  addedPlayers={props.objAddedPlayers}/>
+                  addedPlayers={props.objAddedPlayers}
+                  updatePlayer={props.updatePlayer}
+                  deletePlayer={props.deletePlayer}/>
       <Divider style={{position: "relative"}}/>    
       <PlayerList players={props.addedPlayers} 
                   handleToggle={props.handleToggle}
