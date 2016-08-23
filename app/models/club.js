@@ -70,8 +70,8 @@ clubSchema.statics.removePlayer = function(clubId, id){
 clubSchema.statics.updatePlayer = function(clubId, id, player){
   return this.findOneAndUpdate({"_id": clubId, "players._id": id}, {
     $set: {
-      players.$.rating: player.rating,
-      players.$.name: player.name
+      "players.$.rating": player.rating,
+      "players.$.name": player.name
     }
   }, {new: true});
 }

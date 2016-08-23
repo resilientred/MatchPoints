@@ -15,7 +15,12 @@ class Splash extends Component {
     this.setState({ tab });
   }
   componentDidMount() {
-    if (this.props.location.query.login){
+    if (this.props.location.state && this.props.location.state.login){
+      this.setState({ tab: 1 })
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.state && nextProps.location.state.login){
       this.setState({ tab: 1 })
     }
   }

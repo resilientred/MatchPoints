@@ -8,7 +8,7 @@ class App extends Component {
     super(props, context);
   }
   openLogin() {
-    this.context.router.push({pathname: "/", query: {login: true}});
+    this.context.router.push({pathname: "/", state: {login: true}});
   }
   render(){
     return (
