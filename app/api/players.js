@@ -1,7 +1,7 @@
 import express from 'express';
 import { Player } from '../models/player.js';
 import Club from "../models/club"
-import { parseUrlEncoded, csrfProtection } from "../helpers/app_modules"
+import { parseUrlEncoded, csrfProtection, clubMethods } from "../helpers/app_modules"
 const router = express.Router();
 
 router.route("/:clubId/players")
@@ -23,6 +23,7 @@ router.route("/:clubId/players/:id")
 
     Club.removePlayer(clubId, id)
       .then(club => {
+        clubMethods.setCurrentClub(club);
         res.status(200).send(id);
       }).catch( err  => {
         res.status(422).send("Unable to remove player");

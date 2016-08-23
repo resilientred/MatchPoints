@@ -88,15 +88,12 @@ router.get("", (req, res) => {
           data = req.body.player;
       ClubModel.addPlayer(clubId, data)
         .then((club) => {
+          clubMethods.setCurrentClub(club);
           res.status(200).send(club);
         }).catch((err) => {
-          if (_player){
-            Player.remove({"_id": _player._id});
-          }
           res.status(422).send(err);
-        }).catch((err) => {
-          res.status(500).send(err);
         })
+
     }).delete("/sessions/:id", (req, res) => {
       let id = req.params.id;
       RoundRobinModel.deleteRoundRobin(clubId, id)

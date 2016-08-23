@@ -16,7 +16,11 @@ class ClubMethods {
       return ClubModel.findBySessionToken.call(ClubModel, req.cookies.matchpoint_session);
     }
   }
-  
+  setCurrentClub(club){
+    console.log("Setting current Club,... this = ", this);
+    this._currentClub = club;
+    return club;
+  }
   
   logOut = () => {
     var club = this._currentClub;
