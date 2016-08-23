@@ -25,7 +25,7 @@ export default class NewRRSession extends React.Component {
     this.state = {
       newPlayerModal: false,
       groupTabEnabled: false,
-      tab: "1",
+      tab: 0,
       date: new Date(),
       numPlayers: 0,
       error: null,
@@ -47,7 +47,7 @@ export default class NewRRSession extends React.Component {
     if (this.rrListener) this.rrListener.remove();
     if (this.tslistener) this.tslistener.remove();
   }
- 
+
   _rrResponseReceived = () => {
     let error = RRSessionStore.getError();
 
@@ -112,8 +112,7 @@ export default class NewRRSession extends React.Component {
     this.setState({ [field]: false});
   }
   handleToggle = (_id, e) => {
-    if (e.target.type !== "checkbox") return;
-
+    if (e.target.type !== "checkbox" && e.target.tagName !== "TD") return;
     let addedPlayers = Object.assign({}, this.state.addedPlayers),
         selectedPlayer = this.props.club.players.find((player) => {
           return player._id === _id;
@@ -130,6 +129,8 @@ export default class NewRRSession extends React.Component {
     });
   }
   toggleTab = (tab) => {
+    if (tab.target) return
+
     this.setState({ tab });
   }
 
@@ -212,12 +213,11 @@ export default class NewRRSession extends React.Component {
          <Tabs tabItemContainerStyle={{backgroundColor: "#673AB7"}} contentContainerStyle={{  padding: "20px",
    border: "1px solid #E0E0E0", minHeight: "400px" }} 
               value={this.state.tab} 
-              onChange={this.toggleTab}
-              initialSelectedIndex={1}>
-          <Tab label="Registration" value="1">
+              onChange={this.toggleTab}>
+          <Tab label="Registration" value={0}>
             { playerContent }
           </Tab>
-          <Tab label="Grouping" value="2"> 
+          <Tab label="Grouping" value={1}> 
             { groupContent }
           </Tab>
         </Tabs>

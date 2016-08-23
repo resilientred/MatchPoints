@@ -41,12 +41,15 @@ class NavBar extends Component {
    let club = ClubStore.getCurrentClub(); 
    this.setState({ club })
   }
-
+  handleLogin = () => {
+    this.props.openLogin();
+    this.handleOpen();
+  }
   handleOpen = () => {
     this.setState({ opened: !this.state.opened })
   }
   handleLink(link, tab){
-    this.setState({ tab })
+    this.setState({ tab, opened: false })
     browserHistory.push(link);
   }
 
@@ -121,7 +124,7 @@ class NavBar extends Component {
     } else {
       return (<ul className="nav">
                 <li onClick={this.handleLink.bind(this, "/results", 3)} className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
-                <li className="nav-links" onClick={this.props.openLogin}>Log In</li>
+                <li className="nav-links" onClick={this.handleLogin}>Log In</li>
             </ul>)
     }
 

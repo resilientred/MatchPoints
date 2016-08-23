@@ -6,11 +6,13 @@ import NavBar from "./components/navBar"
 class App extends Component { 
   constructor(props, context){
     super(props, context);
+    this.state = { loading: false };
   }
 
   openLogin() {
     this.context.router.push({pathname: "/", state: {login: true}});
   }
+
   render(){
     return (
       <MuiThemeProvider>

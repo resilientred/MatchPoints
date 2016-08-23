@@ -205,8 +205,17 @@ class Grouping extends React.Component {
     }
 
     handleSave = () => {
-      this.props.saveSession(this.state.schemata, 
-                  this.state.selectedGroup, this.props.addedPlayers)
+      if (!this.state.selectedGroup.length){
+        this.title = "Well...."
+        this.content = "You have to have selected a schema before you can save."
+        this.setState({ dialogOpen: true });
+      } else {
+        this.setState({ loading: true})
+
+        this.props.saveSession(this.state.schemata, 
+                    this.state.selectedGroup, this.props.addedPlayers)
+      }
+
     }
     download = (link) => {
       try {
