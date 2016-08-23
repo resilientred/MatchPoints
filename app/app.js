@@ -1,5 +1,4 @@
 import path from 'path'
-import minify from 'express-minify'
 import mongoose from 'mongoose'
 import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'

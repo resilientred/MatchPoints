@@ -91,9 +91,9 @@ class Grouping extends React.Component {
       }
     } 
     shouldComponentUpdate(nextProps, nextState) {
-      if (!this.state.dialogOpen != nextState.dialogOpen || 
-            !this.state.generated != nextState.generated || 
-            !this.state.loading != nextState.loading){
+      if (this.state.dialogOpen !== nextState.dialogOpen || 
+            this.state.generated !== nextState.generated || 
+            this.state.loading !== nextState.loading){
         return true;
       }
       if ((!this.state.pdfs && nextState.pdfs) || 
@@ -108,12 +108,12 @@ class Grouping extends React.Component {
             this.state.schemata.toString() !== nextState.schemata.toString()){
         return true;
       }
+      
       let {min, max} = this.state;
       if (max !== nextState.max && !min) return true;
-
       if ((max !== nextState.max) || (max && (min !== nextState.min)) || (this.props.numPlayers !== nextProps.numPlayers && max && min)){
         let range = [];
-        for (let i = max; i >= (min || nextState.min); i--){
+        for (let i = nextState.max; i >= (nextState.min || min); i--){
           range.push(i);
         }
         process.nextTick(() => {
@@ -297,7 +297,7 @@ class Grouping extends React.Component {
       let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
 
       return <div className="grouping">
-        <IconMenu style={{position: "absolute", right: 0, top: "-20px", zIndex: "500"}}
+        <IconMenu style={{position: "absolute", right: 0, top: "-20px", zIndex: "50"}}
         iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}

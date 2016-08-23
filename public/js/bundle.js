@@ -66850,7 +66850,7 @@
 	      _this.min = _this.session.min;
 	      _this.cached = true;
 	      _this.setState({
-	        tab: _this.session.tab,
+	        tab: +_this.session.tab,
 	        date: new Date(_this.session.date),
 	        numPlayers: +_this.session.numPlayers,
 	        addedPlayers: _this.session.addedPlayers ? _this.session.addedPlayers : {}
@@ -67007,7 +67007,8 @@
 	            hintText: 'Date', value: this.state.date,
 	            onChange: function onChange(e, date) {
 	              return _this3.setState({ date: date });
-	            } })
+	            },
+	            minDate: new Date() })
 	        ),
 	        _react2.default.createElement(_participants2.default, { objAddedPlayers: this.state.addedPlayers,
 	          addedPlayers: addedPlayers,
@@ -71029,7 +71030,7 @@
 	    value: function shouldComponentUpdate(nextProps, nextState) {
 	      var _this2 = this;
 
-	      if (!this.state.dialogOpen != nextState.dialogOpen || !this.state.generated != nextState.generated || !this.state.loading != nextState.loading) {
+	      if (this.state.dialogOpen !== nextState.dialogOpen || this.state.generated !== nextState.generated || this.state.loading !== nextState.loading) {
 	        return true;
 	      }
 	      if (!this.state.pdfs && nextState.pdfs || nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs)) {
@@ -71041,16 +71042,16 @@
 	      if (this.state.schemata && nextState.schemata && this.state.schemata.toString() !== nextState.schemata.toString()) {
 	        return true;
 	      }
+
 	      var _state = this.state;
 	      var min = _state.min;
 	      var max = _state.max;
 
 	      if (max !== nextState.max && !min) return true;
-
 	      if (max !== nextState.max || max && min !== nextState.min || this.props.numPlayers !== nextProps.numPlayers && max && min) {
 	        var _ret = function () {
 	          var range = [];
-	          for (var i = max; i >= (min || nextState.min); i--) {
+	          for (var i = nextState.max; i >= (nextState.min || min); i--) {
 	            range.push(i);
 	          }
 	          process.nextTick(function () {
@@ -71203,7 +71204,7 @@
 	        { className: 'grouping' },
 	        _react2.default.createElement(
 	          _IconMenu2.default,
-	          { style: { position: "absolute", right: 0, top: "-20px", zIndex: "500" },
+	          { style: { position: "absolute", right: 0, top: "-20px", zIndex: "50" },
 	            iconButtonElement: _react2.default.createElement(
 	              _IconButton2.default,
 	              null,

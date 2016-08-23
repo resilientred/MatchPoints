@@ -88,7 +88,7 @@ export default class NewRRSession extends React.Component {
     this.min = this.session.min;
     this.cached = true;
     this.setState({      
-      tab: this.session.tab,
+      tab: +this.session.tab,
       date: new Date(this.session.date),
       numPlayers: +this.session.numPlayers,
       addedPlayers: this.session.addedPlayers ? this.session.addedPlayers : {}
@@ -187,7 +187,8 @@ export default class NewRRSession extends React.Component {
           <div className="date">
             <DatePicker floatingLabelText="Date of Session"
                 hintText="Date" value={this.state.date}
-                onChange={(e, date) => this.setState({date}) }/>
+                onChange={(e, date) => this.setState({date}) }
+                minDate={new Date()}/>
           </div>
           <Participants objAddedPlayers={this.state.addedPlayers} 
                         addedPlayers={addedPlayers} 
