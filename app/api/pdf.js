@@ -41,6 +41,7 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   let clubId = req.params.clubId,
       { club, addedPlayers, schemas, date } = req.body.session;
   let urls = {};
+
   schemas.forEach((group, i) => {
     let players = [];
     process.nextTick(() => {
@@ -51,8 +52,9 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
           if (err) console.log(err);
         });
         urls["group" + (i + 1)] = url
+
         if (addedPlayers.length === 0){
-          res.status(200).send(urls);
+          setTimeout(() => res.status(200).send(urls), 1000);
         }
       } catch(e){
         res.status(500).send("Unable to generate pdfs. Please try again later.")

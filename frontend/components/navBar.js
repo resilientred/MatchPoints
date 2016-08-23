@@ -1,26 +1,29 @@
 import React, { Component } from 'react'
 import { browserHistory, Link } from 'react-router'
-import { logOut } from '../actions/clubActions'
+import { logOut, fetchCurrentClub } from '../actions/clubActions'
 import Drawer from "material-ui/Drawer"
 import MenuItem from "material-ui/MenuItem"
 import ClubStore from "../stores/clubStore"
-
 class NavBar extends Component {
-  constructor(props, context){
-    super(props, context);
+  constructor(props){
+    super(props);
     this.state = {
       club: null,
       opened: false,
       tab: 0
     }
   }
-
+  componentWillUnmount() {
+    if (this.cuListener) this.cuListener.remove();
+  }
   componentWillMount() {
     this.cuListener = ClubStore.addListener(this._currentClubChange);
     let club = ClubStore.getCurrentClub();
-    if (club){
-        this.setState({ club })
-    } 
+    if (!club){
+      if (location.pathname === "/results"){
+        fetchCurrentClub();
+      } 
+    }
     let tab, path = window.location.pathname;
     if (path === "/club/newSession"){
       tab = 1;
@@ -31,14 +34,14 @@ class NavBar extends Component {
     } else {
       tab = 0;
     }
-    this.setState({tab})
+    
+    this.setState({tab, club})   
   } 
   _currentClubChange = () => {
    let club = ClubStore.getCurrentClub(); 
-    if (club){
-      this.setState({ club })
-    } 
+   this.setState({ club })
   }
+
   handleOpen = () => {
     this.setState({ opened: !this.state.opened })
   }
@@ -46,6 +49,7 @@ class NavBar extends Component {
     this.setState({ tab })
     browserHistory.push(link);
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.opened !== nextState.opened || this.state.tab !== nextState.tab){
       return true
@@ -106,15 +110,18 @@ class NavBar extends Component {
   normalNav() {
     if (this.state.club){
       return (<ul className="nav">
-                  <li><Link to="/club/newSession" className="activeLink">New Session</Link></li>
-                  <li><Link to="/club/sessions" className="activeLink">Old Sessions</Link></li>
-                  <li><Link to="/results" className="activeLink">Browse Results</Link></li>
-                  <li onClick={logOut}><a className="activeLink" >Log Out</a></li>
+                  <li onClick={this.handleLink.bind(this, "/club/newSession", 1)}
+                      className={this.state.tab === 1 ? "active-links" : ""}>New Session</li>
+                  <li onClick={this.handleLink.bind(this, "/club/sessions", 2)}
+                      className={this.state.tab === 2 ? "active-links" : ""}>Old Sessions</li>
+                  <li onClick={this.handleLink.bind(this, "/results", 3)}
+                      className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
+                  <li onClick={logOut}>Log Out</li>
               </ul>)
     } else {
       return (<ul className="nav">
-                <li className="activeLink"><Link to="/results" className="activeLink">Browse Results</Link></li>
-                <li className="activeLink" onClick={this.props.openLogin}>Log In</li>
+                <li onClick={this.handleLink.bind(this, "/results", 3)} className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
+                <li className="nav-links" onClick={this.props.openLogin}>Log In</li>
             </ul>)
     }
 
@@ -125,7 +132,7 @@ class NavBar extends Component {
 
     return <div className="nav-bar">
         <div>
-        	<div className="logo"><Link to={this.state.club ? "/club" : "/"} className="activeLink">MatchPoints</Link></div>
+        	<div className="logo" onClick={this.handleLink.bind(this, this.state.club ? "/club" : "/", 0)}>MatchPoints</div>
           { collapsedIcon }
           { this.normalNav() }
           { this.slideNav() }

@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import ClubStore from "../stores/clubStore"
 import { Link } from "react-router"
 import LogInForm from "./user/logIn"
 import SignUpForm from "./user/signUp"
@@ -18,8 +19,14 @@ class Splash extends Component {
     if (this.props.location.state && this.props.location.state.login){
       this.setState({ tab: 1 })
     }
+    if (ClubStore.getCurrentClub()){
+      this.context.router.push("/club")
+    }
   }
   componentWillReceiveProps(nextProps) {
+    if (ClubStore.getCurrentClub()){
+      this.context.router.push("/club")
+    }
     if (nextProps.location.state && nextProps.location.state.login){
       this.setState({ tab: 1 })
     }

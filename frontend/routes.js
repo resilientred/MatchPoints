@@ -15,6 +15,7 @@ const Routes = (
   <Route path="/" component={App}> 
     <IndexRoute component={Splash} />
     <Route path="club" component={Club} >
+      <IndexRoute component={NewRRSession} />
       <Route path="sessions" component={RoundRobinSessions} />
         <Route path="sessions/:id" component={RoundRobinSession} />
       <Route path="newSession" component={NewRRSession} />

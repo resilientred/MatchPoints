@@ -4,13 +4,12 @@ import { Link, browserHistory } from "react-router"
 import NavBar from "./navBar"
 import { fetchCurrentClub } from '../actions/clubActions'
 import ClubStore from "../stores/clubStore"
-
+import CircularProgress from "material-ui/CircularProgress"
 class Club extends Component {
     constructor(props) {
         super(props);
         this.state = {
             club: null
-            // innerWidth: null
         }
     }
     componentWillMount() {
@@ -32,11 +31,13 @@ class Club extends Component {
         }
     }
     componentWillUnmount() {
-        this.cuListener.remove();
+        if (this.cuListener) this.cuListener.remove();
     }
     render() {
         if (!this.state.club) {
-            return <h1>Loading... </h1>
+            return <div className="overlay"><div className="loading">
+                <CircularProgress size={2} />
+                </div></div>
         }
         return <div className="app">
             <div className="club-body">

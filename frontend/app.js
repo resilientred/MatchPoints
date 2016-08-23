@@ -7,6 +7,7 @@ class App extends Component {
   constructor(props, context){
     super(props, context);
   }
+
   openLogin() {
     this.context.router.push({pathname: "/", state: {login: true}});
   }

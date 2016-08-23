@@ -173,7 +173,8 @@ h3 {
     color: gray; }
 
 body {
-  min-height: 800px; }
+  min-height: 800px;
+  position: relative; }
 
 p {
   font-family: 'Oswald', sans-serif; }
@@ -209,6 +210,22 @@ input {
 .active-tab {
   color: #333333; }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  /*dim the background*/ }
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); }
+
 .nav-bar {
   color: white;
   background-color: #673AB7;
@@ -221,8 +238,6 @@ input {
   height: 60px;
   content: " ";
   position: relative; }
-  .nav-bar a {
-    color: white; }
   .nav-bar > div {
     height: 60px;
     width: 80%;
@@ -235,7 +250,13 @@ input {
       font-family: 'Roboto', sans-serif;
       font-size: 25px;
       cursor: pointer;
-      color: white; }
+      color: white;
+      -webkit-transition: color 0.5s ease-in-out;
+      transition: color 0.5s ease-in-out;
+      -o-transition: color 0.5s ease-in-out;
+      -moz-transition: color 0.5s ease-in-out; }
+    .nav-bar > div .logo:hover {
+      color: #FFA000; }
 
 button {
   cursor: pointer; }
@@ -243,7 +264,7 @@ button {
 .nav {
   position: relative;
   display: flex;
-  right: -20%;
+  right: -15%;
   font-size: 16px; }
   .nav li {
     font-family: 'Roboto', sans-serif;
@@ -388,11 +409,21 @@ input {
   margin-top: 10px;
   color: red; }
 
-.activeLink {
-  cursor: pointer; }
+.nav-bar li {
+  cursor: pointer;
+  color: white; }
+  .nav-bar li:hover {
+    color: #FFA000; }
 
-.activeLink:hover {
-  color: #A1887F; }
+li.active-links {
+  color: black;
+  cursor: initial;
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out;
+  -o-transition: color 0.5s ease-in-out;
+  -moz-transition: color 0.5s ease-in-out; }
+  li.active-links:hover {
+    color: black; }
 
 form {
   max-height: 430px;
@@ -579,7 +610,9 @@ form {
   .banner-container {
     transform: translateY(-15%); }
   .forms {
-    top: 30%; } }
+    top: 30%; }
+  .nav {
+    right: -20%; } }
 
 @media (min-width: 1144px) {
   .banner-container {

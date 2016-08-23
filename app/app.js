@@ -38,7 +38,7 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "..", "public"), { maxAge: 20000000 }));
+app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(webpackMiddleware(compiler));
 app.use('/api/clubs', clubRoutes);
 app.use('/api/clubs', routes);

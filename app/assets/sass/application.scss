@@ -160,6 +160,7 @@ h3 {
 }
 body {
 	min-height: 800px;
+  position: relative;
 }
 
 p {
@@ -197,8 +198,22 @@ input {
 .active-tab {
 	color: #333333;
 }
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.5); /*dim the background*/
+}
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 
-
+}
 .nav-bar {
 	color: white;
 	background-color: #673AB7;
@@ -211,9 +226,7 @@ input {
   height: 60px;
   content: " ";
   position: relative;
-  a {
-    color: white;
-  }
+
 	& > div {
 		height: 60px;
 		width: 80%;
@@ -228,7 +241,11 @@ input {
 			font-size: 25px;
 			cursor: pointer;
       color: white;
-		}
+      @include reg-transition-no-delay(color, 0.5s, ease-in-out)
+    }
+    .logo:hover {
+      color: #FFA000;
+    }
   }
 
 }
@@ -238,7 +255,7 @@ button {
 .nav {
   position: relative;
 	display: flex;
-  right: -20%;
+  right: -15%;
 	font-size: 16px;
 	li {
 		font-family: 'Roboto', sans-serif;
@@ -407,11 +424,22 @@ input {
   margin-top: 10px;
   color: red;
 }
-.activeLink {
+.nav-bar li {
   cursor: pointer;
+  color: white;
+
+  &:hover {
+    color: #FFA000;
+  }
 }
-.activeLink:hover {
-  color: #A1887F;
+
+li.active-links {
+  color: black;
+  cursor: initial;
+  @include reg-transition-no-delay(color, 0.5s, ease-in-out)
+  &:hover {
+    color: black;
+  }
 }
 form {
   max-height: 430px;
@@ -613,6 +641,9 @@ form {
   }
   .forms {
     top: 30%;
+  }
+  .nav {
+    right: -20%;
   }
 }
 @media (min-width: 1144px){

@@ -27098,6 +27098,7 @@
 	  _react2.default.createElement(
 	    _reactRouter.Route,
 	    { path: "club", component: _club2.default },
+	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _newRRSession2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: "sessions", component: _roundrobinSessions2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: "sessions/:id", component: _roundrobinSession2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: "newSession", component: _newRRSession2.default })
@@ -33996,16 +33997,14 @@
 	var NavBar = function (_Component) {
 	  _inherits(NavBar, _Component);
 
-	  function NavBar(props, context) {
+	  function NavBar(props) {
 	    _classCallCheck(this, NavBar);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NavBar).call(this, props, context));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NavBar).call(this, props));
 
 	    _this._currentClubChange = function () {
 	      var club = _clubStore2.default.getCurrentClub();
-	      if (club) {
-	        _this.setState({ club: club });
-	      }
+	      _this.setState({ club: club });
 	    };
 
 	    _this.handleOpen = function () {
@@ -34021,12 +34020,19 @@
 	  }
 
 	  _createClass(NavBar, [{
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      if (this.cuListener) this.cuListener.remove();
+	    }
+	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      this.cuListener = _clubStore2.default.addListener(this._currentClubChange);
 	      var club = _clubStore2.default.getCurrentClub();
-	      if (club) {
-	        this.setState({ club: club });
+	      if (!club) {
+	        if (location.pathname === "/results") {
+	          (0, _clubActions.fetchCurrentClub)();
+	        }
 	      }
 	      var tab = void 0,
 	          path = window.location.pathname;
@@ -34039,7 +34045,8 @@
 	      } else {
 	        tab = 0;
 	      }
-	      this.setState({ tab: tab });
+
+	      this.setState({ tab: tab, club: club });
 	    }
 	  }, {
 	    key: 'handleLink',
@@ -34121,39 +34128,26 @@
 	          { className: 'nav' },
 	          _react2.default.createElement(
 	            'li',
-	            null,
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/club/newSession', className: 'activeLink' },
-	              'New Session'
-	            )
+	            { onClick: this.handleLink.bind(this, "/club/newSession", 1),
+	              className: this.state.tab === 1 ? "active-links" : "" },
+	            'New Session'
 	          ),
 	          _react2.default.createElement(
 	            'li',
-	            null,
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/club/sessions', className: 'activeLink' },
-	              'Old Sessions'
-	            )
+	            { onClick: this.handleLink.bind(this, "/club/sessions", 2),
+	              className: this.state.tab === 2 ? "active-links" : "" },
+	            'Old Sessions'
 	          ),
 	          _react2.default.createElement(
 	            'li',
-	            null,
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/results', className: 'activeLink' },
-	              'Browse Results'
-	            )
+	            { onClick: this.handleLink.bind(this, "/results", 3),
+	              className: this.state.tab === 3 ? "active-links" : "" },
+	            'Browse Results'
 	          ),
 	          _react2.default.createElement(
 	            'li',
 	            { onClick: _clubActions.logOut },
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'activeLink' },
-	              'Log Out'
-	            )
+	            'Log Out'
 	          )
 	        );
 	      } else {
@@ -34162,16 +34156,12 @@
 	          { className: 'nav' },
 	          _react2.default.createElement(
 	            'li',
-	            { className: 'activeLink' },
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/results', className: 'activeLink' },
-	              'Browse Results'
-	            )
+	            { onClick: this.handleLink.bind(this, "/results", 3), className: this.state.tab === 3 ? "active-links" : "" },
+	            'Browse Results'
 	          ),
 	          _react2.default.createElement(
 	            'li',
-	            { className: 'activeLink', onClick: this.props.openLogin },
+	            { className: 'nav-links', onClick: this.props.openLogin },
 	            'Log In'
 	          )
 	        );
@@ -34195,12 +34185,8 @@
 	          null,
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'logo' },
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: this.state.club ? "/club" : "/", className: 'activeLink' },
-	              'MatchPoints'
-	            )
+	            { className: 'logo', onClick: this.handleLink.bind(this, this.state.club ? "/club" : "/", 0) },
+	            'MatchPoints'
 	          ),
 	          collapsedIcon,
 	          this.normalNav(),
@@ -49307,6 +49293,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _clubStore = __webpack_require__(471);
+
+	var _clubStore2 = _interopRequireDefault(_clubStore);
+
 	var _reactRouter = __webpack_require__(168);
 
 	var _logIn = __webpack_require__(490);
@@ -49349,10 +49339,16 @@
 	      if (this.props.location.state && this.props.location.state.login) {
 	        this.setState({ tab: 1 });
 	      }
+	      if (_clubStore2.default.getCurrentClub()) {
+	        this.context.router.push("/club");
+	      }
 	    }
 	  }, {
 	    key: "componentWillReceiveProps",
 	    value: function componentWillReceiveProps(nextProps) {
+	      if (_clubStore2.default.getCurrentClub()) {
+	        this.context.router.push("/club");
+	      }
 	      if (nextProps.location.state && nextProps.location.state.login) {
 	        this.setState({ tab: 1 });
 	      }
@@ -51452,6 +51448,10 @@
 
 	var _clubStore2 = _interopRequireDefault(_clubStore);
 
+	var _CircularProgress = __webpack_require__(671);
+
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -51479,7 +51479,6 @@
 
 	        _this.state = {
 	            club: null
-	            // innerWidth: null
 	        };
 	        return _this;
 	    }
@@ -51498,7 +51497,7 @@
 	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
-	            this.cuListener.remove();
+	            if (this.cuListener) this.cuListener.remove();
 	        }
 	    }, {
 	        key: 'render',
@@ -51507,9 +51506,13 @@
 
 	            if (!this.state.club) {
 	                return _react2.default.createElement(
-	                    'h1',
-	                    null,
-	                    'Loading... '
+	                    'div',
+	                    { className: 'overlay' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'loading' },
+	                        _react2.default.createElement(_CircularProgress2.default, { size: 2 })
+	                    )
 	                );
 	            }
 	            return _react2.default.createElement(
@@ -70552,6 +70555,18 @@
 
 	var _Snackbar2 = _interopRequireDefault(_Snackbar);
 
+	var _FlatButton = __webpack_require__(652);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _Dialog = __webpack_require__(689);
+
+	var _Dialog2 = _interopRequireDefault(_Dialog);
+
+	var _CircularProgress = __webpack_require__(671);
+
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -70586,6 +70601,10 @@
 	      _this.setState({ open: false });
 	    };
 
+	    _this.handleDialogClose = function () {
+	      _this.setState({ dialogOpen: false });
+	    };
+
 	    _this._fetchedPDF = function () {
 	      var error = _pdfStore2.default.getError();
 	      if (error) {
@@ -70611,19 +70630,26 @@
 
 	    _this.generatePDF = function () {
 	      if (_this.state.generated) {
-	        alert("You may only generate once every 30secs");
+	        _this.title = "Whooops..";
+	        _this.content = "You may only generate once every 30secs.";
+	        _this.setState({ dialogOpen: true });
 	        return;
 	      }
 	      if (!_this.state.schemata[0].length) {
-	        alert("There are no players yet :(.");
+	        _this.title = "Oooops..";
+	        _this.content = "There are no players yet :(.";
+	        _this.setState({ dialogOpen: true });
 	        return;
 	      }
 	      (0, _clientActions.generatePDF)(_this.props.addedPlayers, _this.state.selectedGroup, _this.props.club, _this.props.date);
 
-	      _this.setState({ generated: true });
+	      _this.setState({ generated: true, loading: true });
 	      setTimeout(function () {
 	        _this.setState({ generated: false });
 	      }, 30000);
+	      setTimeout(function () {
+	        _this.setState({ loading: false });
+	      }, 1000);
 	    };
 
 	    _this.handleSave = function () {
@@ -70662,7 +70688,9 @@
 	      pdfs: null,
 	      generated: false,
 	      stepIndex: 0,
-	      open: false
+	      open: false,
+	      dialogOpen: false,
+	      loading: false
 	    };
 	    return _this;
 	  }
@@ -70709,6 +70737,9 @@
 	    value: function shouldComponentUpdate(nextProps, nextState) {
 	      var _this2 = this;
 
+	      if (!this.state.dialogOpen != nextState.dialogOpen || !this.state.generated != nextState.generated || !this.state.loading != nextState.loading) {
+	        return true;
+	      }
 	      if (!this.state.pdfs && nextState.pdfs || nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs)) {
 	        return true;
 	      }
@@ -70824,6 +70855,44 @@
 	      );
 	    }
 	  }, {
+	    key: 'loading',
+	    value: function loading() {
+	      if (this.state.loading) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'overlay' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'loading' },
+	            _react2.default.createElement(_CircularProgress2.default, { size: 2 })
+	          )
+	        );
+	      }
+	      return "";
+	    }
+	  }, {
+	    key: 'dialog',
+	    value: function dialog() {
+	      if (this.state.dialogOpen) {
+	        var actions = [_react2.default.createElement(_FlatButton2.default, {
+	          label: 'Close',
+	          primary: true,
+	          onTouchTap: this.handleDialogClose
+	        })];
+	        return _react2.default.createElement(
+	          _Dialog2.default,
+	          {
+	            title: this.title,
+	            actions: actions,
+	            open: this.state.dialogOpen,
+	            modal: false,
+	            onRequestClose: this.handleDialogClose
+	          },
+	          this.content
+	        );
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      if (this.state.max && this.state.min) {
@@ -70842,7 +70911,7 @@
 	        { className: 'grouping' },
 	        _react2.default.createElement(
 	          _IconMenu2.default,
-	          { style: { position: "absolute", right: 0, top: "-20px" },
+	          { style: { position: "absolute", right: 0, top: "-20px", zIndex: "500" },
 	            iconButtonElement: _react2.default.createElement(
 	              _IconButton2.default,
 	              null,
@@ -70851,7 +70920,7 @@
 	            anchorOrigin: { horizontal: 'right', vertical: 'top' },
 	            targetOrigin: { horizontal: 'right', vertical: 'top' }
 	          },
-	          _react2.default.createElement(_MenuItem2.default, { primaryText: 'Generate PDF', onClick: this.generatePDF, disabled: this.props.generated || !this.state.selectedGroup.length }),
+	          _react2.default.createElement(_MenuItem2.default, { primaryText: 'Generate PDF', onClick: this.generatePDF, disabled: this.state.generated || !this.state.selectedGroup.length }),
 	          _react2.default.createElement(_MenuItem2.default, { primaryText: 'Save', onClick: this.handleSave, disabled: !this.state.selectedGroup.length })
 	        ),
 	        this.numOfPlayers(),
@@ -70862,7 +70931,9 @@
 	          onRequestClose: this.handleClose,
 	          message: this.error || "",
 	          autoHideDuration: 3000
-	        })
+	        }),
+	        this.loading(),
+	        this.dialog()
 	      );
 	    }
 	  }]);

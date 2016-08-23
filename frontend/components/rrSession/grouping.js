@@ -10,6 +10,9 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import SnackBar from 'material-ui/Snackbar';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog'
+import CircularProgress from 'material-ui/CircularProgress';
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 
@@ -29,7 +32,9 @@ class Grouping extends React.Component {
           pdfs: null,
           generated: false,
           stepIndex: 0, 
-          open: false
+          open: false,
+          dialogOpen: false,
+          loading: false
         }
     }   
     componentWillMount() {
@@ -55,6 +60,9 @@ class Grouping extends React.Component {
     }   
     handleClose = () => {
       this.setState({open: false});
+    }
+    handleDialogClose = () => {
+      this.setState({ dialogOpen: false })
     }
     _fetchedPDF = () => {
       let error = PDFStore.getError();
@@ -83,6 +91,11 @@ class Grouping extends React.Component {
       }
     } 
     shouldComponentUpdate(nextProps, nextState) {
+      if (!this.state.dialogOpen != nextState.dialogOpen || 
+            !this.state.generated != nextState.generated || 
+            !this.state.loading != nextState.loading){
+        return true;
+      }
       if ((!this.state.pdfs && nextState.pdfs) || 
             (nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs))){
         return true;
@@ -169,19 +182,26 @@ class Grouping extends React.Component {
     }
     generatePDF = () => {
       if (this.state.generated){
-        alert("You may only generate once every 30secs")
+        this.title = "Whooops.."
+        this.content = "You may only generate once every 30secs."
+        this.setState({ dialogOpen: true })
         return;
       }
       if (!this.state.schemata[0].length){
-        alert("There are no players yet :(.")
+        this.title = "Oooops.."
+        this.content = "There are no players yet :(."
+        this.setState({ dialogOpen: true })
         return;
       }
       generatePDF(this.props.addedPlayers, this.state.selectedGroup, this.props.club, this.props.date);
       
-      this.setState({generated: true});
+      this.setState({generated: true, loading: true});
       setTimeout(() => {
         this.setState({generated: false});
       }, 30000);
+      setTimeout(() => {
+        this.setState({loading: false});
+      }, 1000);
     }
 
     handleSave = () => {
@@ -229,6 +249,32 @@ class Grouping extends React.Component {
             }
         </div>);
     }
+    loading() {
+      if (this.state.loading){
+        return <div className="overlay"><div className="loading"><CircularProgress size={2} /></div></div>
+      }
+      return "";      
+    }
+    dialog() {
+      if (this.state.dialogOpen){
+        const actions =[
+          <FlatButton
+            label="Close"
+            primary={true}
+            onTouchTap={this.handleDialogClose}
+          />
+        ];
+        return <Dialog
+            title={this.title}
+            actions={actions}
+            open={this.state.dialogOpen}
+            modal={false}
+            onRequestClose={this.handleDialogClose}
+          >
+            {this.content}
+          </Dialog>;      
+      }
+    }
     render() {
       if (this.state.max && this.state.min){
         var schemata = this.schemata();
@@ -242,12 +288,12 @@ class Grouping extends React.Component {
       let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
 
       return <div className="grouping">
-        <IconMenu style={{position: "absolute", right: 0, top: "-20px"}}
+        <IconMenu style={{position: "absolute", right: 0, top: "-20px", zIndex: "500"}}
         iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
           >
-            <MenuItem primaryText="Generate PDF" onClick={this.generatePDF} disabled={this.props.generated || !this.state.selectedGroup.length}/>
+            <MenuItem primaryText="Generate PDF" onClick={this.generatePDF} disabled={this.state.generated || !this.state.selectedGroup.length}/>
             <MenuItem primaryText="Save" onClick={this.handleSave} disabled={!this.state.selectedGroup.length} />
         </IconMenu>
         { this.numOfPlayers() }
@@ -259,6 +305,8 @@ class Grouping extends React.Component {
           message={this.error || ""}
           autoHideDuration={3000}
         />
+        { this.loading() }
+        { this.dialog() }
       </div>;
     }
 }
