@@ -17,14 +17,11 @@ const PlayerList = (props) => {
                         <TableRowColumn>{player.name}</TableRowColumn>
                         <TableRowColumn>{player.rating}</TableRowColumn>
                         {
-                          !props.updatePlayer ? "" :
+                          !props.deletePlayer ? "" :
                             <TableRowColumn>
                               <IconButton onClick={props.deletePlayer.bind(null, player._id)} 
                                           iconClassName="material-icons" 
                                           tooltip="Remove Player"><Close /></IconButton>
-                              <IconButton onClick={props.updatePlayer.bind(null, player._id)}
-                                          iconClassName="material-icons" 
-                                          tooltip="Update Player"><Create /></IconButton>
                             </TableRowColumn>
                         }
                   </TableRow>);
@@ -36,14 +33,14 @@ const PlayerList = (props) => {
       <Table height='400px' fixedHeader={true} 
         selectable={true} 
         multiSelectable={true} 
-        onCellClick={(i, col, e) => {props.handleToggle(idRef[i])}}
+        onCellClick={(i, col, e) => {props.handleToggle(idRef[i], e)}}
         >
         <TableHeader displaySelectAll={false}>
           <TableRow>
             <TableHeaderColumn>Name</TableHeaderColumn>
             <TableHeaderColumn>Rating</TableHeaderColumn>
             {
-              !props.updatePlayer ? "" :
+              !props.deletePlayer ? "" :
               <TableHeaderColumn></TableHeaderColumn>
             }
           </TableRow>

@@ -72,7 +72,7 @@ export default class LogInForm extends Component {
     return <div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Log In</h3>
-        { this.state.error }
+        <div className="form-error">{ this.state.error }</div>
         <div>     
           <TextField type="text"
                  hintText="username" 
@@ -88,8 +88,8 @@ export default class LogInForm extends Component {
                 onChange={this.updateField.bind(this, "password")} />
         </div>
         <div className="button-div">
-          <RaisedButton label="Log In" style={{marginRight: '10px'}} onClick={this.handleSubmit}/>
-          <RaisedButton label="Guest" onClick={this.guestLogIn} />
+          <RaisedButton label="Log In" backgroundColor="#1565C0" labelColor="white" style={{marginRight: '10px'}} onClick={this.handleSubmit}/>
+          <RaisedButton label="Guest" backgroundColor="#EF6C00" labelColor="white" onClick={this.guestLogIn} />
         </div>
         <div className="redirect-signup">
           Don't have an account yet?&nbsp;&nbsp;<a onClick={() => this.props.setTab(2)}>Sign Up</a>

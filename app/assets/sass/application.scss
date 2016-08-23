@@ -403,6 +403,10 @@ input {
   -webkit-transform: translateX(-60%);
   transform: translateX(-60%);
 }
+.form-error {
+  margin-top: 10px;
+  color: red;
+}
 .activeLink {
   cursor: pointer;
 }
@@ -624,10 +628,9 @@ form {
     -ms-background-position-x: center;
     -ms-background-position-y: center;
     background-position: center center;
-    transform: translateY(0);
   }
   .banner-container {
-    transform: translateY(0);
+    transform: translateY(-5%);
   }
   .banner-text {
     font-size: 24px;

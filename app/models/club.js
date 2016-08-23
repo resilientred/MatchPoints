@@ -65,7 +65,7 @@ clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
 clubSchema.statics.removePlayer = function(clubId, id){
   return this.findOneAndUpdate({"_id": clubId}, {
     $pull: {players: {_id: id}}
-  }, {new: true});
+  });
 }
 clubSchema.statics.updatePlayer = function(clubId, id, player){
   return this.findOneAndUpdate({"_id": clubId, "players._id": id}, {

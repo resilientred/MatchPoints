@@ -34350,10 +34350,10 @@
 				session: sessionId
 			});
 		},
-		updatedClub: function updatedClub(club) {
+		removedPlayer: function removedPlayer(id) {
 			_dispatcher2.default.dispatch({
-				actionType: _constants.UPDATED_CLUB,
-				club: club
+				actionType: _constants.REMOVED_PLAYER,
+				playerId: id
 			});
 		},
 		fetchedRRSessions: function fetchedRRSessions(sessions) {
@@ -34774,7 +34774,6 @@
 	var FETCHED_CLUB_ROUNDROBINS = exports.FETCHED_CLUB_ROUNDROBINS = "FETCHED_CLUB_ROUNDROBINS";
 	var RECEIVED_CACHED_SESSION = exports.RECEIVED_CACHED_SESSION = "RECEIVED_CACHED_SESSION";
 	var PDF_ERROR = exports.PDF_ERROR = "PDF_ERROR";
-	var UPDATED_CLUB = exports.UPDATED_CLUB = "UPDATED_CLUB";
 
 /***/ },
 /* 406 */
@@ -42810,6 +42809,14 @@
 	var _setError = function _setError(err) {
 	  _error = err.responseText ? err.responseText : null;
 	};
+	var _removePlayer = function _removePlayer(id) {
+	  var players = _currentClub.players;
+	  for (var i = 0; i < _currentClub.players.length; i++) {
+	    if (players[i]._id === id) {
+	      players.splice(i, 1);
+	    }
+	  }
+	};
 
 	var ClubStore = new _utils.Store(_dispatcher2.default);
 
@@ -42832,9 +42839,9 @@
 	      _setError(payload.err);
 	      ClubStore.__emitChange();
 	      break;
-	    case _constants.UPDATED_CLUB:
-	      _setCurrentClub(payload.club);
-	      ClubStore.__emitChange();
+	    case _constants.REMOVED_PLAYER:
+	      _removePlayer(payload.playerId);
+	      // ClubStore.__emitChange();
 	      break;
 	  }
 	};
@@ -49549,7 +49556,11 @@
 	            null,
 	            "Log In"
 	          ),
-	          this.state.error,
+	          _react2.default.createElement(
+	            "div",
+	            { className: "form-error" },
+	            this.state.error
+	          ),
 	          _react2.default.createElement(
 	            "div",
 	            null,
@@ -49571,8 +49582,8 @@
 	          _react2.default.createElement(
 	            "div",
 	            { className: "button-div" },
-	            _react2.default.createElement(_RaisedButton2.default, { label: "Log In", style: { marginRight: '10px' }, onClick: this.handleSubmit }),
-	            _react2.default.createElement(_RaisedButton2.default, { label: "Guest", onClick: this.guestLogIn })
+	            _react2.default.createElement(_RaisedButton2.default, { label: "Log In", backgroundColor: "#1565C0", labelColor: "white", style: { marginRight: '10px' }, onClick: this.handleSubmit }),
+	            _react2.default.createElement(_RaisedButton2.default, { label: "Guest", backgroundColor: "#EF6C00", labelColor: "white", onClick: this.guestLogIn })
 	          ),
 	          _react2.default.createElement(
 	            "div",
@@ -51385,7 +51396,7 @@
 	          _react2.default.createElement(
 	            "div",
 	            { className: "button-div" },
-	            _react2.default.createElement(_RaisedButton2.default, { onClick: this.handleSubmit, label: "Sign Up" })
+	            _react2.default.createElement(_RaisedButton2.default, { backgroundColor: "#00796B", labelColor: "white", onClick: this.handleSubmit, label: "Sign Up" })
 	          ),
 	          _react2.default.createElement(
 	            "div",
@@ -66526,10 +66537,13 @@
 	    _this.deletePlayer = function (_id) {
 	      delete _this.state.addedPlayers[_id];
 	      (0, _clientActions.deletePlayer)(_this.props.club._id, _id);
-	    };
-
-	    _this.updatePlayer = function (_id, name, rating) {
-	      (0, _clientActions.updatePlayer)(_this.props.club_id, _id, { name: name, rating: rating });
+	      var players = _this.props.club.players;
+	      for (var i = 0; i < players.length; i++) {
+	        if (players[i]._id === _id) {
+	          players.splice(i, 1);
+	        }
+	      }
+	      _this.setState({ addedPlayers: _this.state.addedPlayers });
 	    };
 
 	    _this._tempSessionFetched = function () {
@@ -66570,7 +66584,9 @@
 	        newPlayerModal: false });
 	    };
 
-	    _this.handleToggle = function (_id) {
+	    _this.handleToggle = function (_id, e) {
+	      if (e.target.type !== "checkbox") return;
+
 	      var addedPlayers = Object.assign({}, _this.state.addedPlayers),
 	          selectedPlayer = _this.props.club.players.find(function (player) {
 	        return player._id === _id;
@@ -66708,7 +66724,6 @@
 	        _react2.default.createElement(_participants2.default, { objAddedPlayers: this.state.addedPlayers,
 	          addedPlayers: addedPlayers,
 	          deletePlayer: this.deletePlayer,
-	          updatePlayer: this.updatePlayer,
 	          allPlayers: allPlayers,
 	          handleToggle: this.handleToggle })
 	      );
@@ -66731,7 +66746,7 @@
 	        _react2.default.createElement(
 	          _Tabs.Tabs,
 	          { tabItemContainerStyle: { backgroundColor: "#673AB7" }, contentContainerStyle: { padding: "20px",
-	              border: "1px solid #E0E0E0" },
+	              border: "1px solid #E0E0E0", minHeight: "400px" },
 	            value: this.state.tab,
 	            onChange: this.toggleTab,
 	            initialSelectedIndex: 1 },
@@ -66819,7 +66834,7 @@
 		(0, _apiUtil.apiCSRFService)({
 			url: "/api/clubs/" + clubId + "/players/" + id,
 			method: "DELETE",
-			success: "updatedClub"
+			success: "removedPlayer"
 		});
 	};
 
@@ -67224,7 +67239,6 @@
 	                                    title: 'All Players',
 	                                    selectable: true,
 	                                    addedPlayers: props.objAddedPlayers,
-	                                    updatePlayer: props.updatePlayer,
 	                                    deletePlayer: props.deletePlayer }),
 	                        _react2.default.createElement(_Divider2.default, { style: { position: "relative" } }),
 	                        _react2.default.createElement(_playerList2.default, { players: props.addedPlayers,
@@ -67298,7 +67312,7 @@
 	        null,
 	        player.rating
 	      ),
-	      !props.updatePlayer ? "" : _react2.default.createElement(
+	      !props.deletePlayer ? "" : _react2.default.createElement(
 	        _Table.TableRowColumn,
 	        null,
 	        _react2.default.createElement(
@@ -67307,13 +67321,6 @@
 	            iconClassName: 'material-icons',
 	            tooltip: 'Remove Player' },
 	          _react2.default.createElement(_close2.default, null)
-	        ),
-	        _react2.default.createElement(
-	          _IconButton2.default,
-	          { onClick: props.updatePlayer.bind(null, player._id),
-	            iconClassName: 'material-icons',
-	            tooltip: 'Update Player' },
-	          _react2.default.createElement(_create2.default, null)
 	        )
 	      )
 	    );
@@ -67333,7 +67340,7 @@
 	        selectable: true,
 	        multiSelectable: true,
 	        onCellClick: function onCellClick(i, col, e) {
-	          props.handleToggle(idRef[i]);
+	          props.handleToggle(idRef[i], e);
 	        }
 	      },
 	      _react2.default.createElement(
@@ -67352,7 +67359,7 @@
 	            null,
 	            'Rating'
 	          ),
-	          !props.updatePlayer ? "" : _react2.default.createElement(_Table.TableHeaderColumn, null)
+	          !props.deletePlayer ? "" : _react2.default.createElement(_Table.TableHeaderColumn, null)
 	        )
 	      ),
 	      _react2.default.createElement(

@@ -87,7 +87,7 @@ export default class SignUpForm extends Component {
                 required/>
         </div>
         <div className="button-div">
-          <RaisedButton onClick={this.handleSubmit} label="Sign Up"/>
+          <RaisedButton backgroundColor="#00796B" labelColor="white" onClick={this.handleSubmit} label="Sign Up"/>
         </div>
         <div className="redirect-signup">
           Already have an account yet?&nbsp;&nbsp;<a onClick={() => this.props.setTab(1)}>Log In</a>

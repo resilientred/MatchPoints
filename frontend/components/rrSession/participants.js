@@ -10,7 +10,6 @@ const PlayerGroup = (props) => {
                   title="All Players"
                   selectable={true} 
                   addedPlayers={props.objAddedPlayers}
-                  updatePlayer={props.updatePlayer}
                   deletePlayer={props.deletePlayer}/>
       <Divider style={{position: "relative"}}/>    
       <PlayerList players={props.addedPlayers} 

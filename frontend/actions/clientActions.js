@@ -33,7 +33,7 @@ const deletePlayer = (clubId, id) => {
 	apiCSRFService({
 		url: `/api/clubs/${clubId}/players/${id}`,
 		method: "DELETE",
-		success: "updatedClub"
+		success: "removedPlayer"
 	});
 }
 

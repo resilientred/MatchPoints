@@ -15,30 +15,15 @@ router.route("/:clubId/players")
       }).catch( err => {
         res.status(422).send(err);
       })
-  }).post(parseUrlEncoded, csrfProtection, (req, res) => {
-    let data = req.body.player;
-    let player = new Player({
-      "name": data.name,
-      "rating": +data.rating
-    });
-    
-    player.save((err, player)=> {
-      if (err) {
-        res.status(422).send(err);
-      } else {
-        res.status(201).send(player);
-        res.end();
-      }
-      
-    })
-  });
+  })
+
 router.route("/:clubId/players/:id")
   .delete((req, res)=>{
     let { clubId, id } = req.params;
 
     Club.removePlayer(clubId, id)
       .then(club => {
-        res.status(200).send(club);
+        res.status(200).send(id);
       }).catch( err  => {
         res.status(422).send("Unable to remove player");
       })

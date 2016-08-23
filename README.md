@@ -8,7 +8,7 @@ And allow users to:
 * query results based on date
 * query their indiviual old results
 ## Todos
- - [ ] deploy on AWS (transpile code to es5 with babel...)
+ - [x] deploy on AWS
  - [ ] form validations
  
 ## Expected Features (MVP)
@@ -30,6 +30,7 @@ And allow users to:
  - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM + Redis as a temporary store
+ - Deployed on Amazon EC2
  
 ## Implementation:
 MatchPoint allows users to dynamically change the range of players that can be in a single group. It also offers the possible schemata that fulfills the condition of the range of players.

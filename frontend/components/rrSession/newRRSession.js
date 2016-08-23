@@ -63,10 +63,15 @@ export default class NewRRSession extends React.Component {
   deletePlayer = (_id) => {
     delete this.state.addedPlayers[_id];
     deletePlayer(this.props.club._id, _id);
+    let players = this.props.club.players;
+    for (let i = 0; i < players.length; i++){
+      if (players[i]._id === _id){
+        players.splice(i, 1);
+      }
+    }
+    this.setState({ addedPlayers: this.state.addedPlayers })
   }
-  updatePlayer = (_id, name, rating) => {
-    updatePlayer(this.props.club_id, _id, {name, rating});
-  }
+
   _tempSessionFetched = () => {
     let session = TempSessionStore.findCachedSession();
 
@@ -106,7 +111,9 @@ export default class NewRRSession extends React.Component {
   handleClose(field){
     this.setState({ [field]: false});
   }
-  handleToggle = (_id) => {
+  handleToggle = (_id, e) => {
+    if (e.target.type !== "checkbox") return;
+
     let addedPlayers = Object.assign({}, this.state.addedPlayers),
         selectedPlayer = this.props.club.players.find((player) => {
           return player._id === _id;
@@ -184,7 +191,6 @@ export default class NewRRSession extends React.Component {
           <Participants objAddedPlayers={this.state.addedPlayers} 
                         addedPlayers={addedPlayers} 
                         deletePlayer={this.deletePlayer}
-                        updatePlayer={this.updatePlayer}
                         allPlayers={allPlayers} 
                         handleToggle={this.handleToggle}/> 
         </div>);
@@ -204,7 +210,7 @@ export default class NewRRSession extends React.Component {
     return (
       <div className="tab-container">
          <Tabs tabItemContainerStyle={{backgroundColor: "#673AB7"}} contentContainerStyle={{  padding: "20px",
-   border: "1px solid #E0E0E0" }} 
+   border: "1px solid #E0E0E0", minHeight: "400px" }} 
               value={this.state.tab} 
               onChange={this.toggleTab}
               initialSelectedIndex={1}>
