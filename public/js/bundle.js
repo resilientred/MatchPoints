@@ -34344,6 +34344,12 @@
 				session: sessionId
 			});
 		},
+		sessionError: function sessionError(error) {
+			_dispatcher2.default.dispatch({
+				actionType: _constants.SESSION_ERROR,
+				error: error
+			});
+		},
 		removedPlayer: function removedPlayer(id) {
 			_dispatcher2.default.dispatch({
 				actionType: _constants.REMOVED_PLAYER,
@@ -34351,6 +34357,7 @@
 			});
 		},
 		fetchedRRSessions: function fetchedRRSessions(sessions) {
+			debugger;
 			_dispatcher2.default.dispatch({
 				actionType: _constants.FETCHED_SESSIONS,
 				sessions: sessions
@@ -34768,6 +34775,7 @@
 	var FETCHED_CLUB_ROUNDROBINS = exports.FETCHED_CLUB_ROUNDROBINS = "FETCHED_CLUB_ROUNDROBINS";
 	var RECEIVED_CACHED_SESSION = exports.RECEIVED_CACHED_SESSION = "RECEIVED_CACHED_SESSION";
 	var PDF_ERROR = exports.PDF_ERROR = "PDF_ERROR";
+	var SESSION_ERROR = exports.SESSION_ERROR = "SESSION_ERROR";
 
 /***/ },
 /* 406 */
@@ -51803,7 +51811,8 @@
 	    data: {
 	      result: { data: data, ratingUpdateList: ratingUpdateList }
 	    },
-	    success: "fetchedRRSession"
+	    success: "fetchedRRSession",
+	    error: "sessionError"
 	  });
 	};
 	var updateResult = exports.updateResult = function updateResult(clubId, data, ratingUpdateList, id, date) {
@@ -51897,6 +51906,9 @@
 	      break;
 	    case _constants.DELETED_SESSION:
 	      _deleteSession(payload.session);
+	      break;
+	    case _constants.SESSION_ERROR:
+	      _setError(payload.error);
 	      break;
 	  }
 	};
@@ -78277,9 +78289,16 @@
 	          session = _this.state.session || _rrSessionStore2.default.find(_this.props.params.id);
 	      newObj.session = session;
 	      if (session) {
-	        var scoreChange = session.results && session.results.length ? session.results : _this.setUpChangeArray(session.selectedSchema);
-	        newObj.scoreChange = scoreChange;
-	        _this.setState(newObj);
+	        var err = _rrSessionStore2.default.getError();
+	        if (_this.state.updating && !err) {
+	          _reactRouter.browserHistory.push("/club/sessions");
+	        } else if (err) {
+	          _this.setState({ updating: false, loading: false });
+	        } else {
+	          var scoreChange = session.results && session.results.length ? session.results : _this.setUpChangeArray(session.selectedSchema);
+	          newObj.scoreChange = scoreChange;
+	          _this.setState(newObj);
+	        }
 	      } else {
 	        (0, _rrSessionActions.fetchRRSessions)(_this.props.club._id);
 	      }
@@ -78301,6 +78320,7 @@
 	          // )
 	        } else {
 	            (0, _rrSessionActions.postResult)(_this.props.club._id, _this.state.scoreChange, _this.state.scoreUpdate, session._id, session.date);
+	            _this.setState({ updating: true, loading: true });
 	          }
 	      }
 	    };
@@ -78324,7 +78344,9 @@
 	      scoreUpdate: {},
 	      currentTab: 0,
 	      open: false,
-	      saved: false
+	      saved: false,
+	      updating: false,
+	      loading: false
 	    };
 	    return _this;
 	  }
@@ -78377,10 +78399,20 @@
 	      );
 	    }
 	  }, {
-	    key: 'loader',
-	    value: function loader() {
-	      if (this.state.session) return;
-	      return _react2.default.createElement(_CircularProgress2.default, { size: 2 });
+	    key: 'loading',
+	    value: function loading() {
+	      if (this.state.loading || !this.state.session) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'overlay' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'loading' },
+	            _react2.default.createElement(_CircularProgress2.default, { size: 2 })
+	          )
+	        );
+	      }
+	      return "";
 	    }
 	  }, {
 	    key: 'render',
@@ -78401,11 +78433,7 @@
 	      var session = _state.session;
 	      var scoreChange = _state.scoreChange;
 
-	      if (!session) return _react2.default.createElement(
-	        'div',
-	        null,
-	        this.loader()
-	      );
+	      if (!session) return this.loading();
 	      var selectedSchema = session.selectedSchema;
 	      var schemata = session.schemata;
 	      var numOfPlayers = session.numOfPlayers;
@@ -78451,7 +78479,8 @@
 	            onRequestClose: this.handleClose
 	          },
 	          'Are you sure you want to delete the session?'
-	        )
+	        ),
+	        this.loading()
 	      );
 	    }
 	  }]);

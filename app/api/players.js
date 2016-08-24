@@ -15,10 +15,10 @@ router.route("/:clubId/players")
       }).catch( err => {
         res.status(422).send(err);
       })
-  })
+  });
 
 router.route("/:clubId/players/:id")
-  .delete((req, res)=>{
+  .delete(csrfProtection, (req, res)=>{
     let { clubId, id } = req.params;
 
     Club.removePlayer(clubId, id)
@@ -28,7 +28,7 @@ router.route("/:clubId/players/:id")
       }).catch( err  => {
         res.status(422).send("Unable to remove player");
       })
-  }).patch((req, res)=>{
+  }).patch(csrfProtection, (req, res)=>{
     let { clubId, id } = req.params;
     let player = req.body.player;
     Club.updatePlayer(clubId, id, player)

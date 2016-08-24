@@ -49,7 +49,8 @@ export const postResult = (clubId, data, ratingUpdateList, id) => {
     data: {
       result: {data, ratingUpdateList}
     },
-    success: "fetchedRRSession"
+    success: "fetchedRRSession",
+    error: "sessionError"
   })
 }
 export const updateResult = (clubId, data, ratingUpdateList, id, date) => {

@@ -25,7 +25,9 @@ class RoundRobinSession extends React.Component {
           scoreUpdate: {},
           currentTab: 0,
           open: false,
-          saved: false
+          saved: false,
+          updating: false,
+          loading: false
         }
     }
     componentWillMount() {
@@ -54,9 +56,16 @@ class RoundRobinSession extends React.Component {
           session = this.state.session || RRSessionStore.find(this.props.params.id);
       newObj.session = session;
       if (session){
-        let scoreChange = session.results && session.results.length ? session.results : this.setUpChangeArray(session.selectedSchema);
-        newObj.scoreChange = scoreChange;
-        this.setState(newObj);
+        let err = RRSessionStore.getError();
+        if (this.state.updating && !err){
+          browserHistory.push("/club/sessions");
+        } else if (err){
+          this.setState({ updating: false, loading: false })
+        } else {
+          let scoreChange = session.results && session.results.length ? session.results : this.setUpChangeArray(session.selectedSchema);
+          newObj.scoreChange = scoreChange;
+          this.setState(newObj);
+        }
       } else {
         fetchRRSessions(this.props.club._id);
       }
@@ -93,6 +102,7 @@ class RoundRobinSession extends React.Component {
             this.props.club._id, this.state.scoreChange, 
             this.state.scoreUpdate, session._id, session.date
           )
+          this.setState({ updating: true, loading: true })
         }
       }
     }
@@ -113,10 +123,11 @@ class RoundRobinSession extends React.Component {
                 <MenuItem primaryText="Delete" onClick={() => this.setState({open: true})}/>
               </IconMenu>
     }
-    loader() {
-      if (this.state.session) return;
-      return <CircularProgress size={2} />
-
+    loading() {
+      if (this.state.loading || !this.state.session){
+        return <div className="overlay"><div className="loading"><CircularProgress size={2} /></div></div>
+      } 
+      return "";      
     }
     render() {
       const actions = [
@@ -133,7 +144,7 @@ class RoundRobinSession extends React.Component {
         />,
       ];
         let { session, scoreChange } = this.state;
-        if (!session) return <div>{ this.loader() }</div>;
+        if (!session) return this.loading();
         let { selectedSchema, schemata, numOfPlayers, clubId, players, finalized } = session;
 
         var countedPlayers = 0;
@@ -168,6 +179,7 @@ class RoundRobinSession extends React.Component {
         >
           Are you sure you want to delete the session?
         </Dialog>
+        { this.loading() }
         </div>;
     }
 }
