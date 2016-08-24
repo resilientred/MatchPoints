@@ -8,10 +8,6 @@ MatchPoints is a Full-stack web Round-Robin rating systems. It is expected to pr
 And allow users to:
 * query results based on date
 * query their indiviual old results
-## Todos
- - [x] deploy on AWS
- - [ ] form validations
- 
 ## Expected Features (MVP)
  - [x] Arrange groups for players based on ratings
  - [x] Allow organizers to enter results
