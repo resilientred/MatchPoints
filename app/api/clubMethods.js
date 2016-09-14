@@ -4,28 +4,28 @@ import crypto from 'crypto';
 
 class ClubMethods {
   constructor(){
-    this._currentClub = null;
+    this._currentClubs = [];
   }
 
   currentClub = (req) => {
-    if (this._currentClub) {
+    let currentClub = this._currentClubs[req.cookies.matchpoint_session];
+    if (currentClub) {
       return new Promise((resolve, reject)=>{
-        resolve(this._currentClub);
+        resolve(currentClub);
       });
     } else {
       return ClubModel.findBySessionToken.call(ClubModel, req.cookies.matchpoint_session);
     }
   }
-  setCurrentClub(club){
-    console.log("Setting current Club,... this = ", this);
-    this._currentClub = club;
+  setCurrentClub(club, token){
+    this._currentClubs[token] = club;
     return club;
   }
   
-  logOut = () => {
-    var club = this._currentClub;
+  logOut = (token) => {
+    var club = this._currentClubs[token];
     if (!club) return new Promise((resolve, _) => { resolve() });
-    this._currentClub = null;
+    delete this._currentClubs[token];
     return ClubModel.resetSessionToken.call(ClubModel, club);
   }
 
@@ -35,29 +35,26 @@ class ClubMethods {
       throw new Error("log In error");
     } else {
       let sessionToken = club.sessionToken; 
-      this._currentClub = club;
       
-      delete this._currentClub.sessionToken;
-      delete this._currentClub.passwordDigest;
+      delete club.sessionToken;
+      delete club.passwordDigest;
 
-      console.log("sending cookie");
+      this._currentClubs[sessionToken] = club;
       res.cookie("matchpoint_session", sessionToken, 
-            { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(this._currentClub);
+            { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(club);
       return new Promise((resolve, reject) => {
-		resolve("ok");
-	});
+    		resolve("ok");
+    	});
     }
   }
 
   _findClub(username, password){
-    console.log(username + " " + password)
     var _club;
     return ClubModel.findByUsernameAndPassword.call(ClubModel, username)
       .then((club) => {
         _club = club;
         return club.isPassword(password);
       }).then(() => {
-	console.log("password correct");
         return new Promise((resolve, reject) => {
           resolve(_club);
         })

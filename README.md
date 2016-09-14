@@ -23,6 +23,10 @@ And allow users to:
  - [ ] Adjust results automatically if an older session is saved after the newer one
  - [ ] Allow Users to customize scoring algorithm
 
+## Bugs fix:
+- [x] User login bugs
+- [ ] Styling is not showing up for pdfs
+
 ## Languages:
  - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js

@@ -8,15 +8,13 @@ router.post("/new", parseUrlEncoded, csrfProtection, (req, res) => {
   let data = req.body.user;
   clubMethods._findClub(data.username, data.password)
     .then((club) => {
-      console.log("logging in...club: " + club);
       clubMethods.logIn(res, club);
     }).catch((err)=>{
       res.status(404).send("Username or password error.");
       res.end();
     });
-}).delete("/", (_, res) => {
-  clubMethods.logOut().then(() => {
-    console.log("clearing cookie")
+}).delete("/", (req, res) => {
+  clubMethods.logOut(req.cookies.matchpoint_session).then(() => {
     res.clearCookie("matchpoint_session").send("");
     res.end();
   }).catch((err)=>{
