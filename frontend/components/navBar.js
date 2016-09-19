@@ -43,6 +43,7 @@ class NavBar extends Component {
   }
   handleLogin = () => {
     this.props.openLogin();
+    // this.handleOpen();
   }
   handleOpen = () => {
     this.setState({ opened: !this.state.opened })

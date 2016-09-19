@@ -6,8 +6,9 @@ import fs from "fs"
 import bluebird from "bluebird"
 import path from "path"
 
-
-const subscriber = redis.createClient();
+const subscriber = process.env.NODE_ENV === "development" ? 
+      redis.createClient() :
+      redis.createClient("redis://" + process.env.HOST);
 const router = express.Router();
 
 
@@ -15,7 +16,6 @@ const _handleExpired = (name) => {
   const filePath = path.join(__dirname, "..", "..", "pdfs", `${name}.pdf`);
   fs.unlink(filePath, (err) => {
     if (err) return console.log(err);
-    console.log("removed an old file");
   })
 };
 

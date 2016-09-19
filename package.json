@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf build && mkdir build",
-    "build-server": "babel -d ./build ./app",
-    "webpack": "node node_modules/webpack/bin/webpack.js",
-    "build": "npm run clean && npm run build-server && npm run webpack",
-    "start": "node ./build/app.js",
+    "start": "NODE_ENV=development babel-node app/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

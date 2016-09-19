@@ -597,7 +597,7 @@ form {
     margin-top: 10px;
   }
 }
-@media only screen and (max-width: 800px){
+@media (max-width: 800px) and (max-device-width: 800px){
   .nav {
     display: none;
   }
@@ -613,29 +613,8 @@ form {
   }
 
 }
-@media (max-width: 535px){
-	.club-nav {
-		position: absolute;
-		left: -150px;
-		@include selected;
-	}
 
-	.club-nav:hover {
-		left: 0px;
-		@include selected;
-
-	}
-	.club-children {
-		position: relative;
-		left: 20px;
-	}
-  .name-select-div {
-    display: flex;
-    flex-direction: column;
-
-  }
-}
-@media (min-width: 944px){
+@media (min-width: 944px) and (min-device-width: 944px){
   .banner-container {
     transform: translateY(-15%);
   }
@@ -646,13 +625,13 @@ form {
     right: -20%;
   }
 }
-@media (min-width: 1144px){
+@media (min-width: 1144px) and (min-device-width: 1144px){
   .banner-container {
     transform: translateY(-20%);
   }
 
 }
-@media (max-width: 760px){
+@media (max-width: 768px) and (max-device-width: 768px){
   .banner {
     background-image: url("/images/tt_banner.jpg");
     background-repeat:no-repeat;
@@ -673,3 +652,26 @@ form {
     width: 90%;
   }
 }
+@media (max-width: 535px) and (max-device-width: 535px){
+  .club-nav {
+    position: absolute;
+    left: -150px;
+    @include selected;
+  }
+
+  .club-nav:hover {
+    left: 0px;
+    @include selected;
+
+  }
+  .club-children {
+    position: relative;
+    left: 20px;
+  }
+  .name-select-div {
+    display: flex;
+    flex-direction: column;
+
+  }
+}
+

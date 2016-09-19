@@ -574,7 +574,7 @@ form {
   .club-info-container > div {
     margin-top: 10px; }
 
-@media only screen and (max-width: 800px) {
+@media (max-width: 800px) and (max-device-width: 800px) {
   .nav {
     display: none; }
   .collapsed-icon {
@@ -585,7 +585,35 @@ form {
     .collapsed-icon:hover {
       color: black; } }
 
-@media (max-width: 535px) {
+@media (min-width: 944px) and (min-device-width: 944px) {
+  .banner-container {
+    transform: translateY(-15%); }
+  .forms {
+    top: 30%; }
+  .nav {
+    right: -20%; } }
+
+@media (min-width: 1144px) and (min-device-width: 1144px) {
+  .banner-container {
+    transform: translateY(-20%); } }
+
+@media (max-width: 768px) and (max-device-width: 768px) {
+  .banner {
+    background-image: url("/images/tt_banner.jpg");
+    background-repeat: no-repeat;
+    -ms-background-position-x: center;
+    -ms-background-position-y: center;
+    background-position: center center; }
+  .banner-container {
+    transform: translateY(-5%); }
+  .banner-text {
+    font-size: 24px; }
+  .result-entry {
+    max-width: 400px; }
+  .result-query-container {
+    width: 90%; } }
+
+@media (max-width: 535px) and (max-device-width: 535px) {
   .club-nav {
     position: absolute;
     left: -150px;
@@ -606,30 +634,6 @@ form {
     display: flex;
     flex-direction: column; } }
 
-@media (min-width: 944px) {
-  .banner-container {
-    transform: translateY(-15%); }
-  .forms {
-    top: 30%; }
-  .nav {
-    right: -20%; } }
-
-@media (min-width: 1144px) {
-  .banner-container {
-    transform: translateY(-20%); } }
-
-@media (max-width: 760px) {
+@media (max-device-width: 480px) {
   .banner {
-    background-image: url("/images/tt_banner.jpg");
-    background-repeat: no-repeat;
-    -ms-background-position-x: center;
-    -ms-background-position-y: center;
-    background-position: center center; }
-  .banner-container {
-    transform: translateY(-5%); }
-  .banner-text {
-    font-size: 24px; }
-  .result-entry {
-    max-width: 400px; }
-  .result-query-container {
-    width: 90%; } }
+    background-size: auto; } }

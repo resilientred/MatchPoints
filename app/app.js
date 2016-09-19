@@ -1,6 +1,5 @@
 import path from 'path'
 import mongoose from 'mongoose'
-import sassMiddleware from 'node-sass-middleware'
 import cookieParser from 'cookie-parser'
 import express from "express"
 import { app, csrfProtection, clubMethods } from "./helpers/app_modules"
@@ -8,37 +7,41 @@ import routes from './api/players'
 import clubRoutes from "./api/club"
 import sessionRoutes from "./api/session"
 import pdfRoutes from "./api/pdf"
-const port = 3000;
-import webpack from 'webpack'
-import webpackMiddleware from 'webpack-dev-middleware'
-import config from '../webpack.config.js'
-const compiler = webpack(config);
+const port = process.env.PORT || 3000;
 
+mongoose.connect('mongodb://127.0.0.1:27017/roundrobindb');
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "..", "public", "views"));
-mongoose.connect('mongodb://localhost/roundrobindb');
 app.use(cookieParser());
 
-// app.use(function (err, req, res, next) {
-//   if (err.code !== 'EBADCSRFTOKEN') return next(err);
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
-//   res.status(403).send("Invalid session token");
-// })
+  res.status(403).send("Forbidden Access");
+})
 
 app.use('/favicon.ico', (req, res, next) => {
   res.end();
 })
-app.use(
-  sassMiddleware({
-    src: path.join(__dirname, "assets", "sass"),
-    dest: path.join(__dirname, "..", "public", "styles"),
-    prefix: '/styles',
-    debug: true
-  })
-);
+
+if (process.env.NODE_ENV === 'development'){
+  const sassMiddleware = require('node-sass-middleware');
+  const webpack = require('webpack')
+  const webpackMiddleware = require('webpack-dev-middleware')
+  const config = require('../webpack.config.js')
+  const compiler = webpack(config);
+  app.use(
+    sassMiddleware({
+      src: path.join(__dirname, "assets", "sass"),
+      dest: path.join(__dirname, "..", "public", "styles"),
+      prefix: '/styles',
+      debug: true
+    })
+  );
+  app.use(webpackMiddleware(compiler));  
+}
 
 app.use(express.static(path.join(__dirname, "..", "public")));
-app.use(webpackMiddleware(compiler));
 app.use('/api/clubs', clubRoutes);
 app.use('/api/clubs', routes);
 app.use('/api/pdfs', pdfRoutes)
@@ -49,7 +52,6 @@ app.use('/api/*', (req, res, next) => {
 app.use('/session', sessionRoutes);
 app.use('/*', (req, res, next) => {
   var origUrl = req.originalUrl;
-  console.log(origUrl);
   var redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
   var currentClub;
 
@@ -74,7 +76,7 @@ app.get('*', csrfProtection, (req, res) => {
 });  
 
 app.listen(port, () => {
-  console.log('listening on port 80...');
+  console.log('listening on port', port);
 });
 
 

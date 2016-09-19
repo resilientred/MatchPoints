@@ -1,6 +1,0 @@
-node_modules/
-.gitignore
-pdfs/
-build/
-bundle.js
-bundle.*

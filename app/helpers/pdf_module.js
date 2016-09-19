@@ -2,15 +2,15 @@ import fs from "fs"
 import html5pdf from "html5-to-pdf"
 import shortid from "shortid"
 import path from "path"
+
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 export const generatePDF = ({clubName}, num, players, numOfPlayers, date) => {
-    console.log("date: ", date, "clubName: ", clubName, "num: ", num, "players: ", players, "numOfPlayers: ", numOfPlayers); 
     let header = '<header class="cf"><div class="left"><h4>Date: ' + date + 
       '</h4></div><div class="center"><h2>' + clubName + 
       '</h2></div><div class="right">' +
       '<h3>Group ' + num + '</h3></div></header>';
     let content = "<content>" + playerList(numOfPlayers, players);
-
+    console.log("csspath", __dirname, "..", "assets", "css-pdf", "pdf.css")
     content += schedule(numOfPlayers) + "</content>";
     content += scoreBoxes(numOfPlayers);
     const generatedId = shortid.generate();
