@@ -1,7 +1,7 @@
 import express from "express"
 import redis from "redis"
-import { generatePDF } from "../helpers/pdf_module.js"
-import { parseUrlEncoded, app, csrfProtection, client } from "../helpers/app_modules"
+import { PDFGenerator } from "../helpers/pdfGenerator"
+import { parseUrlEncoded, app, csrfProtection, client } from "../helpers/appModules"
 import fs from "fs"
 import bluebird from "bluebird"
 import path from "path"
@@ -46,7 +46,7 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
     let players = [];
     process.nextTick(() => {
       try {
-        let url = generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
+        let url = PDFGenerator.generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
 
         client.setex("pdf#" + url, 60*15, "true", (err) => {
           if (err) console.log(err);

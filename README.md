@@ -25,7 +25,8 @@ And allow users to:
 
 ## Bugs fix:
 - [x] User login bugs
-- [ ] Styling is not showing up for pdfs
+- [x] Styling is not showing up for pdfs
+- [x] pdf stylings
 
 ## Languages:
  - Front-end: React.js with Flux architecture

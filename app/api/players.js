@@ -1,7 +1,7 @@
 import express from 'express';
 import { Player } from '../models/player.js';
 import Club from "../models/club"
-import { parseUrlEncoded, csrfProtection, clubMethods } from "../helpers/app_modules"
+import { parseUrlEncoded, csrfProtection, clubMethods } from "../helpers/appModules"
 const router = express.Router();
 
 router.route("/:clubId/players")

@@ -2,7 +2,7 @@ import path from 'path'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
 import express from "express"
-import { app, csrfProtection, clubMethods } from "./helpers/app_modules"
+import { app, csrfProtection, clubMethods } from "./helpers/appModules"
 import routes from './api/players'
 import clubRoutes from "./api/club"
 import sessionRoutes from "./api/session"

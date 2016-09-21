@@ -201,7 +201,7 @@ class Grouping extends React.Component {
       }, 30000);
       setTimeout(() => {
         this.setState({loading: false});
-      }, 1000);
+      }, 2000);
     }
 
     handleSave = () => {

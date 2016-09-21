@@ -633,7 +633,3 @@ form {
   .name-select-div {
     display: flex;
     flex-direction: column; } }
-
-@media (max-device-width: 480px) {
-  .banner {
-    background-size: auto; } }

@@ -2,7 +2,7 @@ import express from 'express'
 import ClubModel from '../models/club'
 import RoundRobinModel from "../models/roundrobin"
 import { Player } from "../models/player"
-import { clubMethods, parseUrlEncoded, csrfProtection, client } from "../helpers/app_modules"
+import { clubMethods, parseUrlEncoded, csrfProtection, client } from "../helpers/appModules"
 
 const router = express.Router();
 
