@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.0.1",
     "bcrypt": "^0.8.7",
     "bcrypt-as-promised": "^1.1.0",
     "bluebird": "^3.4.1",

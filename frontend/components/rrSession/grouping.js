@@ -68,9 +68,10 @@ class Grouping extends React.Component {
       let error = PDFStore.getError();
       if (error){
         this.error = error;
-        handleOpen();
+        this.setState({ loading: false});
+        this.handleOpen();
       } else {
-        this.setState({ pdfs: PDFStore.getPDF() })
+        this.setState({ pdfs: PDFStore.getPDF(), loading: false })
       }
     }
     handleChange = (field, e, idx, value) => {
@@ -93,7 +94,7 @@ class Grouping extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
       if (this.state.dialogOpen !== nextState.dialogOpen || 
             this.state.generated !== nextState.generated || 
-            this.state.loading !== nextState.loading){
+            this.state.loading !== nextState.loading || this.state.open !== nextState.open){
         return true;
       }
       if ((!this.state.pdfs && nextState.pdfs) || 
@@ -199,9 +200,6 @@ class Grouping extends React.Component {
       setTimeout(() => {
         this.setState({generated: false});
       }, 30000);
-      setTimeout(() => {
-        this.setState({loading: false});
-      }, 2000);
     }
 
     handleSave = () => {
@@ -221,7 +219,7 @@ class Grouping extends React.Component {
       try {
         window.open(`/api/pdfs/download/${link}`)
       } catch(e) {
-        debugger;
+        console.log(e)
       }
     }
     moveUp = (group) => {
@@ -312,7 +310,7 @@ class Grouping extends React.Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
           message={this.error || ""}
-          autoHideDuration={3000}
+          autoHideDuration={8000}
         />
         { this.loading() }
         { this.dialog() }

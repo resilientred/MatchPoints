@@ -2,12 +2,12 @@ import fs from "fs"
 import html5pdf from "html5-to-pdf"
 import shortid from "shortid"
 import path from "path"
-import Scheduler from "./rotatingArray"
+import Scheduler from "./scheduler"
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
 class PDFGenerator {
   static generatePDF({clubName}, num, players, numOfPlayers, date){
-    let header = '<header class="cf"><div class="left"><h4>Date: ' + date + 
+    let header = '<header class="cf"><div class="left"><h4>' + date + 
       '</h4></div><div class="center"><h2>' + clubName + 
       '</h2></div><div class="right">' +
       '<h3>Group ' + num + '</h3></div></header>';
@@ -15,15 +15,17 @@ class PDFGenerator {
     content += this.schedule(numOfPlayers) + "</content>";
     content += this.scoreBoxes(numOfPlayers);
     const generatedId = shortid.generate();
-    html5pdf({
-      paperFormat: "letter",
-      cssPath: path.join(__dirname, "..", "assets", "css-pdf", "pdf.css")
-    }).from.string(header + content).to(`./pdfs/${generatedId}.pdf`, function(err) {
-      if (err) console.log(err);
-      console.log("done");
+    
+    return new Promise((resolve, reject) => {
+      html5pdf({
+        paperFormat: "letter",
+        cssPath: path.join(__dirname, "..", "assets", "css-pdf", "pdf.css")
+      }).from.string(header + content).to(`./pdfs/${generatedId}.pdf`, function(err) {
+        reject(err)
+        if (err) console.log(err);
+        resolve(generatedId);
+      })
     })
-
-    return generatedId;
   }
   static playerList(numOfPlayers, players){
     let list = "<ol>";
@@ -37,7 +39,7 @@ class PDFGenerator {
 
   static schedule(numOfPlayers){
     let n = Math.floor(numOfPlayers / 2),
-        schedule = Schedule.findSchedule(numOfPlayers),
+        schedule = Scheduler.findSchedule(numOfPlayers),
         currentCount = 0;
     let schedStr = "<div class='schedule'><div class='scenario'><div>" + 
       numOfPlayers + " Players</div><ul>";
@@ -69,10 +71,10 @@ class PDFGenerator {
       boxes += "<div class='score-title'>" + i + "</div>";
     }
     boxes += "</div>";
-    for (let k = 1; k < numOfPlayers; k++){
-      boxes += "<div class='row cf'><div class='g-num'>" + k + "</div>"
-      for (i = 0; i < numOfPlayers; i++){
-        boxes += "<div class='cell-div" + (i === (k - 1) ? " grey'>" : "'>") + 
+    for (let j = 1; j < numOfPlayers; j++){
+      boxes += "<div class='row cf'><div class='g-num'>" + j + "</div>"
+      for (let i = 0; i < numOfPlayers; i++){
+        boxes += "<div class='cell-div" + (i === (j - 1) ? " grey'>" : "'>") + 
           "<div class='cell'></div><div class='cell'></div></div>"
       } 
       boxes += "</div>";   
@@ -84,4 +86,4 @@ class PDFGenerator {
 }
 
 
-
+export default PDFGenerator

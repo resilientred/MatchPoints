@@ -2,7 +2,7 @@ import Dispatcher from "../dispatcher/dispatcher";
 import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
 				 LOGGED_IN, FETCHED_PLAYER, FETCHED_PLAYERS, REMOVED_PLAYER,
 				 LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF, 
-				 FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION, SESSION_ERROR} from "../constants/constants"
+				 FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION, SESSION_ERROR, PDF_ERROR} from "../constants/constants"
 
 
 module.exports = {
@@ -28,7 +28,6 @@ module.exports = {
 		})
 	},
 	fetchedRRSessions(sessions){
-		debugger;
 		Dispatcher.dispatch({
 			actionType: FETCHED_SESSIONS,
 			sessions: sessions
@@ -81,7 +80,7 @@ module.exports = {
 	},
 	PDFError(error) {
 		Dispatcher.dispatch({
-			actiontype: PDF_ERROR,
+			actionType: PDF_ERROR,
 			error: error
 		})
 	},

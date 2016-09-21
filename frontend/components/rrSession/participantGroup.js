@@ -29,7 +29,9 @@ const moveUpArrow = (moveUp, i) => {
     </IconButton>
 
 }
-
+const mapPlayers = () => {
+  
+}
 const ParticipantGroup = (props) => {
   return (<div style={{position: "relative"}}>
     <IconButton iconClassName="material-icons" 

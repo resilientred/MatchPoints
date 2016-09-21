@@ -1,6 +1,6 @@
 import express from "express"
 import redis from "redis"
-import { PDFGenerator } from "../helpers/pdfGenerator"
+import PDFGenerator from "../helpers/pdfGenerator"
 import { parseUrlEncoded, app, csrfProtection, client } from "../helpers/appModules"
 import fs from "fs"
 import bluebird from "bluebird"
@@ -36,30 +36,26 @@ subscriber.psubscribe("__keyspace@0__:*", (err) => {
 });
 
 
-
 router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   let clubId = req.params.clubId,
       { club, addedPlayers, schemas, date } = req.body.session;
   let urls = {};
 
-  schemas.forEach((group, i) => {
-    let players = [];
-    process.nextTick(() => {
-      try {
-        let url = PDFGenerator.generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
+  let promises = schemas.map((group, i) => {
+    return PDFGenerator.generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date);
+  });
 
-        client.setex("pdf#" + url, 60*15, "true", (err) => {
-          if (err) console.log(err);
-        });
-        urls["group" + (i + 1)] = url
-
-        if (addedPlayers.length === 0){
-          setTimeout(() => res.status(200).send(urls), 1000);
-        }
-      } catch(e){
-        res.status(500).send("Unable to generate pdfs. Please try again later.")
-      }
+  Promise.all(promises).then(pdfs => {
+    pdfs.forEach((url, i) => {
+      client.setex("pdf#" + url, 60*15, "true", (err) => {
+        if (err) console.log(err);
+      });
+      urls["group" + (i + 1)] = url
     })
+    res.status(200).send(urls);
+  }).catch(err => {
+    console.log(err);
+    res.status(500).send("Unable to generate pdfs. Please try again later.")
   })
 })
 

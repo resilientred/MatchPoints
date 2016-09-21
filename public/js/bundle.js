@@ -34012,10 +34012,11 @@
 
 	    _this.handleLogin = function () {
 	      _this.props.openLogin();
-	      _this.handleOpen();
+	      // this.handleOpen();
 	    };
 
 	    _this.handleOpen = function () {
+	      debugger;
 	      _this.setState({ opened: !_this.state.opened });
 	    };
 
@@ -34357,7 +34358,6 @@
 			});
 		},
 		fetchedRRSessions: function fetchedRRSessions(sessions) {
-			debugger;
 			_dispatcher2.default.dispatch({
 				actionType: _constants.FETCHED_SESSIONS,
 				sessions: sessions
@@ -34410,7 +34410,7 @@
 		},
 		PDFError: function PDFError(error) {
 			_dispatcher2.default.dispatch({
-				actiontype: PDF_ERROR,
+				actionType: _constants.PDF_ERROR,
 				error: error
 			});
 		},
@@ -70906,9 +70906,10 @@
 	      var error = _pdfStore2.default.getError();
 	      if (error) {
 	        _this.error = error;
-	        handleOpen();
+	        _this.setState({ loading: false });
+	        _this.handleOpen();
 	      } else {
-	        _this.setState({ pdfs: _pdfStore2.default.getPDF() });
+	        _this.setState({ pdfs: _pdfStore2.default.getPDF(), loading: false });
 	      }
 	    };
 
@@ -70944,9 +70945,6 @@
 	      setTimeout(function () {
 	        _this.setState({ generated: false });
 	      }, 30000);
-	      setTimeout(function () {
-	        _this.setState({ loading: false });
-	      }, 1000);
 	    };
 
 	    _this.handleSave = function () {
@@ -70965,7 +70963,7 @@
 	      try {
 	        window.open('/api/pdfs/download/' + link);
 	      } catch (e) {
-	        debugger;
+	        console.log(e);
 	      }
 	    };
 
@@ -71042,7 +71040,7 @@
 	    value: function shouldComponentUpdate(nextProps, nextState) {
 	      var _this2 = this;
 
-	      if (this.state.dialogOpen !== nextState.dialogOpen || this.state.generated !== nextState.generated || this.state.loading !== nextState.loading) {
+	      if (this.state.dialogOpen !== nextState.dialogOpen || this.state.generated !== nextState.generated || this.state.loading !== nextState.loading || this.state.open !== nextState.open) {
 	        return true;
 	      }
 	      if (!this.state.pdfs && nextState.pdfs || nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs)) {
@@ -71235,7 +71233,7 @@
 	          open: this.state.open,
 	          onRequestClose: this.handleClose,
 	          message: this.error || "",
-	          autoHideDuration: 3000
+	          autoHideDuration: 8000
 	        }),
 	        this.loading(),
 	        this.dialog()
@@ -71320,7 +71318,7 @@
 	    _react2.default.createElement(_keyboardArrowUp2.default, null)
 	  );
 	};
-
+	var mapPlayers = function mapPlayers() {};
 	var ParticipantGroup = function ParticipantGroup(props) {
 	  return _react2.default.createElement(
 	    "div",
