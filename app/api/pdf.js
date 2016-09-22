@@ -8,7 +8,7 @@ import path from "path"
 
 const subscriber = process.env.NODE_ENV === "development" ? 
       redis.createClient() :
-      redis.createClient("redis://" + process.env.HOST);
+      redis.createClient("redis://" + process.env.REDIS_HOST);
 const router = express.Router();
 
 

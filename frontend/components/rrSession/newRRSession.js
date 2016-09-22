@@ -244,4 +244,3 @@ export default class NewRRSession extends React.Component {
 
 
 
-export default NewRRSession;
