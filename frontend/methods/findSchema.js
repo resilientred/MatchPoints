@@ -1,9 +1,9 @@
 const schema = {};
-export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
+const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
   if (numPlayers < 0) return null;
   if (numPlayers === 0) return [[]];
-  let possibilities = [],
-      recursions = [];
+  let possibilities = [];
+  const recursions = [];
 
   if (!schema[numPlayers]) {
     schema[numPlayers] = {};
@@ -27,3 +27,5 @@ export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
 
   return schema[numPlayers][rangeOfPlayers];
 };
+
+export default findSchemata;

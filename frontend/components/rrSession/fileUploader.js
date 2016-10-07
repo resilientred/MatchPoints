@@ -9,7 +9,6 @@ export default class FileUploader extends Component {
   uploadFile = (e) => {
     var fd = new FormData();
     fd.append('file', this.refs.file.getDOMNode().files[0]);
-    
   }
   render(){
     return (
@@ -25,7 +24,6 @@ export default class FileUploader extends Component {
           <input type="submit" />
         </RaisedButton>
       </form>
-      )
+    );
   }
 }
-

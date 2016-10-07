@@ -20,51 +20,51 @@ class NavBar extends Component {
   componentWillMount() {
     this.cuListener = ClubStore.addListener(this._currentClubChange);
     let club = ClubStore.getCurrentClub();
-    if (!club){
-      if (location.pathname === "/results"){
+    if (!club) {
+      if (location.pathname === "/results") {
         fetchCurrentClub();
       }
     }
     let tab, path = window.location.pathname;
-    if (path === "/club/newSession"){
+    if (path === "/club/newSession") {
       tab = 1;
-    } else if (/^\/club\/sessions.*/.test(path)){
+    } else if (/^\/club\/sessions.*/.test(path)) {
       tab = 2;
-    } else if (path === "/results"){
+    } else if (path === "/results") {
       tab = 3;
     } else {
       tab = 0;
     }
 
-    this.setState({tab, club})
+    this.setState({tab, club});
   }
   _currentClubChange = () => {
    let club = ClubStore.getCurrentClub();
-   this.setState({ club })
+   this.setState({ club });
   }
   handleLogin = () => {
     this.props.openLogin();
     // this.handleOpen();
   }
   handleOpen = () => {
-    this.setState({ opened: !this.state.opened })
+    this.setState({ opened: !this.state.opened });
   }
   handleLink(link, tab){
-    this.setState({ tab, opened: false })
+    this.setState({ tab, opened: false });
     browserHistory.push(link);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.opened !== nextState.opened || this.state.tab !== nextState.tab){
-      return true
+    if (this.state.opened !== nextState.opened || this.state.tab !== nextState.tab) {
+      return true;
     }
-    if ((!this.state.club && nextState.club) || (!nextState.club && this.state.club)){
+    if ((!this.state.club && nextState.club) || (!nextState.club && this.state.club)) {
       return true;
     }
     return false;
   }
   slideNav() {
-    if (this.state.club){
+    if (this.state.club) {
       return (<Drawer open={this.state.opened }
        openSecondary={true}
        docked={false}

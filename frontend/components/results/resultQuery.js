@@ -24,7 +24,7 @@ export default class ResultQuery extends Component {
   handleTabChange = (tab, e, i) => {
     this.setState({ tab });
   }
-  _checkIfCachedClubs(){
+  _checkIfCachedClubs() {
     let clubs = AllClubsStore.all();
     if (clubs){
       this.setState({ clubs });
@@ -39,10 +39,10 @@ export default class ResultQuery extends Component {
   render() {
     return <div>
       <div className="result-query-container">
-        <Tabs 
+        <Tabs
           value={this.state.tab}
           onChange={this.handleTabChange}
-          contentContainerStyle={{  
+          contentContainerStyle={{
             padding: "20px",
             border: "1px solid #E0E0E0",
           }} >
@@ -57,4 +57,3 @@ export default class ResultQuery extends Component {
     </div>;
   }
 }
-

@@ -1,7 +1,7 @@
 import React from "react";
 import ParticipantGroup from "./participantGroup";
-import { findSchemata } from "../../methods/findSchema";
-import { generatePDF, downloadPDF } from "../../actions/clientActions"
+import findSchemata from "../../methods/findSchema";
+import { generatePDF, downloadPDF } from "../../actions/clientActions";
 import PDFStore from "../../stores/pdfStore";
 import RaisedButton from "material-ui/RaisedButton";
 import SelectField from "material-ui/SelectField";
@@ -16,11 +16,10 @@ import CircularProgress from "material-ui/CircularProgress";
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 
-const objToString = (obj) => {
-  return Object.keys(obj).reduce( (a, b) => { 
-     a += b + obj[b]
-  }, "");
-}
+const objToString = obj => (
+  Object.keys(obj).reduce((a, b) => a += b + obj[b], "")
+);
+
 class Grouping extends React.Component {
     constructor(props) {
         super(props);
@@ -31,33 +30,32 @@ class Grouping extends React.Component {
           selectedGroup: [],
           pdfs: null,
           generated: false,
-          stepIndex: 0, 
+          stepIndex: 0,
           open: false,
           dialogOpen: false,
           loading: false
         }
-    }   
+    }
     componentWillMount() {
       this.pListener = PDFStore.addListener(this._fetchedPDF);
-
-      this.int = setInterval(this.tempSave, 60000);
+      this._int = setInterval(this.tempSave, 60000);
     }
     componentWillUnmount() {
-     this.pListener.remove(); 
-     clearInterval(this.int);
+     this.pListener.remove();
+     clearInterval(this._int);
     }
     tempSave = () => {
       this.props.temporarilySaveSession(
         this.state.min,
         this.state.max,
-        this.state.schemata, 
-        this.state.selectedGroup, 
+        this.state.schemata,
+        this.state.selectedGroup,
         this.state.pdfs
       );
     }
     handleOpen(){
       this.setState({open: true});
-    }   
+    }
     handleClose = () => {
       this.setState({open: false});
     }
@@ -66,160 +64,165 @@ class Grouping extends React.Component {
     }
     _fetchedPDF = () => {
       let error = PDFStore.getError();
-      if (error){
+      if (error) {
         this.error = error;
         this.setState({ loading: false});
         this.handleOpen();
       } else {
-        this.setState({ pdfs: PDFStore.getPDF(), loading: false })
+        this.setState({ pdfs: PDFStore.getPDF(), loading: false });
       }
     }
     handleChange = (field, e, idx, value) => {
       if (value) this.setState({[field]: value});
     }
     componentWillReceiveProps(nextProps) {
-      if (this.props.cached !== nextProps.cached){
-        this.setState({ 
-          schemata: nextProps.schemata ? 
-            (typeof nextProps.schemata === "string" || 
-              typeof nextProps.schemata === "number" ? 
-                [+nextProps.schemata] : nextProps.schemata.map( arr => (arr.map( el => +el)))) : [[]], 
+      if (this.props.cached !== nextProps.cached) {
+        this.setState({
+          schemata: nextProps.schemata ?
+            (typeof nextProps.schemata === "string" ||
+              typeof nextProps.schemata === "number" ?
+                [+nextProps.schemata] : nextProps.schemata.map( arr => (arr.map( el => +el)))) : [[]],
           selectedGroup: nextProps.selectedGroup ? nextProps.selectedGroup.map(el => +el) : [],
           pdfs: nextProps.pdfs === "" ? null : nextProps.pdfs,
           min: nextProps.min ? +nextProps.min : null,
           max: nextProps.max ? +nextProps.max : null
         });
       }
-    } 
+    }
     shouldComponentUpdate(nextProps, nextState) {
-      if (this.state.dialogOpen !== nextState.dialogOpen || 
-            this.state.generated !== nextState.generated || 
-            this.state.loading !== nextState.loading || this.state.open !== nextState.open){
+      if (this.state.dialogOpen !== nextState.dialogOpen ||
+            this.state.generated !== nextState.generated ||
+            this.state.loading !== nextState.loading ||
+            this.state.open !== nextState.open) {
         return true;
       }
-      if ((!this.state.pdfs && nextState.pdfs) || 
-            (nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs))){
+      if ((!this.state.pdfs && nextState.pdfs) ||
+            (nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs))) {
         return true;
       }
-      if (this.state.selectedGroup && nextState.selectedGroup && 
-            this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()){
+      if (this.state.selectedGroup && nextState.selectedGroup &&
+            this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()) {
         return true;
       }
-      if (this.state.schemata && nextState.schemata && 
-            this.state.schemata.toString() !== nextState.schemata.toString()){
+      if (this.state.schemata && nextState.schemata &&
+            this.state.schemata.toString() !== nextState.schemata.toString()) {
         return true;
       }
-      
+
       let {min, max} = this.state;
       if (max !== nextState.max && !min) return true;
       if ((max !== nextState.max) || (max && (min !== nextState.min)) || (this.props.numPlayers !== nextProps.numPlayers && max && min)){
         let range = [];
-        for (let i = nextState.max; i >= (nextState.min || min); i--){
+        for (let i = nextState.max; i >= (nextState.min || min); i--) {
           range.push(i);
         }
         process.nextTick(() => {
           let numPlayers = nextProps.numPlayers;
           let range2 = range.slice();
           let schemata = findSchemata(numPlayers, range2);
-          console.log(schemata);
-          this.setState({schemata: schemata.length ? schemata : [[]]});  
-        })   
+          this.setState({schemata: schemata.length ? schemata : [[]]});
+        })
         return true;
       }
 
-      return false; 
+      return false;
     }
     schemata() {
       let schemata = this.state.schemata;
-      if (schemata.length){
-        return <div>
-          <SelectField value={this.state.selectedGroup.join(",")} 
-                       onChange={this.changeSchema} 
-                       floatingLabelText="Select a schema"
-                       floatingLabelFixed={true}>
-          {
-            schemata ? 
-                schemata.map( (schema, i)=>{
+      if (schemata.length) {
+        return (<div>
+          <SelectField value={this.state.selectedGroup.join(",")}
+            onChange={this.changeSchema}
+            floatingLabelText="Select a schema"
+            floatingLabelFixed={true}
+          >
+            {
+              schemata ?
+                schemata.map((schema, i) => {
                   return <MenuItem key={schema} value={schema.join(",")} primaryText={schema.join(", ")}/>;
                 })
-              :
+                :
                 <MenuItem key={"noth"} disabled={true} primaryText="No Available Schemas..."/>
-          }
-        </SelectField>
-        </div>;
-      } 
+            }
+          </SelectField>
+      </div>);
+      }
     }
     numOfPlayers() {
       let { min, max } = this.state;
 
       return (<div className="min-max">
         <SelectField value={max}
-                     floatingLabelFixed={true}
-                     floatingLabelText="Max Players"
-                     onChange={this.handleChange.bind(this, "max")}>
-            {
-              rangeOfPlayers.map((num) => (
-                <MenuItem key={num} value={num} primaryText={num} disabled={num < min }/>
-              ))
-            }
+          floatingLabelFixed={true}
+          floatingLabelText="Max Players"
+          onChange={this.handleChange.bind(this, "max")}
+        >
+          {
+            rangeOfPlayers.map(num => (
+              <MenuItem key={num} value={num} primaryText={num} disabled={num < min }/>
+            ))
+          }
         </SelectField>
-        <SelectField value={min} 
-                     floatingLabelFixed={true}
-                     floatingLabelText="Min Players"
-                     onChange={this.handleChange.bind(this, "min")}>
-            {
-              rangeOfPlayers.map((num) => (
-                <MenuItem key={num} value={num} primaryText={num} disabled={num > max}/>
-              ))
-            }
+        <SelectField value={min}
+          floatingLabelFixed={true}
+          floatingLabelText="Min Players"
+          onChange={this.handleChange.bind(this, "min")}
+        >
+          {
+            rangeOfPlayers.map(num => (
+              <MenuItem key={num} value={num} primaryText={num} disabled={num > max}/>
+            ))
+          }
          </SelectField>
-      </div>)
+      </div>);
     }
     changeSchema = (e, _, selectedGroup) => {
-      if (selectedGroup){
+      if (selectedGroup) {
         this.totalPlayerAdded = 0;
-        this.setState({ selectedGroup: selectedGroup.split(",").map(el => +el) }); 
+        this.setState({ selectedGroup: selectedGroup.split(",").map(el => +el) });
       }
     }
     generatePDF = () => {
-      if (this.state.generated){
+      if (this.state.generated) {
         this.title = "Whooops.."
         this.content = "You may only generate once every 30secs."
         this.setState({ dialogOpen: true })
         return;
       }
-      if (!this.state.schemata[0].length){
+      if (!this.state.schemata[0].length) {
         this.title = "Oooops.."
         this.content = "There are no players yet :(."
         this.setState({ dialogOpen: true })
         return;
       }
       generatePDF(this.props.addedPlayers, this.state.selectedGroup, this.props.club, this.props.date);
-      
-      this.setState({generated: true, loading: true});
+
+      this.setState({ generated: true, loading: true });
       setTimeout(() => {
-        this.setState({generated: false});
+        this.setState({ generated: false });
       }, 30000);
     }
 
     handleSave = () => {
-      if (!this.state.selectedGroup.length){
-        this.title = "Well...."
-        this.content = "You have to have selected a schema before you can save."
+      if (!this.state.selectedGroup.length) {
+        this.title = "Well....";
+        this.content = "You have to have selected a schema before you can save.";
         this.setState({ dialogOpen: true });
       } else {
-        this.setState({ loading: true})
-
-        this.props.saveSession(this.state.schemata, 
-                    this.state.selectedGroup, this.props.addedPlayers)
+        this.setState({ loading: true});
+        this.props.saveSession(
+          this.state.schemata,
+          this.state.selectedGroup,
+          this.props.addedPlayers
+        );
       }
 
     }
     download = (link) => {
       try {
-        window.open(`/api/pdfs/download/${link}`)
+        window.open(`/api/pdfs/download/${link}`);
       } catch(e) {
-        console.log(e)
+        console.log(e);
       }
     }
     moveUp = (group) => {
@@ -238,70 +241,75 @@ class Grouping extends React.Component {
     }
     groupTables(){
       let pdfs = this.state.pdfs;
-      return (<div> 
-           {
-            this.state.selectedGroup.map((numPlayers, i, arr) => {
-              this.totalPlayerAdded += +numPlayers;
-              return <ParticipantGroup key={i + "" + numPlayers} groupId={i}
-                        pdfDownload={ !pdfs ? () => {} : this.download.bind(this, pdfs["group" + (i + 1)])}
-                        pdfs={!!pdfs}
-                        numPlayers={numPlayers}
-                        players={this.props.addedPlayers.slice(
-                          this.totalPlayerAdded - numPlayers, this.totalPlayerAdded
-                          )}
-                        moveUp={i === 0 ? null : this.moveUp}
-                        moveDown={i === arr.length - 1 ? null : this.moveDown}
-                      />;
-             })
-            }
-        </div>);
+      return (<div>
+        {
+          this.state.selectedGroup.map((numPlayers, i, arr) => {
+            this.totalPlayerAdded += +numPlayers;
+            return (<ParticipantGroup key={i + "" + numPlayers} groupId={i}
+              pdfDownload={ !pdfs ? () => {} : this.download.bind(this, pdfs["group" + (i + 1)])}
+              pdfs={!!pdfs}
+              numPlayers={numPlayers}
+              players={this.props.addedPlayers.slice(
+                this.totalPlayerAdded - numPlayers, this.totalPlayerAdded
+                )}
+              moveUp={i === 0 ? null : this.moveUp}
+              moveDown={i === arr.length - 1 ? null : this.moveDown}
+            />);
+          })
+        }
+      </div>);
     }
     loading() {
       if (this.state.loading){
-        return <div className="overlay"><div className="loading"><CircularProgress size={2} /></div></div>
+        return <div className="overlay"><div className="loading"><CircularProgress size={2} /></div></div>;
       }
-      return "";      
+      return "";
     }
     dialog() {
-      if (this.state.dialogOpen){
-        const actions =[
+      if (this.state.dialogOpen) {
+        const actions = [
           <FlatButton
             label="Close"
             primary={true}
             onTouchTap={this.handleDialogClose}
           />
         ];
-        return <Dialog
-            title={this.title}
-            actions={actions}
-            open={this.state.dialogOpen}
-            modal={false}
-            onRequestClose={this.handleDialogClose}
-          >
-            {this.content}
-          </Dialog>;      
+        return (<Dialog
+          title={this.title}
+          actions={actions}
+          open={this.state.dialogOpen}
+          modal={false}
+          onRequestClose={this.handleDialogClose}
+        >
+          {this.content}
+        </Dialog>);
       }
     }
     render() {
-      if (this.state.max && this.state.min){
-        var schemata = this.schemata();
-        if (this.state.selectedGroup){
-          var groupTables = this.groupTables();            
-        } 
+      if (this.state.max && this.state.min) {
+        const schemata = this.schemata();
+        if (this.state.selectedGroup) {
+          const groupTables = this.groupTables();
+        }
       }
-
       this.totalPlayerAdded = 0;
-      
-      let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF"
 
-      return <div className="grouping">
-        <IconMenu style={{position: "absolute", right: 0, top: "-20px", zIndex: "50"}}
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          >
-            <MenuItem primaryText="Generate PDF" onClick={this.generatePDF} disabled={this.state.generated || !this.state.selectedGroup.length}/>
-            <MenuItem primaryText="Save" onClick={this.handleSave} disabled={!this.state.selectedGroup.length} />
+      let generatedText = this.state.generated ? "You must wait 30secs" : "Create PDF";
+
+      return (<div className="grouping">
+        <IconMenu
+          style={{
+            position: "absolute",
+            right: 0,
+            top: "-20px",
+            zIndex: "50"
+          }}
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        >
+          <MenuItem primaryText="Generate PDF" onClick={this.generatePDF} disabled={this.state.generated || !this.state.selectedGroup.length}/>
+          <MenuItem primaryText="Save" onClick={this.handleSave} disabled={!this.state.selectedGroup.length} />
         </IconMenu>
         { this.numOfPlayers() }
         { schemata }
@@ -314,8 +322,8 @@ class Grouping extends React.Component {
         />
         { this.loading() }
         { this.dialog() }
-      </div>;
-    };
-}
+      </div>);
+    }
+};
 
 export default Grouping;
