@@ -7,6 +7,7 @@ import routes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
 import pdfRoutes from "./api/pdf";
+import uploadRoutes from "./api/upload";
 const port = process.env.PORT || 3000;
 
 mongoose.connect("mongodb://127.0.0.1:27017/roundrobindb");
@@ -47,6 +48,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/clubs", clubRoutes);
 app.use("/api/clubs", routes);
 app.use("/api/pdfs", pdfRoutes);
+app.use("/api/upload", uploadRoutes)
 app.use("/api/*", (req, res, next) => {
   res.status(404).send("Invalid routes");
   res.end();
@@ -72,12 +74,12 @@ app.use("/*", (req, res, next) => {
     });
 });
 
-app.get('*', csrfProtection, (req, res) => {
+app.get("*", csrfProtection, (req, res) => {
   res.render("index", {csrfToken: req.csrfToken()});
 });  
 
 app.listen(port, () => {
-  console.log('listening on port', port);
+  console.log("listening on port", port);
 });
 
 

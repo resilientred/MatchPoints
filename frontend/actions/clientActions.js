@@ -44,6 +44,15 @@ const fetchAllClubs = () => {
 	})
 }
 
+const uploadFile = (data) => {
+	apiCSRFService({
+		url: `/api/upload/players`,
+		method: "POST",
+		processData: false,
+		contentType: false,
+		success: "parsedFile"
+	})
+}
 const generatePDF = (addedPlayers, schemas, club, date) => {
 	apiCSRFService({
 		url: `/api/pdfs/${club._id}`,

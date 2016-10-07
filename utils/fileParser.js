@@ -1,13 +1,14 @@
 import fs from "fs";
 import path from "path";
 import readline from "readline";
-
-export class CSVParser {
-  static parseFile(file){
+import Club from "../app/models/club";
+export default class PlayersParser {
+  static CSVToPlayers(file, id){
     var rd = readline.createInterface({
       input: fs.createReadStream(file)
     });
-    var name, rating, players = [];
+    var name, rating, 
+        promises = [];
 
     return new Promise((resolve, reject) => {
       rd.on("line", (line) => {
@@ -26,16 +27,17 @@ export class CSVParser {
           }
         } else {
           var data = this.CSVtoArray(line);
-
-          players.push({
+          promises.push(Club.addPlayer(id, {
             name: data[name],
             rating: data[rating]
-          });
+          }))
         }
       });
-      rd.on("close", () => {
+      Promise.all(promises).then(players => {
         resolve(players);
-      });
+      }).catch(err => {
+        reject(err);
+      })
     });
   }
 
@@ -54,16 +56,25 @@ export class CSVParser {
     if (/,\s*$/.test(text)) a.push('');
     return a;
   }
-}
 
-export class JSONParser{
-  static parseFile(file) {
+  static JSONToPlayers(file) {
     return new Promise((resolve, reject) => {
       fs.readFile(file, 'utf8', (err, data) => {
         if (err){
           reject(err);
         } else {
-          resolve(JSON.parse(data));
+          let players = JSON.parse(data),
+              promises = players.map(player => {
+                return Club.addPlayer({
+                  name: player.name,
+                  rating: player.rating
+                })
+              })
+          Promise.all(promises).then(players => {
+            resolve(players);
+          }).catch(err => {
+            reject(err);
+          })
         }
       });
 
@@ -71,5 +82,9 @@ export class JSONParser{
 
   }
 }
+
+
+
+
 
 

@@ -1,25 +1,25 @@
-import React from 'react'
-import ParticipantGroup from './participantGroup'
-import { findSchemata } from "../../methods/findSchema"
+import React from "react";
+import ParticipantGroup from "./participantGroup";
+import { findSchemata } from "../../methods/findSchema";
 import { generatePDF, downloadPDF } from "../../actions/clientActions"
-import PDFStore from "../../stores/pdfStore"
-import RaisedButton from "material-ui/RaisedButton"
-import SelectField from "material-ui/SelectField"
-import MenuItem from "material-ui/MenuItem"
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import SnackBar from 'material-ui/Snackbar';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog'
-import CircularProgress from 'material-ui/CircularProgress';
+import PDFStore from "../../stores/pdfStore";
+import RaisedButton from "material-ui/RaisedButton";
+import SelectField from "material-ui/SelectField";
+import MenuItem from "material-ui/MenuItem";
+import IconMenu from "material-ui/IconMenu";
+import IconButton from "material-ui/IconButton/IconButton";
+import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
+import SnackBar from "material-ui/Snackbar";
+import FlatButton from "material-ui/FlatButton";
+import Dialog from "material-ui/Dialog";
+import CircularProgress from "material-ui/CircularProgress";
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 
 const objToString = (obj) => {
   return Object.keys(obj).reduce( (a, b) => { 
      a += b + obj[b]
-  }, "")
+  }, "");
 }
 class Grouping extends React.Component {
     constructor(props) {
@@ -315,7 +315,7 @@ class Grouping extends React.Component {
         { this.loading() }
         { this.dialog() }
       </div>;
-    }
+    };
 }
 
 export default Grouping;

@@ -1,4 +1,4 @@
-import serverActions from "../actions/serverActions"
+import * from "../actions/serverActions"
 
 const getCSRF = () => {
 	const els = document.getElementsByTagName("meta");
@@ -10,7 +10,7 @@ const getCSRF = () => {
 }
 
 export const apiService = (options) => {
-	  			
+			
 		$.ajax({
 			method: options["method"] || "GET",
 			url: options["url"],
