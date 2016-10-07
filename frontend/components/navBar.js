@@ -46,7 +46,6 @@ class NavBar extends Component {
     // this.handleOpen();
   }
   handleOpen = () => {
-    debugger;
     this.setState({ opened: !this.state.opened })
   }
   handleLink(link, tab){

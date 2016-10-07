@@ -1,6 +1,6 @@
 class RotatingArray {
   constructor(len){
-    this.len = len % 2 === 0 ? len - 1: len
+    this.len = len % 2 === 0 ? len - 1: len;
     this.arr = new Array(this.len);
     this.start = this.len;
     this.end = this.len;
@@ -10,7 +10,7 @@ class RotatingArray {
     }
   }
 
-  rotate(i){
+  rotate(){
     this.start--;
     this.end--;
   }
@@ -45,7 +45,7 @@ class RotatingArray {
     var allSchedule = [];
     for (var i = 0; i < this.len; i++){
       this.currentRoundSchedule(allSchedule, i);
-      this.rotate(i);
+      this.rotate();
     }
 
     return allSchedule;

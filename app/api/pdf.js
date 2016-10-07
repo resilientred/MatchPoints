@@ -1,10 +1,10 @@
-import express from "express"
-import redis from "redis"
-import PDFGenerator from "../helpers/pdfGenerator"
-import { parseUrlEncoded, app, csrfProtection, client } from "../helpers/appModules"
-import fs from "fs"
-import bluebird from "bluebird"
-import path from "path"
+import express from "express";
+import redis from "redis";
+import PDFGenerator from "../../utils/pdfGenerator";
+import { parseUrlEncoded, app, csrfProtection, client } from "../helpers/appModules";
+import fs from "fs";
+import bluebird from "bluebird";
+import path from "path";
 
 const subscriber = process.env.NODE_ENV === "development" ? 
       redis.createClient() :

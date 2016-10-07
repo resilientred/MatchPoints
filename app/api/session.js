@@ -1,6 +1,6 @@
-import express from 'express'
-import ClubModel from '../models/club';
-import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/appModules"
+import express from "express";
+import ClubModel from "../models/club";
+import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/appModules";
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.post("/new", parseUrlEncoded, csrfProtection, (req, res) => {
   }).catch((err)=>{
     res.status(404).send(err);
   });  
-})
+});
 
 
 

@@ -1,40 +1,42 @@
-import path from 'path'
-import mongoose from 'mongoose'
-import cookieParser from 'cookie-parser'
-import express from "express"
-import { app, csrfProtection, clubMethods } from "./helpers/appModules"
-import routes from './api/players'
-import clubRoutes from "./api/club"
-import sessionRoutes from "./api/session"
-import pdfRoutes from "./api/pdf"
+import path from "path";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import express from "express";
+import { app, csrfProtection, clubMethods } from "./helpers/appModules";
+import routes from "./api/players";
+import clubRoutes from "./api/club";
+import sessionRoutes from "./api/session";
+import pdfRoutes from "./api/pdf";
 const port = process.env.PORT || 3000;
 
-mongoose.connect('mongodb://127.0.0.1:27017/roundrobindb');
-app.set('view engine', 'ejs');
+mongoose.connect("mongodb://127.0.0.1:27017/roundrobindb");
+app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use(cookieParser());
 
 app.use(function (err, req, res, next) {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  if (err.code !== "EBADCSRFTOKEN"){
+    return next(err);
+  }
 
   res.status(403).send("Forbidden Access");
-})
+});
 
-app.use('/favicon.ico', (req, res, next) => {
+app.use("/favicon.ico", (req, res, next) => {
   res.end();
-})
+});
 
-if (process.env.NODE_ENV === 'development'){
-  const sassMiddleware = require('node-sass-middleware');
-  const webpack = require('webpack')
-  const webpackMiddleware = require('webpack-dev-middleware')
-  const config = require('../webpack.config.js')
+if (process.env.NODE_ENV === "development"){
+  const sassMiddleware = require("node-sass-middleware");
+  const webpack = require("webpack");
+  const webpackMiddleware = require("webpack-dev-middleware");
+  const config = require("../webpack.config.js");
   const compiler = webpack(config);
   app.use(
     sassMiddleware({
       src: path.join(__dirname, "assets", "sass"),
       dest: path.join(__dirname, "..", "public", "styles"),
-      prefix: '/styles',
+      prefix: "/styles",
       debug: true
     })
   );
@@ -42,15 +44,15 @@ if (process.env.NODE_ENV === 'development'){
 }
 
 app.use(express.static(path.join(__dirname, "..", "public")));
-app.use('/api/clubs', clubRoutes);
-app.use('/api/clubs', routes);
-app.use('/api/pdfs', pdfRoutes)
-app.use('/api/*', (req, res, next) => {
+app.use("/api/clubs", clubRoutes);
+app.use("/api/clubs", routes);
+app.use("/api/pdfs", pdfRoutes);
+app.use("/api/*", (req, res, next) => {
   res.status(404).send("Invalid routes");
   res.end();
-})
-app.use('/session', sessionRoutes);
-app.use('/*', (req, res, next) => {
+});
+app.use("/session", sessionRoutes);
+app.use("/*", (req, res, next) => {
   var origUrl = req.originalUrl;
   var redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
   var currentClub;
@@ -62,17 +64,16 @@ app.use('/*', (req, res, next) => {
       currentClub = null;
     }).then(() => {
       if (currentClub && redirectURL) {
-        console.log("redirecting")
         res.redirect("/club");
         res.end();
       } else {
         next();
       }
-    })
+    });
 });
 
 app.get('*', csrfProtection, (req, res) => {
-  res.render("index", { csrfToken: req.csrfToken() });
+  res.render("index", {csrfToken: req.csrfToken()});
 });  
 
 app.listen(port, () => {

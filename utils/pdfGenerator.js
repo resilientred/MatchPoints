@@ -1,8 +1,8 @@
-import fs from "fs"
-import html5pdf from "html5-to-pdf"
-import shortid from "shortid"
-import path from "path"
-import Scheduler from "./scheduler"
+import fs from "fs";
+import html5pdf from "html5-to-pdf";
+import shortid from "shortid";
+import path from "path";
+import Scheduler from "./scheduler";
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
 class PDFGenerator {
@@ -20,18 +20,17 @@ class PDFGenerator {
       html5pdf({
         paperFormat: "letter",
         cssPath: path.join(__dirname, "..", "assets", "css-pdf", "pdf.css")
-      }).from.string(header + content).to(`./pdfs/${generatedId}.pdf`, function(err) {
-        reject(err)
+      }).from.string(header + content).to(path.join(__dirname, "..", "pdfs", `${generatedId}.pdf`), function(err) {
         if (err) console.log(err);
         resolve(generatedId);
-      })
-    })
+      });
+    });
   }
   static playerList(numOfPlayers, players){
     let list = "<ol>";
     players.forEach((player) => {
       list += "<li>" + player.name + "<span>" + parseInt(player.rating) + "</span></li>";
-    })
+    });
     list += "</ol>";
 
     return list;
@@ -72,10 +71,10 @@ class PDFGenerator {
     }
     boxes += "</div>";
     for (let j = 1; j < numOfPlayers; j++){
-      boxes += "<div class='row cf'><div class='g-num'>" + j + "</div>"
+      boxes += "<div class='row cf'><div class='g-num'>" + j + "</div>";
       for (let i = 0; i < numOfPlayers; i++){
         boxes += "<div class='cell-div" + (i === (j - 1) ? " grey'>" : "'>") + 
-          "<div class='cell'></div><div class='cell'></div></div>"
+          "<div class='cell'></div><div class='cell'></div></div>";
       } 
       boxes += "</div>";   
     }
@@ -86,4 +85,4 @@ class PDFGenerator {
 }
 
 
-export default PDFGenerator
+export default PDFGenerator;

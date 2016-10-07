@@ -67086,7 +67086,6 @@
 	}(_react2.default.Component);
 
 	exports.default = NewRRSession;
-	exports.default = NewRRSession;
 
 /***/ },
 /* 620 */

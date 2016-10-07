@@ -6,7 +6,7 @@ class Schedule {
   constructor(){
     this.schedules = {};
 
-    var data = fs.readFileSync(path.join(__dirname, "schedule.txt"))
+    var data = fs.readFileSync(path.join(__dirname, "schedule.txt"));
     this.schedules = JSON.parse(data);
   }
 
@@ -20,7 +20,7 @@ class Schedule {
     this.schedules[String(people)] = sched;
     fs.writeFile(path.join(__dirname, "schedule.txt"), JSON.stringify(this.schedules), (err) => {
       if (err) console.log(err);
-    })
+    });
 
     return this.schedules[String(people)];
   }

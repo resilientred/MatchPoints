@@ -23,16 +23,15 @@ And allow users to:
  - [ ] Adjust results automatically if an older session is saved after the newer one
  - [ ] Allow Users to customize scoring algorithm
 
-## Bugs fix:
-- [x] User login bugs
-- [x] Styling is not showing up for pdfs
-- [x] pdf stylings
+## TODO
+- [ ] SSL
+- [ ] Grouping algorithm is buggy
 
 ## Languages:
  - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM + Redis as a temporary store
- - Deployed on Amazon EC2
+ - Deployed on Amazon EC2 with ElastiCache
  
 ## Implementation:
 MatchPoint allows users to dynamically change the range of players that can be in a single group. It also offers the possible schemata that fulfills the condition of the range of players.
