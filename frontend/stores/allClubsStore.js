@@ -4,18 +4,18 @@ import { FETCHED_ALL_CLUBS } from "../constants/constants";
 
 const ClubStore = new Store(AppDispatcher);
 
-let _allClubs = null;
+let allClubs = null;
 
-const _setAllClubs = (clubs) => {
-  _allClubs = clubs;
+const setAllClubs = (clubs) => {
+  allClubs = clubs;
 };
 
-ClubStore.all = () => _allClubs;
+ClubStore.all = () => allClubs;
 
 ClubStore.__onDispatch = (payload) => {
   switch (payload.actionType) {
     case FETCHED_ALL_CLUBS:
-      _setAllClubs(payload.clubs);
+      setAllClubs(payload.clubs);
       ClubStore.__emitChange();
       break;
     default:

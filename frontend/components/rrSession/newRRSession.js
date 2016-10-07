@@ -1,23 +1,23 @@
-import React from 'react';
+import React from "react";
 import { browserHistory } from "react-router";
-import { fetchPlayers, deletePlayer, updatePlayer } from '../../actions/clientActions';
+import { Tabs, Tab } from "material-ui/Tabs";
+import CircularProgress from "material-ui/CircularProgress";
+import RaisedButton from "material-ui/RaisedButton";
+import FlatButton from "material-ui/FlatButton";
+import DatePicker from "material-ui/DatePicker";
+import SnackBar from "material-ui/Snackbar";
+import Dialog from "material-ui/Dialog";
+import moment from "moment";
+import { fetchPlayers, deletePlayer, updatePlayer } from "../../actions/clientActions";
 import { saveSession, temporarySession, destroyTempSession, fetchTempSession } from "../../actions/rrSessionActions";
-import moment from "moment"
 import RRSessionStore from "../../stores/rrSessionStore";
 import TempSessionStore from "../../stores/tempSessionStore";
-import PDFStore from "../../stores/pdfStore"
-import PlayerForm from './playerForm';
+import PDFStore from "../../stores/pdfStore";
+import PlayerForm from "./playerForm";
 import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import ClubStore from "../../stores/clubStore";
 import Participants from "./participants";
 import Grouping from "./grouping";
-import { Tabs, Tab } from "material-ui/Tabs"
-import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
-import DatePicker from 'material-ui/DatePicker';
-import SnackBar from "material-ui/Snackbar"
-import Dialog from 'material-ui/Dialog';
 
 export default class NewRRSession extends React.Component {
   constructor(props) {
@@ -56,7 +56,7 @@ export default class NewRRSession extends React.Component {
       setTimeout(() => {
         this.setState({ error: null });
       }, 2000)
-    } else {     
+    } else {
       browserHistory.push("/club/sessions");
     }
   }
@@ -87,7 +87,7 @@ export default class NewRRSession extends React.Component {
     this.max = this.session.max;
     this.min = this.session.min;
     this.cached = true;
-    this.setState({      
+    this.setState({
       tab: +this.session.tab,
       date: new Date(this.session.date),
       numPlayers: +this.session.numPlayers,
@@ -123,13 +123,13 @@ export default class NewRRSession extends React.Component {
     } else {
       addedPlayers[_id] = selectedPlayer;
     }
-    this.setState({ 
-      addedPlayers, 
+    this.setState({
+      addedPlayers,
       numPlayers: ++this.state.numPlayers
     });
   }
   toggleTab = (tab) => {
-    if (tab.target) return
+    if (tab.target) return;
 
     this.setState({ tab });
   }
@@ -163,47 +163,57 @@ export default class NewRRSession extends React.Component {
     this.handleClose("dialogOpen");
   }
   render(){
-    if (!this.props.club){ 
-      return <CircularProgress size={2} />
-      }
-    let allPlayers = this.props.club.players,
-        addedPlayers = this.convertPlayersToArr().sort( (a, b)=>(b.rating - a.rating) ),
-        { tab, date, numPlayers, error } = this.state;
-    
+    if (!this.props.club){
+      return <CircularProgress size={2} />;
+    }
+    const allPlayers = this.props.club.players;
+    const addedPlayers = this.convertPlayersToArr().sort((a, b)=>(b.rating - a.rating));
+    const { tab, date, numPlayers, error } = this.state;
+
     const actions = [
-      <FlatButton label="Discard"
-                  secondary={true}
-                  onTouchTap={this.destroyTempSession} />,
-      <FlatButton label="Retrieve"
-                  secondary={true}
-                  onTouchTap={this.restoreSession} />
+      <FlatButton
+        label="Discard"
+        secondary={true}
+        onTouchTap={this.destroyTempSession}
+      />,
+      <FlatButton
+        label="Retrieve"
+        secondary={true}
+        onTouchTap={this.restoreSession}
+      />
     ];
     let playerContent = (<div>
-          <RaisedButton 
-              onClick={this.openModal} 
-              label="New Player" 
-              secondary={true}
-              style={{position: "absolute", right: 0}}/>
+          <RaisedButton
+            onClick={this.openModal}
+            label="New Player"
+            secondary={true}
+            style={{
+              position: "absolute", right: 0
+            }}
+          />
           <div className="date">
             <DatePicker floatingLabelText="Date of Session"
-                hintText="Date" value={this.state.date}
-                onChange={(e, date) => this.setState({date}) }
-                minDate={new Date()}/>
+              hintText="Date" value={this.state.date}
+              onChange={(e, date) => this.setState({date})}
+              minDate={new Date()}
+            />
           </div>
-          <Participants objAddedPlayers={this.state.addedPlayers} 
-                        addedPlayers={addedPlayers} 
-                        deletePlayer={this.deletePlayer}
-                        allPlayers={allPlayers} 
-                        handleToggle={this.handleToggle}/> 
+          <Participants
+            objAddedPlayers={this.state.addedPlayers}
+            addedPlayers={addedPlayers}
+            deletePlayer={this.deletePlayer}
+            allPlayers={allPlayers}
+            handleToggle={this.handleToggle}
+          />
         </div>);
-    let groupContent = (<Grouping numPlayers={numPlayers} 
+    let groupContent = (<Grouping numPlayers={numPlayers}
                           cached={this.cached}
                           pdfs={this.pdfs}
                           min={this.min}
                           max={this.max}
                           selectedGroup={this.selectedSchema}
                           schemata={this.schemata}
-                          addedPlayers={addedPlayers} 
+                          addedPlayers={addedPlayers}
                           saveSession={this.saveSession}
                           temporarilySaveSession={this.temporarilySaveSession}
                           club={this.props.club}
@@ -211,21 +221,29 @@ export default class NewRRSession extends React.Component {
 
     return (
       <div className="tab-container">
-         <Tabs tabItemContainerStyle={{backgroundColor: "#673AB7"}} contentContainerStyle={{  padding: "20px",
-   border: "1px solid #E0E0E0", minHeight: "400px" }} 
-              value={this.state.tab} 
-              onChange={this.toggleTab}>
+         <Tabs
+          tabItemContainerStyle={{ backgroundColor: "#673AB7" }}
+          contentContainerStyle={{
+            padding: "20px",
+            border: "1px solid #E0E0E0",
+            minHeight: "400px"
+          }}
+          value={this.state.tab}
+          onChange={this.toggleTab}
+        >
           <Tab label="Registration" value={0}>
             { playerContent }
           </Tab>
-          <Tab label="Grouping" value={1}> 
+          <Tab label="Grouping" value={1}>
             { groupContent }
           </Tab>
         </Tabs>
-        <SnackBar open={this.state.snackBarOpen}
-                  message="Session has been temporarily saved"
-                  autoHideDuration={8000}
-                  onRequestClose={this.handleClose.bind(this, "snackBarOpen")} />
+        <SnackBar
+          open={this.state.snackBarOpen}
+          message="Session has been temporarily saved"
+          autoHideDuration={8000}
+          onRequestClose={this.handleClose.bind(this, "snackBarOpen")}
+        />
         <Dialog
           title="Session found"
           actions={actions}
@@ -235,12 +253,11 @@ export default class NewRRSession extends React.Component {
         >
           Would you like to restore your previous session?
         </Dialog>
-        <PlayerForm modalOpen={this.state.newPlayerModal} 
-                  closeModal={this.closeModal}/>
+        <PlayerForm
+          modalOpen={this.state.newPlayerModal}
+          closeModal={this.closeModal}
+        />
       </div>
-    )
+    );
   }
 }
-
-
-

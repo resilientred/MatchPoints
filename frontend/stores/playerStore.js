@@ -2,39 +2,39 @@ import { Store } from "flux/utils";
 import Dispatcher from "../dispatcher/dispatcher";
 import { FETCHED_PLAYERS, LOGGED_IN } from "../constants/constants";
 
-const _players = {};
-let _currentClubPlayers = {};
-const _currentClub = null;
-const _resetPlayers = (club) => {
-  const players = club.players;
-  _players[club._id] = {};
-  if (players) {
-    players.forEach(player => (_players[club._id][player._id] = player));
+const players = {};
+let currentClubPlayers = {};
+const currentClub = null;
+const resetPlayers = (club) => {
+  const clubPlayers = club.players;
+  players[club._id] = {};
+  if (clubPlayers) {
+    clubPlayers.forEach(player => (players[club._id][player._id] = player));
   }
 };
 
 const PlayerStore = new Store(Dispatcher);
 
 PlayerStore.setClub = (clubId) => {
-  _currentClubPlayers = _players[clubId];
+  currentClubPlayers = players[clubId];
 };
 
-PlayerStore.allPlayersInClub = () => _currentClubPlayers;
+PlayerStore.allPlayersInClub = () => currentClubPlayers;
 
-PlayerStore.containClub = id => !!_players[id];
+PlayerStore.containClub = id => !!players[id];
 
-PlayerStore.currentClub = () => _currentClub;
+PlayerStore.currentClub = () => currentClub;
 
-PlayerStore.find = id => _currentClubPlayers[id];
+PlayerStore.find = id => currentClubPlayers[id];
 
 PlayerStore.__onDispatch = (payload) => {
   switch (payload.actionType) {
     case FETCHED_PLAYERS:
-      _resetPlayers(payload.club);
+      resetPlayers(payload.club);
       PlayerStore.__emitChange();
       break;
     case LOGGED_IN:
-      _resetPlayers(payload.club);
+      resetPlayers(payload.club);
       break;
     default:
       break;
