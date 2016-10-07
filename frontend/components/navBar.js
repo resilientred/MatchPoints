@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
-import { browserHistory, Link } from 'react-router'
-import { logOut, fetchCurrentClub } from '../actions/clubActions'
-import Drawer from "material-ui/Drawer"
-import MenuItem from "material-ui/MenuItem"
-import ClubStore from "../stores/clubStore"
+import React, { Component } from "react";
+import { browserHistory, Link } from "react-router";
+import { logOut, fetchCurrentClub } from "../actions/clubActions";
+import Drawer from "material-ui/Drawer";
+import MenuItem from "material-ui/MenuItem";
+import ClubStore from "../stores/clubStore";
+
 class NavBar extends Component {
   constructor(props){
     super(props);
@@ -22,7 +23,7 @@ class NavBar extends Component {
     if (!club){
       if (location.pathname === "/results"){
         fetchCurrentClub();
-      } 
+      }
     }
     let tab, path = window.location.pathname;
     if (path === "/club/newSession"){
@@ -30,15 +31,15 @@ class NavBar extends Component {
     } else if (/^\/club\/sessions.*/.test(path)){
       tab = 2;
     } else if (path === "/results"){
-      tab = 3;  
+      tab = 3;
     } else {
       tab = 0;
     }
-    
-    this.setState({tab, club})   
-  } 
+
+    this.setState({tab, club})
+  }
   _currentClubChange = () => {
-   let club = ClubStore.getCurrentClub(); 
+   let club = ClubStore.getCurrentClub();
    this.setState({ club })
   }
   handleLogin = () => {
@@ -64,50 +65,58 @@ class NavBar extends Component {
   }
   slideNav() {
     if (this.state.club){
-      return (<Drawer open={this.state.opened } 
-                         openSecondary={true}
-                         docked={false}
-                         onRequestChange={this.handleOpen}
-                         zDepth={5}
-                         >    
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club", 0)} 
-                            primaryText="Home" 
-                            insetChildren={true}
-                            checked={this.state.tab === 0} />
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club/newSession", 1)} 
-                            primaryText="New Session" 
-                            insetChildren={true}
-                            checked={this.state.tab === 1}/>
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/club/sessions", 2)} 
-                            primaryText="Old Sessions" 
-                            insetChildren={true}
-                            checked={this.state.tab === 2}/>
-                  <MenuItem onTouchTap={this.handleLink.bind(this, "/results", 3)} 
-                            primaryText="Browse Results"
-                            insetChildren={true}
-                            checked={this.state.tab === 3}/>
-                  <MenuItem onTouchTap={logOut} 
-                            primaryText="Log Out"
-                            insetChildren={true}/>
-              </Drawer>)
+      return (<Drawer open={this.state.opened }
+       openSecondary={true}
+       docked={false}
+       onRequestChange={this.handleOpen}
+       zDepth={5}
+      >
+        <MenuItem onTouchTap={this.handleLink.bind(this, "/club", 0)}
+          primaryText="Home"
+          insetChildren={true}
+          checked={this.state.tab === 0}
+        />
+        <MenuItem onTouchTap={this.handleLink.bind(this, "/club/newSession", 1)}
+          primaryText="New Session"
+          insetChildren={true}
+          checked={this.state.tab === 1}
+        />
+        <MenuItem onTouchTap={this.handleLink.bind(this, "/club/sessions", 2)}
+          primaryText="Old Sessions"
+          insetChildren={true}
+          checked={this.state.tab === 2}
+        />
+        <MenuItem onTouchTap={this.handleLink.bind(this, "/results", 3)}
+          primaryText="Browse Results"
+          insetChildren={true}
+          checked={this.state.tab === 3}
+        />
+        <MenuItem onTouchTap={logOut}
+          primaryText="Log Out"
+          insetChildren={true}
+        />
+      </Drawer>);
     } else {
-      return (<Drawer open={this.state.opened } 
-                         openSecondary={true} 
-                         docked={false}
-                         onRequestChange={this.handleOpen}
-                         >
-                <MenuItem onTouchTap={this.handleLink.bind(this, "/", 0)} 
-                          primaryText="Home" 
-                          checked={this.state.tab === 0} 
-                          insetChildren={true}/>
-                <MenuItem onTouchTap={this.handleLink.bind(this, "/results", 3)} 
-                          primaryText="Browse Results"
-                          insetChildren={true}
-                          checked={this.state.tab === 3}/>
-                <MenuItem primaryText="Log In"
-                          onTouchTap={this.props.openLogin}
-                          insetChildren={true}/>
-            </Drawer>)
+      return (<Drawer open={this.state.opened }
+        openSecondary={true}
+        docked={false}
+        onRequestChange={this.handleOpen}
+      >
+        <MenuItem onTouchTap={this.handleLink.bind(this, "/", 0)}
+          primaryText="Home"
+          checked={this.state.tab === 0}
+          insetChildren={true}
+        />
+        <MenuItem onTouchTap={this.handleLink.bind(this, "/results", 3)}
+          primaryText="Browse Results"
+          insetChildren={true}
+          checked={this.state.tab === 3}
+        />
+        <MenuItem primaryText="Log In"
+          onTouchTap={this.props.openLogin}
+          insetChildren={true}
+        />
+      </Drawer>);
     }
   }
   normalNav() {
@@ -120,12 +129,12 @@ class NavBar extends Component {
                   <li onClick={this.handleLink.bind(this, "/results", 3)}
                       className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
                   <li onClick={logOut}>Log Out</li>
-              </ul>)
+              </ul>);
     } else {
       return (<ul className="nav">
-                <li onClick={this.handleLink.bind(this, "/results", 3)} className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
-                <li className="nav-links" onClick={this.handleLogin}>Log In</li>
-            </ul>)
+        <li onClick={this.handleLink.bind(this, "/results", 3)} className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
+        <li className="nav-links" onClick={this.handleLogin}>Log In</li>
+      </ul>);
     }
 
   }
@@ -133,15 +142,15 @@ class NavBar extends Component {
     let collapsedIcon;
     collapsedIcon = <div className="collapsed-icon" onClick={this.handleOpen}>&#9776;</div>
 
-    return <div className="nav-bar">
-        <div>
-        	<div className="logo" onClick={this.handleLink.bind(this, this.state.club ? "/club" : "/", 0)}>MatchPoints</div>
-          { collapsedIcon }
-          { this.normalNav() }
-          { this.slideNav() }
-        </div>
-    </div>;
+    return (<div className="nav-bar">
+      <div>
+      	<div className="logo" onClick={this.handleLink.bind(this, this.state.club ? "/club" : "/", 0)}>MatchPoints</div>
+        { collapsedIcon }
+        { this.normalNav() }
+        { this.slideNav() }
+      </div>
+    </div>);
   }
-}
+};
 
 export default NavBar;

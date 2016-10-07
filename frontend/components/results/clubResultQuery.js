@@ -60,18 +60,18 @@ export default class ClubQuery extends Component {
   render() {
     let clubs = this.props.clubs;
     if (!clubs) return <div className="club-info-container">Select a club..</div>;
-    
+
     return (<div className="club-result-container">
       <div className="name-select-div">
-      <SelectField 
-            value={this.state.currentClub ? this.state.currentClub._id : null} 
+      <SelectField
+            value={this.state.currentClub ? this.state.currentClub._id : null}
             onChange={this.changeClub}
             floatingLabelText="Select a Club"
-            floatingLabelFixed={true}> 
-            { 
+            floatingLabelFixed={true}>
+            {
               clubs.map( (club, i) => (
                 <MenuItem key={i} value={club._id} primaryText={club.clubName} />
-              )) 
+              ))
             }
       </SelectField>
        <SelectField

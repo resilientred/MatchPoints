@@ -41,7 +41,8 @@ if (process.env.NODE_ENV === "development"){
       debug: true
     })
   );
-  app.use(webpackMiddleware(compiler));  
+  app.use(webpackMiddleware(compiler));
+  app.use(require('webpack-hot-middleware')(compiler));
 }
 
 app.use(express.static(path.join(__dirname, "..", "public")));

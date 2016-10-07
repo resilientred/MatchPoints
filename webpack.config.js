@@ -1,5 +1,5 @@
-var path = require('path');
-
+var path = require("path");
+var webpack = require("webpack");
 module.exports = {
   context: __dirname,
   entry: "./frontend/matchPoints.js",
@@ -12,14 +12,22 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel',
+        loader: "babel",
         query: {
           presets: ['react', 'es2015', 'stage-0']
         }
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: "eslint-loader"
       }
     ]
   },
   resolve: {
     extensions: ["", ".js", ".jsx"]
-  }
+  },
+  plugins: [
+      new webpack.HotModuleReplacementPlugin()
+  ]
 };

@@ -1,9 +1,9 @@
-import { Store } from "flux/utils"
-import AppDispatcher from "../dispatcher/dispatcher"
-import { FETCHED_SESSION, FETCHED_SESSIONS, DELETED_SESSION, SESSION_ERROR } from "../constants/constants"
+import { Store } from "flux/utils";
+import AppDispatcher from "../dispatcher/dispatcher";
+import { FETCHED_SESSION, FETCHED_SESSIONS, DELETED_SESSION, SESSION_ERROR } from "../constants/constants";
 
 const RRSessionStore = new Store(AppDispatcher);
-let _rrSessions = {};
+const _rrSessions = {};
 let _error = null;
 
 const _resetSession = (session) => {
@@ -12,9 +12,9 @@ const _resetSession = (session) => {
 };
 
 const _resetSessions = (sessions) => {
-  sessions.forEach( (session) => {
+  sessions.forEach((session) => {
     _rrSessions[session.id] = session;
-  } );
+  });
   RRSessionStore.__emitChange();
 };
 
@@ -25,28 +25,25 @@ const _deleteSession = (sessionId) => {
 
 const _setError = (error) => {
   _error = error.responseText;
-}
-
+};
 
 RRSessionStore.all = () => {
   let sessions = Object.keys(_rrSessions);
 
-  return sessions.length === 0 ? null : 
+  return sessions.length === 0 ? null :
     sessions.map( sessionId => _rrSessions[sessionId]);
-}
+};
 
-RRSessionStore.find = (id) => {
-  return _rrSessions[id];
-}
+RRSessionStore.find = id => _rrSessions[id];
 
 RRSessionStore.getError = () => {
   let err = _error;
   _error = null;
   return err;
-}
+};
 
 RRSessionStore.__onDispatch = (payload) => {
-  switch (payload.actionType){
+  switch (payload.actionType) {
     case FETCHED_SESSION:
       _resetSession(payload.session);
       break;
@@ -59,7 +56,9 @@ RRSessionStore.__onDispatch = (payload) => {
     case SESSION_ERROR:
       _setError(payload.error);
       break;
+    default:
+      break;
   }
-}
+};
 
 export default RRSessionStore;
