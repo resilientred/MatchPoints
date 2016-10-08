@@ -46,4 +46,4 @@ build
 ./app/api/pdf.js
 ./package.json
 ./webpack.config.js
-./public/js/bundle.js
+./public/js/
