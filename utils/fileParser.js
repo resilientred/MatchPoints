@@ -2,42 +2,49 @@ import fs from "fs";
 import path from "path";
 import readline from "readline";
 import Club from "../app/models/club";
+import { Player } from "../app/models/player";
 
-export default class PlayersParser {
-  static CSVToPlayers(file, id){
-    var rd = readline.createInterface({
+export default class PlayerParser {
+  static CSVToPlayers(file, id) {
+    const rd = readline.createInterface({
       input: fs.createReadStream(file)
     });
-    var name, rating,
-        promises = [];
+    const players = [];
+    let promise;
+    let name;
+    let rating;
 
     return new Promise((resolve, reject) => {
       rd.on("line", (line) => {
         if(!name) {
-          var row = this.CSVtoArray(line);
+          const row = this.CSVtoArray(line);
           row.forEach((label, i) => {
-            if((/name/i).test(label)){
+            if((/name/i).test(label)) {
               name = i;
-            } else if ((/rating/i).test(label)){
+            } else if ((/rating/i).test(label)) {
               rating = i;
             }
-
           });
-          if (!name || !rating){
+          if (!name || !rating) {
             reject("No labels found");
           }
         } else {
-          var data = this.CSVtoArray(line);
-          promises.push(Club.addPlayer(id, {
+          const data = this.CSVtoArray(line);
+          const newPlayer = new Player({
             name: data[name],
-            rating: data[rating]
-          }))
+            rating: +data[rating]
+          });
+          newPlayer.markModified("player");
+          players.push(newPlayer);
         }
       });
-      Promise.all(promises).then(players => {
-        resolve(players);
-      }).catch(err => {
-        reject(err);
+      rd.on("close", () => {
+        Club.addPlayers(id, players)
+          .then((players) => {
+            resolve(players);
+          }).catch((err) => {
+            reject(err);
+          })
       })
     });
   }
@@ -58,24 +65,27 @@ export default class PlayersParser {
     return a;
   }
 
-  static JSONToPlayers(file) {
+  static JSONToPlayers(file, id) {
     return new Promise((resolve, reject) => {
       fs.readFile(file, 'utf8', (err, data) => {
         if (err){
           reject(err);
         } else {
-          let players = JSON.parse(data),
-              promises = players.map(player => {
-                return Club.addPlayer({
+          let playersData = JSON.parse(data),
+              players = data.map(player => {
+                const newPlayer = new Player({
                   name: player.name,
-                  rating: player.rating
-                })
+                  rating: +player.rating
+                });
+                newPlayer.markModified("player");
+                return newPlayer;
               })
-          Promise.all(promises).then(players => {
-            resolve(players);
-          }).catch(err => {
-            reject(err);
-          })
+          Club.addPlayers(id, players)
+            .then(players => {
+              resolve(players);
+            }).catch(err => {
+              reject(err);
+            })
         }
       });
 

@@ -6,11 +6,11 @@ import RecordTableView from "./recordTableView";
 
 class RecordTable extends Component {
   static propTypes = {
-    updateScore: PropTypes.function,
-    finalized: PropTypes.boolean,
-    sizeOfGroup: PropTypes.Number,
-    groupNum: PropTypes.Number,
-    start: PropTypes.Number,
+    updateScore: PropTypes.func,
+    finalized: PropTypes.bool,
+    sizeOfGroup: PropTypes.number,
+    groupNum: PropTypes.number,
+    start: PropTypes.number,
     state: PropTypes.String,
     joinedPlayers: PropTypes.Object
   }

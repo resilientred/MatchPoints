@@ -24,10 +24,10 @@ class Grouping extends Component {
     club: PropTypes.string,
     date: PropTypes.string,
     addedPlayers: PropTypes.Array,
-    saveSession: PropTypes.function,
-    cached: PropTypes.boolean,
-    numPlayers: PropTypes.Number,
-    temporarilySaveSession: PropTypes.function
+    saveSession: PropTypes.func,
+    cached: PropTypes.bool,
+    numPlayers: PropTypes.number,
+    temporarilySaveSession: PropTypes.func
   }
   constructor(props) {
     super(props);

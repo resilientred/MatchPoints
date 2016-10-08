@@ -45,12 +45,11 @@ const fetchAllClubs = () => {
 };
 
 const uploadFile = (data) => {
+  //need clubid...
   apiCSRFService({
-    url: "/api/upload/players",
+    url: "/api/upload/players/",
     method: "POST",
     data,
-    processData: false,
-    contentType: false,
     success: "parsedPlayers"
   });
 };

@@ -16,7 +16,7 @@ app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use(cookieParser());
 
 app.use(function (err, req, res, next) {
-  if (err.code !== "EBADCSRFTOKEN"){
+  if (err.code !== "EBADCSRFTOKEN") {
     return next(err);
   }
 
@@ -76,7 +76,7 @@ app.use("/*", (req, res, next) => {
 });
 
 app.get("*", csrfProtection, (req, res) => {
-  res.render("index", {csrfToken: req.csrfToken()});
+  res.render("index", { csrfToken: req.csrfToken() });
 });
 
 app.listen(port, () => {

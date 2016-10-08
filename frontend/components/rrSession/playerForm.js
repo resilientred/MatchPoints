@@ -8,7 +8,7 @@ import ClubStore from "../../stores/clubStore";
 
 class PlayerForm extends React.Component {
   static propTypes = {
-    modalOpen: PropTypes.boolean,
+    modalOpen: PropTypes.bool,
     closeModal: PropTypes.func
   }
   constructor(props) {

@@ -102,9 +102,9 @@ const RecordTableDetail = (props) => {
 };
 
 RecordTableDetail.propTypes = {
-  sizeOfGroup: PropTypes.Number,
-  start: PropTypes.Number,
-  groupNum: PropTypes.Number,
+  sizeOfGroup: PropTypes.number,
+  start: PropTypes.number,
+  groupNum: PropTypes.number,
   joinedPlayers: PropTypes.Array,
   scoreChange: PropTypes.Array,
 };

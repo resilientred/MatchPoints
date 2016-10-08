@@ -22,7 +22,10 @@ import FileUploader from "./fileUploader";
 export default class NewRRSession extends Component {
   static propTypes = {
     club: PropTypes.shape({
-      _id: PropTypes.Number,
+      _id: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.String
+      ]),
       players: PropTypes.Array
     })
   }

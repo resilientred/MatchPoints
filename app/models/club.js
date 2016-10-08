@@ -35,21 +35,40 @@ const clubSchema = new Schema({
 
 clubSchema.statics.resetSessionToken = function(club) {
   const token = URLSafeBase64.encode(crypto.randomBytes(32));
-  return this.update({ "username": club.username }, { sessionToken: token });
+  return this.update(
+    { "username": club.username },
+    { sessionToken: token }
+  );
 };
 clubSchema.statics.findPlayers = function(clubId) {
-  return this.findOne({ _id: clubId }, { players: true });
+  return this.findOne(
+    { _id: clubId },
+    { players: true }
+  );
 };
 clubSchema.statics.addPlayer = function(clubId, player) {
   const newPlayer = new Player({ name: player.name, rating: player.rating });
   newPlayer.markModified("player");
-  return this.findOneAndUpdate({ "_id": clubId }, {
-    $push: { "players": newPlayer }
-  }, { new: true });
+  return this.findOneAndUpdate(
+    { "_id": clubId },
+    { $push: { "players": newPlayer } },
+    { new: true }
+  );
 };
+
+clubSchema.statics.addPlayers = function(clubId, players) {
+  return this.findOneAndUpdate(
+    { "_id": clubId },
+    { $push: { "players": { $each: players } } },
+    { new: true, select: "players" }
+  );
+};
+
 clubSchema.statics.updatePlayer = function(clubId, player) {
-  return this.update({ "_id": clubId, "players.id": player.id },
-    { $set: { "players.$": player } })
+  return this.update(
+    { "_id": clubId, "players.id": player.id },
+    { $set: { "players.$": player } }
+  )
 };
 clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
   return this.findOne({"_id": clubId}).then((club) => {
@@ -74,18 +93,19 @@ clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
   });
 };
 clubSchema.statics.removePlayer = function(clubId, id) {
-  return this.findOneAndUpdate({"_id": clubId}, {
-    $pull: {players: {_id: id}}
-  }, {new: true});
+  return this.findOneAndUpdate(
+    { "_id": clubId },
+    { $pull: { players: { _id: id } } },
+    { new: true }
+  );
 };
 
 clubSchema.statics.updatePlayer = function(clubId, id, player) {
-  return this.findOneAndUpdate({"_id": clubId, "players._id": id}, {
-    $set: {
-      "players.$.rating": player.rating,
-      "players.$.name": player.name
-    }
-  }, {new: true});
+  return this.findOneAndUpdate(
+    { "_id": clubId, "players._id": id },
+    { $set: { "players.$.rating": player.rating, "players.$.name": player.name } },
+    { new: true }
+  );
 };
 
 clubSchema.methods.isPassword = function(password) {
@@ -97,17 +117,22 @@ clubSchema.statics.findByUsernameAndPassword = function(username) {
 };
 
 clubSchema.statics.findBySessionToken = function(sessionToken) {
-  return this.findOne({"sessionToken": sessionToken},
-    {"passwordDigest": false, "sessionToken": false});
+  return this.findOne(
+    { "sessionToken": sessionToken },
+    { "passwordDigest": false, "sessionToken": false }
+  );
 };
 
 clubSchema.statics.generatePasswordDigest = function(password) {
   return bcrypt.hash(password, saltRounds);
 };
-clubSchema.statics.findClub = function(id){
-  return this.find({"_id": id}, {"passwordDigest": false, "sessionToken": false} );
+clubSchema.statics.findClub = function(id) {
+  return this.find(
+    { "_id": id },
+    { "passwordDigest": false, "sessionToken": false }
+  );
 };
-clubSchema.statics.findAll = function(){
+clubSchema.statics.findAll = function() {
   return this.find({}, {
     "passwordDigest": false,
     "sessionToken": false,

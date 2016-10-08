@@ -60,10 +60,10 @@ const PlayerList = (props) => {
 
 PlayerList.propTypes = {
   players: PropTypes.Array,
-  deletePlayer: PropTypes.function,
-  selectable: PropTypes.boolean,
-  handleToggle: PropTypes.function,
-  title: PropTypes.String
+  deletePlayer: PropTypes.func,
+  selectable: PropTypes.bool,
+  handleToggle: PropTypes.func,
+  title: PropTypes.string
 };
 
 export default PlayerList;

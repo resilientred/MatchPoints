@@ -16,22 +16,23 @@ class RotatingArray {
   }
 
   currentRoundSchedule(schedule, i){
-    var { arr, start, end } = this,
+    const { arr, start, end } = this,
         scheStr = "";
-    for (var j = 0; j < Math.ceil(this.len / 2); j++){
-      var firstEl, secondEl; 
+    for (let j = 0; j < Math.ceil(this.len / 2); j++){
+      let firstEl;
+      let secondEl;
 
       if (j === 0){
         firstEl = 1;
         secondEl = arr[(arr.length - 1 - i)];
       } else {
         firstEl = arr[(j + start - 1) % this.len];
-        secondEl = arr[(arr.length - 1 - j + end) % this.len]; 
+        secondEl = arr[(arr.length - 1 - j + end) % this.len];
       }
 
-      if (firstEl === null || secondEl === null){
+      if (firstEl === null || secondEl === null) {
         continue;
-      } else if (firstEl > secondEl){
+      } else if (firstEl > secondEl) {
         schedule.push(`${secondEl} vs. ${firstEl}`);
       } else {
         schedule.push(`${firstEl} vs. ${secondEl}`);
@@ -42,8 +43,8 @@ class RotatingArray {
   }
 
   getAllRounds(){
-    var allSchedule = [];
-    for (var i = 0; i < this.len; i++){
+    const allSchedule = [];
+    for (let i = 0; i < this.len; i++) {
       this.currentRoundSchedule(allSchedule, i);
       this.rotate();
     }

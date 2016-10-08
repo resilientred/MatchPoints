@@ -24,10 +24,8 @@ const removePlayer = (id) => {
   }
 };
 
-const addPlayers = (players) => {
-  players.forEach((player) => {
-    currentClub.players.push(player);
-  });
+const setPlayers = (players) => {
+  currentClub.players = players
 };
 
 ClubStore.getCurrentClub = () => currentClub;
@@ -52,7 +50,8 @@ ClubStore.__onDispatch = (payload) => {
       removePlayer(payload.playerId);
       break;
     case PARSED_PLAYERS:
-      addPlayers(payload.players);
+    debugger;
+      setPlayers(payload.club.players);
       ClubStore.__emitChange();
       break;
     default:

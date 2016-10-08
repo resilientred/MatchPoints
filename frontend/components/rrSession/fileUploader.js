@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
+import CircularProgress from "material-ui/CircularProgress";
 import { uploadFile } from "../../actions/clientActions";
+import ClubStore from "../../stores/clubStore";
 
 const style = {
   cursor: "pointer",
@@ -22,13 +24,25 @@ export default class FileUploader extends Component {
       processing: false
     };
   }
-  shouldComponentUpdate(nextProps, nextState) {
-   if (this.state.processing !== nextState.processing ||
-    this.state.filename !== nextState.filename) {
-    return true;
-   }
 
-   return false;
+  componentDidMount() {
+    this.listener = ClubStore.addListener(this.clubChanged);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.processing !== nextState.processing ||
+      this.state.filename !== nextState.filename) {
+      return true;
+    }
+
+    return false;
+  }
+  componentWillUnmount() {
+    this.listener.remove();
+  }
+
+  clubChanged = () => {
+    this.setState({ processing: false });
   }
   updateFile = (e) => {
     const reader = new FileReader();
@@ -41,17 +55,24 @@ export default class FileUploader extends Component {
         filetype: file.type,
         processing: false
       });
-    }
+    };
     reader.readAsDataURL(file);
   }
   uploadFile = (e) => {
     e.preventDefault();
-
+    this.setState({ processing: true });
     uploadFile({
       data_uri: this.state.data_uri,
       filename: this.state.filename,
       filetype: this.state.filetype
     });
+  }
+  loader() {
+    return (this.state.processing && (<div className="overlay">
+      <div className="loading">
+        <CircularProgress size={2} />
+      </div>
+    </div>));
   }
   render() {
     return (
@@ -60,6 +81,7 @@ export default class FileUploader extends Component {
         encType="multipart/form-data"
         onSubmit={this.uploadFile}
       >
+        <div>File Selected {this.state.filename || "None"}</div>
         <RaisedButton
           label="Choose a file (.csv or .json)"
           labelPosition="before"
@@ -79,6 +101,7 @@ export default class FileUploader extends Component {
         >
           <input type="submit" style={style} />
         </RaisedButton>
+        { this.loader() }
       </form>
     );
   }

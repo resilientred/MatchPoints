@@ -34,9 +34,9 @@ const ClubResultDetails = (props) => {
 
 ClubResultDetails.propTypes = {
   players: PropTypes.Array,
-  finalized: PropTypes.boolean,
+  finalized: PropTypes.bool,
   selectedSchema: PropTypes.Array,
-  _id: PropTypes.Number
+  _id: PropTypes.number
 };
 
 export default ClubResultDetails;

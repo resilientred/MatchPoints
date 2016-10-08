@@ -1,9 +1,8 @@
 # MatchPoints [Live Link](http://www.matchpoints.org)
-
-MatchPoints is a Full-stack web Round-Robin rating systems. It is expected to provide a platform for round-robin organizers to:
+MatchPoints is a Full-stack web round-robin rating system. It is expected to provide a platform for round-robin organizers to:
 * group players
 * record results
-* calculate score
+* calculate scores
 
 And allow users to:
 * query results based on date
@@ -23,54 +22,53 @@ And allow users to:
  - [ ] Adjust results automatically if an older session is saved after the newer one
  - [ ] Allow Users to customize scoring algorithm
 
-## TODO
-- [ ] SSL
-- [ ] Grouping algorithm is buggy
+## Bug fix
+- [ ] Grouping algorithm
 
 ## Languages:
  - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM + Redis as a temporary store
  - Deployed on Amazon EC2 with ElastiCache
- 
+
 ## Implementation:
-MatchPoint allows users to dynamically change the range of players that can be in a single group. It also offers the possible schemata that fulfills the condition of the range of players.
+MatchPoint allows users to dynamically change the range of players that is allowed in a group. It also offers the possible schemata that fulfill the criteria.
 
 ### Helper Methods
 ```javascript
-const schema = {} 
-export const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
+const schema = {};
+const findSchemata = (numPlayers, rangeOfPlayers = [6, 5, 4]) => {
   if (numPlayers < 0) return null;
   if (numPlayers === 0) return [[]];
-  let possibilities = [],
-      recursions = [];
-      
-  if (!schema[numPlayers]){
+  let possibilities = [];
+  const recursions = [];
+
+  if (!schema[numPlayers]) {
     schema[numPlayers] = {};
   }
-  if (!schema[numPlayers][rangeOfPlayers[0]]){
+  if (!schema[numPlayers][rangeOfPlayers[0]]) {
     rangeOfPlayers.forEach((range, i) => {
       recursions.push([range, findSchemata(numPlayers - range, rangeOfPlayers.slice(i))]);
-    })
+    });
 
-    if (recursions.every(result => !result[1])) return null;
+    if (recursions.every(result => (result[1] === false))) return null;
 
     recursions.forEach((test) => {
-      if (test[1]){
-        possibilities = possibilities.concat(test[1].map( 
+      if (test[1]) {
+        possibilities = possibilities.concat(test[1].map(
           result => [test[0]].concat(result)
-        ));  
+        ));
       }
-    })
+    });
     schema[numPlayers][rangeOfPlayers] = possibilities;
   }
 
   return schema[numPlayers][rangeOfPlayers];
-}
+};
 ```
 
 ### MongoDB
-MatchPoint uses mongoose CDM to help with data validations and to construct schemata. Mongoose is used with Bluebird module to avoid a maze of callbacks. The schemata are constructed as follows:
+MatchPoint uses mongoose CDM to construct schemas and help with data validations. Mongoose is used with Bluebird to promisify results. The schemas are constructed as follows:
 
 ```javascript
 const clubSchema = new Schema({
@@ -98,7 +96,7 @@ const historySchema = new Schema({
   oldRating: Number,
   newRating: Number,
   ratingChange: Number
-})
+});
 
 const roundRobinSchema = new Schema({
   _clubId: { type: String, required: true},
@@ -111,26 +109,25 @@ const roundRobinSchema = new Schema({
   finalized: { type: Boolean, default: false },
   id: { type: String, default: shortid.generate, required: true, index: true }
 })
-
 ```
 
 ### Redis as a temporary store
-Matchpoint allows users to create schedules in pdfs and provide it to the players. It does so using html5-to-pdf library. Redis provides a platform for caching pdf links, expiring and cleaning up of old pdfs.
+Matchpoint allows users to create schedules in pdfs and provide it to the players. It does so using html5-to-pdf library. Redis provides a platform for caching pdf links, expiring and cleaning up old pdfs.
 
-Upon creation of pdfs, the filename is stored in the Redis store and is set to expire after 15 minutes. Once expired, the listener which is listening on the "expired" event, will remove the file.
+Upon creation of pdfs, the filenames are stored in the Redis store and are set to expire after 15 minutes. Once expired, a listener which is listening on the "expired" event, will remove the files.
 
 ```js
 client.setex(url, 60*15, "true", (err) => {
-            if (err) console.log(err);
-          }) 
+  if (err) console.log(err);
+});
 subscriber.on('pmessage', (pattern, channel, message) => {
-  switch (message){
+  switch (message) {
     case "expired":
       const key = channel.split(":")[1];
       _handleExpired(key);
       break;
   }
-})
+});
 
 const _handleExpired = (name) => {
   const filePath = path.join(__dirname, "..", "..", "pdfs", `${name}.pdf`);
@@ -140,48 +137,34 @@ const _handleExpired = (name) => {
 };
 ```
 
-Every time a new session has started, the stringified verison of the data will be saved temporarily every 30 seconds in the Redis store, and it is made available for as long as the user is active or 15 minutes after leaving the page.  
+Every time a new session is initiated, the data will be saved every 60 seconds in the Redis store, and it is made available for as long as the user is active or 15 minutes after leaving the page.
 
 ```js
 this.int = setInterval(this.tempSave, 30000);
 
 let data = JSON.stringify(req.body.session);
-client.setex("tempsess#" + _clubId, 300, data, (err) => {
-  if(err) console.log(err)
+client.setex(`tempsess#${clubId}`, 300, data, (err) => {
+  if(err) console.log(err);
 });
-
-
 ```
 
-Every time a user opened the new session page, a request will be sent to the server to see whether or not a previous session is available. A dialog will be opened to ask whether or not a user want to restore the session. If a user decides to retrieve the session, the expire time of the data stored in Redis will be extended. 
+Every time a user navigated to the new session page, a request will be made to inquire whether or not a previous session is available. If one such session is found, users will be prompted to decide whether or not a user want to restore the data. If a user decides to restore the session, the expiration of the data will be refreshed in Redis.
 
-Since this component, which has sub-components, does not have direct control to all the data, I utilized this technique with componentWillReceiveProps: I rely on the change of a prop (this.cached) passed down to allow the sub-components to decide whether or not they should use the props. The moment when this.props.cache changed from false to true, the sub-component will update itself with the other props passed down.
+Since this component, which has sub-components, does not have direct control of all the data, I utilized componentWillReceiveProps to restore data. A prop, particularly "this.cached", is passed down initially as false. Should a user decides to restore a session, "this.cached" will become true. The sub-component will update itself accordingly.
 
 ```js
 client.get("tempsess#" + _clubId, (err, data) => {
-        if (data){
-          client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
-          res.status(200).send(JSON.parse(data));
-        } else {
-          res.status(200).send("no data cached");
-          res.end();
-        }
-      })
-
-// how I implemented restore session
-restoreSession = () => {
-  this.selectedSchema = this.session.selectedSchema;
-  this.schemata = this.session.schemata;
-  this.pdfs = this.session.pdfs;
-  this.max = this.session.max;
-  this.min = this.session.min;
-  this.cached = true;
-  this.setState({      
-    tab: this.session.tab,
-    date: new Date(this.session.date),
-    numPlayers: +this.session.numPlayers,
-    addedPlayers: this.session.addedPlayers ? this.session.addedPlayers : {}
-  })
-  this.handleClose("dialogOpen")
-}
+  if (data){
+    client.setex("tempsess#" + _clubId, 300, data, err => {if(err) console.log(err)});
+    res.status(200).send(JSON.parse(data));
+  } else {
+    res.status(200).send("no data cached");
+    res.end();
+  }
+});
 ```
+
+### Roundrobin scheduler
+The Roundrobin scheduler is based on this algorithm ([link](http://stackoverflow.com/a/6649732)). In order to optimize the algorithm, it is done by using an algorithm similar to a ring buffer.
+
+

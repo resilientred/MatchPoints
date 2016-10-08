@@ -96,10 +96,10 @@ export default {
       roundrobins
     });
   },
-  parsedPlayers(players) {
+  parsedPlayers(club) {
     Dispatcher.dispatch({
       actionType: PARSED_PLAYERS,
-      players
+      club
     });
   }
 };
