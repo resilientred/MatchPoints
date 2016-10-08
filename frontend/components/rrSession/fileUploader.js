@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import RaisedButton from "material-ui/RaisedButton";
 import CircularProgress from "material-ui/CircularProgress";
 import { uploadFile } from "../../actions/clientActions";
@@ -15,6 +15,9 @@ const style = {
   opacity: 0
 };
 export default class FileUploader extends Component {
+  static propTypes = {
+    handleClose: PropTypes.func
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -43,29 +46,41 @@ export default class FileUploader extends Component {
 
   clubChanged = () => {
     this.setState({ processing: false });
+    if (this.playerLen !== ClubStore.getCurrentClub().players.length) {
+      this.props.handleClose();
+    }
   }
   updateFile = (e) => {
-    const reader = new FileReader();
     const file = e.target.files[0];
-    this.setState({ processing: true });
-    reader.onload = (upload) => {
+    if (/csv|json/.test(file.type)) {
+      const reader = new FileReader();
+      this.setState({ processing: true });
+      reader.onload = (upload) => {
+        this.setState({
+          data_uri: upload.target.result,
+          filename: file.name,
+          filetype: file.type,
+          processing: false
+        });
+      };
+      reader.readAsDataURL(file);
+    } else {
       this.setState({
-        data_uri: upload.target.result,
-        filename: file.name,
-        filetype: file.type,
-        processing: false
+        filename: `Unrecognized file type: .${file.type}`
       });
-    };
-    reader.readAsDataURL(file);
+    }
   }
   uploadFile = (e) => {
     e.preventDefault();
-    this.setState({ processing: true });
-    uploadFile({
-      data_uri: this.state.data_uri,
-      filename: this.state.filename,
-      filetype: this.state.filetype
-    });
+    if (this.state.data_uri && this.state.filetype && this.state.filename) {
+      this.setState({ processing: true });
+      this.playerLen = ClubStore.getCurrentClub().players.length;
+      uploadFile({
+        data_uri: this.state.data_uri,
+        filename: this.state.filename,
+        filetype: this.state.filetype
+      });
+    }
   }
   loader() {
     return (this.state.processing && (<div className="overlay">
@@ -75,15 +90,18 @@ export default class FileUploader extends Component {
     </div>));
   }
   render() {
+    const buttonLabel = this.state.filename ?
+      `File:  ${this.state.filename}` :
+      "Choose a file (.csv or .json)";
     return (
       <form
         id="upload-form"
         encType="multipart/form-data"
         onSubmit={this.uploadFile}
       >
-        <div>File Selected {this.state.filename || "None"}</div>
         <RaisedButton
-          label="Choose a file (.csv or .json)"
+          style={{ midWidth: "150px", marginRight: "10px" }}
+          label={buttonLabel}
           labelPosition="before"
           containerElement="label"
         >
@@ -98,6 +116,8 @@ export default class FileUploader extends Component {
           label="Upload"
           labelPosition="before"
           containerElement="label"
+          primary={Boolean(true)}
+          disabled={!this.state.data_uri}
         >
           <input type="submit" style={style} />
         </RaisedButton>

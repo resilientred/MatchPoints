@@ -19,8 +19,8 @@ const setUpChangeArray = selectedSchema => [...Array(selectedSchema.length)];
 
 class RoundRobinSession extends Component {
   static propTypes = {
-    club: PropTypes.Object,
-    params: PropTypes.Object,
+    club: PropTypes.object,
+    params: PropTypes.object,
     deleteSession: PropTypes.func
   }
   constructor(props) {

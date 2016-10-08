@@ -12,7 +12,7 @@ class RecordTable extends Component {
     groupNum: PropTypes.number,
     start: PropTypes.number,
     state: PropTypes.String,
-    joinedPlayers: PropTypes.Object
+    joinedPlayers: PropTypes.object
   }
   constructor(props) {
     super(props);

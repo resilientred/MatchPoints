@@ -59,7 +59,7 @@ const PlayerList = (props) => {
 };
 
 PlayerList.propTypes = {
-  players: PropTypes.Array,
+  players: PropTypes.array,
   deletePlayer: PropTypes.func,
   selectable: PropTypes.bool,
   handleToggle: PropTypes.func,

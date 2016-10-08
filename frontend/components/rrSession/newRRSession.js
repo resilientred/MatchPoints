@@ -3,10 +3,8 @@ import { browserHistory } from "react-router";
 import { Tabs, Tab } from "material-ui/Tabs";
 import CircularProgress from "material-ui/CircularProgress";
 import RaisedButton from "material-ui/RaisedButton";
-import FlatButton from "material-ui/FlatButton";
 import DatePicker from "material-ui/DatePicker";
 import SnackBar from "material-ui/Snackbar";
-import Dialog from "material-ui/Dialog";
 import moment from "moment";
 import { deletePlayer } from "../../actions/clientActions";
 import { saveSession, temporarySession, destroyTempSession, fetchTempSession } from "../../actions/rrSessionActions";
@@ -17,7 +15,8 @@ import PlayerForm from "./playerForm";
 import ClubStore from "../../stores/clubStore";
 import Participants from "./participants";
 import Grouping from "./grouping";
-import FileUploader from "./fileUploader";
+import RestoreDialog from "./restoreDialog";
+import UploadDialog from "./uploadDialog";
 
 export default class NewRRSession extends Component {
   static propTypes = {
@@ -26,7 +25,7 @@ export default class NewRRSession extends Component {
         PropTypes.number,
         PropTypes.String
       ]),
-      players: PropTypes.Array
+      players: PropTypes.array
     })
   }
   constructor(props) {
@@ -39,7 +38,8 @@ export default class NewRRSession extends Component {
       numPlayers: 0,
       error: null,
       snackBarOpen: false,
-      dialogOpen: false,
+      restoreDialogOpen: false,
+      uploadDialogOpen: false,
       addedPlayers: {}
     };
   }
@@ -182,18 +182,6 @@ export default class NewRRSession extends Component {
     const addedPlayers = this.convertPlayersToArr().sort((a, b) => b.rating - a.rating);
     const { numPlayers } = this.state;
 
-    const actions = [
-      <FlatButton
-        label="Discard"
-        secondary={Boolean(true)}
-        onTouchTap={this.destroyTempSession}
-      />,
-      <FlatButton
-        label="Retrieve"
-        secondary={Boolean(true)}
-        onTouchTap={this.restoreSession}
-      />
-    ];
     const playerContent = (<div>
       <RaisedButton
         onClick={this.openModal}
@@ -201,6 +189,14 @@ export default class NewRRSession extends Component {
         secondary={Boolean(true)}
         style={{
           position: "absolute", right: 0
+        }}
+      />
+      <RaisedButton
+        onClick={() => this.handleOpen("uploadDialogOpen")}
+        label="Upload Players"
+        secondary={Boolean(true)}
+        style={{
+          position: "absolute", right: "150px"
         }}
       />
       <div className="date">
@@ -211,7 +207,6 @@ export default class NewRRSession extends Component {
           minDate={new Date()}
         />
       </div>
-      <FileUploader />
       <Participants
         objAddedPlayers={this.state.addedPlayers}
         addedPlayers={addedPlayers}
@@ -259,15 +254,16 @@ export default class NewRRSession extends Component {
         autoHideDuration={8000}
         onRequestClose={() => this.handleClose("snackBarOpen")}
       />
-      <Dialog
-        title="Session found"
-        actions={actions}
-        modal={false}
-        open={this.state.dialogOpen}
-        onRequestClose={() => this.handleClose("dialogOpen")}
-      >
-        Would you like to restore your previous session?
-      </Dialog>
+      <RestoreDialog
+        open={this.state.restoreDialogOpen}
+        handleClose={this.handleClose}
+        restoreSession={this.restoreSession}
+        destroyTempSession={this.destroyTempSession}
+      />
+      <UploadDialog
+        open={this.state.uploadDialogOpen}
+        handleClose={this.handleClose}
+      />
       <PlayerForm
         modalOpen={this.state.newPlayerModal}
         closeModal={this.closeModal}

@@ -88,9 +88,9 @@ const ParticipantGroup = props => (
 
 ParticipantGroup.propTypes = {
   pdfDownload: PropTypes.func,
-  pdfs: PropTypes.Array,
+  pdfs: PropTypes.array,
   groupId: PropTypes.number,
-  players: PropTypes.Array,
+  players: PropTypes.array,
   moveUp: PropTypes.func,
   moveDown: PropTypes.func
 };

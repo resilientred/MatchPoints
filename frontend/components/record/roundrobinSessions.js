@@ -14,7 +14,7 @@ import { fetchRRSessions } from "../../actions/rrSessionActions";
 
 class RoundRobinSessions extends Component {
   static propTypes = {
-    club: PropTypes.Object
+    club: PropTypes.object
   }
 
   constructor(props) {

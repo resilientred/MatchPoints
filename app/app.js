@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === "development"){
   // const compiler = webpack(config);
   app.use(
     sassMiddleware({
-      src: path.join(__dirname, "assets", "sass"),
+      src: path.join(__dirname, "..", "assets", "sass"),
       dest: path.join(__dirname, "..", "public", "styles"),
       prefix: "/styles",
       debug: true

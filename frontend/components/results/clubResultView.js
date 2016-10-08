@@ -103,7 +103,7 @@ const ClubResultView = (props) => {
 ClubResultView.propTypes = {
   sizeOfGroup: PropTypes.number,
   start: PropTypes.number,
-  joinedPlayers: PropTypes.Object,
-  result: PropTypes.Array
+  joinedPlayers: PropTypes.object,
+  result: PropTypes.array
 };
 export default ClubResultView;

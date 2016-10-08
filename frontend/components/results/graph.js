@@ -16,7 +16,7 @@ const Graph = (props =>
 );
 
 Graph.propTypes = {
-  data: PropTypes.Array
+  data: PropTypes.array
 };
 
 export default Graph;

@@ -21,9 +21,9 @@ const objToString = obj => (
 
 class Grouping extends Component {
   static propTypes = {
-    club: PropTypes.string,
+    club: PropTypes.object,
     date: PropTypes.string,
-    addedPlayers: PropTypes.Array,
+    addedPlayers: PropTypes.array,
     saveSession: PropTypes.func,
     cached: PropTypes.bool,
     numPlayers: PropTypes.number,

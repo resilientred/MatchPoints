@@ -141,8 +141,8 @@ const RecordTableDetail = (props) => {
 RecordTableDetail.propTypes = {
   sizeOfGroup: PropTypes.number,
   start: PropTypes.number,
-  joinedPlayers: PropTypes.Array,
-  result: PropTypes.Array
+  joinedPlayers: PropTypes.array,
+  result: PropTypes.array
 };
 
 export default RecordTableDetail;

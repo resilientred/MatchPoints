@@ -8,7 +8,7 @@ import ClubResultDetails from "./clubResultDetails";
 
 export default class ClubQuery extends Component {
   static propTypes = {
-    clubs: PropTypes.Array
+    clubs: PropTypes.array
   }
   constructor(props) {
     super(props);

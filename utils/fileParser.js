@@ -44,8 +44,8 @@ export default class PlayerParser {
             resolve(players);
           }).catch((err) => {
             reject(err);
-          })
-      })
+          });
+      });
     });
   }
 
@@ -59,7 +59,7 @@ export default class PlayerParser {
             if      (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
             else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
             else if (m3 !== undefined) a.push(m3);
-            return ''; // Return empty string.
+            return '';
         });
     if (/,\s*$/.test(text)) a.push('');
     return a;
@@ -71,21 +71,21 @@ export default class PlayerParser {
         if (err){
           reject(err);
         } else {
-          let playersData = JSON.parse(data),
-              players = data.map(player => {
-                const newPlayer = new Player({
-                  name: player.name,
-                  rating: +player.rating
-                });
-                newPlayer.markModified("player");
-                return newPlayer;
-              })
+          const playersData = JSON.parse(data);
+          const players = data.map(player => {
+            const newPlayer = new Player({
+              name: player.name,
+              rating: +player.rating
+            });
+            newPlayer.markModified("player");
+            return newPlayer;
+          })
           Club.addPlayers(id, players)
             .then(players => {
               resolve(players);
             }).catch(err => {
               reject(err);
-            })
+            });
         }
       });
 

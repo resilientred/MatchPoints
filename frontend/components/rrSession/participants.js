@@ -28,11 +28,11 @@ const PlayerGroup = props => (
 );
 
 PlayerGroup.propTypes = {
-  allPlayers: PropTypes.Array,
+  allPlayers: PropTypes.array,
   handleToggle: PropTypes.func,
-  objAddedPlayers: PropTypes.Object,
+  objAddedPlayers: PropTypes.object,
   deletePlayer: PropTypes.func,
-  addedPlayers: PropTypes.Array
+  addedPlayers: PropTypes.array
 };
 
 export default PlayerGroup;

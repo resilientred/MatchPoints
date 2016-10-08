@@ -25,7 +25,7 @@ const removePlayer = (id) => {
 };
 
 const setPlayers = (players) => {
-  currentClub.players = players
+  currentClub.players = players;
 };
 
 ClubStore.getCurrentClub = () => currentClub;
@@ -50,7 +50,6 @@ ClubStore.__onDispatch = (payload) => {
       removePlayer(payload.playerId);
       break;
     case PARSED_PLAYERS:
-    debugger;
       setPlayers(payload.club.players);
       ClubStore.__emitChange();
       break;

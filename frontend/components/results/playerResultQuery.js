@@ -8,7 +8,7 @@ import PlayerStore from "../../stores/playerStore";
 
 export default class PlayerResultQuery extends Component {
   static propTypes = {
-    clubs: PropTypes.Array
+    clubs: PropTypes.array
   }
   constructor(props) {
     super(props);

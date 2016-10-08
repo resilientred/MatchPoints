@@ -105,8 +105,8 @@ RecordTableDetail.propTypes = {
   sizeOfGroup: PropTypes.number,
   start: PropTypes.number,
   groupNum: PropTypes.number,
-  joinedPlayers: PropTypes.Array,
-  scoreChange: PropTypes.Array,
+  joinedPlayers: PropTypes.array,
+  scoreChange: PropTypes.array,
 };
 
 export default RecordTableDetail;

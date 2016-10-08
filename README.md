@@ -17,7 +17,7 @@ And allow users to:
 
 ## Bonus features (Will be implemented in the future)
  - [x] Temporary Save sessions and allow users to retrieve results
- - [ ] Allow users to import players in csv, json, (or xml?) formats
+ - [x] Allow users to import players with csv or json files
  - [ ] Allow Users to update previous saved results
  - [ ] Adjust results automatically if an older session is saved after the newer one
  - [ ] Allow Users to customize scoring algorithm
@@ -114,7 +114,7 @@ const roundRobinSchema = new Schema({
 ### Redis as a temporary store
 Matchpoint allows users to create schedules in pdfs and provide it to the players. It does so using html5-to-pdf library. Redis provides a platform for caching pdf links, expiring and cleaning up old pdfs.
 
-Upon creation of pdfs, the filenames are stored in the Redis store and are set to expire after 15 minutes. Once expired, a listener which is listening on the "expired" event, will remove the files.
+Upon creation of pdfs, the filenames are stored to the Redis store and are set to expire after 15 minutes. Once expired, a listener which is listening on the "expired" event, will remove the files.
 
 ```js
 client.setex(url, 60*15, "true", (err) => {
@@ -137,7 +137,7 @@ const _handleExpired = (name) => {
 };
 ```
 
-Every time a new session is initiated, the data will be saved every 60 seconds in the Redis store, and it is made available for as long as the user is active or 15 minutes after leaving the page.
+Every time a new session is initiated, the data will be saved at an interval of 60 seconds to the Redis store, and it is available as long as the user is active or within 15 minutes after leaving the page.
 
 ```js
 this.int = setInterval(this.tempSave, 30000);
@@ -165,6 +165,6 @@ client.get("tempsess#" + _clubId, (err, data) => {
 ```
 
 ### Roundrobin scheduler
-The Roundrobin scheduler is based on this algorithm ([link](http://stackoverflow.com/a/6649732)). In order to optimize the algorithm, it is done by using an algorithm similar to a ring buffer.
+The Roundrobin scheduler is based on this algorithm ([link](http://stackoverflow.com/a/6649732)). The algorithm is created based on a structure that is similar to a ring buffer.
 
 

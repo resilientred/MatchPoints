@@ -34,7 +34,7 @@
 
 @keyframes added-player-sm {
 	0% { opacity: 0; width: 0px; margin-right: 200px;}
-	100% {opacity: 1; width: 280px; margin-right: 0px;} 
+	100% {opacity: 1; width: 280px; margin-right: 0px;}
 }
 
 @-webkit-keyframes added-player-sm {
@@ -42,7 +42,7 @@
 	100% {opacity: 1; width: 280px; margin-right: 0px;}
 }
 @-moz-keyframes added-player-sm {
-	0% { opacity: 0; width: 0px; margin-right: 200px;} 
+	0% { opacity: 0; width: 0px; margin-right: 200px;}
 	100% {opacity: 1; width: 280px;margin-right: 0px;}
 }
 @-o-keyframes added-player-sm {
@@ -51,7 +51,7 @@
 }
 @keyframes added-player-lg {
 	0% { opacity: 0; width: 0px; margin-right: 200px;}
-	100% {opacity: 1; width: 500px; margin-right: 0px;} 
+	100% {opacity: 1; width: 500px; margin-right: 0px;}
 }
 
 @-webkit-keyframes added-player-lg {
@@ -59,7 +59,7 @@
 	100% {opacity: 1; width: 500px; margin-right: 0px;}
 }
 @-moz-keyframes added-player-lg {
-	0% { opacity: 0; width: 0px; margin-right: 200px;} 
+	0% { opacity: 0; width: 0px; margin-right: 200px;}
 	100% {opacity: 1; width: 500px;margin-right: 0px;}
 }
 @-o-keyframes added-player-lg {
@@ -234,7 +234,7 @@ input {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		align-items: center; 
+		align-items: center;
 
 		.logo {
 			font-family: 'Roboto', sans-serif;
@@ -306,7 +306,7 @@ button {
 
     &:nth-child(2) {
       margin-right: 10px;
-    }    
+    }
     &:nth-child(even) {
       margin-top: 20px;
     }
@@ -318,16 +318,16 @@ button {
     margin-right: auto;
     margin-left: auto;
     /*min-width: 350px;*/
-  
+
   }
   .player-lists {
   display: flex;
   flex-direction: column;
-  
+
     & > div {
       height: 300px;
       overflow: scroll;
-      
+
       &:nth-child(even) {
         margin-top: 20px;
         margin-bottom: 20px;
@@ -468,6 +468,16 @@ form {
   }
 
 }
+#upload-form {
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  box-shadow: none;
+  &:first-child {
+    margin-right: 10px;
+  }
+}
 .record-btn {
     color: grey;
     font-size: 16px;
@@ -508,7 +518,7 @@ form {
   backface-visibility: hidden;
 }
 .collapsed-icon {
-  display: none; 
+  display: none;
   font-size: 40px;
 }
 .player-form {
@@ -535,6 +545,7 @@ form {
   top: -20px;
   left: 0;
 }
+
 .redirect-signup {
   margin-bottom: -20px;
   color: #212121;
@@ -556,7 +567,7 @@ form {
   flex-direction: row;
   justify-content: space-between;
   :first-child {
-    margin-right: 20px; 
+    margin-right: 20px;
   }
 }
 .player-query {
@@ -631,7 +642,7 @@ form {
   }
 
 }
-@media (max-width: 768px) and (max-device-width: 768px){
+@media (min-width: 535px) and (max-device-width: 535px){
   .banner {
     background-image: url("/images/tt_banner.jpg");
     background-repeat:no-repeat;
@@ -652,7 +663,7 @@ form {
     width: 90%;
   }
 }
-@media (max-width: 535px) and (max-device-width: 535px){
+@media (min-width: 335px) and (min-device-width: 335px){
   .club-nav {
     position: absolute;
     left: -150px;
