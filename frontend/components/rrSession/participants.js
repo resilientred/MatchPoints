@@ -29,9 +29,9 @@ const PlayerGroup = props => (
 
 PlayerGroup.propTypes = {
   allPlayers: PropTypes.Array,
-  handleToggle: PropTypes.function,
+  handleToggle: PropTypes.func,
   objAddedPlayers: PropTypes.Object,
-  deletePlayer: PropTypes.function,
+  deletePlayer: PropTypes.func,
   addedPlayers: PropTypes.Array
 };
 

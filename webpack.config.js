@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 module.exports = {
+  devtool: 'inline-source-map',
   context: __dirname,
   entry: "./frontend/matchPoints.js",
   output: {
@@ -28,6 +29,6 @@ module.exports = {
     extensions: ["", ".js", ".jsx"]
   },
   plugins: [
-      new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin()
   ]
 };

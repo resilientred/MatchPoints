@@ -35,7 +35,7 @@ const clubSchema = new Schema({
 
 clubSchema.statics.resetSessionToken = function(club) {
   const token = URLSafeBase64.encode(crypto.randomBytes(32));
-  return this.update({ "username": club.username }, {s essionToken: token });
+  return this.update({ "username": club.username }, { sessionToken: token });
 };
 clubSchema.statics.findPlayers = function(clubId) {
   return this.findOne({ _id: clubId }, { players: true });

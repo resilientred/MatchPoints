@@ -51,7 +51,7 @@ const uploadFile = (data) => {
     data,
     processData: false,
     contentType: false,
-    success: "parsedFile"
+    success: "parsedPlayers"
   });
 };
 const generatePDF = (addedPlayers, schemas, club, date) => {

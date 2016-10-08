@@ -87,12 +87,12 @@ const ParticipantGroup = props => (
 );
 
 ParticipantGroup.propTypes = {
-  pdfDownload: PropTypes.function,
+  pdfDownload: PropTypes.func,
   pdfs: PropTypes.Array,
   groupId: PropTypes.Number,
   players: PropTypes.Array,
-  moveUp: PropTypes.function,
-  moveDown: PropTypes.function
+  moveUp: PropTypes.func,
+  moveDown: PropTypes.func
 };
 
 export default ParticipantGroup;

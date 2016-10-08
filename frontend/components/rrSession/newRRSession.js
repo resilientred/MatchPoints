@@ -17,6 +17,7 @@ import PlayerForm from "./playerForm";
 import ClubStore from "../../stores/clubStore";
 import Participants from "./participants";
 import Grouping from "./grouping";
+import FileUploader from "./fileUploader";
 
 export default class NewRRSession extends Component {
   static propTypes = {
@@ -207,6 +208,7 @@ export default class NewRRSession extends Component {
           minDate={new Date()}
         />
       </div>
+      <FileUploader />
       <Participants
         objAddedPlayers={this.state.addedPlayers}
         addedPlayers={addedPlayers}
