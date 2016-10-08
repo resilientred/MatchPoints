@@ -19,7 +19,7 @@
     "no-underscore-dangle": ["error", { "allow": ["_id", "__onDispatch", "__emitChange"] }],
     "quotes": ["error", "double"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+    "no-plusplus": "off"
   },
   "plugins": [
     "react", "import"

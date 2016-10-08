@@ -2,35 +2,35 @@ import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
 import { GENERATED_PDF, PDF_ERROR } from "../constants/constants";
 
-let _pdfs = null;
-let _error = null;
+let pdfs = null;
+let error = null;
 const PDFStore = new Store(AppDispatcher);
 
-const _setPDF = (pdfs) => {
-  _pdfs = pdfs;
+const setPDF = (ps) => {
+  pdfs = ps;
 };
-const _setError = (error) => {
-  _error = error.responseText;
+const setError = (e) => {
+  error = e.responseText;
 };
-PDFStore.getPDF = () => _pdfs;
+PDFStore.getPDF = () => pdfs;
 PDFStore.getError = () => {
-  let err = _error;
-  _error = null;
+  const err = error;
+  error = null;
   return err;
 };
 
 PDFStore.clearPDF = () => {
-  _pdfs = null;
+  pdfs = null;
 };
 
 PDFStore.__onDispatch = (payload) => {
   switch (payload.actionType) {
     case GENERATED_PDF:
-      _setPDF(payload.pdfs);
+      setPDF(payload.pdfs);
       PDFStore.__emitChange();
       break;
     case PDF_ERROR:
-      _setError(payload.error);
+      setError(payload.error);
       PDFStore.__emitChange();
       break;
     default:

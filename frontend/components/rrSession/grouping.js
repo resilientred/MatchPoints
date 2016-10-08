@@ -45,8 +45,8 @@ class Grouping extends Component {
     };
   }
   componentWillMount() {
-    this.pListener = PDFStore.addListener(this._fetchedPDF);
-    this._int = setInterval(this.tempSave, 60000);
+    this.pListener = PDFStore.addListener(this.fetchedPDF);
+    this.int = setInterval(this.tempSave, 60000);
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.cached !== nextProps.cached) {
@@ -115,7 +115,7 @@ class Grouping extends Component {
   }
   componentWillUnmount() {
     this.pListener.remove();
-    clearInterval(this._int);
+    clearInterval(this.int);
   }
   tempSave = () => {
     this.props.temporarilySaveSession(
@@ -135,7 +135,7 @@ class Grouping extends Component {
   handleDialogClose = () => {
     this.setState({ dialogOpen: false });
   }
-  _fetchedPDF = () => {
+  fetchedPDF = () => {
     const error = PDFStore.getError();
     if (error) {
       this.error = error;

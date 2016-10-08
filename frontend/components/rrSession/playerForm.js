@@ -1,74 +1,80 @@
-import React from "react";
-import { addPlayer } from "../../actions/clientActions";
-import ClubStore from "../../stores/clubStore";
+import React, { PropTypes } from "react";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import IconButton from "material-ui/IconButton/IconButton";
 import Close from "react-icons/lib/md/close";
+import { addPlayer } from "../../actions/clientActions";
+import ClubStore from "../../stores/clubStore";
 
 class PlayerForm extends React.Component {
-	constructor(props) {
-		super(props);
+  static propTypes = {
+    modalOpen: PropTypes.boolean,
+    closeModal: PropTypes.func
+  }
+  constructor(props) {
+    super(props);
     this.state = {
       name: "",
       rating: "0"
     };
-	}
-  componentDidUpdate(prevProps, prevState) {
+  }
+  componentDidUpdate(prevProps) {
     if (!prevProps.modalOpen && this.props.modalOpen) {
       document.getElementById("name").focus();
     }
   }
-  _updateField(name, e) {
+  updateField(name, e) {
     this.setState({ [name]: e.target.value });
   }
-  _handleSubmit = () => {
+  handleSubmit = () => {
     addPlayer(ClubStore.getCurrentClub()._id, this.state);
     this.setState({ name: "", rating: "0" });
   }
-	render() {
+  render() {
     return (<div
       className="player-form"
       style={{ display: this.props.modalOpen ? "block" : "none" }}
     >
       <form>
         <IconButton
-          style={{position: "absolute", right: "10px", top: "10px"}}
+          style={{ position: "absolute", right: "10px", top: "10px" }}
           iconClassName="material-icons"
           onClick={this.props.closeModal}
-          tooltip="Close Form" touch={true}
+          tooltip="Close Form" touch={Boolean(true)}
         >
           <Close />
         </IconButton>
         <h3>Player Form</h3>
         <div>
-          <TextField type="text"
+          <TextField
+            type="text"
             floatingLabelText="Name"
             id="name"
             hintText="Name"
-    				onChange={this._updateField.bind(this, "name")}
-    				value={this.state.name}
+            onChange={() => this.updateField("name")}
+            value={this.state.name}
             required
           />
         </div>
         <div>
-          <TextField type="text"
+          <TextField
+            type="text"
             floatingLabelText="Rating"
             hintText="Rating"
-    			  onChange={this._updateField.bind(this, "rating")}
-    			  value={this.state.rating} pattern="^\d{2,4}$"
-    			  required
+            onChange={() => this.updateField("rating")}
+            value={this.state.rating} pattern="^\d{2,4}$"
+            required
           />
         </div>
         <RaisedButton
-          fullWidth={true}
+          fullWidth={Boolean(true)}
           label="Register Player"
-          style={{marginTop: "20px"}}
-          onTouchTap={this._handleSubmit}
+          style={{ marginTop: "20px" }}
+          onTouchTap={this.handleSubmit}
         />
       </form>
     </div>);
-	}
-};
+  }
+}
 
 export default PlayerForm;

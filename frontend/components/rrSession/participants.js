@@ -30,7 +30,7 @@ const PlayerGroup = props => (
 PlayerGroup.propTypes = {
   allPlayers: PropTypes.Array,
   handleToggle: PropTypes.function,
-  objAddedPlayers: PropTypes.object,
+  objAddedPlayers: PropTypes.Object,
   deletePlayer: PropTypes.function,
   addedPlayers: PropTypes.Array
 };

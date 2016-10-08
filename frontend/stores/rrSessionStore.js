@@ -3,58 +3,58 @@ import AppDispatcher from "../dispatcher/dispatcher";
 import { FETCHED_SESSION, FETCHED_SESSIONS, DELETED_SESSION, SESSION_ERROR } from "../constants/constants";
 
 const RRSessionStore = new Store(AppDispatcher);
-const _rrSessions = {};
-let _error = null;
+const rrSessions = {};
+let error = null;
 
-const _resetSession = (session) => {
-  _rrSessions[session.id] = session;
+const resetSession = (session) => {
+  rrSessions[session.id] = session;
   RRSessionStore.__emitChange();
 };
 
-const _resetSessions = (sessions) => {
+const resetSessions = (sessions) => {
   sessions.forEach((session) => {
-    _rrSessions[session.id] = session;
+    rrSessions[session.id] = session;
   });
   RRSessionStore.__emitChange();
 };
 
-const _deleteSession = (sessionId) => {
-  delete _rrSessions[sessionId];
+const deleteSession = (sessionId) => {
+  delete rrSessions[sessionId];
   RRSessionStore.__emitChange();
 };
 
-const _setError = (error) => {
-  _error = error.responseText;
+const setError = (e) => {
+  error = e.responseText;
 };
 
 RRSessionStore.all = () => {
-  let sessions = Object.keys(_rrSessions);
+  const sessions = Object.keys(rrSessions);
 
   return sessions.length === 0 ? null :
-    sessions.map( sessionId => _rrSessions[sessionId]);
+    sessions.map(sessionId => rrSessions[sessionId]);
 };
 
-RRSessionStore.find = id => _rrSessions[id];
+RRSessionStore.find = id => rrSessions[id];
 
 RRSessionStore.getError = () => {
-  let err = _error;
-  _error = null;
+  const err = error;
+  error = null;
   return err;
 };
 
 RRSessionStore.__onDispatch = (payload) => {
   switch (payload.actionType) {
     case FETCHED_SESSION:
-      _resetSession(payload.session);
+      resetSession(payload.session);
       break;
     case FETCHED_SESSIONS:
-      _resetSessions(payload.sessions);
+      resetSessions(payload.sessions);
       break;
     case DELETED_SESSION:
-      _deleteSession(payload.session);
+      deleteSession(payload.session);
       break;
     case SESSION_ERROR:
-      _setError(payload.error);
+      setError(payload.error);
       break;
     default:
       break;
