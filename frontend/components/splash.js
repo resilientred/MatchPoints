@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ClubStore from "../stores/clubStore";
-import { Link } from "react-router";
 import LogInForm from "./user/logIn";
 import SignUpForm from "./user/signUp";
 
@@ -9,32 +8,33 @@ class Splash extends Component {
     super(props, context);
     this.state = {
       tab: 0
-    }
+    };
   }
 
+  componentDidMount() {
+    if (ClubStore.getCurrentClub()) {
+      this.context.router.push("/club");
+    }
+    this.checkLocation(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (ClubStore.getCurrentClub()) {
+      this.context.router.push("/club");
+    }
+    this.checkLocation(nextProps);
+  }
   setTab = (tab) => {
     this.setState({ tab });
   }
-  componentDidMount() {
-    if (this.props.location.state && this.props.location.state.login){
-      this.setState({ tab: 1 });
-    }
-    if (ClubStore.getCurrentClub()){
-      this.context.router.push("/club");
-    }
-  }
-  componentWillReceiveProps(nextProps) {
-    if (ClubStore.getCurrentClub()){
-      this.context.router.push("/club");
-    }
-    if (nextProps.location.state && nextProps.location.state.login){
-      this.setState({ tab: 1 });
+  checkLocation(props) {
+    if (props.location.state && props.location.state.login) {
+      this.setTab(1);
     }
   }
   render() {
     let content;
     (function mapContent(that) {
-      switch(that.state.tab){
+      switch (that.state.tab) {
         case 1:
           content = <LogInForm setTab={that.setTab} />;
           break;
@@ -49,20 +49,19 @@ class Splash extends Component {
           </div>);
           break;
       }
-    })(this);
+    }(this));
 
     return (<div>
       <div className="banner-container">
-        <div className="banner"></div>
+        <div className="banner" />
         { content }
       </div>
     </div>);
   }
-
-};
+}
 
 Splash.contextTypes = {
-    router: React.PropTypes.object.isRequired
+  router: React.PropTypes.object.isRequired
 };
 
 export default Splash;

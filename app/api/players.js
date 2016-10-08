@@ -1,25 +1,25 @@
-import express from 'express';
-import { Player } from '../models/player.js';
-import Club from "../models/club"
-import { parseUrlEncoded, csrfProtection, clubMethods } from "../helpers/appModules"
+import express from "express";
+import { Player } from "../models/player.js";
+import Club from "../models/club";
+import { parseUrlEncoded, csrfProtection, clubMethods } from "../helpers/appModules";
 const router = express.Router();
 
 router.route("/:clubId/players")
-	.get((req, res)=>{
+	.get((req, res) => {
     const clubId = req.params.clubId;
-    console.log("reaced routes")
+    console.log("reaced routes");
     Club.findPlayers(clubId)
-      .then( (players) => {
-        console.log(players)
+      .then((players) => {
+        console.log(players);
         res.status(200).send(players);
-      }).catch( err => {
+      }).catch((err) => {
         res.status(422).send(err);
       })
   });
 
 router.route("/:clubId/players/:id")
-  .delete(csrfProtection, (req, res)=>{
-    let { clubId, id } = req.params;
+  .delete(csrfProtection, (req, res) => {
+    const { clubId, id } = req.params;
 
     Club.removePlayer(clubId, id)
       .then(club => {
@@ -29,14 +29,14 @@ router.route("/:clubId/players/:id")
         res.status(422).send("Unable to remove player");
       })
   }).patch(csrfProtection, (req, res)=>{
-    let { clubId, id } = req.params;
-    let player = req.body.player;
+    const { clubId, id } = req.params;
+    const player = req.body.player;
     Club.updatePlayer(clubId, id, player)
-      .then(club => {
+      .then((club) => {
         res.status(200).send(club);
-      }).catch(err => {
+      }).catch((err) => {
         res.status(422).send("Unable to update player");
       })
-});
-  
+  });
+
 export default router;

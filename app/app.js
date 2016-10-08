@@ -56,9 +56,9 @@ app.use("/api/*", (req, res, next) => {
 });
 app.use("/session", sessionRoutes);
 app.use("/*", (req, res, next) => {
-  var origUrl = req.originalUrl;
-  var redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
-  var currentClub;
+  const origUrl = req.originalUrl;
+  const redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
+  let currentClub;
 
   clubMethods.currentClub(req)
     .then((club) => {
@@ -77,11 +77,8 @@ app.use("/*", (req, res, next) => {
 
 app.get("*", csrfProtection, (req, res) => {
   res.render("index", {csrfToken: req.csrfToken()});
-});  
+});
 
 app.listen(port, () => {
   console.log("listening on port", port);
 });
-
-
-

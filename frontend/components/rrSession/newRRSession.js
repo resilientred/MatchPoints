@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropTypes, Component } from "react";
 import { browserHistory } from "react-router";
 import { Tabs, Tab } from "material-ui/Tabs";
 import CircularProgress from "material-ui/CircularProgress";
@@ -8,18 +8,23 @@ import DatePicker from "material-ui/DatePicker";
 import SnackBar from "material-ui/Snackbar";
 import Dialog from "material-ui/Dialog";
 import moment from "moment";
-import { fetchPlayers, deletePlayer, updatePlayer } from "../../actions/clientActions";
+import { deletePlayer } from "../../actions/clientActions";
 import { saveSession, temporarySession, destroyTempSession, fetchTempSession } from "../../actions/rrSessionActions";
 import RRSessionStore from "../../stores/rrSessionStore";
 import TempSessionStore from "../../stores/tempSessionStore";
 import PDFStore from "../../stores/pdfStore";
 import PlayerForm from "./playerForm";
-import NewPlayerStyle from "../../modalStyles/newPlayerModal";
 import ClubStore from "../../stores/clubStore";
 import Participants from "./participants";
 import Grouping from "./grouping";
 
-export default class NewRRSession extends React.Component {
+export default class NewRRSession extends Component {
+  static propTypes = {
+    club: PropTypes.shape({
+      _id: PropTypes.Number,
+      players: PropTypes.Array
+    })
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -32,13 +37,13 @@ export default class NewRRSession extends React.Component {
       snackBarOpen: false,
       dialogOpen: false,
       addedPlayers: {}
-    }
+    };
   }
   componentWillMount() {
     this.cached = false;
-    this.csListener = ClubStore.addListener(this._clubChanged);
-    this.rrListener = RRSessionStore.addListener(this._rrResponseReceived);
-    this.tslistener = TempSessionStore.addListener(this._tempSessionFetched);
+    this.csListener = ClubStore.addListener(this.clubChanged);
+    this.rrListener = RRSessionStore.addListener(this.rrResponseReceived);
+    this.tslistener = TempSessionStore.addListener(this.tempSessionFetched);
     fetchTempSession(this.props.club._id);
   }
 
@@ -48,14 +53,14 @@ export default class NewRRSession extends React.Component {
     if (this.tslistener) this.tslistener.remove();
   }
 
-  _rrResponseReceived = () => {
-    let error = RRSessionStore.getError();
+  rrResponseReceived = () => {
+    const error = RRSessionStore.getError();
 
-    if (error){
+    if (error) {
       this.setState({ error });
       setTimeout(() => {
         this.setState({ error: null });
-      }, 2000)
+      }, 2000);
     } else {
       browserHistory.push("/club/sessions");
     }
@@ -63,19 +68,20 @@ export default class NewRRSession extends React.Component {
   deletePlayer = (_id) => {
     delete this.state.addedPlayers[_id];
     deletePlayer(this.props.club._id, _id);
-    let players = this.props.club.players;
-    for (let i = 0; i < players.length; i++){
-      if (players[i]._id === _id){
+
+    const players = this.props.club.players;
+    for (let i = 0; i < players.length; i++) {
+      if (players[i]._id === _id) {
         players.splice(i, 1);
       }
     }
-    this.setState({ addedPlayers: this.state.addedPlayers })
+    this.setState({ addedPlayers: this.state.addedPlayers });
   }
 
-  _tempSessionFetched = () => {
-    let session = TempSessionStore.findCachedSession();
+  tempSessionFetched = () => {
+    const session = TempSessionStore.findCachedSession();
 
-    if (session){
+    if (session) {
       this.session = session;
       this.handleOpen("dialogOpen");
     }
@@ -92,33 +98,35 @@ export default class NewRRSession extends React.Component {
       date: new Date(this.session.date),
       numPlayers: +this.session.numPlayers,
       addedPlayers: this.session.addedPlayers ? this.session.addedPlayers : {}
-    })
-    this.handleClose("dialogOpen")
+    });
+    this.handleClose("dialogOpen");
   }
-  openModal = () =>{
-    this.setState({newPlayerModal: true});
+  openModal = () => {
+    this.setState({ newPlayerModal: true });
   }
-  closeModal = () =>{
-    this.setState({newPlayerModal: false});
+  closeModal = () => {
+    this.setState({ newPlayerModal: false });
   }
-  _clubChanged = () => {
-    this.setState({ club: ClubStore.getCurrentClub(),
-      newPlayerModal: false });
+  clubChanged = () => {
+    this.setState({
+      club: ClubStore.getCurrentClub(),
+      newPlayerModal: false
+    });
   }
-  handleOpen(field){
+  handleOpen = (field) => {
     this.setState({ [field]: true });
   }
-  handleClose(field){
-    this.setState({ [field]: false});
+  handleClose = (field) => {
+    this.setState({ [field]: false });
   }
   handleToggle = (_id, e) => {
     if (e.target.type !== "checkbox" && e.target.tagName !== "TD") return;
-    let addedPlayers = Object.assign({}, this.state.addedPlayers),
-        selectedPlayer = this.props.club.players.find((player) => {
-          return player._id === _id;
-        });
+    const addedPlayers = Object.assign({}, this.state.addedPlayers);
+    const selectedPlayer = this.props.club.players.find((player =>
+      player._id === _id
+    ));
 
-    if (addedPlayers[_id]){
+    if (addedPlayers[_id]) {
       delete addedPlayers[_id];
     } else {
       addedPlayers[_id] = selectedPlayer;
@@ -135,18 +143,18 @@ export default class NewRRSession extends React.Component {
   }
 
   convertPlayersToArr() {
-    return Object.keys(this.state.addedPlayers).map( (_id) => {
-      return this.state.addedPlayers[_id];
-    });
+    return Object.keys(this.state.addedPlayers).map((_id =>
+      this.state.addedPlayers[_id]
+    ));
   }
 
   saveSession = (schemata, selectedSchema, players) => {
     saveSession({
       date: this.state.date,
       numOfPlayers: this.state.numPlayers,
-      players: players,
-      selectedSchema: selectedSchema,
-      schemata: schemata,
+      players,
+      selectedSchema,
+      schemata,
     }, this.props.club._id);
     destroyTempSession(this.props.club._id);
   }
@@ -162,102 +170,103 @@ export default class NewRRSession extends React.Component {
     destroyTempSession(this.props.club._id);
     this.handleClose("dialogOpen");
   }
-  render(){
-    if (!this.props.club){
+  render() {
+    if (!this.props.club) {
       return <CircularProgress size={2} />;
     }
     const allPlayers = this.props.club.players;
-    const addedPlayers = this.convertPlayersToArr().sort((a, b)=>(b.rating - a.rating));
-    const { tab, date, numPlayers, error } = this.state;
+    const addedPlayers = this.convertPlayersToArr().sort((a, b) => b.rating - a.rating);
+    const { numPlayers } = this.state;
 
     const actions = [
       <FlatButton
         label="Discard"
-        secondary={true}
+        secondary={Boolean(true)}
         onTouchTap={this.destroyTempSession}
       />,
       <FlatButton
         label="Retrieve"
-        secondary={true}
+        secondary={Boolean(true)}
         onTouchTap={this.restoreSession}
       />
     ];
-    let playerContent = (<div>
-          <RaisedButton
-            onClick={this.openModal}
-            label="New Player"
-            secondary={true}
-            style={{
-              position: "absolute", right: 0
-            }}
-          />
-          <div className="date">
-            <DatePicker floatingLabelText="Date of Session"
-              hintText="Date" value={this.state.date}
-              onChange={(e, date) => this.setState({date})}
-              minDate={new Date()}
-            />
-          </div>
-          <Participants
-            objAddedPlayers={this.state.addedPlayers}
-            addedPlayers={addedPlayers}
-            deletePlayer={this.deletePlayer}
-            allPlayers={allPlayers}
-            handleToggle={this.handleToggle}
-          />
-        </div>);
-    let groupContent = (<Grouping numPlayers={numPlayers}
-                          cached={this.cached}
-                          pdfs={this.pdfs}
-                          min={this.min}
-                          max={this.max}
-                          selectedGroup={this.selectedSchema}
-                          schemata={this.schemata}
-                          addedPlayers={addedPlayers}
-                          saveSession={this.saveSession}
-                          temporarilySaveSession={this.temporarilySaveSession}
-                          club={this.props.club}
-                          date={moment(this.state.date).format("YYYY-MM-DD")}/>);
-
-    return (
-      <div className="tab-container">
-         <Tabs
-          tabItemContainerStyle={{ backgroundColor: "#673AB7" }}
-          contentContainerStyle={{
-            padding: "20px",
-            border: "1px solid #E0E0E0",
-            minHeight: "400px"
-          }}
-          value={this.state.tab}
-          onChange={this.toggleTab}
-        >
-          <Tab label="Registration" value={0}>
-            { playerContent }
-          </Tab>
-          <Tab label="Grouping" value={1}>
-            { groupContent }
-          </Tab>
-        </Tabs>
-        <SnackBar
-          open={this.state.snackBarOpen}
-          message="Session has been temporarily saved"
-          autoHideDuration={8000}
-          onRequestClose={this.handleClose.bind(this, "snackBarOpen")}
-        />
-        <Dialog
-          title="Session found"
-          actions={actions}
-          modal={false}
-          open={this.state.dialogOpen}
-          onRequestClose={this.handleClose.bind(this, "dialogOpen")}
-        >
-          Would you like to restore your previous session?
-        </Dialog>
-        <PlayerForm
-          modalOpen={this.state.newPlayerModal}
-          closeModal={this.closeModal}
+    const playerContent = (<div>
+      <RaisedButton
+        onClick={this.openModal}
+        label="New Player"
+        secondary={Boolean(true)}
+        style={{
+          position: "absolute", right: 0
+        }}
+      />
+      <div className="date">
+        <DatePicker
+          floatingLabelText="Date of Session"
+          hintText="Date" value={this.state.date}
+          onChange={(e, date) => this.setState({ date })}
+          minDate={new Date()}
         />
       </div>
-    );
+      <Participants
+        objAddedPlayers={this.state.addedPlayers}
+        addedPlayers={addedPlayers}
+        deletePlayer={this.deletePlayer}
+        allPlayers={allPlayers}
+        handleToggle={this.handleToggle}
+      />
+    </div>);
+    const groupContent = (<Grouping
+      numPlayers={numPlayers}
+      cached={this.cached}
+      pdfs={this.pdfs}
+      min={this.min}
+      max={this.max}
+      selectedGroup={this.selectedSchema}
+      schemata={this.schemata}
+      addedPlayers={addedPlayers}
+      saveSession={this.saveSession}
+      temporarilySaveSession={this.temporarilySaveSession}
+      club={this.props.club}
+      date={moment(this.state.date).format("YYYY-MM-DD")}
+    />);
+
+    return (<div className="tab-container">
+      <Tabs
+        tabItemContainerStyle={{ backgroundColor: "#673AB7" }}
+        contentContainerStyle={{
+          padding: "20px",
+          border: "1px solid #E0E0E0",
+          minHeight: "400px"
+        }}
+        value={this.state.tab}
+        onChange={this.toggleTab}
+      >
+        <Tab label="Registration" value={0}>
+          { playerContent }
+        </Tab>
+        <Tab label="Grouping" value={1}>
+          { groupContent }
+        </Tab>
+      </Tabs>
+      <SnackBar
+        open={this.state.snackBarOpen}
+        message="Session has been temporarily saved"
+        autoHideDuration={8000}
+        onRequestClose={() => this.handleClose("snackBarOpen")}
+      />
+      <Dialog
+        title="Session found"
+        actions={actions}
+        modal={false}
+        open={this.state.dialogOpen}
+        onRequestClose={() => this.handleClose("dialogOpen")}
+      >
+        Would you like to restore your previous session?
+      </Dialog>
+      <PlayerForm
+        modalOpen={this.state.newPlayerModal}
+        closeModal={this.closeModal}
+      />
+    </div>);
   }
 }

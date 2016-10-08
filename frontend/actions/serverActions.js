@@ -5,7 +5,6 @@ import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
   FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION,
   SESSION_ERROR, PDF_ERROR } from "../constants/constants";
 
-
 export default {
   log(err) {
     console.log(err);

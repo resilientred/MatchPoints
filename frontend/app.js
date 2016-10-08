@@ -1,32 +1,37 @@
-import React, { Component } from "react"
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import NavBar from "./components/navBar"
+import React, { Component, PropTypes } from "react";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import NavBar from "./components/navBar";
 
-
-class App extends Component { 
-  constructor(props, context){
+class App extends Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ])
+  }
+  constructor(props, context) {
     super(props, context);
     this.state = { loading: false };
   }
 
   openLogin() {
-    this.context.router.push({pathname: "/", state: {login: true}});
+    this.context.router.push({
+      pathname: "/", state: { login: true }
+    });
   }
 
-  render(){
-    return (
-      <MuiThemeProvider>
+  render() {
+    return (<MuiThemeProvider>
       <div>
-        <NavBar openLogin={this.openLogin.bind(this)}/>
+        <NavBar openLogin={() => this.openLogin} />
         { this.props.children }
       </div>
-      </MuiThemeProvider>
-    )
+    </MuiThemeProvider>);
   }
 }
 
 App.contextTypes = {
-    router: React.PropTypes.object.isRequired
+  router: React.PropTypes.object.isRequired
 };
 
-export default App
+export default App;
