@@ -16,7 +16,7 @@ export default class PlayerParser {
 
     return new Promise((resolve, reject) => {
       rd.on("line", (line) => {
-        if(!name) {
+        if(name === undefined) {
           const row = this.CSVtoArray(line);
           row.forEach((label, i) => {
             if((/name/i).test(label)) {
@@ -25,7 +25,7 @@ export default class PlayerParser {
               rating = i;
             }
           });
-          if (!name || !rating) {
+          if (name === undefined || rating === undefined) {
             reject("No labels found");
           }
         } else {

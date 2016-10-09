@@ -59,6 +59,7 @@ export default class LogInForm extends Component {
     e.preventDefault();
     const user = "guest";
     const password = "password";
+    this.setState({ username: "", password: "" });
     let count = 0;
     const int = setInterval(() => {
       if (count < 5) {
