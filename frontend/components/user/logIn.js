@@ -82,7 +82,7 @@ export default class LogInForm extends Component {
             hintText="username"
             floatingLabelText="Username"
             value={this.state.username}
-            onChange={() => this.updateField("username")}
+            onChange={(e) => this.updateField("username", e)}
           />
         </div>
         <div>
@@ -91,7 +91,7 @@ export default class LogInForm extends Component {
             hintText="password"
             floatingLabelText="Password"
             value={this.state.password}
-            onChange={() => this.updateField("password")}
+            onChange={(e) => this.updateField("password", e)}
           />
         </div>
         <div className="button-div">

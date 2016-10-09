@@ -51,7 +51,7 @@ class PlayerForm extends React.Component {
             floatingLabelText="Name"
             id="name"
             hintText="Name"
-            onChange={() => this.updateField("name")}
+            onChange={(e) => this.updateField("name", e)}
             value={this.state.name}
             required
           />
@@ -61,7 +61,7 @@ class PlayerForm extends React.Component {
             type="text"
             floatingLabelText="Rating"
             hintText="Rating"
-            onChange={() => this.updateField("rating")}
+            onChange={(e) => this.updateField("rating", e)}
             value={this.state.rating} pattern="^\d{2,4}$"
             required
           />
