@@ -48,9 +48,13 @@ export default class NewRRSession extends Component {
     this.csListener = ClubStore.addListener(this.clubChanged);
     this.rrListener = RRSessionStore.addListener(this.rrResponseReceived);
     this.tslistener = TempSessionStore.addListener(this.tempSessionFetched);
+  }
+  componentDidMount() {
     fetchTempSession(this.props.club._id);
   }
-
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
   componentWillUnmount() {
     if (this.csListener) this.csListener.remove();
     if (this.rrListener) this.rrListener.remove();
@@ -175,11 +179,12 @@ export default class NewRRSession extends Component {
     this.handleClose("dialogOpen");
   }
   render() {
-    if (!this.props.club) {
-      return <CircularProgress size={2} />;
+    let allPlayers = [];
+    let addedPlayers = [];
+    if (this.props.club) {
+      allPlayers = this.props.club.players;
+      addedPlayers = this.convertPlayersToArr().sort((a, b) => b.rating - a.rating);
     }
-    const allPlayers = this.props.club.players;
-    const addedPlayers = this.convertPlayersToArr().sort((a, b) => b.rating - a.rating);
     const { numPlayers } = this.state;
 
     const playerContent = (<div>
@@ -254,20 +259,37 @@ export default class NewRRSession extends Component {
         autoHideDuration={8000}
         onRequestClose={() => this.handleClose("snackBarOpen")}
       />
-      <RestoreDialog
-        open={this.state.restoreDialogOpen}
-        handleClose={this.handleClose}
-        restoreSession={this.restoreSession}
-        destroyTempSession={this.destroyTempSession}
-      />
-      <UploadDialog
-        open={this.state.uploadDialogOpen}
-        handleClose={this.handleClose}
-      />
-      <PlayerForm
-        modalOpen={this.state.newPlayerModal}
-        closeModal={this.closeModal}
-      />
+      {
+        this.state.restoreDialogOpen &&
+          <RestoreDialog
+            open={this.state.restoreDialogOpen}
+            handleClose={this.handleClose}
+            restoreSession={this.restoreSession}
+            destroyTempSession={this.destroyTempSession}
+          />
+      }
+      {
+        this.state.uploadDialogOpen &&
+          <UploadDialog
+            open={this.state.uploadDialogOpen}
+            handleClose={this.handleClose}
+          />
+      }
+      {
+        this.state.newPlayerModal &&
+          <PlayerForm
+            modalOpen={this.state.newPlayerModal}
+            closeModal={this.closeModal}
+          />
+      }
+      {
+        !this.props.club &&
+          (<div className="overlay">
+            <div className="loading">
+              <CircularProgress size={2} />
+            </div>
+          </div>)
+      }
     </div>);
   }
 }

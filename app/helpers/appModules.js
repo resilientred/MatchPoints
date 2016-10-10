@@ -6,7 +6,7 @@ import clubMethoding from "../api/clubMethods";
 
 const client = process.env.NODE_ENV === "development" ?
       redis.createClient() :
-      redis.createClient("redis://" + process.env.REDIS_HOST);
+      redis.createClient(`redis://${process.env.REDIS_HOST}`);
 
 export { client };
 export const parseUrlEncoded = bodyParser.urlencoded({ extended: true });

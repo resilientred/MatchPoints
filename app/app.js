@@ -8,6 +8,7 @@ import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
 import pdfRoutes from "./api/pdf";
 import uploadRoutes from "./api/upload";
+
 const port = process.env.PORT || 3000;
 
 mongoose.connect("mongodb://127.0.0.1:27017/roundrobindb");
@@ -15,24 +16,24 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use(cookieParser());
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if (err.code !== "EBADCSRFTOKEN") {
-    return next(err);
+    next(err);
+  } else {
+    res.status(403).send("Forbidden Access");
   }
-
-  res.status(403).send("Forbidden Access");
 });
 
-app.use("/favicon.ico", (req, res, next) => {
+app.use("/favicon.ico", (req, res) => {
   res.end();
 });
 
-if (process.env.NODE_ENV === "development"){
+if (process.env.NODE_ENV === "development") {
   const sassMiddleware = require("node-sass-middleware");
-  // const webpack = require("webpack");
-  // const webpackMiddleware = require("webpack-dev-middleware");
-  // const config = require("../webpack.config.js");
-  // const compiler = webpack(config);
+  const webpack = require("webpack");
+  const webpackMiddleware = require("webpack-dev-middleware");
+  const config = require("../webpack.config.server.js");
+  const compiler = webpack(config);
   app.use(
     sassMiddleware({
       src: path.join(__dirname, "..", "assets", "sass"),
@@ -41,16 +42,16 @@ if (process.env.NODE_ENV === "development"){
       debug: true
     })
   );
-  // app.use(webpackMiddleware(compiler));
-  // app.use(require('webpack-hot-middleware')(compiler));
+  app.use(webpackMiddleware(compiler));
+  app.use(require("webpack-hot-middleware")(compiler));
 }
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/clubs", clubRoutes);
 app.use("/api/clubs", routes);
 app.use("/api/pdfs", pdfRoutes);
-app.use("/api/upload", uploadRoutes)
-app.use("/api/*", (req, res, next) => {
+app.use("/api/upload", uploadRoutes);
+app.use("/api/*", (req, res) => {
   res.status(404).send("Invalid routes");
   res.end();
 });
@@ -63,7 +64,7 @@ app.use("/*", (req, res, next) => {
   clubMethods.currentClub(req)
     .then((club) => {
       currentClub = club;
-    }).catch((err) => {
+    }).catch(() => {
       currentClub = null;
     }).then(() => {
       if (currentClub && redirectURL) {

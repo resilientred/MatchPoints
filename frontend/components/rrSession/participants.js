@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 import Divider from "material-ui/Divider";
 import PlayerList from "./playerList";
+import SelectedPlayerList from "./selectedPlayerList";
 
 const style = { position: "relative" };
 
@@ -16,7 +17,7 @@ const PlayerGroup = props => (
       deletePlayer={props.deletePlayer}
     />
     <Divider style={style} />
-    <PlayerList
+    <SelectedPlayerList
       players={props.addedPlayers}
       handleToggle={props.handleToggle}
       title="Selected Players"

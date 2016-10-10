@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { playerSchema, Player } from "./player";
-import { History, historySchema } from "./history";
 import URLSafeBase64 from "urlsafe-base64";
 import crypto from "crypto";
 import bcrypt from "bcrypt-as-promised";
 import shortid from "shortid";
+import { playerSchema, Player } from "./player";
+import { History } from "./history";
 
 mongoose.Promise = require("bluebird");
 
@@ -12,19 +12,14 @@ const saltRounds = 10;
 const Schema = mongoose.Schema;
 const clubSchema = new Schema({
   username: {
-    type: String, required: [true, "username required"],
+    type: String,
+    required: [true, "username required"],
     index: { unique: [true, "Username has been taken."] },
     min: [8, "has to be 8 characters long"]
   },
-  passwordDigest: {
-    type: String, required: true
-  },
-  sessionToken: {
-    type: String, default: URLSafeBase64.encode(crypto.randomBytes(32))
-  },
-  clubName: {
-    type: String, required: true
-  },
+  passwordDigest: { type: String, required: true },
+  sessionToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
+  clubName: { type: String, required: true },
   location: {
     city: { type: String, required: true },
     state: { type: String, required: true }
@@ -36,42 +31,41 @@ const clubSchema = new Schema({
 clubSchema.statics.resetSessionToken = function(club) {
   const token = URLSafeBase64.encode(crypto.randomBytes(32));
   return this.update(
-    { "username": club.username },
+    { username: club.username },
     { sessionToken: token }
   );
 };
 clubSchema.statics.findPlayers = function(clubId) {
-  return this.findOne(
-    { _id: clubId },
-    { players: true }
-  );
+  return this.findOne({ _id: clubId }, { players: true });
 };
+
 clubSchema.statics.addPlayer = function(clubId, player) {
   const newPlayer = new Player({ name: player.name, rating: player.rating });
   newPlayer.markModified("player");
   return this.findOneAndUpdate(
-    { "_id": clubId },
-    { $push: { "players": newPlayer } },
+    { _id: clubId },
+    { $push: { players: newPlayer } },
     { new: true }
   );
 };
 
 clubSchema.statics.addPlayers = function(clubId, players) {
   return this.findOneAndUpdate(
-    { "_id": clubId },
-    { $push: { "players": { $each: players } } },
+    { _id: clubId },
+    { $push: { players: { $each: players } } },
     { new: true, select: "players" }
   );
 };
 
 clubSchema.statics.updatePlayer = function(clubId, player) {
   return this.update(
-    { "_id": clubId, "players.id": player.id },
+    { _id: clubId, "players.id": player.id },
     { $set: { "players.$": player } }
-  )
+  );
 };
+
 clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
-  return this.findOne({"_id": clubId}).then((club) => {
+  return this.findOne({ _id: clubId }).then((club) => {
     const players = club.players;
     for (let i = 0; i < players.length; i++) {
       const curPlayer = players[i];
@@ -94,7 +88,7 @@ clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
 };
 clubSchema.statics.removePlayer = function(clubId, id) {
   return this.findOneAndUpdate(
-    { "_id": clubId },
+    { _id: clubId },
     { $pull: { players: { _id: id } } },
     { new: true }
   );
@@ -102,7 +96,7 @@ clubSchema.statics.removePlayer = function(clubId, id) {
 
 clubSchema.statics.updatePlayer = function(clubId, id, player) {
   return this.findOneAndUpdate(
-    { "_id": clubId, "players._id": id },
+    { _id: clubId, "players._id": id },
     { $set: { "players.$.rating": player.rating, "players.$.name": player.name } },
     { new: true }
   );
@@ -113,34 +107,29 @@ clubSchema.methods.isPassword = function(password) {
 };
 
 clubSchema.statics.findByUsernameAndPassword = function(username) {
-  return this.findOne({ "username": username });
+  return this.findOne({ username: username });
 };
 
 clubSchema.statics.findBySessionToken = function(sessionToken) {
   return this.findOne(
-    { "sessionToken": sessionToken },
-    { "passwordDigest": false, "sessionToken": false }
+    { sessionToken: sessionToken },
+    { passwordDigest: false, sessionToken: false }
   );
 };
 
 clubSchema.statics.generatePasswordDigest = function(password) {
   return bcrypt.hash(password, saltRounds);
 };
+
 clubSchema.statics.findClub = function(id) {
-  return this.find(
-    { "_id": id },
-    { "passwordDigest": false, "sessionToken": false }
-  );
+  return this.find({ _id: id }, { passwordDigest: false, sessionToken: false });
 };
 clubSchema.statics.findAll = function() {
-  return this.find({}, {
-    "passwordDigest": false,
-    "sessionToken": false,
-    "username": false,
-    "players": false,
-  });
+  return this.find({},
+    { passwordDigest: false, sessionToken: false, username: false, players: false }
+  );
 };
 
-const Club = mongoose.model('Club', clubSchema);
+const Club = mongoose.model("Club", clubSchema);
 
 export default Club;

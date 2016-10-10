@@ -59,7 +59,7 @@ export default class SignUpForm extends Component {
             type="text"
             hintText="clubName"
             floatingLabelText="Club Name"
-            onChange={(e) => this.updateField("clubName", e)}
+            onChange={e => this.updateField("clubName", e)}
             required
           />
         </div>
@@ -68,7 +68,7 @@ export default class SignUpForm extends Component {
             type="text"
             hintText="city"
             floatingLabelText="City"
-            onChange={(e) => this.updateField("city", e)}
+            onChange={e => this.updateField("city", e)}
             required
           />
         </div>
@@ -77,7 +77,7 @@ export default class SignUpForm extends Component {
             type="text"
             hintText="State"
             floatingLabelText="State"
-            onChange={(e) => this.updateField("stateName", e)}
+            onChange={e => this.updateField("stateName", e)}
             required
           />
         </div>
@@ -86,7 +86,7 @@ export default class SignUpForm extends Component {
             type="text"
             hintText="username"
             floatingLabelText="Username"
-            onChange={(e) => this.updateField("username", e)}
+            onChange={e => this.updateField("username", e)}
             required
           />
         </div>
@@ -95,7 +95,7 @@ export default class SignUpForm extends Component {
             type="password"
             hintText="password"
             floatingLabelText="Password"
-            onChange={(e) => this.updateField("password", e)}
+            onChange={e => this.updateField("password", e)}
             required
           />
         </div>

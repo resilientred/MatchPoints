@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { History, historySchema } from "./history"
+import { historySchema } from "./history";
+
 const Schema = mongoose.Schema;
 
 export const playerSchema = new Schema({

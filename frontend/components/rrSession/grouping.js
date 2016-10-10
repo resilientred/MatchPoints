@@ -15,10 +15,6 @@ import PDFStore from "../../stores/pdfStore";
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 
-const objToString = obj => (
-  Object.keys(obj).reduce((a, b) => a + b + obj[b], "")
-);
-
 class Grouping extends Component {
   static propTypes = {
     club: PropTypes.object,
@@ -71,48 +67,7 @@ class Grouping extends Component {
       });
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.dialogOpen !== nextState.dialogOpen ||
-          this.state.generated !== nextState.generated ||
-          this.state.loading !== nextState.loading ||
-          this.state.open !== nextState.open) {
-      return true;
-    }
-    if ((!this.state.pdfs && nextState.pdfs) ||
-          (nextState.pdfs && objToString(this.state.pdfs) !== objToString(nextState.pdfs))) {
-      return true;
-    }
-    if (this.state.selectedGroup && nextState.selectedGroup &&
-          this.state.selectedGroup.toString() !== nextState.selectedGroup.toString()) {
-      return true;
-    }
-    if (this.state.schemata && nextState.schemata &&
-          this.state.schemata.toString() !== nextState.schemata.toString()) {
-      return true;
-    }
 
-    const { min, max } = this.state;
-    if (max !== nextState.max && !min) return true;
-    if ((max !== nextState.max) ||
-      (max && (min !== nextState.min)) ||
-      (this.props.numPlayers !== nextProps.numPlayers && max && min)) {
-      const range = [];
-      for (let i = nextState.max; i >= (nextState.min || min); i--) {
-        range.push(i);
-      }
-      process.nextTick(() => {
-        const numPlayers = nextProps.numPlayers;
-        const range2 = range.slice();
-        const schemata = findSchemata(numPlayers, range2);
-        this.setState({
-          schemata: schemata.length ? schemata : [[]]
-        });
-      });
-      return true;
-    }
-
-    return false;
-  }
   componentWillUnmount() {
     this.pListener.remove();
     clearInterval(this.int);
@@ -146,7 +101,27 @@ class Grouping extends Component {
     }
   }
   handleChange = (field, e, idx, value) => {
-    if (value) this.setState({ [field]: value });
+    if (value) {
+      let { min, max } = this.state;
+      this.setState({ [field]: value });
+      if (field === "min") {
+        min = value;
+      } else {
+        max = value;
+      }
+
+      process.nextTick(() => {
+        const numPlayers = this.props.numPlayers;
+        const range = [];
+        for (let i = max; i >= min; i--) {
+          range.push(i);
+        }
+        const schemata = findSchemata(numPlayers, range);
+        this.setState({
+          schemata: schemata.length ? schemata : [[]]
+        });
+      });
+    }
   }
   schemata() {
     const schemata = this.state.schemata;
@@ -183,7 +158,7 @@ class Grouping extends Component {
         value={max}
         floatingLabelFixed={Boolean(true)}
         floatingLabelText="Max Players"
-        onChange={() => this.handleChange("max")}
+        onChange={(e, idx, val) => this.handleChange("max", e, idx, val)}
       >
         {
           rangeOfPlayers.map(num => (
@@ -195,7 +170,7 @@ class Grouping extends Component {
         value={min}
         floatingLabelFixed={Boolean(true)}
         floatingLabelText="Min Players"
-        onChange={() => this.handleChange("min")}
+        onChange={(e, idx, val) => this.handleChange("min", e, idx, val)}
       >
         {
           rangeOfPlayers.map(num => (

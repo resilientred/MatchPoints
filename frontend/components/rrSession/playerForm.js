@@ -29,6 +29,7 @@ class PlayerForm extends React.Component {
   handleSubmit = () => {
     addPlayer(ClubStore.getCurrentClub()._id, this.state);
     this.setState({ name: "", rating: "0" });
+    this.props.closeModal();
   }
   render() {
     return (<div
@@ -51,7 +52,7 @@ class PlayerForm extends React.Component {
             floatingLabelText="Name"
             id="name"
             hintText="Name"
-            onChange={(e) => this.updateField("name", e)}
+            onChange={e => this.updateField("name", e)}
             value={this.state.name}
             required
           />
@@ -61,7 +62,7 @@ class PlayerForm extends React.Component {
             type="text"
             floatingLabelText="Rating"
             hintText="Rating"
-            onChange={(e) => this.updateField("rating", e)}
+            onChange={e => this.updateField("rating", e)}
             value={this.state.rating} pattern="^\d{2,4}$"
             required
           />
