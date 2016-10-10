@@ -315,7 +315,39 @@ button {
     .player-lists > div:nth-child(even) {
       margin-top: 20px; }
 
-@media (max-width: 700px) {
+.table-search-field {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center; }
+
+.col-rating {
+  width: 100px; }
+
+.col-button {
+  width: 30px; }
+
+@media (max-width: 560px) {
+  .col-name {
+    padding-right: 10px;
+    padding-left: 10px; }
+  .col-rating {
+    width: 30px;
+    padding-right: 0; }
+  .col-button {
+    width: 15px; } }
+
+@media (min-width: 740px) {
+  .col-name {
+    padding-right: 10px;
+    padding-left: 10px; }
+  .col-rating {
+    width: 30px;
+    padding-right: 0; }
+  .col-button {
+    width: 15px; } }
+
+@media (max-width: 740px) {
   .tab-container {
     width: 90%;
     margin-right: auto;
@@ -329,7 +361,9 @@ button {
       overflow: scroll; }
       .player-lists > div:nth-child(even) {
         margin-top: 20px;
-        margin-bottom: 20px; } }
+        margin-bottom: 20px; }
+  .date {
+    padding-top: 40px; } }
 
 .sessions-list {
   border: 1px solid #E0E0E0;

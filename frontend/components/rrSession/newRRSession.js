@@ -13,8 +13,8 @@ import TempSessionStore from "../../stores/tempSessionStore";
 import PDFStore from "../../stores/pdfStore";
 import PlayerForm from "./playerForm";
 import ClubStore from "../../stores/clubStore";
-import Participants from "./participants";
-import Grouping from "./grouping";
+import Participants from "./playerList/participants";
+import Grouping from "./groups/grouping";
 import RestoreDialog from "./restoreDialog";
 import UploadDialog from "./uploadDialog";
 

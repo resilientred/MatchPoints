@@ -9,9 +9,9 @@ import FlatButton from "material-ui/FlatButton";
 import Dialog from "material-ui/Dialog";
 import CircularProgress from "material-ui/CircularProgress";
 import ParticipantGroup from "./participantGroup";
-import findSchemata from "../../methods/findSchema";
-import { generatePDF } from "../../actions/clientActions";
-import PDFStore from "../../stores/pdfStore";
+import findSchemata from "../../../methods/findSchema";
+import { generatePDF } from "../../../actions/clientActions";
+import PDFStore from "../../../stores/pdfStore";
 
 const rangeOfPlayers = [3, 4, 5, 6, 7];
 

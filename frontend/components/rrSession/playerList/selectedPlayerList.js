@@ -3,9 +3,8 @@ import { Table, TableBody, TableHeader,
   TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
 
 const SelectedPlayerList = (props) => {
-  const players = props.players;
   const idRef = {};
-  const playerList = players.map((player, i) => {
+  const playerList = props.players.map((player, i) => {
     idRef[i] = player._id;
     return (<TableRow key={player._id} selected={!!props.addedPlayers[player._id]}>
       <TableRowColumn>{player.name}</TableRowColumn>
@@ -30,9 +29,9 @@ const SelectedPlayerList = (props) => {
           </TableRow>
         </TableHeader>
         <TableBody
-          displayRowCheckBox={props.selectable}
+          displayRowCheckBox={false}
           showRowHover={Boolean(true)}
-          deselectOnClickaway={Boolean(false)}
+          deselectOnClickaway={false}
         >
           { playerList }
         </TableBody>
@@ -43,7 +42,7 @@ const SelectedPlayerList = (props) => {
 
 SelectedPlayerList.propTypes = {
   players: PropTypes.array,
-  selectable: PropTypes.bool,
+  addedPlayers: PropTypes.object,
   handleToggle: PropTypes.func,
   title: PropTypes.string
 };

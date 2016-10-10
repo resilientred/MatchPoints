@@ -12,7 +12,6 @@ const PlayerGroup = props => (
       players={props.allPlayers}
       handleToggle={props.handleToggle}
       title="All Players"
-      selectable={Boolean(true)}
       addedPlayers={props.objAddedPlayers}
       deletePlayer={props.deletePlayer}
     />
@@ -21,7 +20,6 @@ const PlayerGroup = props => (
       players={props.addedPlayers}
       handleToggle={props.handleToggle}
       title="Selected Players"
-      selectable={false}
       addedPlayers={props.objAddedPlayers}
     />
     <Divider style={style} />

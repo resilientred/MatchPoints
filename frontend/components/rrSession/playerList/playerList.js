@@ -2,8 +2,8 @@ import React, { PropTypes, Component } from "react";
 import { Table, TableBody, TableHeader,
   TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
 import IconButton from "material-ui/IconButton";
-import TextField from "material-ui/TextField";
 import Close from "react-icons/lib/md/close";
+import PlayerSearchField from "./playerSearchField";
 
 class PlayerList extends Component {
   constructor(props) {
@@ -16,26 +16,30 @@ class PlayerList extends Component {
   handleUpdateInput = (e) => {
     this.setState({ input: e.target.value.toLowerCase() });
   }
-
+  handleClearInput = () => {
+    this.setState({ input: "" });
+  }
   playerRow(player) {
-    return (<TableRow key={player._id} selected={!!this.props.addedPlayers[player._id]}>
-      <TableRowColumn>{player.name}</TableRowColumn>
-      <TableRowColumn>{player.rating}</TableRowColumn>
-      <TableRowColumn>
-        <IconButton
-          onClick={() => this.props.deletePlayer(player._id)}
-          iconClassName="material-icons"
-          tooltip="Remove Player"
-        >
-          <Close />
-        </IconButton>
-      </TableRowColumn>
-    </TableRow>);
+    return (
+      <TableRow key={player._id} selected={!!this.props.addedPlayers[player._id]}>
+        <TableRowColumn className="col-name">{player.name}</TableRowColumn>
+        <TableRowColumn className="col-rating">{player.rating}</TableRowColumn>
+        <TableRowColumn className="col-button">
+          <IconButton
+            onClick={() => this.props.deletePlayer(player._id)}
+            iconClassName="material-icons"
+            tooltip="Remove Player"
+          >
+            <Close />
+          </IconButton>
+        </TableRowColumn>
+      </TableRow>
+    );
   }
   render() {
     const players = this.props.players;
     const input = this.state.input;
-    const idRef = {};
+    const filteredPlayers = [];
     const playerList = [];
 
     for (let i = 0; i < players.length; i++) {
@@ -44,36 +48,35 @@ class PlayerList extends Component {
       }
       const player = players[i];
       if (player.name.toLowerCase().indexOf(input) > -1) {
-        idRef[i] = player._id;
         playerList.push(this.playerRow(player));
+        filteredPlayers.push(player);
       }
     }
 
     return (
       <div>
         <h3 className="table-title">{ this.props.title }</h3>
-        <TextField
-          hintText="Start typing..."
-          onChange={this.handleUpdateInput}
-          floatingLabelText="Search for a player"
-          fullWidth={Boolean(true)}
+        <PlayerSearchField
+          input={this.state.input}
+          handleUpdateInput={this.handleUpdateInput}
+          handleClearInput={this.handleClearInput}
         />
         <Table
           height="400px"
           fixedHeader={Boolean(true)}
           selectable={Boolean(true)}
           multiSelectable={Boolean(true)}
-          onCellClick={(i, col, e) => this.props.handleToggle(idRef[i], e)}
+          onCellClick={(i, col, e) => this.props.handleToggle(filteredPlayers[i]._id, e)}
         >
           <TableHeader displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Rating</TableHeaderColumn>
-              <TableHeaderColumn />
+              <TableHeaderColumn className="col-name">Name</TableHeaderColumn>
+              <TableHeaderColumn className="col-rating">Rating</TableHeaderColumn>
+              <TableHeaderColumn className="col-button" />
             </TableRow>
           </TableHeader>
           <TableBody
-            displayRowCheckBox={this.props.selectable}
+            displayRowCheckBox={Boolean(true)}
             showRowHover={Boolean(true)}
             deselectOnClickaway={Boolean(false)}
           >
@@ -89,7 +92,6 @@ PlayerList.propTypes = {
   players: PropTypes.array,
   addedPlayers: PropTypes.object,
   deletePlayer: PropTypes.func,
-  selectable: PropTypes.bool,
   handleToggle: PropTypes.func,
   title: PropTypes.string
 };
