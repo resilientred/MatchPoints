@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import { render } from "react-dom";
 import { Router, browserHistory, RouterContext } from "react-router";
 import React from "react";
