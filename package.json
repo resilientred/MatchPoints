@@ -28,8 +28,7 @@
       "command": "sudo node ./build/app.js",
       "env": {
         "NODE_ENV": "production",
-        "PORT": 80,
-        "REDIS_HOST": "matchpoints-redis.ho1ans.0001.usw1.cache.amazonaws.com:6379"
+        "PORT": 80
       }
     },
     "build": {

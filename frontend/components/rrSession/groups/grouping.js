@@ -66,6 +66,14 @@ class Grouping extends Component {
         max: nextProps.max ? +nextProps.max : null
       });
     }
+    if (this.props.addedPlayers.length !== nextProps.addedPlayers.length) {
+      if (this.state.min && this.state.max) {
+        this.setState({
+          selectedGroup: []
+        });
+        this.updateSchema(this.state.min, this.state.max);
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -100,6 +108,19 @@ class Grouping extends Component {
       this.setState({ pdfs: PDFStore.getPDF(), loading: false });
     }
   }
+  updateSchema = (min, max) => {
+    process.nextTick(() => {
+      const numPlayers = this.props.numPlayers;
+      const range = [];
+      for (let i = max; i >= min; i--) {
+        range.push(i);
+      }
+      const schemata = findSchemata(numPlayers, range);
+      this.setState({
+        schemata: schemata.length ? schemata : [[]]
+      });
+    });
+  }
   handleChange = (field, e, idx, value) => {
     if (value) {
       let { min, max } = this.state;
@@ -109,18 +130,9 @@ class Grouping extends Component {
       } else {
         max = value;
       }
-
-      process.nextTick(() => {
-        const numPlayers = this.props.numPlayers;
-        const range = [];
-        for (let i = max; i >= min; i--) {
-          range.push(i);
-        }
-        const schemata = findSchemata(numPlayers, range);
-        this.setState({
-          schemata: schemata.length ? schemata : [[]]
-        });
-      });
+      if (min && max) {
+        this.updateSchema(min, max);
+      }
     }
   }
   schemata() {

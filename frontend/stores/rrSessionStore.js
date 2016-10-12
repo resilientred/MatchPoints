@@ -1,6 +1,8 @@
 import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
-import { FETCHED_SESSION, FETCHED_SESSIONS, DELETED_SESSION, SESSION_ERROR } from "../constants/constants";
+import { FETCHED_SESSION, FETCHED_SESSIONS,
+  DELETED_SESSION, SESSION_ERROR,
+  SAVED_SESSION } from "../constants/constants";
 
 const RRSessionStore = new Store(AppDispatcher);
 const rrSessions = {};
@@ -52,6 +54,9 @@ RRSessionStore.__onDispatch = (payload) => {
       break;
     case DELETED_SESSION:
       deleteSession(payload.session);
+      break;
+    case SAVED_SESSION:
+      RRSessionStore.__emitChange();
       break;
     case SESSION_ERROR:
       setError(payload.error);

@@ -11,8 +11,8 @@ class RecordTable extends Component {
     sizeOfGroup: PropTypes.number,
     groupNum: PropTypes.number,
     start: PropTypes.number,
-    state: PropTypes.String,
-    joinedPlayers: PropTypes.object
+    state: PropTypes.string,
+    joinedPlayers: PropTypes.array
   }
   constructor(props) {
     super(props);
@@ -78,6 +78,7 @@ class RecordTable extends Component {
     return [calculatedScore, rc];
   }
   updateResult = (i, j, k, e, idx, val) => {
+    debugger;
     this.state.result[i][j][k] = val;
     this.setState({
       result: this.state.result

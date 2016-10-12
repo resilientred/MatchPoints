@@ -1,5 +1,5 @@
-var path = require('path');
-    webpack = require('webpack');
+var path = require("path");
+    webpack = require("webpack");
 
 module.exports = {
   context: __dirname,
@@ -13,9 +13,9 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel',
+        loader: "babel",
         query: {
-          presets: ['react', 'es2015', 'stage-0']
+          presets: ["react", "es2015", "stage-0"]
         }
       }
     ]
@@ -32,8 +32,9 @@ module.exports = {
       sourceMap: false
     }),
     new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+      "process.env": {
+        "NODE_ENV": JSON.stringify("production"),
+        "REDIS_HOST": JSON.stringify("matchpoints-redis.ho1ans.0001.usw1.cache.amazonaws.com:6379")
       }
     })
   ]

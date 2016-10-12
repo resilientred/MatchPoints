@@ -51,8 +51,8 @@ router.get("", (req, res) => {
   const newRR = new RoundRobinModel({ _clubId: clubId, ...data });
 
   newRR.save()
-    .then((rr) => {
-      res.status(200).send(rr);
+    .then(() => {
+      res.status(200).send();
     }).catch((err) => {
       res.status(422).send(err);
     });

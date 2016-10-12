@@ -18,7 +18,7 @@ export const saveSession = (data, clubId) => {
     url: `/api/clubs/${clubId}/session/new`,
     method: "POST",
     data: { session: data },
-    success: "fetchedRRSession"
+    success: "savedSession"
   });
 };
 export const temporarySession = (data, clubId) => {

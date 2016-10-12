@@ -52,9 +52,7 @@ export default class NewRRSession extends Component {
   componentDidMount() {
     fetchTempSession(this.props.club._id);
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
+
   componentWillUnmount() {
     if (this.csListener) this.csListener.remove();
     if (this.rrListener) this.rrListener.remove();
