@@ -56,7 +56,7 @@ RRSessionStore.__onDispatch = (payload) => {
       deleteSession(payload.session);
       break;
     case SAVED_SESSION:
-      if (RRSession.all()) {
+      if (RRSessionStore.all()) {
         resetSession(payload.session);
       }
       RRSessionStore.__emitChange();

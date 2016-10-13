@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import NavBar from "./components/navBar";
+import Footer from "./components/footer";
 
 class App extends Component {
   static propTypes = {
@@ -25,6 +26,7 @@ class App extends Component {
       <div>
         <NavBar openLogin={this.openLogin} />
         { this.props.children }
+        <Footer />
       </div>
     </MuiThemeProvider>);
   }

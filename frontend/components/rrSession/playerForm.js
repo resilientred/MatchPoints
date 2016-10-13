@@ -49,7 +49,7 @@ class PlayerForm extends Component {
       });
       return false;
     }
-    if (this.state.rating === "0") {
+    if (this.state.rating === "0" || this.state.rating === "") {
       this.setState({
         errorText: {
           rating: "Rating field cannot be empty."
@@ -64,7 +64,7 @@ class PlayerForm extends Component {
     const state = { rating: e.target.value };
     if (this.state.errorText.rating !== "") {
       if (e.target.value !== "0") {
-        state.errorText = Object.assign(errorText, { rating: "" });
+        state.errorText = Object.assign(this.state.errorText, { rating: "" });
       }
     }
     this.setState(state);
@@ -73,7 +73,7 @@ class PlayerForm extends Component {
     const state = { name: e.target.value };
     if (this.state.errorText.name !== "") {
       if (e.target.value !== "") {
-        state.errorText = Object.assign(errorText, { name: "" });
+        state.errorText = Object.assign(this.state.errorText, { name: "" });
       }
     }
     this.setState(state);
