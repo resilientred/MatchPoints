@@ -91,12 +91,27 @@ router.get("", (req, res) => {
 .post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {
   const clubId = req.params.clubId;
   const data = req.body.player;
+  const err = {};
+  let hasError = false;
+  if (data.rating === "0") {
+    err.rating = "Rating cannot be empty.";
+    hasError = true;
+  }
+  if (data.name === "") {
+    err.name = "Name cannot be empty.";
+    hasError = true;
+  }
+  if (hasError) {
+    res.status(422).send(err);
+    return;
+  }
+
   ClubModel.addPlayer(clubId, data)
-    .then((club) => {
+    .then((club, player) => {
       clubMethods.setCurrentClub(club);
-      res.status(200).send(club);
-    }).catch((err) => {
-      res.status(422).send(err);
+      res.status(200).send(player);
+    }).catch((e) => {
+      res.status(422).send(e);
     });
 })
 .delete("/:clubId/sessions/:id", (req, res) => {

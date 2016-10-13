@@ -3,7 +3,8 @@ import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
   LOGGED_IN, REMOVED_PLAYER, FETCHED_PLAYERS,
   LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF,
   FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION,
-  SESSION_ERROR, PDF_ERROR, PARSED_PLAYERS, SAVED_SESSION } from "../constants/constants";
+  SESSION_ERROR, PDF_ERROR, PARSED_PLAYERS,
+  SAVED_SESSION, ADDED_PLAYER } from "../constants/constants";
 
 export default {
   log(err) {
@@ -27,15 +28,22 @@ export default {
       playerId
     });
   },
+  addedPlayer(player) {
+    Dispatcher.dispatch({
+      actionType: ADDED_PLAYER,
+      player
+    });
+  },
   fetchedRRSessions(sessions) {
     Dispatcher.dispatch({
       actionType: FETCHED_SESSIONS,
       sessions
     });
   },
-  savedSession() {
+  savedSession(session) {
     Dispatcher.dispatch({
-      actionType: SAVED_SESSION
+      actionType: SAVED_SESSION,
+      session
     });
   },
   receivedCachedSession(session) {

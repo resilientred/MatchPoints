@@ -15,3 +15,4 @@ export const PDF_ERROR = "PDF_ERROR";
 export const SESSION_ERROR = "SESSION_ERROR";
 export const PARSED_PLAYERS = "PARSED_PLAYERS";
 export const SAVED_SESSION = "SAVED_SESSION";
+export const ADDED_PLAYER = "ADDED_PLAYER";

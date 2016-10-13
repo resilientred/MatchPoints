@@ -3,7 +3,6 @@ import { Table, TableBody, TableHeader,
   TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
 import SelectField from "material-ui/SelectField";
 import MenuItem from "material-ui/MenuItem";
-import RRSessionStore from "../../stores/rrSessionStore";
 
 const style = { paddingLeft: "0" };
 
@@ -145,7 +144,6 @@ class RecordTableDetail extends Component {
 
 RecordTableDetail.propTypes = {
   sizeOfGroup: PropTypes.number,
-  updateResult: PropTypes.func,
   groupNum: PropTypes.number,
   start: PropTypes.number,
   joinedPlayers: PropTypes.array,

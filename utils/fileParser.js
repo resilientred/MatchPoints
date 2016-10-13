@@ -1,13 +1,7 @@
 import fs from "fs";
 import readline from "readline";
-
-if (process.env.NODE_ENV === "development") {
-  const Club = require("../app/models/club");
-  const { Player } = require("../app/models/player");
-} else {
-  const Club = require("../build/models/club");
-  const { Player } = require("../build/models/player");
-}
+import Club from "../app/models/club";
+import { Player } from "../app/models/player";
 
 export default class PlayerParser {
   static csvToPlayers(file, id) {
@@ -34,12 +28,14 @@ export default class PlayerParser {
           }
         } else {
           const data = this.csvToArray(line);
-          const newPlayer = new Player({
-            name: data[name],
-            rating: +data[rating]
-          });
-          newPlayer.markModified("player");
-          players.push(newPlayer);
+          if (data[rating] && data[name]) {
+            const newPlayer = new Player({
+              name: data[name],
+              rating: +data[rating]
+            });
+            newPlayer.markModified("player");
+            players.push(newPlayer);
+          }
         }
       });
       rd.on("close", () => {

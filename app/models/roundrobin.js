@@ -35,7 +35,7 @@ roundRobinSchema.statics.saveResult = function(id, result, scoreChange) {
 
 roundRobinSchema.statics.deleteRoundRobin = function(id) {
   return this.remove({ id: id });
-}
+};
 
 roundRobinSchema.statics.updateResult = function(id, result, scoreChange) {
   return this.update(

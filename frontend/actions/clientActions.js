@@ -18,7 +18,8 @@ const addPlayer = (clubId, player) => {
     url: `/api/clubs/${clubId}/players/new`,
     method: "POST",
     data: { player },
-    success: "loggedIn"
+    success: "addedPlayer",
+    error: "logInError"
   });
 };
 const updatePlayer = (clubId, id, player) => {

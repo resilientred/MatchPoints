@@ -37,7 +37,7 @@ class RecordTable extends Component {
   }
   calculateScore() {
     const joinedPlayers = this.props.joinedPlayers;
-    const playerIds = Object.keys(joinedPlayers);
+    // const playerIds = Object.keys(joinedPlayers);
     const startIdx = this.props.start;
     const calculatedScore = [];
     const rc = {};
@@ -55,21 +55,23 @@ class RecordTable extends Component {
         }
 
         if (sign === 0) return 0;
-        const player1Id = playerIds[startIdx + i];
-        const player2Id = playerIds[startIdx + j];
+        const player1 = joinedPlayers[startIdx + i];
+        const player2 = joinedPlayers[startIdx + j];
+        const player1Id = player1._id;
+        const player2Id = player2._id;
         const modifier = sign === 1 ? -record[1] * 2 : record[0] * 2;
 
         const scoreAdjust = parseInt(((16 * sign) -
-          ((joinedPlayers[player1Id].rating - joinedPlayers[player2Id].rating) *
+          ((player1.rating - player2.rating) *
             sign * 0.04)) + modifier, 10);
 
         rc[player1Id] = {
           change: rc[player1Id] ? rc[player1Id].change : 0 + scoreAdjust,
-          ratingBefore: +joinedPlayers[player1Id].rating
+          ratingBefore: +player1.rating
         };
         rc[player2Id] = {
           change: rc[player2Id] ? rc[player2Id].change : 0 - scoreAdjust,
-          ratingBefore: +joinedPlayers[player2Id].rating
+          ratingBefore: +player2.rating
         };
         return scoreAdjust;
       });
@@ -78,7 +80,6 @@ class RecordTable extends Component {
     return [calculatedScore, rc];
   }
   updateResult = (i, j, k, e, idx, val) => {
-    debugger;
     this.state.result[i][j][k] = val;
     this.setState({
       result: this.state.result

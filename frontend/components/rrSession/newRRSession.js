@@ -114,10 +114,7 @@ export default class NewRRSession extends Component {
     this.setState({ newPlayerModal: false });
   }
   clubChanged = () => {
-    this.setState({
-      club: ClubStore.getCurrentClub(),
-      newPlayerModal: false
-    });
+    this.setState({ club: ClubStore.getCurrentClub() });
   }
   handleOpen = (field) => {
     this.setState({ [field]: true });
@@ -275,10 +272,12 @@ export default class NewRRSession extends Component {
       }
       {
         this.state.newPlayerModal &&
-          <PlayerForm
-            modalOpen={this.state.newPlayerModal}
-            closeModal={this.closeModal}
-          />
+          (<div className="overlay">
+            <PlayerForm
+              modalOpen={this.state.newPlayerModal}
+              closeModal={this.closeModal}
+            />
+          </div>)
       }
       {
         !this.props.club &&

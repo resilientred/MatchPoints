@@ -68,7 +68,9 @@
     "shortid": "^2.2.6",
     "urlsafe-base64": "^1.0.0",
     "webpack-dev-middleware": "^1.8.4",
-    "webpack-hot-middleware": "^2.12.2"
+    "webpack-hot-middleware": "^2.12.2",
+    "node-sass-middleware": "^0.9.8",
+    "webpack": "^1.13.1"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -86,8 +88,6 @@
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-react": "^6.3.0",
     "node-sass": "^3.7.0",
-    "node-sass-middleware": "^0.9.8",
-    "react-a11y": "^0.3.3",
-    "webpack": "^1.13.1"
+    "react-a11y": "^0.3.3"
   }
 }

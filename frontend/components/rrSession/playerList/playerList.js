@@ -47,7 +47,7 @@ class PlayerList extends Component {
         break;
       }
       const player = players[i];
-      if (player.name.toLowerCase().indexOf(input) > -1) {
+      if (player.name && player.name.toLowerCase().indexOf(input) > -1) {
         playerList.push(this.playerRow(player));
         filteredPlayers.push(player);
       }

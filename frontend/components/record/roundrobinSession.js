@@ -55,9 +55,8 @@ class RoundRobinSession extends Component {
     if (this.csListener) this.csListener.remove();
   }
   setRRSession = () => {
-    const newObj = {};
     const session = this.state.session || RRSessionStore.find(this.props.params.id);
-    newObj.session = session;
+    const newObj = { session };
     if (session) {
       const err = RRSessionStore.getError();
       if (this.state.updating && !err) {

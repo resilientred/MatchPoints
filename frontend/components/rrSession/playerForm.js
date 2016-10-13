@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react";
+import React, { PropTypes, Component } from "react";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import IconButton from "material-ui/IconButton/IconButton";
@@ -6,7 +6,7 @@ import Close from "react-icons/lib/md/close";
 import { addPlayer } from "../../actions/clientActions";
 import ClubStore from "../../stores/clubStore";
 
-class PlayerForm extends React.Component {
+class PlayerForm extends Component {
   static propTypes = {
     modalOpen: PropTypes.bool,
     closeModal: PropTypes.func
@@ -15,21 +15,75 @@ class PlayerForm extends React.Component {
     super(props);
     this.state = {
       name: "",
-      rating: "0"
+      rating: "0",
+      errorText: {
+        name: "",
+        rating: ""
+      }
     };
   }
+
+  componentDidMount() {
+    this.listener = ClubStore.addListener(this.handleUpdate);
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.modalOpen && this.props.modalOpen) {
       document.getElementById("name").focus();
     }
   }
-  updateField(name, e) {
-    this.setState({ [name]: e.target.value });
+
+  handleUpdate = () => {
+    const err = ClubStore.getError();
+    if (!err) {
+      this.props.closeModal();
+    }
+  }
+
+  validateFields() {
+    if (this.state.name === "") {
+      this.setState({
+        errorText: {
+          name: "Name field cannot be empty."
+        }
+      });
+      return false;
+    }
+    if (this.state.rating === "0") {
+      this.setState({
+        errorText: {
+          rating: "Rating field cannot be empty."
+        }
+      });
+      return false;
+    }
+
+    return true;
+  }
+  updateRating = (e) => {
+    const state = { rating: e.target.value };
+    if (this.state.errorText.rating !== "") {
+      if (e.target.value !== "0") {
+        state.errorText = Object.assign(errorText, { rating: "" });
+      }
+    }
+    this.setState(state);
+  }
+  updateName = (e) => {
+    const state = { name: e.target.value };
+    if (this.state.errorText.name !== "") {
+      if (e.target.value !== "") {
+        state.errorText = Object.assign(errorText, { name: "" });
+      }
+    }
+    this.setState(state);
   }
   handleSubmit = () => {
-    addPlayer(ClubStore.getCurrentClub()._id, this.state);
-    this.setState({ name: "", rating: "0" });
-    this.props.closeModal();
+    if (this.validateFields()) {
+      addPlayer(ClubStore.getCurrentClub()._id, this.state);
+      this.setState({ name: "", rating: "0" });
+      this.props.closeModal();
+    }
   }
   render() {
     return (<div
@@ -52,7 +106,8 @@ class PlayerForm extends React.Component {
             floatingLabelText="Name"
             id="name"
             hintText="Name"
-            onChange={e => this.updateField("name", e)}
+            onChange={this.updateName}
+            errorText={this.state.errorText.name}
             value={this.state.name}
             required
           />
@@ -62,7 +117,8 @@ class PlayerForm extends React.Component {
             type="text"
             floatingLabelText="Rating"
             hintText="Rating"
-            onChange={e => this.updateField("rating", e)}
+            onChange={this.updateRating}
+            errorText={this.state.errorText.rating}
             value={this.state.rating} pattern="^\d{2,4}$"
             required
           />

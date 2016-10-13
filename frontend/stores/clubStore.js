@@ -1,7 +1,8 @@
 import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
 import { LOGGED_IN, LOG_IN_ERROR,
-  REMOVED_PLAYER, PARSED_PLAYERS } from "../constants/constants";
+  REMOVED_PLAYER, PARSED_PLAYERS,
+  ADDED_PLAYER } from "../constants/constants";
 
 const ClubStore = new Store(AppDispatcher);
 let currentClub = null;
@@ -24,10 +25,16 @@ const removePlayer = (id) => {
   }
 };
 
+const addPlayer = (player) => {
+  currentClub.players.push(player);
+};
+
 const setPlayers = (players) => {
   currentClub.players = players;
 };
+const addedPlayer = () => {
 
+}
 ClubStore.getCurrentClub = () => currentClub;
 
 ClubStore.getError = () => {
@@ -51,6 +58,10 @@ ClubStore.__onDispatch = (payload) => {
       break;
     case PARSED_PLAYERS:
       setPlayers(payload.club.players);
+      ClubStore.__emitChange();
+      break;
+    case ADDED_PLAYER:
+      addPlayer(payload.player);
       ClubStore.__emitChange();
       break;
     default:
