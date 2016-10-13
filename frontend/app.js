@@ -14,7 +14,7 @@ class App extends Component {
     this.state = { loading: false };
   }
 
-  openLogin() {
+  openLogin = () => {
     this.context.router.push({
       pathname: "/", state: { login: true }
     });
@@ -23,7 +23,7 @@ class App extends Component {
   render() {
     return (<MuiThemeProvider>
       <div>
-        <NavBar openLogin={() => this.openLogin} />
+        <NavBar openLogin={this.openLogin} />
         { this.props.children }
       </div>
     </MuiThemeProvider>);

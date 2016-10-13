@@ -54,11 +54,18 @@ class NavBar extends Component {
     this.setState({ club });
   }
   handleLogin = () => {
+    this.setState({ opened: false, tab: 0 });
     this.props.openLogin();
-    // this.handleOpen();
+  }
+  handleLogout = () => {
+    this.setState({ opened: false, tab: 0 });
+    logOut();
+  }
+  handleClose = () => {
+    this.setState({ opened: false });
   }
   handleOpen = () => {
-    this.setState({ opened: !this.state.opened });
+    this.setState({ opened: true });
   }
   handleLink(link, tab) {
     this.setState({ tab, opened: false });
@@ -123,11 +130,14 @@ class NavBar extends Component {
         insetChildren={Boolean(true)}
         checked={this.state.tab === 3}
       />
-      <MenuItem
-        primaryText="Log In"
-        onTouchTap={this.props.openLogin}
-        insetChildren={Boolean(true)}
-      />
+      {
+        location.pathname === "/" ||
+        <MenuItem
+          primaryText="Log In"
+          onTouchTap={this.handleLogin}
+          insetChildren={Boolean(true)}
+        />
+      }
     </Drawer>);
   }
   normalNav() {
@@ -151,12 +161,15 @@ class NavBar extends Component {
         >
           Browse Results
         </li>
-        <li onClick={logOut}>Log Out</li>
+        <li onClick={this.handleLogout}>Log Out</li>
       </ul>);
     }
     return (<ul className="nav">
       <li onClick={() => this.handleLink("/results", 3)} className={this.state.tab === 3 ? "active-links" : ""}>Browse Results</li>
-      <li className="nav-links" onClick={this.handleLogin}>Log In</li>
+      {
+        location.pathname === "/" ||
+          <li className="nav-links" onClick={this.handleLogin}>Log In</li>
+      }
     </ul>);
   }
   render() {

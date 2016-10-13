@@ -1,4 +1,4 @@
-import React, { Component, Children, cloneElement } from "react";
+import React, { Component, Children, cloneElement, PropTypes } from "react";
 import CircularProgress from "material-ui/CircularProgress";
 import { browserHistory } from "react-router";
 import { fetchCurrentClub } from "../actions/clubActions";
@@ -6,9 +6,9 @@ import ClubStore from "../stores/clubStore";
 
 class Club extends Component {
   static propTypes = {
-    children: React.PropTypes.oneOfType([
-      React.PropTypes.arrayOf(React.PropTypes.node),
-      React.PropTypes.node
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
     ])
   }
   constructor(props) {

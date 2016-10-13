@@ -86,7 +86,7 @@ const ClubResultView = (props) => {
               if (n === sizeOfGroup + 3 || n === sizeOfGroup + 4 || n === 1 || n === 2) {
                 return <TableRowColumn key={`row${m}:${n}`} style={style}>{ cellContent }</TableRowColumn>;
               }
-              if (!result[m]) {
+              if (!result || !result[m]) {
                 return <TableRowColumn key={`row${m}:${n}`}>0</TableRowColumn>;
               }
               ratingChangeSum += +result[m][n - 3];
@@ -103,7 +103,7 @@ const ClubResultView = (props) => {
 ClubResultView.propTypes = {
   sizeOfGroup: PropTypes.number,
   start: PropTypes.number,
-  joinedPlayers: PropTypes.object,
+  joinedPlayers: PropTypes.array,
   result: PropTypes.array
 };
 export default ClubResultView;
