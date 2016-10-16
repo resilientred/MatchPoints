@@ -68,7 +68,7 @@ ClubStore.__onDispatch = (payload) => {
       ClubStore.__emitChange();
       break;
     case ADDED_PLAYER:
-      addPlayer(payload.player);
+      setCurrentClub(payload.club);
       ClubStore.__emitChange();
       break;
     case UPDATED_PLAYER:

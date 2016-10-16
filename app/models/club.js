@@ -46,11 +46,7 @@ clubSchema.statics.addPlayer = function(clubId, player) {
     { _id: clubId },
     { $push: { players: newPlayer } },
     { new: true }
-  ).then((club) => {
-    return new Promise((resolve) => {
-      resolve(club, newPlayer);
-    });
-  });
+  );
 };
 
 clubSchema.statics.addPlayers = function(clubId, players) {

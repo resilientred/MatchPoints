@@ -107,9 +107,8 @@ router.get("", (req, res) => {
   }
 
   ClubModel.addPlayer(clubId, data)
-    .then((club, player) => {
-      clubMethods.setCurrentClub(club);
-      res.status(200).send(player);
+    .then((club) => {
+      res.status(200).send(club);
     }).catch((e) => {
       res.status(422).send(e);
     });

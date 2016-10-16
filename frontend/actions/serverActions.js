@@ -28,10 +28,10 @@ export default {
       playerId
     });
   },
-  addedPlayer(player) {
+  addedPlayer(club) {
     Dispatcher.dispatch({
       actionType: ADDED_PLAYER,
-      player
+      club
     });
   },
   updatedPlayer(club) {
