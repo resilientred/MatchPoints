@@ -3,19 +3,28 @@ import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import IconButton from "material-ui/IconButton/IconButton";
 import Close from "react-icons/lib/md/close";
-import { addPlayer } from "../../actions/clientActions";
 import ClubStore from "../../stores/clubStore";
 
 class PlayerForm extends Component {
   static propTypes = {
     modalOpen: PropTypes.bool,
-    closeModal: PropTypes.func
+    closeModal: PropTypes.func,
+    callback: PropTypes.func
   }
   constructor(props) {
     super(props);
-    this.state = {
+
+    const def = {
       name: "",
-      rating: "0",
+      rating: "0"
+    };
+    if (props.player) {
+      def.id = props.player._id,
+      def.name = props.player.name;
+      def.rating = props.player.rating;
+    }
+    this.state = {
+      ...def,
       errorText: {
         name: "",
         rating: ""
@@ -80,7 +89,7 @@ class PlayerForm extends Component {
   }
   handleSubmit = () => {
     if (this.validateFields()) {
-      addPlayer(ClubStore.getCurrentClub()._id, this.state);
+      this.props.callback(ClubStore.getCurrentClub()._id, this.state);
       this.setState({ name: "", rating: "0" });
       this.props.closeModal();
     }
@@ -125,7 +134,7 @@ class PlayerForm extends Component {
         </div>
         <RaisedButton
           fullWidth={Boolean(true)}
-          label="Register Player"
+          label={this.props.title}
           style={{ marginTop: "20px" }}
           onTouchTap={this.handleSubmit}
         />

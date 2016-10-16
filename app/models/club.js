@@ -61,13 +61,6 @@ clubSchema.statics.addPlayers = function(clubId, players) {
   );
 };
 
-clubSchema.statics.updatePlayer = function(clubId, player) {
-  return this.update(
-    { _id: clubId, "players.id": player.id },
-    { $set: { "players.$": player } }
-  );
-};
-
 clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
   return this.findOne({ _id: clubId }).then((club) => {
     const players = club.players;

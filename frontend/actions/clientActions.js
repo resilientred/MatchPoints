@@ -22,12 +22,13 @@ const addPlayer = (clubId, player) => {
     error: "logInError"
   });
 };
-const updatePlayer = (clubId, id, player) => {
+const updatePlayer = (clubId, player) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/players/${id}`,
+    url: `/api/clubs/${clubId}/players/${player.id}`,
     method: "PATCH",
     data: { player },
-    success: "updatedClub"
+    success: "updatedPlayer",
+    error: "logInError"
   });
 };
 const deletePlayer = (clubId, id) => {

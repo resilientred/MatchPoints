@@ -3,6 +3,7 @@ import { Table, TableBody, TableHeader,
   TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
 import IconButton from "material-ui/IconButton";
 import Close from "react-icons/lib/md/close";
+import ModeEdit from "react-icons/lib/md/mode-edit";
 import PlayerSearchField from "./playerSearchField";
 
 class PlayerList extends Component {
@@ -31,6 +32,15 @@ class PlayerList extends Component {
             tooltip="Remove Player"
           >
             <Close />
+          </IconButton>
+        </TableRowColumn>
+        <TableRowColumn className="col-button">
+          <IconButton
+            onClick={() => this.props.openEditModal(player)}
+            iconClassName="material-icons"
+            tooltip="Edit Player"
+          >
+            <ModeEdit />
           </IconButton>
         </TableRowColumn>
       </TableRow>
@@ -73,6 +83,7 @@ class PlayerList extends Component {
               <TableHeaderColumn className="col-name">Name</TableHeaderColumn>
               <TableHeaderColumn className="col-rating">Rating</TableHeaderColumn>
               <TableHeaderColumn className="col-button" />
+              <TableHeaderColumn className="col-button" />
             </TableRow>
           </TableHeader>
           <TableBody
@@ -89,6 +100,7 @@ class PlayerList extends Component {
 }
 
 PlayerList.propTypes = {
+  openEditModal: PropTypes.func,
   players: PropTypes.array,
   addedPlayers: PropTypes.object,
   deletePlayer: PropTypes.func,

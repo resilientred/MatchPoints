@@ -14,6 +14,7 @@ const style = {
   width: "100%",
   opacity: 0
 };
+
 export default class FileUploader extends Component {
   static propTypes = {
     handleClose: PropTypes.func

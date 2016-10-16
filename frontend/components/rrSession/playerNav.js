@@ -14,6 +14,4 @@ const PlayerNav = (props) => (
   />
 )
 
-export default PlayerNav
-
-
+export default PlayerNav;

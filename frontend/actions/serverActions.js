@@ -4,7 +4,7 @@ import { DELETED_SESSION, FETCHED_SESSIONS, FETCHED_SESSION,
   LOG_IN_ERROR, FETCHED_ALL_CLUBS, GENERATED_PDF,
   FETCHED_CLUB_ROUNDROBINS, RECEIVED_CACHED_SESSION,
   SESSION_ERROR, PDF_ERROR, PARSED_PLAYERS,
-  SAVED_SESSION, ADDED_PLAYER } from "../constants/constants";
+  SAVED_SESSION, ADDED_PLAYER, UPDATED_PLAYER } from "../constants/constants";
 
 export default {
   log(err) {
@@ -32,6 +32,12 @@ export default {
     Dispatcher.dispatch({
       actionType: ADDED_PLAYER,
       player
+    });
+  },
+  updatedPlayer(club) {
+    Dispatcher.dispatch({
+      actionType: UPDATED_PLAYER,
+      club
     });
   },
   fetchedRRSessions(sessions) {

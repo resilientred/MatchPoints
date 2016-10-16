@@ -10,8 +10,12 @@ import pdfRoutes from "./api/pdf";
 import uploadRoutes from "./api/upload";
 
 const port = process.env.PORT || 3000;
-
-mongoose.connect("mongodb://127.0.0.1:27017/roundrobindb");
+const mongoURI = process.env.NODE_ENV === "test" ?
+  "mongodb://127.0.0.1:27017/match_point_test"
+  :
+  "mongodb://127.0.0.1:27017/roundrobindb";
+console.log("connecting to: ", mongoURI);
+mongoose.connect(mongoURI);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use(cookieParser());
@@ -83,3 +87,5 @@ app.get("*", csrfProtection, (req, res) => {
 app.listen(port, () => {
   console.log("listening on port", port);
 });
+
+module.exports = app;

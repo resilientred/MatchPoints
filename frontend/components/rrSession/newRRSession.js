@@ -6,7 +6,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import DatePicker from "material-ui/DatePicker";
 import SnackBar from "material-ui/Snackbar";
 import moment from "moment";
-import { deletePlayer } from "../../actions/clientActions";
+import { deletePlayer, addPlayer, updatePlayer } from "../../actions/clientActions";
 import { saveSession, temporarySession, destroyTempSession, fetchTempSession } from "../../actions/rrSessionActions";
 import RRSessionStore from "../../stores/rrSessionStore";
 import TempSessionStore from "../../stores/tempSessionStore";
@@ -33,6 +33,10 @@ export default class NewRRSession extends Component {
     this.state = {
       newPlayerModal: false,
       groupTabEnabled: false,
+      editPlayerModal: {
+        open: false,
+        player: null
+      },
       tab: 0,
       date: new Date(),
       numPlayers: 0,
@@ -110,8 +114,28 @@ export default class NewRRSession extends Component {
   openModal = () => {
     this.setState({ newPlayerModal: true });
   }
+  openEditModal = (player) => {
+    this.setState({
+      editPlayerModal: {
+        open: true,
+        player: {
+          _id: player._id,
+          name: player.name,
+          rating: player.rating
+        }
+      }
+    });
+  }
   closeModal = () => {
     this.setState({ newPlayerModal: false });
+  }
+  closeEditModal = () => {
+    this.setState({
+      editPlayerModal: {
+        open: false,
+        player: null
+      }
+    });
   }
   clubChanged = () => {
     this.setState({ club: ClubStore.getCurrentClub() });
@@ -213,6 +237,7 @@ export default class NewRRSession extends Component {
         deletePlayer={this.deletePlayer}
         allPlayers={allPlayers}
         handleToggle={this.handleToggle}
+        openEditModal={this.openEditModal}
       />
     </div>);
     const groupContent = (<Grouping
@@ -274,8 +299,22 @@ export default class NewRRSession extends Component {
         this.state.newPlayerModal &&
           (<div className="overlay">
             <PlayerForm
+              title="Register Player"
+              callback={addPlayer}
               modalOpen={this.state.newPlayerModal}
               closeModal={this.closeModal}
+            />
+          </div>)
+      }
+      {
+        this.state.editPlayerModal.open &&
+          (<div className="overlay">
+            <PlayerForm
+              title="Update Player"
+              callback={updatePlayer}
+              player={this.state.editPlayerModal.player}
+              modalOpen={this.state.editPlayerModal.open}
+              closeModal={this.closeEditModal}
             />
           </div>)
       }

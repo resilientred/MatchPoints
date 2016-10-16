@@ -34,7 +34,8 @@ router.route("/:clubId/players/:id")
     Club.updatePlayer(clubId, id, player)
       .then((club) => {
         res.status(200).send(club);
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err);
         res.status(422).send("Unable to update player");
       });
   });

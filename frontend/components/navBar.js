@@ -78,7 +78,7 @@ class NavBar extends Component {
         open={this.state.opened}
         openSecondary={Boolean(true)}
         docked={false}
-        onRequestChange={this.handleOpen}
+        onRequestChange={(opened) => this.setState({ opened })}
         zDepth={5}
       >
         <MenuItem
@@ -106,7 +106,7 @@ class NavBar extends Component {
           checked={this.state.tab === 3}
         />
         <MenuItem
-          onTouchTap={logOut}
+          onTouchTap={this.handleLogout}
           primaryText="Log Out"
           insetChildren={Boolean(true)}
         />

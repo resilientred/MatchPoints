@@ -2,7 +2,7 @@ import { Store } from "flux/utils";
 import AppDispatcher from "../dispatcher/dispatcher";
 import { LOGGED_IN, LOG_IN_ERROR,
   REMOVED_PLAYER, PARSED_PLAYERS,
-  ADDED_PLAYER } from "../constants/constants";
+  ADDED_PLAYER, UPDATED_PLAYER } from "../constants/constants";
 
 const ClubStore = new Store(AppDispatcher);
 let currentClub = null;
@@ -18,7 +18,7 @@ const setError = (err) => {
 
 const removePlayer = (id) => {
   const players = currentClub.players;
-  for (let i = 0; i < currentClub.players.length; i++) {
+  for (let i = 0; i < players.length; i++) {
     if (players[i]._id === id) {
       players.splice(i, 1);
     }
@@ -32,8 +32,15 @@ const addPlayer = (player) => {
 const setPlayers = (players) => {
   currentClub.players = players;
 };
-const addedPlayer = () => {
-
+const updatedPlayer = (player) => {
+  let players = currentClub.players;
+  for (let i = 0; i < players.length; i++) {
+    if (players[i]._id === player._id) {
+      players[i] = player;
+      break;
+    }
+  }
+  currentClub.players = players;
 }
 ClubStore.getCurrentClub = () => currentClub;
 
@@ -62,6 +69,10 @@ ClubStore.__onDispatch = (payload) => {
       break;
     case ADDED_PLAYER:
       addPlayer(payload.player);
+      ClubStore.__emitChange();
+      break;
+    case UPDATED_PLAYER:
+      setCurrentClub(payload.club);
       ClubStore.__emitChange();
       break;
     default:

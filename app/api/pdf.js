@@ -5,9 +5,9 @@ import path from "path";
 import PDFGenerator from "../../utils/pdfGenerator";
 import { parseUrlEncoded, csrfProtection, client } from "../helpers/appModules";
 
-const subscriber = process.env.NODE_ENV === "development" ?
-      redis.createClient() :
-      redis.createClient(`redis://${process.env.REDIS_HOST}`);
+const subscriber = process.env.NODE_ENV === "production" ?
+      redis.createClient(`redis://${process.env.REDIS_HOST}`) :
+      redis.createClient();
 const router = express.Router();
 
 const handleExpired = (name) => {

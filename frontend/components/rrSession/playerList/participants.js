@@ -14,6 +14,7 @@ const PlayerGroup = props => (
       title="All Players"
       addedPlayers={props.objAddedPlayers}
       deletePlayer={props.deletePlayer}
+      openEditModal={props.openEditModal}
     />
     <Divider style={style} />
     <SelectedPlayerList
@@ -27,6 +28,7 @@ const PlayerGroup = props => (
 );
 
 PlayerGroup.propTypes = {
+  openEditModal: PropTypes.func,
   allPlayers: PropTypes.array,
   handleToggle: PropTypes.func,
   objAddedPlayers: PropTypes.object,
