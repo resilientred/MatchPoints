@@ -1,0 +1,5 @@
+{
+  "verbose": true,
+  "ignore": ["frontend/**", "public/js/**", "pdfs/**", "helpers/uploads/**"],
+  "delay": "500ms"
+}

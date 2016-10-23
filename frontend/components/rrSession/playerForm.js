@@ -19,7 +19,7 @@ class PlayerForm extends Component {
       rating: "0"
     };
     if (props.player) {
-      def.id = props.player._id,
+      def.id = props.player._id;
       def.name = props.player.name;
       def.rating = props.player.rating;
     }

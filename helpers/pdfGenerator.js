@@ -7,6 +7,7 @@ shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 
 class PDFGenerator {
   static generatePDF({ clubName }, num, players, numOfPlayers, date) {
+    console.log("group:", num, players);
     let header = '<header class="cf"><div class="left"><h4>' + date +
       '</h4></div><div class="center"><h2>' + clubName +
       '</h2></div><div class="right">' +

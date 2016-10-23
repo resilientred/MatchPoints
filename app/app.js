@@ -34,10 +34,10 @@ app.use("/favicon.ico", (req, res) => {
 
 if (process.env.NODE_ENV === "development") {
   const sassMiddleware = require("node-sass-middleware");
-  const webpack = require("webpack");
-  const webpackMiddleware = require("webpack-dev-middleware");
-  const config = require("../webpack.config.server.js");
-  const compiler = webpack(config);
+  // const webpack = require("webpack");
+  // const webpackMiddleware = require("webpack-dev-middleware");
+  // const config = require("../webpack.config.server.js");
+  // const compiler = webpack(config);
   app.use(
     sassMiddleware({
       src: path.join(__dirname, "..", "assets", "sass"),
@@ -46,8 +46,8 @@ if (process.env.NODE_ENV === "development") {
       debug: true
     })
   );
-  app.use(webpackMiddleware(compiler));
-  app.use(require("webpack-hot-middleware")(compiler));
+  // app.use(webpackMiddleware(compiler));
+  // app.use(require("webpack-hot-middleware")(compiler));
 }
 
 app.use(express.static(path.join(__dirname, "..", "public")));

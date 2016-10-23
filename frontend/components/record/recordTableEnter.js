@@ -7,8 +7,7 @@ import MenuItem from "material-ui/MenuItem";
 const style = { paddingLeft: "0" };
 
 class RecordTableDetail extends Component {
-  componentDidMount() {
-  }
+
   render() {
     const { sizeOfGroup, start, joinedPlayers, result, groupNum } = this.props;
     return (<Table

@@ -40,10 +40,12 @@ class Grouping extends Component {
       loading: false
     };
   }
+
   componentWillMount() {
     this.pListener = PDFStore.addListener(this.fetchedPDF);
     this.int = setInterval(this.tempSave, 60000);
   }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.cached !== nextProps.cached) {
       const schemata = (function parseSchemata(s) {
@@ -137,13 +139,25 @@ class Grouping extends Component {
   }
   schemata() {
     const schemata = this.state.schemata;
+    const floatingStyle = {
+      zIndex: this.state.selectedGroup.length ? "auto" : 999,
+      color: this.state.selectedGroup.length ? "#E0E0E0" : "orange"
+    };
+/*        style={{ zIndex: !max ? 999 : "auto" }}
+        floatingLabelStyle={ maxFloatingStyle }
+        errorText={!max ? "Maximum number of players you want to allow" : ""}
+        errorStyle={{color: "orange"}}*/
     if (schemata.length) {
       return (<div>
         <SelectField
           value={this.state.selectedGroup.join(",")}
           onChange={this.changeSchema}
+          floatingLabelStyle={ floatingStyle }
           floatingLabelText="Select a schema"
           floatingLabelFixed={Boolean(true)}
+          style={{ zIndex: this.state.selectedGroup.length ? "auto" : 999 }}
+          errorText={this.state.selectedGroup.length ? "" : "Select an arrangement"}
+          errorStyle={{color: "orange"}}
         >
           {
             schemata ?
@@ -164,10 +178,21 @@ class Grouping extends Component {
   }
   numOfPlayers() {
     const { min, max } = this.state;
-
+    const minFloatingStyle = {
+      zIndex: max && !min ? 999 : "auto",
+      color: max && !min ? "orange" : "#E0E0E0"
+    };
+    const maxFloatingStyle = {
+      zIndex: max ? "auto" : 999,
+      color: max ? "#E0E0E0" : "orange"
+    };
     return (<div className="min-max">
       <SelectField
         value={max}
+        style={{ zIndex: !max ? 999 : "auto" }}
+        floatingLabelStyle={ maxFloatingStyle }
+        errorText={!max ? "Maximum number of players you want to allow" : ""}
+        errorStyle={{color: "orange"}}
         floatingLabelFixed={Boolean(true)}
         floatingLabelText="Max Players"
         onChange={(e, idx, val) => this.handleChange("max", e, idx, val)}
@@ -180,6 +205,10 @@ class Grouping extends Component {
       </SelectField>
       <SelectField
         value={min}
+        style={{ zIndex: max && !min ? 999 : "auto" }}
+        floatingLabelStyle={ minFloatingStyle }
+        errorStyle={{color: "orange"}}
+        errorText={max && !min ? "Minimum number of players you want to allow" : ""}
         floatingLabelFixed={Boolean(true)}
         floatingLabelText="Min Players"
         onChange={(e, idx, val) => this.handleChange("min", e, idx, val)}
@@ -279,39 +308,32 @@ class Grouping extends Component {
       }
     </div>);
   }
-  loading() {
-    if (this.state.loading) {
-      return <div className="overlay"><div className="loading"><CircularProgress size={2} /></div></div>;
-    }
-    return "";
-  }
+
   dialog() {
-    if (this.state.dialogOpen) {
-      const actions = [
-        <FlatButton
-          label="Close"
-          primary={Boolean(true)}
-          onTouchTap={this.handleDialogClose}
-        />
-      ];
-      return (<Dialog
-        title={this.title}
-        actions={actions}
-        open={this.state.dialogOpen}
-        modal={false}
-        onRequestClose={this.handleDialogClose}
-      >
-        {this.content}
-      </Dialog>);
-    }
-    return "";
+    const actions = [
+      <FlatButton
+        label="Close"
+        primary={Boolean(true)}
+        onTouchTap={this.handleDialogClose}
+      />
+    ];
+    return (<Dialog
+      title={this.title}
+      actions={actions}
+      open={this.state.dialogOpen}
+      modal={false}
+      onRequestClose={this.handleDialogClose}
+    >
+      {this.content}
+    </Dialog>);
   }
   render() {
     let schemata;
     let groupTables;
+
     if (this.state.max && this.state.min) {
       schemata = this.schemata();
-      if (this.state.selectedGroup) {
+      if (this.state.selectedGroup.length) {
         groupTables = this.groupTables();
       }
     }
@@ -349,8 +371,15 @@ class Grouping extends Component {
         message={this.error || ""}
         autoHideDuration={8000}
       />
-      { this.loading() }
-      { this.dialog() }
+      {
+        this.state.loading &&
+          <div className="overlay">
+            <div className="loading">
+              <CircularProgress size={2} />
+            </div>
+          </div>
+      }
+      { this.state.dialog && this.dialog() }
     </div>);
   }
 }

@@ -33,6 +33,7 @@ router.route("/:clubId/players/:id")
     const player = req.body.player;
     Club.updatePlayer(clubId, id, player)
       .then((club) => {
+        clubMethods.setCurrentClub(club);
         res.status(200).send(club);
       }).catch((err) => {
         console.log(err);

@@ -25,23 +25,10 @@ const removePlayer = (id) => {
   }
 };
 
-const addPlayer = (player) => {
-  currentClub.players.push(player);
-};
-
 const setPlayers = (players) => {
   currentClub.players = players;
 };
-const updatedPlayer = (player) => {
-  let players = currentClub.players;
-  for (let i = 0; i < players.length; i++) {
-    if (players[i]._id === player._id) {
-      players[i] = player;
-      break;
-    }
-  }
-  currentClub.players = players;
-}
+
 ClubStore.getCurrentClub = () => currentClub;
 
 ClubStore.getError = () => {

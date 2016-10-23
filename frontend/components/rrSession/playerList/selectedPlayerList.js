@@ -14,7 +14,7 @@ const SelectedPlayerList = (props) => {
 
   return (
     <div>
-      <h3 className="table-title">{ props.title }</h3>
+      <h3 className="table-title">{`${props.title} (${props.players.length})`}</h3>
       <Table
         height="400px"
         fixedHeader={Boolean(true)}

@@ -42,12 +42,13 @@ subscriber.psubscribe("__keyspace@0__:*", (err) => {
 router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   const { club, addedPlayers, schemas, date } = req.body.session;
   const urls = {};
-
+  console.log("schemas: ", schemas);
   const promises = schemas.map((group, i) => (
     PDFGenerator.generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date)
   ));
 
   Promise.all(promises).then((pdfs) => {
+    console.log("pdfs:", pdfs);
     pdfs.forEach((url, i) => {
       client.setex(`pdf#${url}`, 60 * 15, "true", (err) => {
         if (err) console.log(err);

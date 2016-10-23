@@ -21,7 +21,7 @@
   },
   "betterScripts": {
     "start-dev": {
-      "command": "babel-node ./app/app.js",
+      "command": "nodemon ./app/app.js --exec babel-node",
       "env": {
         "NODE_ENV": "development",
         "PORT": 3000
@@ -96,6 +96,7 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
     "node-sass": "^3.7.0",
+    "nodemon": "^1.11.0",
     "phantomjs-polyfill": "0.0.2",
     "react-a11y": "^0.3.3"
   }

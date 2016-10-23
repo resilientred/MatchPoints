@@ -27,20 +27,20 @@ class PlayerList extends Component {
         <TableRowColumn className="col-rating">{player.rating}</TableRowColumn>
         <TableRowColumn className="col-button">
           <IconButton
-            onClick={() => this.props.deletePlayer(player._id)}
-            iconClassName="material-icons"
-            tooltip="Remove Player"
-          >
-            <Close />
-          </IconButton>
-        </TableRowColumn>
-        <TableRowColumn className="col-button">
-          <IconButton
             onClick={() => this.props.openEditModal(player)}
             iconClassName="material-icons"
             tooltip="Edit Player"
           >
             <ModeEdit />
+          </IconButton>
+        </TableRowColumn>
+        <TableRowColumn className="col-button">
+          <IconButton
+            onClick={() => this.props.deletePlayer(player._id)}
+            iconClassName="material-icons"
+            tooltip="Remove Player"
+          >
+            <Close />
           </IconButton>
         </TableRowColumn>
       </TableRow>

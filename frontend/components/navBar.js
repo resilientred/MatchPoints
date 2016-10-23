@@ -78,7 +78,7 @@ class NavBar extends Component {
         open={this.state.opened}
         openSecondary={Boolean(true)}
         docked={false}
-        onRequestChange={(opened) => this.setState({ opened })}
+        onRequestChange={opened => this.setState({ opened })}
         zDepth={5}
       >
         <MenuItem
@@ -132,11 +132,11 @@ class NavBar extends Component {
       />
       {
         location.pathname === "/" ||
-        <MenuItem
-          primaryText="Log In"
-          onTouchTap={this.handleLogin}
-          insetChildren={Boolean(true)}
-        />
+          <MenuItem
+            primaryText="Log In"
+            onTouchTap={this.handleLogin}
+            insetChildren={Boolean(true)}
+          />
       }
     </Drawer>);
   }
