@@ -37,6 +37,7 @@ class NavBar extends Component {
 
     this.setState({ tab, club });
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.opened !== nextState.opened || this.state.tab !== nextState.tab) {
       return true;

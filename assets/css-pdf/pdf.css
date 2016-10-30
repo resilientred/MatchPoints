@@ -47,7 +47,7 @@ content {
 
 content ol {
   float: left;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   margin-right: 20px;
   padding-bottom: 20px;
@@ -58,7 +58,7 @@ ol li {
   padding-bottom: 5px;
 }
 ol li span {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 content > div {
   float: left;
@@ -66,6 +66,7 @@ content > div {
 .schedule {
   margin-top: 10px;
   float: right;
+  font-size: 15px;
 }
 .scenario {
   float: left;
@@ -88,10 +89,20 @@ content > div {
   border-right: 0px;
 }
 .cell {
+  position: relative;
   float: left;
   border-bottom: 1px solid black;
   height: 35px;
   width: 30px;
+}
+.pos {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 50px;
+  width: 100%;
+  font-size: 12px;
 }
 .g-num, .blank {
   float: left;

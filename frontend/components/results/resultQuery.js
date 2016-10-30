@@ -47,9 +47,6 @@ export default class ResultQuery extends Component {
             border: "1px solid #E0E0E0",
           }}
         >
-          <Tab label="Players" value={0}>
-            <PlayerResultQuery clubs={this.state.clubs} />
-          </Tab>
           <Tab label="Club" value={1}>
             <ClubResultQuery clubs={this.state.clubs} />
           </Tab>

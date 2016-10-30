@@ -204,6 +204,8 @@ export default class NewRRSession extends Component {
       allPlayers = this.props.club.players;
       addedPlayers = this.convertPlayersToArr().sort((a, b) => b.rating - a.rating);
     }
+    const today = new Date();
+    const minDate = today.setYear(today.getFullYear() - 1);
     const { numPlayers } = this.state;
 
     const playerContent = (<div>
@@ -228,7 +230,7 @@ export default class NewRRSession extends Component {
           floatingLabelText="Date of Session"
           hintText="Date" value={this.state.date}
           onChange={(e, date) => this.setState({ date })}
-          minDate={new Date()}
+          minDate={minDate}
         />
       </div>
       <Participants

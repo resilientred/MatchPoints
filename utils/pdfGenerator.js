@@ -74,8 +74,8 @@ class PDFGenerator {
     for (let j = 1; j < numOfPlayers; j++) {
       boxes += `<div class='row cf'><div class='g-num'>${j}</div>`;
       for (let i = 0; i < numOfPlayers; i++) {
-        boxes += `<div class='cell-div${(i === (j - 1) ? " grey'>" : "'>")}`;
-        boxes += "<div class='cell'></div><div class='cell'></div></div>";
+        boxes += `<div class='cell-div${(i <= (j - 1) ? " grey'>" : "'>")}`;
+        boxes += `<div class='cell'><div class='pos'>${i > (j - 1) ? j : ""}</div></div><div class='cell'><div class='pos'>${i > (j - 1) ? i + 1 : ""}</div></div></div>`;
       }
       boxes += "</div>";
     }
