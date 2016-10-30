@@ -10,7 +10,8 @@ class PDFGenerator {
     let header = "<header class='cf'><div class='left'>";
     header += `<h4>${date}</h4></div><div class="center">`;
     header += `<h2>${clubName}</h2></div>`;
-    header += `<div class="right"><h3>Group ${num}</h3></div></header>`;
+    header += `<div class="right"><h3>Group ${num}</h3></div>`;
+    header += `<div class="address">http://www.matchpoints.org/results</div></header>`;
     let content = "<content>";
     content += this.playerList(numOfPlayers, players);
     content += this.schedule(numOfPlayers);

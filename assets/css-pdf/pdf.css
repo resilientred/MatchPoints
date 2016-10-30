@@ -29,6 +29,12 @@ header {
 .center h1 {
   text-decoration: underline;
 }
+.address {
+  margin-top: -10px;
+  display: block;
+  font-size: 14px;
+  margin-left: 25%;
+}
 .left, .right {
   width: 20%;
 }
