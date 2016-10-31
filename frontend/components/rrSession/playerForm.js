@@ -89,7 +89,7 @@ class PlayerForm extends Component {
   }
   handleSubmit = () => {
     if (this.validateFields()) {
-      this.props.callback(ClubStore.getCurrentClub()._id, this.state);
+      this.props.callback(this.state);
       this.setState({ name: "", rating: "0" });
       this.props.closeModal();
     }

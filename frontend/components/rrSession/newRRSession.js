@@ -54,7 +54,7 @@ export default class NewRRSession extends Component {
     this.tslistener = TempSessionStore.addListener(this.tempSessionFetched);
   }
   componentDidMount() {
-    fetchTempSession(this.props.club._id);
+    fetchTempSession();
   }
 
   componentWillUnmount() {
@@ -77,7 +77,7 @@ export default class NewRRSession extends Component {
   }
   deletePlayer = (_id) => {
     delete this.state.addedPlayers[_id];
-    deletePlayer(this.props.club._id, _id);
+    deletePlayer(_id);
 
     const players = this.props.club.players;
     for (let i = 0; i < players.length; i++) {
@@ -182,19 +182,19 @@ export default class NewRRSession extends Component {
       players,
       selectedSchema,
       schemata,
-    }, this.props.club._id);
-    destroyTempSession(this.props.club._id);
+    });
+    destroyTempSession();
   }
   temporarilySaveSession = (min, max, schemata, selectedSchema, pdfs) => {
     this.handleOpen("snackBarOpen");
     temporarySession({
       ...this.state, min, max, selectedSchema, schemata, pdfs
-    }, this.props.club._id);
+    });
   }
   destroyTempSession = () => {
     this.session = null;
     PDFStore.clearPDF();
-    destroyTempSession(this.props.club._id);
+    destroyTempSession();
     this.handleClose("dialogOpen");
   }
   render() {

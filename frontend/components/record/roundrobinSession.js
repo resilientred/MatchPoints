@@ -100,8 +100,8 @@ class RoundRobinSession extends Component {
     }
     if (!session.finalized) {
       postResult(
-        this.props.club._id, this.state.scoreChange,
-        this.state.scoreUpdate, session._id, session.date
+        this.state.scoreChange, this.state.scoreUpdate,
+        session._id, session.date
       );
       this.setState({ updating: true, loading: true });
     }

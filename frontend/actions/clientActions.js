@@ -13,27 +13,27 @@ const fetchPlayer = (id) => {
     success: "fetchedPlayer"
   });
 };
-const addPlayer = (clubId, player) => {
+const addPlayer = (player) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/players/new`,
+    url: `/api/my/players/new`,
     method: "POST",
     data: { player },
     success: "addedPlayer",
     error: "logInError"
   });
 };
-const updatePlayer = (clubId, player) => {
+const updatePlayer = (player) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/players/${player.id}`,
+    url: `/api/my/players/${player.id}`,
     method: "PATCH",
     data: { player },
     success: "updatedPlayer",
     error: "logInError"
   });
 };
-const deletePlayer = (clubId, id) => {
+const deletePlayer = (id) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/players/${id}`,
+    url: `/api/my/players/${id}`,
     method: "DELETE",
     success: "removedPlayer"
   });

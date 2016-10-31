@@ -13,38 +13,38 @@ export const fetchSession = (id) => {
     success: "fetchedRRSession"
   });
 };
-export const saveSession = (data, clubId) => {
+export const saveSession = (data) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/session/new`,
+    url: `/api/my/session/new`,
     method: "POST",
     data: { session: data },
     success: "savedSession"
   });
 };
-export const temporarySession = (data, clubId) => {
+export const temporarySession = (data) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/temp`,
+    url: `/api/my/temp`,
     method: "POST",
     data: { session: data },
     success: "log"
   });
 };
-export const fetchTempSession = (clubId) => {
+export const fetchTempSession = () => {
   apiService({
-    url: `/api/clubs/${clubId}/temp`,
+    url: `/api/my/temp`,
     success: "receivedCachedSession"
   });
 };
-export const destroyTempSession = (clubId) => {
+export const destroyTempSession = () => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/temp`,
+    url: `/api/my/temp`,
     method: "DELETE",
     success: "log"
   });
 };
-export const postResult = (clubId, data, ratingUpdateList, id) => {
+export const postResult = (data, ratingUpdateList, id) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/sessions/${id}`,
+    url: `/api/my/sessions/${id}`,
     method: "POST",
     data: {
       result: { data, ratingUpdateList }
@@ -53,9 +53,9 @@ export const postResult = (clubId, data, ratingUpdateList, id) => {
     error: "sessionError"
   });
 };
-export const updateResult = (clubId, data, ratingUpdateList, id, date) => {
+export const updateResult = (data, ratingUpdateList, id, date) => {
   apiCSRFService({
-    url: `/api/clubs/${clubId}/sessions/${id}`,
+    url: `/api/my/sessions/${id}`,
     method: "PATCH",
     data: {
       result: { date, data, ratingUpdateList }
@@ -65,7 +65,7 @@ export const updateResult = (clubId, data, ratingUpdateList, id, date) => {
 };
 export const deleteSession = (id) => {
   apiCSRFService({
-    url: `/api/clubs/sessions/${id}`,
+    url: `/api/my/sessions/${id}`,
     method: "DELETE",
     success: "deletedRRSession"
   });

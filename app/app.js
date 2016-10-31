@@ -8,13 +8,13 @@ import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
 import pdfRoutes from "./api/pdf";
 import uploadRoutes from "./api/upload";
+import currentUserRoutes from "./api/currentUser";
 
 const port = process.env.PORT || 3000;
 const mongoURI = process.env.NODE_ENV === "test" ?
   "mongodb://127.0.0.1:27017/match_point_test"
   :
   "mongodb://127.0.0.1:27017/roundrobindb";
-console.log("connecting to: ", mongoURI);
 mongoose.connect(mongoURI);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
@@ -34,10 +34,6 @@ app.use("/favicon.ico", (req, res) => {
 
 if (process.env.NODE_ENV === "development") {
   const sassMiddleware = require("node-sass-middleware");
-  // const webpack = require("webpack");
-  // const webpackMiddleware = require("webpack-dev-middleware");
-  // const config = require("../webpack.config.server.js");
-  // const compiler = webpack(config);
   app.use(
     sassMiddleware({
       src: path.join(__dirname, "..", "assets", "sass"),
@@ -46,15 +42,23 @@ if (process.env.NODE_ENV === "development") {
       debug: true
     })
   );
-  // app.use(webpackMiddleware(compiler));
-  // app.use(require("webpack-hot-middleware")(compiler));
 }
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/clubs", clubRoutes);
-app.use("/api/clubs", routes);
 app.use("/api/pdfs", pdfRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/my", (req, res, next) => {
+  clubMethods.currentClub(req)
+    .then((club) => {
+      req.clubId = club._id;
+      next();
+    }).catch((err) => {
+      res.status(403).send("Forbidden Access");
+    });
+});
+app.use("/api/my", currentUserRoutes);
+app.use("/api/my", playerRoutes);
 app.use("/api/*", (req, res) => {
   res.status(404).send("Invalid routes");
   res.end();

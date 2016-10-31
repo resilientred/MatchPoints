@@ -12,6 +12,7 @@ export default class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      email: "",
       username: "",
       password: "",
       clubName: "",
@@ -87,6 +88,15 @@ export default class SignUpForm extends Component {
             hintText="username"
             floatingLabelText="Username"
             onChange={e => this.updateField("username", e)}
+            required
+          />
+        </div>
+        <div>
+          <TextField
+            type="email"
+            hintText="email"
+            floatingLabelText="Email"
+            onChange={e => this.updateField("email", e)}
             required
           />
         </div>

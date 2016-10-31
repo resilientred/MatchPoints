@@ -106,9 +106,15 @@ export default class LogInForm extends Component {
           <RaisedButton label="Guest" backgroundColor="#EF6C00" labelColor="white" onClick={this.guestLogIn} />
         </div>
         <div className="redirect-signup">
-          {"Don't have an account yet?"}&nbsp; &nbsp;
+          Don't have an account yet?&nbsp; &nbsp;
           <a onClick={() => this.props.setTab(2)}>
             Sign Up
+          </a>
+        </div>
+        <div className="forgot-password">
+          Forgot your password?&nbsp; &nbsp;
+          <a onClick={() => this.props.setTab(3)}>
+            Reset Password
           </a>
         </div>
       </form>

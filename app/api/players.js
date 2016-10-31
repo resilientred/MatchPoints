@@ -3,24 +3,38 @@ import Club from "../models/club";
 import { parseUrlEncoded, csrfProtection, clubMethods } from "../helpers/appModules";
 
 const router = express.Router();
-
-router.route("/:clubId/players")
-.get((req, res) => {
-  const clubId = req.params.clubId;
-  Club.findPlayers(clubId)
-    .then((players) => {
-      console.log(players);
-      res.status(200).send(players);
-    }).catch((err) => {
+router.route("/players/new")
+  .post(parseUrlEncoded, csrfProtection, (req, res) => {
+    const data = req.body.player;
+    const err = {};
+    let hasError = false;
+    if (data.rating === "0") {
+      err.rating = "Rating cannot be empty.";
+      hasError = true;
+    }
+    if (data.name === "") {
+      err.name = "Name cannot be empty.";
+      hasError = true;
+    }
+    if (hasError) {
       res.status(422).send(err);
-    });
-});
+      return;
+    }
 
-router.route("/:clubId/players/:id")
+    ClubModel.addPlayer(req.clubId, data)
+      .then((club) => {
+        clubMethods.setCurrentClub(club);
+        res.status(200).send(club);
+      }).catch((e) => {
+        res.status(422).send(e);
+      });
+  });
+
+router.route("/players/:id")
   .delete(csrfProtection, (req, res) => {
-    const { clubId, id } = req.params;
+    const id = req.params.id;
 
-    Club.removePlayer(clubId, id)
+    Club.removePlayer(req.clubId, id)
       .then((club) => {
         clubMethods.setCurrentClub(club);
         res.status(200).send(id);
@@ -29,9 +43,9 @@ router.route("/:clubId/players/:id")
       });
   })
   .patch(csrfProtection, parseUrlEncoded, (req, res) => {
-    const { clubId, id } = req.params;
+    const id = req.params;
     const player = req.body.player;
-    Club.updatePlayer(clubId, id, player)
+    Club.updatePlayer(req.clubId, id, player)
       .then((club) => {
         clubMethods.setCurrentClub(club);
         res.status(200).send(club);

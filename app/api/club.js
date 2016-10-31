@@ -14,6 +14,15 @@ router.get("", (req, res) => {
       console.log(err);
     });
 })
+.get("/:clubId/players", (req, res) => {
+  Club.findPlayers(req.params.clubId)
+    .then((players) => {
+      console.log(players);
+      res.status(200).send(players);
+    }).catch((err) => {
+      res.status(422).send(err);
+    });
+});
 .get("/all", (req, res) => {
   ClubModel.findAll()
     .then((roundrobins) => {
@@ -42,101 +51,6 @@ router.get("", (req, res) => {
     }).catch(() => {
       res.status(500);
       res.end();
-    });
-})
-.post("/:clubId/session/new", parseUrlEncoded, csrfProtection, (req, res) => {
-  const clubId = req.params.clubId;
-  const data = req.body.session;
-
-  const newRR = new RoundRobinModel({ _clubId: clubId, ...data });
-
-  newRR.save()
-    .then(() => {
-      res.status(200).send();
-    }).catch((err) => {
-      res.status(422).send(err);
-    });
-})
-.post("/:clubId/temp", parseUrlEncoded, csrfProtection, (req, res) => {
-  const clubId = req.params.clubId;
-  const data = JSON.stringify(req.body.session);
-  client.setex(`tempsess#${clubId}`, 300, data, (err) => {
-    if (err) console.log(err);
-  });
-  res.status(202);
-  res.end();
-})
-.get("/:clubId/temp", (req, res) => {
-  const clubId = req.params.clubId;
-  client.get(`tempsess#${clubId}`, (err, data) => {
-    if (data) {
-      client.setex(`tempsess#${clubId}`, 300, data, (e) => {
-        if (e) console.log(e);
-      });
-      res.status(200).send(JSON.parse(data));
-    } else {
-      res.status(200).send("no data cached");
-      res.end();
-    }
-  });
-})
-.delete("/:clubId/temp", (req, res) => {
-  const clubId = req.params.clubId;
-  client.del(clubId, () => {
-    client.del(`tempsess#${clubId}`, () => {
-      res.status(202);
-    });
-  });
-})
-.post("/:clubId/players/new", parseUrlEncoded, csrfProtection, (req, res) => {
-  const clubId = req.params.clubId;
-  const data = req.body.player;
-  const err = {};
-  let hasError = false;
-  if (data.rating === "0") {
-    err.rating = "Rating cannot be empty.";
-    hasError = true;
-  }
-  if (data.name === "") {
-    err.name = "Name cannot be empty.";
-    hasError = true;
-  }
-  if (hasError) {
-    res.status(422).send(err);
-    return;
-  }
-
-  ClubModel.addPlayer(clubId, data)
-    .then((club) => {
-      clubMethods.setCurrentClub(club);
-      res.status(200).send(club);
-    }).catch((e) => {
-      res.status(422).send(e);
-    });
-})
-.delete("/:clubId/sessions/:id", (req, res) => {
-  const id = req.params.id;
-  const clubId = req.params.clubId;
-  RoundRobinModel.deleteRoundRobin(clubId, id)
-    .then(() => {
-      res.status(200).send(id);
-      res.end();
-    }).catch(() => {
-      res.status(500);
-      res.end();
-    });
-})
-.post("/:clubId/sessions/:id", parseUrlEncoded, csrfProtection, (req, res) => {
-  const id = req.params.id;
-  const clubId = req.params.clubId;
-  const { date, data, ratingUpdateList } = req.body.result;
-
-  ClubModel.postPlayersRating(clubId, ratingUpdateList, date)
-    .then(() => RoundRobinModel.saveResult(id, data)).then((session) => {
-      res.status(200).send(session);
-    }).catch((err) => {
-      console.log(err);
-      res.status(422).send(err);
     });
 })
 .post("/new", parseUrlEncoded, (req, res) => {
