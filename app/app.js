@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import express from "express";
 import { app, csrfProtection, clubMethods } from "./helpers/appModules";
-import routes from "./api/players";
+import playerRoutes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
 import pdfRoutes from "./api/pdf";
@@ -15,6 +15,7 @@ const mongoURI = process.env.NODE_ENV === "test" ?
   "mongodb://127.0.0.1:27017/match_point_test"
   :
   "mongodb://127.0.0.1:27017/roundrobindb";
+
 mongoose.connect(mongoURI);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));

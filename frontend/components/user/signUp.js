@@ -5,6 +5,16 @@ import RaisedButton from "material-ui/RaisedButton";
 import { fetchCurrentClub, signUp } from "../../actions/clubActions";
 import ClubStore from "../../stores/clubStore";
 
+/*        (<div>
+          <TextField
+            type="email"
+            hintText="email"
+            floatingLabelText="Email"
+            onChange={e => this.updateField("email", e)}
+            required
+          />
+        </div>)
+        */
 export default class SignUpForm extends Component {
   static propTypes = {
     setTab: PropTypes.func
@@ -88,15 +98,6 @@ export default class SignUpForm extends Component {
             hintText="username"
             floatingLabelText="Username"
             onChange={e => this.updateField("username", e)}
-            required
-          />
-        </div>
-        <div>
-          <TextField
-            type="email"
-            hintText="email"
-            floatingLabelText="Email"
-            onChange={e => this.updateField("email", e)}
             required
           />
         </div>

@@ -362,9 +362,9 @@ class Grouping extends Component {
           disabled={!this.state.selectedGroup.length}
         />
       </IconMenu>
-      { this.numOfPlayers() }
-      { schemata }
-      { groupTables }
+      {this.numOfPlayers()}
+      {schemata}
+      {groupTables}
       <SnackBar
         open={this.state.open}
         onRequestClose={this.handleClose}
@@ -379,7 +379,7 @@ class Grouping extends Component {
             </div>
           </div>
       }
-      { this.state.dialog && this.dialog() }
+      {this.state.dialog && this.dialog()}
     </div>);
   }
 }

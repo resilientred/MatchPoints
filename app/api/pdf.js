@@ -42,21 +42,38 @@ subscriber.psubscribe("__keyspace@0__:*", (err) => {
 router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
   const { club, addedPlayers, schemas, date } = req.body.session;
   const urls = {};
-  console.log("schemas: ", schemas);
-  const promises = schemas.map((group, i) => (
-    PDFGenerator.generatePDF(club, i + 1, addedPlayers.splice(0, group), group, date)
-  ));
+  //server can't handle more than two pdf
+  const generatePDF = (start = 0) => {
+    const promises = [];
+    const target = start + 2;
+    while (start < target) {
+      if (start >= schemas.length) {
+        break;
+      }
+      const promise = PDFGenerator.generatePDF(club, start + 1, addedPlayers.splice(0, schemas[start]), schemas[start], date);
+      promises.push(promise);
+      start++;
+    }
 
-  Promise.all(promises).then((pdfs) => {
-    console.log("pdfs:", pdfs);
-    pdfs.forEach((url, i) => {
-      client.setex(`pdf#${url}`, 60 * 15, "true", (err) => {
-        if (err) console.log(err);
+    return Promise.all(promises).then((pdfs) => {
+      pdfs.forEach((url, i) => {
+        client.setex(`pdf#${url}`, 60 * 15, "true", (err) => {
+          return Promise.reject(err);
+        });
+        urls[`group${(i + 1 + start - 2)}`] = url;
       });
-      urls[`group${(i + 1)}`] = url;
+      if (start >= schemas.length) {
+        return Promise.resolve(urls);
+      } else {
+        return generatePDF(start);
+      }
     });
+  }
+  generatePDF().then((urls) => {
+    console.log(urls);
     res.status(200).send(urls);
-  }).catch(() => {
+  }).catch((err) => {
+    console.log(err);
     res.status(500).send("Unable to generate pdfs. Please try again later.");
   });
 });

@@ -152,15 +152,18 @@ export default class NewRRSession extends Component {
     const selectedPlayer = this.props.club.players.find((player =>
       player._id === _id
     ));
+    let numPlayers = this.state.numPlayers;
 
     if (addedPlayers[_id]) {
       delete addedPlayers[_id];
+      numPlayers--;
     } else {
       addedPlayers[_id] = selectedPlayer;
+      numPlayers++;
     }
     this.setState({
       addedPlayers,
-      numPlayers: ++this.state.numPlayers
+      numPlayers
     });
   }
   toggleTab = (tab) => {
@@ -205,7 +208,7 @@ export default class NewRRSession extends Component {
       addedPlayers = this.convertPlayersToArr().sort((a, b) => b.rating - a.rating);
     }
     const today = new Date();
-    const minDate = today.setYear(today.getFullYear() - 1);
+    const minDate = new Date(today.setYear(today.getFullYear() - 1));
     const { numPlayers } = this.state;
 
     const playerContent = (<div>

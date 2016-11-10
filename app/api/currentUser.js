@@ -4,15 +4,15 @@ import RoundRobinModel from "../models/roundrobin";
 import { clubMethods, parseUrlEncoded, csrfProtection, client } from "../helpers/appModules";
 
 const router = express.Router();
-//"/my"
 
-route.patch("/password", (req, res) => {
-  clubMethods.currentClub(req)
-    .then((currentClub) => {
+router.patch("/password", (req, res) => {
+  //has to have old password...
+  //check if they're the same
+  //then say ok
 
-    }).catch((err) => {
-      console.log(err);
-    });
+  //the other route is forgot,
+  //which will send a email to the email addreess
+  //which then reset
 })
 .post("/temp", parseUrlEncoded, csrfProtection, (req, res) => {
   const data = JSON.stringify(req.body.session);

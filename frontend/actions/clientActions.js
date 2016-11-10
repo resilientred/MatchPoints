@@ -7,12 +7,6 @@ const fetchPlayers = (clubId) => {
   });
 };
 
-const fetchPlayer = (id) => {
-  apiService({
-    url: `/api/players/${id}`,
-    success: "fetchedPlayer"
-  });
-};
 const addPlayer = (player) => {
   apiCSRFService({
     url: `/api/my/players/new`,
@@ -80,7 +74,7 @@ const fetchClubRoundrobins = (clubId) => {
   });
 };
 
-export { fetchPlayers, fetchPlayer, addPlayer,
+export { fetchPlayers, addPlayer,
   updatePlayer, deletePlayer, fetchAllClubs,
   generatePDF, fetchAllPlayersFromClub, fetchClubRoundrobins,
   uploadFile };

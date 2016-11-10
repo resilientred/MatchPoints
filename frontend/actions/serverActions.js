@@ -120,5 +120,11 @@ export default {
       actionType: PARSED_PLAYERS,
       club
     });
+  },
+  resetPassword() {
+    Dispatcher.dispatch({
+      actionType: RESET_PASSWORD,
+
+    });
   }
 };

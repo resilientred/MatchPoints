@@ -1,7 +1,7 @@
 import express from "express";
 import ClubModel from "../models/club";
 import RoundRobinModel from "../models/roundrobin";
-import { clubMethods, parseUrlEncoded, csrfProtection, client } from "../helpers/appModules";
+import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/appModules";
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.get("", (req, res) => {
     }).catch((err) => {
       res.status(422).send(err);
     });
-});
+})
 .get("/all", (req, res) => {
   ClubModel.findAll()
     .then((roundrobins) => {

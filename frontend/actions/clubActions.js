@@ -6,21 +6,29 @@ export const fetchCurrentClub = () => {
     success: "loggedIn"
   });
 };
-export const logIn = (data) => {
+export const resetPassword = (email) => {
+  apiService({
+    url: "/api/my/forgot",
+    method: "PATCH",
+    data: { email },
+    success: "resetPassword"
+  });
+};
+export const logIn = (user) => {
   apiCSRFService({
     method: "POST",
     url: "/session/new",
-    data: { user: data },
+    data: { user },
     success: "loggedIn",
     error: "failedLogIn"
   });
 };
 
-export const signUp = (data) => {
+export const signUp = (user) => {
   apiCSRFService({
     method: "POST",
     url: "/api/clubs/new",
-    data: { user: data },
+    data: { user },
     success: "loggedIn",
     error: "failedLogIn"
   });
