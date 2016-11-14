@@ -5,7 +5,7 @@ const LOAD_AUTH = "mp/auth/LOAD_AUTH";
 export const LOGOUT = "mp/auth/LOGOUT";
 export const LOAD_AUTH_SUCCESS = "mp/auth/LOAD_AUTH_SUCCESS";
 const LOAD_AUTH_ERROR = "mp/auth/LOAD_AUTH_ERROR";
-const LOGOUT_LOAD = "mp/auth/LOGOUT_LOAD";
+export const LOGOUT_LOAD = "mp/auth/LOGOUT_LOAD";
 const LOGOUT_SUCCESS = "mp/auth/LOGOUT_SUCCESS";
 const LOGOUT_FAIL = "mp/auth/LOGOUT_FAIL";
 

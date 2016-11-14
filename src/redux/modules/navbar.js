@@ -1,4 +1,4 @@
-import { LOGOUT } from "./auth";
+import { LOGOUT_LOAD } from "./auth";
 import { OPEN_LOGIN } from "./splash";
 
 const OPEN_NAV = "mp/navbar/OPEN_NAV";
@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
         opened: true
       };
     case OPEN_LOGIN:
-    case LOGOUT:
+    case LOGOUT_LOAD:
       return {
         opened: false,
         tab: 0
@@ -33,7 +33,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         tab: action.payload,
-        open: false
+        opened: false
       };
     case PRE_SET_TAB:
       return {
@@ -48,6 +48,12 @@ export default (state = initialState, action) => {
 export const open = () => {
   return {
     type: OPEN_NAV
+  };
+};
+
+export const close = () => {
+  return {
+    type: CLOSE_NAV
   };
 };
 

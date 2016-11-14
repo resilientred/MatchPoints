@@ -5,11 +5,11 @@ import MenuItem from "material-ui/MenuItem";
 import { connect } from "react-redux";
 import { openLogin } from "redux/modules/splash";
 import { logIn, logOut } from "redux/modules/auth";
-import { open, setTab, preSetTab } from "redux/modules/navbar";
+import { open, close, setTab, preSetTab } from "redux/modules/navbar";
 
 @connect(
   ({ auth: { club }, navbar }) => ({ club, navbar }),
-  { openLogin, logIn, logOut, open, setTab, preSetTab }
+  { openLogin, logIn, logOut, open, close, setTab, preSetTab }
 )
 export default class Navbar extends Component {
   componentWillMount() {
@@ -43,10 +43,10 @@ export default class Navbar extends Component {
 
     if (this.props.club._id) {
       return (<Drawer
-        open={this.props.opened}
+        open={opened}
         openSecondary={Boolean(true)}
         docked={false}
-        onRequestChange={this.props.open}
+        onRequestChange={this.props.close}
         zDepth={5}
       >
         <MenuItem
@@ -85,7 +85,7 @@ export default class Navbar extends Component {
       open={opened}
       openSecondary={Boolean(true)}
       docked={false}
-      onRequestChange={this.props.open}
+      onRequestChange={this.props.close}
     >
       <MenuItem
         onTouchTap={() => this.handleLink("/", 0)}

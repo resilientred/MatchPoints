@@ -8,9 +8,6 @@ import { setPage } from "redux/modules/splash";
 
 @connect(() => ({}), { signUp, setPage })
 export default class SignUpForm extends Component {
-  static propTypes = {
-    setPage: PropTypes.func
-  }
   constructor(props) {
     super(props);
     this.state = {

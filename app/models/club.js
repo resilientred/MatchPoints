@@ -20,11 +20,12 @@ const clubSchema = new Schema({
   passwordDigest: { type: String, required: true },
   sessionToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
   clubName: { type: String, required: true },
-  email: { type: String, require: true },
+  email: { type: String, required: true },
   location: {
     city: { type: String, required: true },
     state: { type: String, required: true }
   },
+  confirmed: { type: Boolean, default: false },
   id: { type: String, default: shortid.generate, index: true },
   players: [playerSchema]
 });

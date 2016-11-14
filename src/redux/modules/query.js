@@ -48,7 +48,8 @@ export default (state = initialState, action) => {
       const selectedClub = state.clubs[action.payload];
       return {
         ...state,
-        selectedClub
+        selectedClub,
+        selectedDate: null
       };
     }
     case SET_DATE: {
