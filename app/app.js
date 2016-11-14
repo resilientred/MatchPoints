@@ -55,7 +55,7 @@ app.use("/api/my", jsonParser, (req, res, next) => {
       req.clubId = club._id;
       return next();
     }).catch((err) => {
-      res.status(403).send("Forbidden Access");
+      res.status(403).send(err);
     });
 });
 app.use("/api/my", currentUserRoutes);

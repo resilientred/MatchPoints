@@ -8,7 +8,7 @@ class ClubMethods {
   currentClub = (req) => {
     const currentClub = this.currentClubs[req.cookies.matchpoint_session];
     if (currentClub) {
-      return new Promise.resolve(currentClub);
+      return Promise.resolve(currentClub);
     }
 
     return ClubModel.findBySessionToken.call(ClubModel, req.cookies.matchpoint_session);

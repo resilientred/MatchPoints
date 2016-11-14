@@ -1,9 +1,10 @@
 var path = require("path");
 var webpack = require("webpack");
+
 module.exports = {
   devtool: 'inline-source-map',
   context: __dirname,
-  entry: "./frontend/matchPoints.js",
+  entry: "./src/app.js",
   output: {
     path: path.join(__dirname, "public", "js"),
     filename: "bundle.js"
@@ -13,27 +14,23 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: "babel",
-        query: {
-          presets: ['react', 'es2015', 'stage-0']
-        }
-      },
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loaders: ["babel-loader", "eslint-loader"]
+        loaders: ["babel", "eslint-loader"]
       }
     ]
   },
   resolve: {
+    modulesDirectories: [
+      "src",
+      "node_modules"
+    ],
     extensions: ["", ".js", ".jsx"]
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('development')
+        'NODE_ENV': JSON.stringify('development'),
+        'DEVTOOLS': true
       }
-    }),
-    new webpack.HotModuleReplacementPlugin()
+    })
   ]
 };

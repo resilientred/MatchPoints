@@ -8,7 +8,7 @@ export default ({ getState, dispatch }) => {
   const requireNotLoggedin = (nextState, replace, callback) => {
     const checkAuth = () => {
       const { club } = getState().auth;
-      if (club) {
+      if (club._id) {
         replace("/club");
       }
       callback();
@@ -24,7 +24,7 @@ export default ({ getState, dispatch }) => {
   const requireLoggedIn = (nextState, replace, callback) => {
     const checkAuth = () => {
       const { club } = getState().auth;
-      if (!club) {
+      if (!club._id) {
         replace("/");
       }
       callback();

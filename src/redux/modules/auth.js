@@ -10,7 +10,7 @@ const LOGOUT_SUCCESS = "mp/auth/LOGOUT_SUCCESS";
 const LOGOUT_FAIL = "mp/auth/LOGOUT_FAIL";
 
 const initialState = {
-  club: null,
+  club: {},
   error: null,
   loading: false,
   loaded: false
@@ -39,12 +39,13 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         loaded: true,
-        error: action.payload
+        error: typeof action.payload === "object" ? "Something went wrong" : action.payload
       };
-    case LOGOUT:
+    case LOGOUT_LOAD:
       return {
         ...state,
-        club: null
+        loaded: false,
+        club: {}
       };
     default:
       return state;
@@ -68,7 +69,7 @@ export const isAuthLoaded = (state) => {
 export const logIn = (user) => {
   const promise = axios({
     method: "POST",
-    url: "/api/clubs/new",
+    url: "/session/new",
     data: { user },
     headers: {
       "X-CSRF-TOKEN": getCSRF()
@@ -98,10 +99,8 @@ export const signUp = (user) => {
 };
 
 export const logOut = () => {
-  const promise = axios.delete("/session");
-
   return {
     types: [LOGOUT_LOAD, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise
+    promise: axios.delete("/session")
   };
 };

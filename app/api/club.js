@@ -8,8 +8,7 @@ const router = express.Router();
 router.get("", (req, res) => {
   clubMethods.currentClub(req)
     .then((currentClub) => {
-      res.status(200).send(currentClub);
-      return res.end();
+      return res.status(200).send(currentClub);
     }).catch((err) => {
       console.log(err);
     });

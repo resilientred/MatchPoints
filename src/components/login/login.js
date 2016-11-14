@@ -99,13 +99,13 @@ export default class LogInForm extends Component {
             Sign Up
           </a>
         </div>
-        <div className="forgot-password">
-          {"Forgot your password?"}&nbsp;&nbsp;
-          <a onClick={() => this.props.setPage(3)}>
-            Reset Password
-          </a>
-        </div>
       </form>
     </div>);
   }
 }
+// (        <div className="forgot-password">
+//           {"Forgot your password?"}&nbsp;&nbsp;
+//           <a onClick={() => this.props.setPage(3)}>
+//             Reset Password
+//           </a>
+//         </div>)

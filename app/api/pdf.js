@@ -3,8 +3,10 @@ import redis from "redis";
 import fs from "fs";
 import path from "path";
 import PDFGenerator from "../../utils/pdfGenerator";
-import { jsonParser, csrfProtection, client } from "../helpers/appModules";
+import bodyParser from "body-parser";
+import { csrfProtection, client } from "../helpers/appModules";
 
+const jsonParser = bodyParser.json({ limit: "2mb" });
 const subscriber = process.env.NODE_ENV === "production" ?
       redis.createClient(`redis://${process.env.REDIS_HOST}`) :
       redis.createClient();
@@ -39,7 +41,7 @@ subscriber.psubscribe("__keyspace@0__:*", (err) => {
 });
 
 
-router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
+router.post("/:clubId", jsonParser, csrfProtection, (req, res) => {
   const { club, addedPlayers, schemas, date } = req.body.session;
   const urls = {};
   //server can't handle more than two pdf
