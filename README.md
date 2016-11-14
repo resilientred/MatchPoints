@@ -25,9 +25,6 @@ MatchPoints utilizes Redis to reduce the number of times data is fetched the dat
  - [ ] Adjust results automatically if an older session is saved after the newer one
  - [ ] Allow Users to customize scoring algorithm
 
-## Bug fix
-- [ ] Grouping algorithm
-
 ## Languages:
  - Front-end: React.js with Flux architecture
  - Back-end: Node.js/Express.js
