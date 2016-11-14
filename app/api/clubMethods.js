@@ -8,9 +8,7 @@ class ClubMethods {
   currentClub = (req) => {
     const currentClub = this.currentClubs[req.cookies.matchpoint_session];
     if (currentClub) {
-      return new Promise((resolve) => {
-        resolve(currentClub);
-      });
+      return new Promise.resolve(currentClub);
     }
 
     return ClubModel.findBySessionToken.call(ClubModel, req.cookies.matchpoint_session);
@@ -23,9 +21,7 @@ class ClubMethods {
   logOut = (token) => {
     const club = this.currentClubs[token];
     if (!club) {
-      return new Promise((resolve) => {
-        resolve();
-      });
+      return Promise.resolve();
     }
     delete this.currentClubs[token];
     return ClubModel.resetSessionToken.call(ClubModel, club);
@@ -43,9 +39,7 @@ class ClubMethods {
       this.currentClubs[sessionToken] = club;
       res.cookie("matchpoint_session", sessionToken,
             { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(club);
-      return new Promise((resolve) => {
-        resolve("ok");
-      });
+      return Promise.resolve("ok");
     }
   }
 
@@ -55,14 +49,10 @@ class ClubMethods {
       .then((c) => {
         club = c;
         return club.isPassword(password);
-      }).then((() =>
-        new Promise((resolve) => {
-          resolve(club);
-        })
-      ), (err => new Promise((_, reject) => {
-        reject(err);
-      })
-    ));
+      }).then(
+        () => Promise.resolve(club),
+        err => Promise.reject(err)
+      );
   }
 }
 

@@ -1,9 +1,9 @@
 import express from "express";
-import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/appModules";
+import { clubMethods, jsonParser, csrfProtection } from "../helpers/appModules";
 
 const router = express.Router();
 
-router.post("/new", parseUrlEncoded, csrfProtection, (req, res) => {
+router.post("/new", jsonParser, csrfProtection, (req, res) => {
   const data = req.body.user;
   clubMethods.findClub(data.username, data.password)
     .then((club) => {

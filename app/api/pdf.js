@@ -3,7 +3,7 @@ import redis from "redis";
 import fs from "fs";
 import path from "path";
 import PDFGenerator from "../../utils/pdfGenerator";
-import { parseUrlEncoded, csrfProtection, client } from "../helpers/appModules";
+import { jsonParser, csrfProtection, client } from "../helpers/appModules";
 
 const subscriber = process.env.NODE_ENV === "production" ?
       redis.createClient(`redis://${process.env.REDIS_HOST}`) :
@@ -21,7 +21,7 @@ subscriber.on("pmessage", (pattern, channel, message) => {
   switch (message) {
     case "expired": {
       const key = channel.split(":")[1];
-      const file = key.split("#");
+      const file = key.split(":");
       if (file[1] && file[0] === "pdf") {
         handleExpired(file[1]);
       }
@@ -57,7 +57,7 @@ router.post("/:clubId", parseUrlEncoded, csrfProtection, (req, res) => {
 
     return Promise.all(promises).then((pdfs) => {
       pdfs.forEach((url, i) => {
-        client.setex(`pdf#${url}`, 60 * 15, "true", (err) => {
+        client.setex(`pdf:${url}`, 60 * 15, "true", (err) => {
           return Promise.reject(err);
         });
         urls[`group${(i + 1 + start - 2)}`] = url;

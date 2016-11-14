@@ -1,3 +1,5 @@
+@import 'reset';
+
 @mixin reg-transition($anim-part, $duration, $curve, $delay){
   -webkit-transition: $anim-part $duration $curve $delay;
   transition: $anim-part $duration $curve $delay;

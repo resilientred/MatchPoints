@@ -2,7 +2,7 @@ import path from "path";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import express from "express";
-import { app, csrfProtection, clubMethods } from "./helpers/appModules";
+import { app, csrfProtection, clubMethods, jsonParser } from "./helpers/appModules";
 import playerRoutes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
@@ -49,11 +49,11 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/clubs", clubRoutes);
 app.use("/api/pdfs", pdfRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/api/my", (req, res, next) => {
+app.use("/api/my", jsonParser, (req, res, next) => {
   clubMethods.currentClub(req)
     .then((club) => {
       req.clubId = club._id;
-      next();
+      return next();
     }).catch((err) => {
       res.status(403).send("Forbidden Access");
     });
@@ -61,30 +61,10 @@ app.use("/api/my", (req, res, next) => {
 app.use("/api/my", currentUserRoutes);
 app.use("/api/my", playerRoutes);
 app.use("/api/*", (req, res) => {
-  res.status(404).send("Invalid routes");
+  res.status(404).send("Invalid route");
   res.end();
 });
 app.use("/session", sessionRoutes);
-app.use("/*", (req, res, next) => {
-  const origUrl = req.originalUrl;
-  const redirectURL = origUrl.match(/^(\/$|\/login|\/signup)/);
-  let currentClub;
-
-  clubMethods.currentClub(req)
-    .then((club) => {
-      currentClub = club;
-    }).catch(() => {
-      currentClub = null;
-    }).then(() => {
-      if (currentClub && redirectURL) {
-        res.redirect("/club");
-        res.end();
-      } else {
-        next();
-      }
-    });
-});
-
 app.get("*", csrfProtection, (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });
@@ -92,5 +72,3 @@ app.get("*", csrfProtection, (req, res) => {
 app.listen(port, () => {
   console.log("listening on port", port);
 });
-
-module.exports = app;

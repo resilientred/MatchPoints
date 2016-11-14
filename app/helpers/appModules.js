@@ -9,7 +9,7 @@ const client = process.env.NODE_ENV === "production" ?
       redis.createClient();
 
 export { client };
-export const parseUrlEncoded = bodyParser.urlencoded({ extended: true });
+export const jsonParser = bodyParser.json();
 export const app = express();
 export const clubMethods = new clubMethoding(app);
 export const csrfProtection = process.env.NODE_ENV === "test" ?

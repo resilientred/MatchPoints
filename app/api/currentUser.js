@@ -1,7 +1,7 @@
 import express from "express";
 import ClubModel from "../models/club";
 import RoundRobinModel from "../models/roundrobin";
-import { clubMethods, parseUrlEncoded, csrfProtection, client } from "../helpers/appModules";
+import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appModules";
 
 const router = express.Router();
 
@@ -14,68 +14,74 @@ router.patch("/password", (req, res) => {
   //which will send a email to the email addreess
   //which then reset
 })
-.post("/temp", parseUrlEncoded, csrfProtection, (req, res) => {
-  const data = JSON.stringify(req.body.session);
-  client.setex(`tempsess#${req.clubId}`, 300, data, (err) => {
-    if (err) console.log(err);
-  });
-  res.status(202);
-  res.end();
-})
-.get("/temp", (req, res) => {
-  client.get(`tempsess#${req.clubId}`, (err, data) => {
-    if (data) {
-      client.setex(`tempsess#${req.clubId}`, 300, data, (e) => {
-        if (e) console.log(e);
-      });
-      res.status(200).send(JSON.parse(data));
+.get("/sessions", (req, res) => {
+  const clubId = req.clubId;
+  client.get(`sessions:${clubId}`, (err, reply) => {
+    if (!reply) {
+      RoundRobinModel.findRoundRobinsByClub(clubId)
+        .then((roundrobins) => {
+          client.set(`sessions:${clubId}`, JSON.stringify(roundrobins));
+          return res.status(200).send(roundrobins);
+        }).catch(() => {
+          return res.status(500);
+        });
     } else {
-      res.status(200).send("no data cached");
-      res.end();
+      res.status(200).send(JSON.parse(reply));
     }
-  });
+  })
 })
-.delete("/temp", (req, res) => {
-  client.del(req.clubId, () => {
-    client.del(`tempsess#${req.clubId}`, () => {
-      res.status(202);
-    });
-  });
+.get("/sessions/:id", (req, res) => {
+  const clubId = req.clubId;
+  const id = req.params.id;
+
+  RoundRobinModel.findRoundRobin(clubId, id)
+    .then(roundrobin => res.status(200).send(roundrobin))
+    .catch(() => res.status(422).send("Cannot retrieve the session data."));
 })
 .delete("/sessions/:id", (req, res) => {
   const id = req.params.id;
   RoundRobinModel.deleteRoundRobin(req.clubId, id)
     .then(() => {
-      res.status(200).send(id);
-      res.end();
-    }).catch(() => {
-      res.status(500);
-      res.end();
+      client.del(`sessions:${req.clubId}`);
+      return res.status(200).send(id);
+    }).catch((err) => {
+      return res.status(500);
     });
 })
-.post("/sessions/:id", parseUrlEncoded, csrfProtection, (req, res) => {
+.post("/sessions/:id", jsonParser, csrfProtection, (req, res) => {
   const id = req.params.id;
   const { date, data, ratingUpdateList } = req.body.result;
 
   ClubModel.postPlayersRating(req.clubId, ratingUpdateList, date)
-    .then(() => RoundRobinModel.saveResult(id, data)).then((session) => {
-      res.status(200).send(session);
+    .then(() => RoundRobinModel.saveResult(id, data))
+    .then((session) => {
+      client.del(`players:${req.clubId}`);
+      client.del(`sessions:${req.clubId}`);
+      return res.status(200).send(session);
     }).catch((err) => {
       console.log(err);
       res.status(422).send(err);
     });
 })
-.post("/session/new", parseUrlEncoded, csrfProtection, (req, res) => {
-  const clubId = req.params.clubId;
+.post("/session/new", jsonParser, csrfProtection, (req, res) => {
+  const clubId = req.clubId;
   const data = req.body.session;
-
-  const newRR = new RoundRobinModel({ _clubId: clubId, ...data });
+  const newRR = new RoundRobinModel({
+   _clubId: clubId,
+   date: data.date,
+   numOfPlayers: data.numOfPlayers,
+   players: data.players,
+   schemata: data.schemata,
+   selectedSchema: data.selectedSchema
+  });
 
   newRR.save()
     .then(() => {
-      res.status(200).send();
+      client.del(`sessions:${clubId}`);
+      res.status(200).send(newRR);
     }).catch((err) => {
-      res.status(422).send(err);
+      console.log(err);
+      res.status(422).send("Something went wrong...");
     });
 });
 

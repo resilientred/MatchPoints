@@ -3,12 +3,12 @@ import path from "path";
 import fs from "fs";
 import shortid from "shortid";
 import PlayerParser from "../../utils/fileParser";
-import { parseUrlEncoded, clubMethods, csrfProtection } from "../helpers/appModules";
+import { jsonParser, clubMethods, csrfProtection } from "../helpers/appModules";
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 const router = express.Router();
 
-router.post("/players", parseUrlEncoded, csrfProtection, (req, res) => {
+router.post("/players", jsonParser, csrfProtection, (req, res) => {
   const [filetype, filedata] = req.body.data_uri.split(",");
   const filename = shortid.generate();
   const filepath = path.join(__dirname, "..", "..", "utils", "uploads", filename);

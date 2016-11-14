@@ -1,7 +1,7 @@
 import express from "express";
 import ClubModel from "../models/club";
 import RoundRobinModel from "../models/roundrobin";
-import { clubMethods, parseUrlEncoded, csrfProtection } from "../helpers/appModules";
+import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appModules";
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.get("", (req, res) => {
   clubMethods.currentClub(req)
     .then((currentClub) => {
       res.status(200).send(currentClub);
-      res.end();
+      return res.end();
     }).catch((err) => {
       console.log(err);
     });
@@ -17,7 +17,6 @@ router.get("", (req, res) => {
 .get("/:clubId/players", (req, res) => {
   Club.findPlayers(req.params.clubId)
     .then((players) => {
-      console.log(players);
       res.status(200).send(players);
     }).catch((err) => {
       res.status(422).send(err);
@@ -33,14 +32,19 @@ router.get("", (req, res) => {
 })
 .get("/:clubId/sessions", (req, res) => {
   const clubId = req.params.clubId;
-  RoundRobinModel.findRoundRobinsByClub(clubId)
-    .then((roundrobins) => {
-      res.status(200).send(roundrobins);
-      res.end();
-    }).catch(() => {
-      res.status(500);
-      res.end();
-    });
+  client.get(`sessions:${clubId}`, (err, reply) => {
+    if (!reply) {
+      RoundRobinModel.findRoundRobinsByClub(clubId)
+        .then((roundrobins) => {
+          client.set(`sessions:${clubId}`, JSON.stringify(roundrobins));
+          res.status(200).send(roundrobins);
+        }).catch(() => {
+          res.status(500);
+        });
+    } else {
+      res.status(200).send(JSON.parse(reply));
+    }
+  })
 })
 .get("/:clubId/roundrobins", (req, res) => {
   const clubId = req.params.clubId;
@@ -53,7 +57,7 @@ router.get("", (req, res) => {
       res.end();
     });
 })
-.post("/new", parseUrlEncoded, (req, res) => {
+.post("/new", jsonParser, (req, res) => {
   const data = req.body.user;
   if (data.password <= 8) {
     res.status(422).send("Password must be 8 characters long\n" +

@@ -37,17 +37,16 @@ clubSchema.statics.resetSessionToken = function(club) {
   );
 };
 clubSchema.statics.findPlayers = function(clubId) {
-  return this.findOne({ _id: clubId }, { players: true });
+  return this.findOne({ _id: clubId }, { players: true, _id: false });
 };
 
 clubSchema.statics.addPlayer = function(clubId, player) {
   const newPlayer = new Player({ name: player.name, rating: player.rating });
   newPlayer.markModified("player");
-  return this.findOneAndUpdate(
+  return this.update(
     { _id: clubId },
     { $push: { players: newPlayer } },
-    { new: true }
-  );
+  ).then(() => Promise.resolve(newPlayer));
 };
 
 clubSchema.statics.addPlayers = function(clubId, players) {
@@ -89,10 +88,10 @@ clubSchema.statics.removePlayer = function(clubId, id) {
 };
 
 clubSchema.statics.updatePlayer = function(clubId, id, player) {
-  return this.findOneAndUpdate(
+  return this.update(
     { _id: clubId, "players._id": id },
     { $set: { "players.$.rating": player.rating, "players.$.name": player.name } },
-    { new: true }
+    { new: true, select: "players" }
   );
 };
 
@@ -107,7 +106,7 @@ clubSchema.statics.findByUsernameAndPassword = function(username) {
 clubSchema.statics.findBySessionToken = function(sessionToken) {
   return this.findOne(
     { sessionToken: sessionToken },
-    { passwordDigest: false, sessionToken: false }
+    { passwordDigest: false, sessionToken: false, players: false }
   );
 };
 
