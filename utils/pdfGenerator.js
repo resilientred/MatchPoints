@@ -86,5 +86,4 @@ class PDFGenerator {
   }
 }
 
-
 export default PDFGenerator;

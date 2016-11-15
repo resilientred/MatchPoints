@@ -4,8 +4,12 @@ import { connect } from "react-redux";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import { logIn } from "redux/modules/auth";
+import Divider from "material-ui/Divider";
+import { setPage } from "redux/modules/splash";
 
-@connect(() => ({}), { logIn })
+const style = { position: "relative" };
+
+@connect(() => ({}), { logIn, setPage })
 export default class LogInForm extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +19,7 @@ export default class LogInForm extends Component {
       error: ""
     };
   }
+
   updateField(field, e) {
     const newField = { [field]: e.target.value };
 
@@ -37,7 +42,7 @@ export default class LogInForm extends Component {
       }
     } else {
       this.props.logIn(this.state).then(() => {
-          this.setState({ username: "", password: "", error: "" });
+        this.setState({ username: "", password: "", error: "" });
         browserHistory.push("/club");
       }).catch((error) => {
         this.setState({ error });
@@ -94,16 +99,16 @@ export default class LogInForm extends Component {
           />
           <RaisedButton label="Guest" backgroundColor="#EF6C00" labelColor="white" onClick={this.guestLogIn} />
         </div>
+        <div className="forgot-password">
+          <a onClick={() => this.props.setPage(3)}>
+            Forgot password?
+          </a>
+        </div>
+        <Divider style={style} />
         <div className="redirect-signup">
           {"Don't have an account yet?"}&nbsp;&nbsp;
           <a onClick={() => this.props.setPage(2)}>
             Sign Up
-          </a>
-        </div>
-        <div className="forgot-password">
-          {"Forgot your password?"}&nbsp;&nbsp;
-          <a onClick={() => this.props.setPage(3)}>
-            Reset Password
           </a>
         </div>
       </form>

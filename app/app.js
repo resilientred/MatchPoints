@@ -6,7 +6,7 @@ import { app, csrfProtection, clubMethods, jsonParser } from "./helpers/appModul
 import playerRoutes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
-import accountRoutes from "./api/accounts";
+import accountRoutes from "./api/account";
 import pdfRoutes from "./api/pdf";
 import uploadRoutes from "./api/upload";
 import currentUserRoutes from "./api/currentUser";
@@ -66,7 +66,7 @@ app.use("/api/*", (req, res) => {
   res.end();
 });
 app.use("/session", sessionRoutes);
-app.use("/accounts", accountRoutes)
+app.use("/accounts", accountRoutes);
 app.get("*", csrfProtection, (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });

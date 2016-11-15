@@ -22,7 +22,7 @@ router.patch("/password", (req, res) => {
   }).catch(() => {
     return res.status(422).send("Something went wrong. Please try again later.");
   });
-});
+})
 .get("/sessions", (req, res) => {
   const clubId = req.clubId;
   client.get(`sessions:${clubId}`, (err, reply) => {

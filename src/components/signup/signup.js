@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { browserHistory } from "react-router";
 import TextField from "material-ui/TextField";
@@ -20,16 +20,7 @@ export default class SignUpForm extends Component {
     };
   }
   isNotValid() {
-    const emailRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[._!@#*&$-])[a-zA-Z0-9_!@#*&$.-]{8,}$";
-    if (this.state.username.length < 8) {
-      return "Username must be at least 8 characters long";
-    }
-    if (this.state.password.length < 8) {
-      return "Password must be at least 8 characters long";
-    }
-    if (!emailRegex.test(this.state.email)) {
-      return "Email is not a valid format";
-    }
+    const emailRegex = new RegExp(".+@.+..+", "i");
     if (this.state.clubName.length === 0) {
       return "Club name cannot be empty";
     }
@@ -39,9 +30,17 @@ export default class SignUpForm extends Component {
     if (this.state.stateName.length === 0) {
       return "State cannot be empty";
     }
+    if (this.state.username.length < 8) {
+      return "Username must be at least 8 characters long";
+    }
+    if (this.state.password.length < 8) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!emailRegex.test(this.state.email)) {
+      return "Email is not a valid format";
+    }
 
     return null;
-
   }
   updateField(field, e) {
     const newField = { [field]: e.target.value };
@@ -55,13 +54,15 @@ export default class SignUpForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if (this.isNotValid()) {
+    const error = this.isNotValid();
+    if (error) {
       this.setState({ error });
     } else {
       this.props.signUp(this.state).then(() => {
+        this.props.setPage(0);
         browserHistory.push("/club");
-      }).catch((error) => {
-        this.setState({ error });
+      }).catch((err) => {
+        this.setState({ error: err });
       });
     }
   }
@@ -69,7 +70,7 @@ export default class SignUpForm extends Component {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Sign Up</h3>
-        {this.state.error}
+        <div style={{ color: "red" }}>{this.state.error}</div>
         <div>
           <TextField
             type="text"

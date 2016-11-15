@@ -59,7 +59,7 @@ router.get("", (req, res) => {
 })
 .post("/new", jsonParser, (req, res) => {
   const isUserNotValid = (user) => {
-    const emailRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[._!@#*&$-])[a-zA-Z0-9_!@#*&$.-]{8,}$";
+    const emailRegex = new RegExp(".+@.+..+", "i");
     if (user.username.length < 8) {
       return "Username must be at least 8 characters long";
     }
@@ -70,13 +70,13 @@ router.get("", (req, res) => {
       return "Email is not a valid format";
     }
 
-    if (this.state.clubName.length === 0) {
+    if (user.clubName.length === 0) {
       return "Club name cannot be empty";
     }
-    if (this.state.city.length === 0) {
+    if (user.city.length === 0) {
       return "City cannot be empty";
     }
-    if (this.state.stateName.length === 0) {
+    if (user.stateName.length === 0) {
       return "State cannot be empty";
     }
 
@@ -105,6 +105,8 @@ router.get("", (req, res) => {
       new Mailer(club).sendConfirmationEmail();
       return clubMethods.logIn(res, club);
     }).catch((err) => {
+      console.log(err);
+      console.log(err.code);
       res.status(422).send(err);
       res.end();
     });

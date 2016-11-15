@@ -3,13 +3,13 @@ import { browserHistory } from "react-router";
 import Drawer from "material-ui/Drawer";
 import MenuItem from "material-ui/MenuItem";
 import { connect } from "react-redux";
-import { openLogin } from "redux/modules/splash";
+import { openLogin, setPage } from "redux/modules/splash";
 import { logIn, logOut } from "redux/modules/auth";
 import { open, close, setTab, preSetTab } from "redux/modules/navbar";
 
 @connect(
   ({ auth: { club }, navbar }) => ({ club, navbar }),
-  { openLogin, logIn, logOut, open, close, setTab, preSetTab }
+  { openLogin, logIn, logOut, open, close, setTab, preSetTab, setPage }
 )
 export default class Navbar extends Component {
   componentWillMount() {
@@ -34,6 +34,9 @@ export default class Navbar extends Component {
     });
   }
   handleLink(link, tab) {
+    if (tab === 0) {
+      this.props.setPage(0);
+    }
     this.props.setTab(tab);
     browserHistory.push(link);
   }

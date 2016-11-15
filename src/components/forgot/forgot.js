@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+import TextField from "material-ui/TextField";
+import RaisedButton from "material-ui/RaisedButton";
 import { connect } from "react-redux";
 import { resetWithUsername, resetWithEmail } from "redux/modules/reset";
 
-export default class ForgotPassword extends Component {
+@connect(() => ({}), { resetWithEmail, resetWithUsername })
+export default class Forgot extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,7 +16,7 @@ export default class ForgotPassword extends Component {
   }
 
   handleSubmit = (e) => {
-    const emailRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[._!@#*&$-])[a-zA-Z0-9_!@#*&$.-]{8,}$";
+    const emailRegex = new RegExp(".+@.+..+", "i");
     let promise;
     if (!emailRegex.test(this.state.field)) {
       promise = this.props.resetWithUsername(this.state.field);
@@ -38,16 +41,17 @@ export default class ForgotPassword extends Component {
         <div>
           <TextField
             type="text"
-            hintText="Enter your username or email address"
-            floatingLabelText="Enter your username or email address"
+            hintText="Enter your username or email"
+            floatingLabelText="Enter your username or email"
             value={this.state.field}
+            fullWidth={true}
             onChange={e => this.setState({ field: e.target.value })}
           />
           <RaisedButton
             label="Reset Password"
             backgroundColor="#1565C0"
             labelColor="white"
-            style={{ marginRight: "10px" }}
+            style={{ marginTop: "10px" }}
             onClick={this.handleSubmit}
           />
         </div>

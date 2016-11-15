@@ -2,8 +2,8 @@ import NodeMailer from "nodemailer";
 import smtpTransport from "nodemailer-smtp-transport";
 
 export default class Mailer {
-  contructor(recipent) {
-    this.recipient = user;
+  constructor(recipient) {
+    this.recipient = recipient;
   }
   static getTransport() {
     const smtpOptions = {
@@ -12,7 +12,7 @@ export default class Mailer {
       secure: true,
       auth: {
         user: "noreplymatchpoints@gmail.com",
-        pass: ""
+        pass: "matchpointsorg"
       }
     };
     return NodeMailer.createTransport(smtpTransport(smtpOptions));
@@ -23,13 +23,13 @@ export default class Mailer {
     emailHTML += "<p>Thank you for joining Match Points.</p>";
     emailHTML += "<p>To confirm your registration, click on the link below.</p>";
     emailHTML += `<a href="https://matchpoints.org/accounts/activate?token=${this.recipient.confirmToken}">https://matchpoints.org/accounts/activate?token=${this.recipient.confirmToken}</a>`;
-    emailHTML += "<p>Looking forward to serving your need.</p>";
-    emailHTML += "<p>Best,</br><a href='https://matchpoints.org'>MatchPoints</a></p>";
+    emailHTML += "<p>Looking forward to serving your needs.</p>";
+    emailHTML += "<p>Best,</p><p><a href='https://matchpoints.org'>MatchPoints</a></p>";
     let emailText = `Dear ${this.recipient.username}\n\n`;
     emailText += "Thank you for joining Match Points.\n\n";
     emailText += "To confirm your registration, click on the link below:\n\n";
     emailText += `https://matchpoints.org/accounts/activate?token=${this.recipient.confirmToken}\n\n`;
-    emailText += "Looking forward to serving your need.\n\n";
+    emailText += "Looking forward to serving your needs.\n\n";
     emailText += "Best,\nMatchPoints\n(https://matchpoints.org)";
     return {
       from: '"Match points" <noreplymatchpoints@gmail.com>',
@@ -44,13 +44,13 @@ export default class Mailer {
     let emailHTML = `<p>Dear ${this.recipient.username}</p>`;
     emailHTML += "<p>Please follow the link below to reset your password</p>";
     emailHTML += `<a href="https://matchpoints.org/reset?token=${this.recipient.token}">https://matchpoints.org/accounts/activate?token=${this.recipient.confirmToken}</a>`;
-    emailHTML += "<p>Looking forward to serving your need.</p>";
+    emailHTML += "<p>Please contact support.matchpoints@gmail.com if you have any questions.</p>";
     emailHTML += "<p>Best,</br><a href='https://matchpoints.org'>MatchPoints</a></p>";
     let emailText = `Dear ${this.recipient.username}\n\n`;
-    emailText += "Thank you for joining Match Points.\n\n";
+    emailText += "Please follow the link below to reset your password<\n\n";
     emailText += "To confirm your registration, click on the link below:\n\n";
-    emailText += `https://matchpoints.org/reset?token=${this.recipient.token}\n\n`;
-    emailText += "Looking forward to serving your need.\n\n";
+    emailText += `https://matchpoints.org/accounts/activate?token=${this.recipient.confirmToken}\n\n`;
+    emailText += "Please contact support.matchpoints@gmail.com if you have any questions.\n\n";
     emailText += "Best,\nMatchPoints\n(https://matchpoints.org)";
     return {
       from: '"Match points" <noreplymatchpoints@gmail.com>',
@@ -62,8 +62,9 @@ export default class Mailer {
   }
 
   sendConfirmationEmail() {
+    console.log("sending confirmation email", this.recipient);
     return new Promise((resolve, reject) => {
-      this.getTransport().sendMail(this.confirmationOptions(), (err, info) => {
+      Mailer.getTransport().sendMail(this.confirmationOptions(), (err, info) => {
         if (err) {
           return reject(err);
         }
@@ -75,7 +76,7 @@ export default class Mailer {
 
   sendResetEmail() {
     return new Promise((resolve, reject) => {
-      this.getTransport().sendMail(this.resetEmailOptions(), (err, info) => {
+      Mailer.getTransport().sendMail(this.resetEmailOptions(), (err, info) => {
         if (err) {
           return reject(err);
         }

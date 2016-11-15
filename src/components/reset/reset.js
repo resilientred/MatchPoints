@@ -2,11 +2,18 @@ import React, { Component } from "react";
 import { asyncConnect } from "redux-async-connect";
 import { connect } from "react-redux";
 import { resetPassword } from "redux/modules/reset";
+import TextField from "material-ui/TextField";
+import RaisedButton from "material-ui/RaisedButton";
 
-  //check whether params.location exist
-@asyncConnect({
-  token: params => Promise.resolve(params.location.query.token)
-})
+//check whether params.location exist
+
+@asyncConnect([{
+  token: ({ location }) => {
+    debugger;
+    return Promise.resolve(location.query.token);
+  }
+}])
+@connect(() => ({}), { resetPassword })
 export default class ForgotReset extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +24,11 @@ export default class ForgotReset extends Component {
     };
   }
 
-  handleSubmit = (e) => {
+  componentDidMount() {
+    debugger;
+  }
+  handleSubmit = (event) => {
+    event.preventDefault();
     if (this.state.password !== this.state.passwordCheck) {
       this.setState({ error: "Passwords don't match" });
       return;
@@ -30,7 +41,7 @@ export default class ForgotReset extends Component {
         passwordCheck: "",
         error: ""
       });
-    }).catch((error ) => {
+    }).catch((error) => {
       this.setState({ error });
     });
   }

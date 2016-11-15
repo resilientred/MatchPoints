@@ -46,6 +46,7 @@ clubSchema.statics.confirmUser = function(token) {
       user.confirmed = true;
       return user.save();
     }
+  });
 };
 
 clubSchema.statics.findPlayers = function(clubId) {

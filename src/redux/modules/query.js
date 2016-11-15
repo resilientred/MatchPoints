@@ -1,6 +1,6 @@
 import axios from "axios";
-import { LOAD, ERROR } from "./main";
 import { UPDATE_SESSION_SUCCESS } from "redux/modules/sessions";
+import { LOAD, ERROR } from "./main";
 
 const FETCH_ALL_SUCCESS = "mp/clubs/FETCH_ALL_SUCCESS";
 const FETCH_SESSIONS_SUCCESS = "mp/clubs/FETCH_SESSIONS_SUCCESS";

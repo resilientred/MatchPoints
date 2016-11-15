@@ -5,10 +5,11 @@ import { LogInForm, SignUpForm, ForgotForm, ResetForm } from "components";
 import { asyncConnect } from "redux-async-connect";
 
 @asyncConnect([{
-  promise: ({ store }) => {
-    if (params.location.pathname === "/reset") {
-      return Promise.resolve(store.dispatch(setTab(4)));
+  promise: ({ store, location }) => {
+    if (location.pathname === "/reset") {
+      return Promise.resolve(store.dispatch(setPage(4)));
     }
+    return null;
   }
 }])
 @connect(({ splash: { page } }) => ({ page }), { setPage })

@@ -32,8 +32,8 @@ export const resetWithEmail = (email) => {
 export const resetPassword = (token) => {
   const promise = axios({
     method: "POST",
-    url: `/accounts/reset`,
-    data: { token }
+    url: "/accounts/reset",
+    data: { token },
     headers: {
       "X-CSRF-TOKEN": getCSRF()
     }

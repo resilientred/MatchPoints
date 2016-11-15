@@ -1,18 +1,21 @@
 import express from "express";
 import Mailer from "../helpers/mailer";
 import Club from "../models/club";
-import { csrfProtection, jsonParser , clubMethods } from "../helpers/appModules";
+import { csrfProtection, jsonParser, clubMethods } from "../helpers/appModules";
 import URLSafeBase64 from "urlsafe-base64";
 import crypto from "crypto";
 
 const router = express.Router();
 
-route.post("/activate", csrfProtection, (req, res) => {
+router.get("/activate", (req, res) => {
   const token = req.query.token;
+  console.log("here");
   Club.confirmUser(token).then((message) => {
-    return res.render("activate", { message: "Your account has been activated." })
+    console.log("confirmed")
+    res.render("activate", { message: "Your account has been activated." })
   }).catch((message) => {
-    return res.render("error", { message });
+    console.log("error");
+    res.render("activate", { message });
   });
 })
 .post("/reset/request", csrfProtection, (req, res) => {
@@ -51,3 +54,5 @@ route.post("/activate", csrfProtection, (req, res) => {
       res.status(422).send("Token may have expired...");
     });
 });
+
+export default router;
