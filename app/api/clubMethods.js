@@ -35,6 +35,7 @@ class ClubMethods {
 
       delete club.sessionToken;
       delete club.passwordDigest;
+      delete club.confirmToken;
 
       this.currentClubs[sessionToken] = club;
       res.cookie("matchpoint_session", sessionToken,

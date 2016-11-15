@@ -15,3 +15,4 @@ export EditRecordTable from "./recordTable/editRecordTable";
 export ViewRecordTable from "./recordTable/viewRecordTable";
 export ClubQuery from "./clubQuery/clubQuery";
 export Query from "./query/query";
+export Reset from "./reset/reset";

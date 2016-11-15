@@ -128,7 +128,7 @@ h3 {
   }
 }
 .banner {
-  background-image: url("/images/tt_banner.jpg");
+  background-image: url("https://d92dg5nnjcx7c.cloudfront.net/images/tt_banner.jpg");
   background-size: cover;
     -ms-background-position-x: center;
   -ms-background-position-y: top;
@@ -710,7 +710,7 @@ footer {
 }
 @media (min-width: 535px) and (max-device-width: 535px){
   .banner {
-    background-image: url("/images/tt_banner.jpg");
+    background-image: url("https://d92dg5nnjcx7c.cloudfront.net/images/tt_banner.jpg");
     background-repeat:no-repeat;
     -ms-background-position-x: center;
     -ms-background-position-y: center;

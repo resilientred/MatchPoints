@@ -14,6 +14,15 @@ router.patch("/password", (req, res) => {
   //which will send a email to the email addreess
   //which then reset
 })
+.post("/accounts/resend", (req, res) => {
+  ClubModel.findOne({ _id: req.clubId }).then((club) => {
+    return Mailer.sendMail(club)
+    .then(() => res.status(200))
+    .catch(() => res.status(500).send("Something went wrong. Please try again later."));
+  }).catch(() => {
+    return res.status(422).send("Something went wrong. Please try again later.");
+  });
+});
 .get("/sessions", (req, res) => {
   const clubId = req.clubId;
   client.get(`sessions:${clubId}`, (err, reply) => {

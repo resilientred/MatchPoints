@@ -4,9 +4,8 @@ import { connect } from "react-redux";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import { logIn } from "redux/modules/auth";
-import { setPage } from "redux/modules/splash";
 
-@connect(() => ({}), { logIn, setPage })
+@connect(() => ({}), { logIn })
 export default class LogInForm extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +29,7 @@ export default class LogInForm extends Component {
       e.preventDefault();
       if (e.target.tagName !== "BUTTON") {
         this.props.logIn(this.state).then(() => {
+          this.setState({ username: "", password: "", error: "" });
           browserHistory.push("/club");
         }).catch((error) => {
           this.setState({ error });
@@ -37,6 +37,7 @@ export default class LogInForm extends Component {
       }
     } else {
       this.props.logIn(this.state).then(() => {
+          this.setState({ username: "", password: "", error: "" });
         browserHistory.push("/club");
       }).catch((error) => {
         this.setState({ error });
@@ -99,13 +100,13 @@ export default class LogInForm extends Component {
             Sign Up
           </a>
         </div>
+        <div className="forgot-password">
+          {"Forgot your password?"}&nbsp;&nbsp;
+          <a onClick={() => this.props.setPage(3)}>
+            Reset Password
+          </a>
+        </div>
       </form>
     </div>);
   }
 }
-// (        <div className="forgot-password">
-//           {"Forgot your password?"}&nbsp;&nbsp;
-//           <a onClick={() => this.props.setPage(3)}>
-//             Reset Password
-//           </a>
-//         </div>)

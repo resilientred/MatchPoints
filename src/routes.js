@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, IndexRoute } from "react-router";
-import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query } from "containers";
+import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query, Reset } from "containers";
 import { isAuthLoaded, loadAuth } from "redux/modules/auth";
 import ErrorPage from "./errorPage";
 
@@ -52,6 +52,7 @@ export default ({ getState, dispatch }) => {
         </Route>
       </Route>
       <Route path="results" component={Query} />
+      <Route path="reset" component={Splash} />
       <Route path="*" component={ErrorPage} />
     </Route>
   );

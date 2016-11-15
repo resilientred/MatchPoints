@@ -13,9 +13,7 @@ const Schema = mongoose.Schema;
 const clubSchema = new Schema({
   username: {
     type: String,
-    required: [true, "username required"],
-    index: { unique: [true, "Username has been taken."] },
-    min: [8, "has to be 8 characters long"]
+    index: { unique: [true, "Username has been taken."] }
   },
   passwordDigest: { type: String, required: true },
   sessionToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
@@ -25,7 +23,9 @@ const clubSchema = new Schema({
     city: { type: String, required: true },
     state: { type: String, required: true }
   },
+  token: { type:String },
   confirmed: { type: Boolean, default: false },
+  confirmToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
   id: { type: String, default: shortid.generate, index: true },
   players: [playerSchema]
 });
@@ -37,6 +37,17 @@ clubSchema.statics.resetSessionToken = function(club) {
     { sessionToken: token }
   );
 };
+
+clubSchema.statics.confirmUser = function(token) {
+  return this.findOne({ confirmToken: token }).then((user) => {
+    if (user.confirmed) {
+      return Promise.reject("This account has been validated");
+    } else {
+      user.confirmed = true;
+      return user.save();
+    }
+};
+
 clubSchema.statics.findPlayers = function(clubId) {
   return this.findOne({ _id: clubId }, { players: true, _id: false });
 };
@@ -107,7 +118,7 @@ clubSchema.statics.findByUsernameAndPassword = function(username) {
 clubSchema.statics.findBySessionToken = function(sessionToken) {
   return this.findOne(
     { sessionToken: sessionToken },
-    { passwordDigest: false, sessionToken: false, players: false }
+    { passwordDigest: false, sessionToken: false, players: false, confirmToken: false }
   );
 };
 
@@ -116,12 +127,22 @@ clubSchema.statics.generatePasswordDigest = function(password) {
 };
 
 clubSchema.statics.findClub = function(id) {
-  return this.find({ _id: id }, { passwordDigest: false, sessionToken: false });
+  return this.find({ _id: id }, { passwordDigest: false, sessionToken: false, confirmToken: false });
 };
 clubSchema.statics.findAll = function() {
   return this.find({},
-    { passwordDigest: false, sessionToken: false, username: false, players: false }
+    { passwordDigest: false, sessionToken: false, confirmToken: false, username: false, players: false }
   );
+};
+
+clubSchema.statics.resetPasswordWithToken = function(token, newPassword) {
+  return this.generatePasswordDigest(newPassword)
+    .then((digest) => {
+      return this.findOneAndUpdate(
+        { token: token },
+        { $set: { digest } }
+      );
+    })
 };
 
 const Club = mongoose.model("Club", clubSchema);

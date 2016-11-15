@@ -2,6 +2,7 @@ import express from "express";
 import ClubModel from "../models/club";
 import RoundRobinModel from "../models/roundrobin";
 import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appModules";
+import Mailer from "../helpers/mailer";
 
 const router = express.Router();
 
@@ -57,11 +58,34 @@ router.get("", (req, res) => {
     });
 })
 .post("/new", jsonParser, (req, res) => {
+  const isUserNotValid = (user) => {
+    const emailRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[._!@#*&$-])[a-zA-Z0-9_!@#*&$.-]{8,}$";
+    if (user.username.length < 8) {
+      return "Username must be at least 8 characters long";
+    }
+    if (user.password.length < 8) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!emailRegex.test(user.email)) {
+      return "Email is not a valid format";
+    }
+
+    if (this.state.clubName.length === 0) {
+      return "Club name cannot be empty";
+    }
+    if (this.state.city.length === 0) {
+      return "City cannot be empty";
+    }
+    if (this.state.stateName.length === 0) {
+      return "State cannot be empty";
+    }
+
+    return null;
+  }
   const data = req.body.user;
-  if (data.password <= 8) {
-    res.status(422).send("Password must be 8 characters long\n" +
-      "Must consist of at least:\n\t1) One special character (*!@$.^)\n\t" +
-      "2) One Capital Letter\n\t3) One Lowercase Letter\n\t4) One Number");
+  const isNotValid = isUserNotValid(data);
+  if (isNotValid) {
+    res.status(422).send(isNotValid);
   }
   const newClub = new ClubModel({
     username: data.username,
@@ -69,6 +93,7 @@ router.get("", (req, res) => {
       city: data.city,
       state: data.stateName
     },
+    email: data.email,
     clubName: data.clubName
   });
 
@@ -77,7 +102,8 @@ router.get("", (req, res) => {
       newClub.passwordDigest = digest;
       return newClub.save();
     }).then((club) => {
-      clubMethods.logIn(res, club);
+      new Mailer(club).sendConfirmationEmail();
+      return clubMethods.logIn(res, club);
     }).catch((err) => {
       res.status(422).send(err);
       res.end();

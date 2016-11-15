@@ -52,3 +52,10 @@ export const clearError = () => {
     type: CLEAR_ERROR
   };
 };
+
+export const setError = (msg) => {
+  return {
+    type: ERROR,
+    payload: msg
+  };
+}
