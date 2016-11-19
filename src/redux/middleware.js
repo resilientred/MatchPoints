@@ -30,20 +30,20 @@ export default ({ dispatch, getState }) => next => action => {
       dispatch(stopLoad());
     }
     if (error.response) {
-      next({ ...rest, error: error.response.data, type: FAILURE });
+      next({ ...rest, payload: error.response.data, type: FAILURE });
     } else {
       console.log(error);
-      next({ ...rest, error: "something went wrong", type: FAILURE });
+      next({ ...rest, payload: "something went wrong", type: FAILURE });
     }
   }).catch((error) => {
     if (REQUEST === LOAD) {
       dispatch(stopLoad());
     }
     if (error.response) {
-      next({ ...rest, error: error.response.data, type: FAILURE });
+      next({ ...rest, payload: error.response.data, type: FAILURE });
     } else {
       console.log(error);
-      next({ ...rest, error: "something went wrong", type: FAILURE });
+      next({ ...rest, payload: "something went wrong", type: FAILURE });
     }
   });
 

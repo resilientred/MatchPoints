@@ -82,22 +82,6 @@ export const logIn = (user) => {
   };
 };
 
-export const changePassword = (data) => {
-  const promise = axios({
-    method: "POST",
-    url: "/api/my/account/password",
-    data,
-    headers: {
-      "X-CSRF-TOKEN": getCSRF()
-    }
-  });
-
-  return {
-    types: ["NOT NEEDED", "NOT NEEDED", "NOT NEEDED"],
-    promise
-  };
-};
-
 export const signUp = (user) => {
   const promise = axios({
     method: "POST",

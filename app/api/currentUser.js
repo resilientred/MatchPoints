@@ -5,23 +5,11 @@ import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appM
 
 const router = express.Router();
 
-router.patch("/password", (req, res) => {
-  //has to have old password...
-  //check if they're the same
-  //then say ok
-
-  //the other route is forgot,
-  //which will send a email to the email addreess
-  //which then reset
-})
-.post("/accounts/resend", (req, res) => {
-  ClubModel.findOne({ _id: req.clubId }).then((club) => {
-    return Mailer.sendMail(club)
-    .then(() => res.status(200))
-    .catch(() => res.status(500).send("Something went wrong. Please try again later."));
-  }).catch(() => {
-    return res.status(422).send("Something went wrong. Please try again later.");
-  });
+router.post("/accounts/resend", (req, res) => {
+  ClubModel.findOne({ _id: req.clubId })
+  .then(club => new Mailer(club).sendMail())
+  .then(() => res.status(200))
+  .catch(() => res.status(422).send("Something went wrong. Please try again later."));
 })
 .get("/sessions", (req, res) => {
   const clubId = req.clubId;
@@ -92,6 +80,24 @@ router.patch("/password", (req, res) => {
       console.log(err);
       res.status(422).send("Something went wrong...");
     });
+}).patch("", jsonParser, (req, res) => {
+  const data = req.body.data;
+  const type = req.query;
+  const clubId = req.clubId;
+
+  let promise;
+  if (type === "password") {
+    promise = ClubModel.changePassword(clubId, data);
+  } else if (type === "info") {
+    promise = ClubModel.changeInfo(clubId, data);
+  } else {
+    res.status(404).send("No changes were made.");
+    return;
+  }
+
+  promise.then(() => res.status(200))
+    .catch((err) => res.status(422).send(err));
+
 });
 
 export default router;

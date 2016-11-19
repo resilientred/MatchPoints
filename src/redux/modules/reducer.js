@@ -10,6 +10,7 @@ import selectedSession from "./selectedSession";
 import sessions from "./sessions";
 import schemata from "./schemata";
 import query from "./query";
+import reset from "./reset";
 import dialogs from "./dialogs";
 import modals from "./modals";
 
@@ -19,6 +20,7 @@ export default combineReducers({
   main,
   pdf,
   splash,
+  reset,
   navbar,
   selectedSession,
   newSession,

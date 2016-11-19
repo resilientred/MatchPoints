@@ -20,7 +20,6 @@ export default class SignUpForm extends Component {
     };
   }
   isNotValid() {
-    const emailRegex = new RegExp(".+@.+..+", "i");
     if (this.state.clubName.length === 0) {
       return "Club name cannot be empty";
     }

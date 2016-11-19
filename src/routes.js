@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, IndexRoute } from "react-router";
-import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query, Reset } from "containers";
+import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query, Reset, Confirmation } from "containers";
 import { isAuthLoaded, loadAuth } from "redux/modules/auth";
 import ErrorPage from "./errorPage";
 
@@ -27,6 +27,9 @@ export default ({ getState, dispatch }) => {
       if (!club._id) {
         replace("/");
       }
+      if (!club.confirmed) {
+        replace("/confirm")
+      }
       callback();
     };
 
@@ -46,6 +49,7 @@ export default ({ getState, dispatch }) => {
       <Route onEnter={requireLoggedIn}>
         <Route path="club" component={Club}>
           <IndexRoute component={NewRoundrobin} />
+          <Route path="confirm" component={Confirmation} />
           <Route path="sessions" component={Sessions} />
           <Route path="sessions/new" component={NewRoundrobin} />
           <Route path="sessions/:id" component={Session} />
@@ -53,6 +57,7 @@ export default ({ getState, dispatch }) => {
       </Route>
       <Route path="results" component={Query} />
       <Route path="reset" component={Splash} />
+      <Route path="activate/*" component={Splash} />
       <Route path="*" component={ErrorPage} />
     </Route>
   );

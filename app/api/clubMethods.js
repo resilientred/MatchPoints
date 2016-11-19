@@ -13,6 +13,7 @@ class ClubMethods {
 
     return ClubModel.findBySessionToken.call(ClubModel, req.cookies.matchpoint_session);
   }
+
   setCurrentClub(club, token) {
     this.currentClubs[token] = club;
     return club;

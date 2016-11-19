@@ -25,9 +25,9 @@ export default class Confirmation extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="confirmation-sent">
         <p>We've sent you a confirmation email with a link to actviate your account.</p>
-        <p>Did not receive the email?<div onClick={this.resend}>Resend</div></p>
+        <p>Did not receive the email?<a onClick={this.resend}>Resend</a></p>
       </div>
     );
   }

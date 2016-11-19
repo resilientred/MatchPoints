@@ -44,7 +44,7 @@ export default class ClubQuery extends Component {
           {
             selectedClub && roundrobins[selectedClub._id] ?
               roundrobins[selectedClub._id].map((roundrobin, i) => (
-                <MenuItem key={i} value={roundrobin._id} primaryText={moment(roundrobin.date).format("MMMM DD, YYYY")} />
+                <MenuItem key={i} value={roundrobin._id} primaryText={moment(roundrobin.date).utc().format("MMMM DD, YYYY")} />
              )) :
               <MenuItem key="empty" value={null} primaryText="No dates available" />
           }

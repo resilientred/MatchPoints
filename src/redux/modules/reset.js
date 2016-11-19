@@ -1,6 +1,34 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
 
+const LOAD_CHANGE = "mp/reset/LOAD_CHANGE";
+const CHANGE_SUCCESS = "mp/reset/CHANGE_SUCCESS";
+const CHANGE_ERROR = "mp/reset/CHANGE_ERROR";
+const SET_TOKEN = "mp/reset/SET_TOKEN";
+const SET_ERROR = "mp/reset/SET_ERROR";
+const initialState = {
+  token: null
+};
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case CHANGE_SUCCESS:
+      return {};
+    case SET_TOKEN:
+      return {
+        token: action.payload
+      };
+    case CHANGE_ERROR:
+    case SET_ERROR:
+      return {
+        ...state,
+        error: action.payload
+      };
+    default:
+      return state;
+  }
+};
+
 export const resetWithUsername = (username) => {
   const promise = axios({
     method: "POST",
@@ -29,17 +57,48 @@ export const resetWithEmail = (email) => {
   };
 };
 
-export const resetPassword = (token) => {
+export const resetPassword = (token, newPassword) => {
   const promise = axios({
     method: "POST",
     url: "/accounts/reset",
-    data: { token },
+    data: { token, newPassword },
     headers: {
       "X-CSRF-TOKEN": getCSRF()
     }
   });
   return {
+    types: [LOAD_CHANGE, CHANGE_SUCCESS, CHANGE_ERROR],
+    promise
+  };
+};
+
+export const changePassword = (data) => {
+  const promise = axios({
+    method: "POST",
+    url: "/api/my/account/password",
+    data,
+    headers: {
+      "X-CSRF-TOKEN": getCSRF()
+    }
+  });
+
+  return {
     types: ["NOT NEEDED", "NOT NEEDED", "NOT NEEDED"],
     promise
+  };
+};
+
+
+export const setToken = (token) => {
+  return {
+    type: SET_TOKEN,
+    payload: token
+  };
+};
+
+export const setError = (err) => {
+  return {
+    type: SET_ERROR,
+    payload: err
   };
 };

@@ -9,19 +9,13 @@ const router = express.Router();
 
 router.get("/activate", (req, res) => {
   const token = req.query.token;
-  console.log("here");
-  Club.confirmUser(token).then((message) => {
-    console.log("confirmed")
-    res.render("activate", { message: "Your account has been activated." })
-  }).catch((message) => {
-    console.log("error");
-    res.render("activate", { message });
-  });
+  Club.confirmUser(token)
+    .then(message => res.redirect("/activate/success"))
+    .catch(message => res.redirect("/activate/error"))
 })
 .post("/reset/request", csrfProtection, (req, res) => {
   const email = req.query.email;
   const username = req.query.username;
-
   let promise;
   if (email) {
     promise = Club.findOneAndUpdate(
@@ -31,7 +25,7 @@ router.get("/activate", (req, res) => {
     );
   } else if (username) {
     promise = Club.findOneAndUpdate(
-      { username: usernames },
+      { username: username },
       { $set: { token: URLSafeBase64.encode(crypto.randomBytes(32)) } },
       { new: true }
     );
@@ -40,18 +34,21 @@ router.get("/activate", (req, res) => {
   }
 
   promise.then(club => new Mailer(club).sendResetEmail())
-    .catch(err => res.status(404).send("No users are associated with this credential.."))
-    .then(() => res.status(202).send("Confirmation Email sent"));
+    .then(() => res.status(202).send("Confirmation Email sent"))
+    .catch((err) => {
+      res.status(404).send("No users are associated with this credential..")
+    });
 })
 .post("/reset", jsonParser, csrfProtection, (req, res) => {
   const { token, newPassword } = req.body;
   Club.resetPasswordWithToken(token, newPassword)
     .then((club) => {
+      if (!club) return Promise.reject();
+
       clubMethods.logOut(club.sessionToken);
       return res.status(200).send("success");
-    })
-    .catch(() => {
-      res.status(422).send("Token may have expired...");
+    }).catch((err) => {
+      res.status(422).send("Token have expired.");
     });
 });
 

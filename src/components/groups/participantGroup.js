@@ -1,11 +1,13 @@
 import React from "react";
 import { Table, TableBody, TableRow,
   TableHeader, TableHeaderColumn, TableRowColumn } from "material-ui/Table";
+import UpArrow from "react-icons/lib/md/keyboard-arrow-up";
+import DownArrow from "react-icons/lib/md/keyboard-arrow-down";
 import IconButton from "material-ui/IconButton/IconButton";
 import PdfIcon from "react-icons/lib/md/picture-as-pdf";
 
-const ParticipantGroup = props => (
-  (<div style={{ position: "relative" }}>
+const ParticipantGroup = (props) => (
+  return (<div style={{ position: "relative" }}>
     <IconButton
       iconClassName="material-icons"
       style={{ position: "absolute", right: "0", top: "5px", zIndex: 10 }}
@@ -47,7 +49,39 @@ const ParticipantGroup = props => (
         }
       </TableBody>
     </Table>
-  </div>)
-);
+    {
+      !!props.moveUp &&
+        (<IconButton
+          iconClassName="material-icons"
+          tooltip="Move one player up"
+          onClick={() => props.moveUp(i)}
+          style={{
+            position: "absolute",
+            left: "30px",
+            top: "57px",
+            zIndex: 10
+          }}
+        >
+          <UpArrow />
+        </IconButton>)
+    }
+    {
+      !!props.moveDown &&
+        (<IconButton
+          iconClassName="material-icons"
+          tooltip="Move one player down"
+          onClick={() => props.moveDown(i)}
+          style={{
+            position: "absolute",
+            left: "30px",
+            bottom: "1px",
+            zIndex: 10
+          }}
+        >
+          <DownArrow />
+        </IconButton>)
+    }
+  </div>);
+});
 
 export default ParticipantGroup;

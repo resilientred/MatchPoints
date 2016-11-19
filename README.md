@@ -10,6 +10,10 @@ And allow users to:
 
 MatchPoints utilizes Redis to reduce the number of times data is fetched the database, thus reduce latency in many requests.
 
+## Bug Fix
+ - [x] Set-date becomes a day behind (moment always convert to local time)
+ - [ ] Add way to flexibly change schema
+
 ## Expected Features (MVP)
  - [x] Arrange groups for players based on ratings
  - [x] Allow organizers to enter results

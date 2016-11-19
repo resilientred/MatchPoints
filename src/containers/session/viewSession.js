@@ -31,7 +31,7 @@ export default class ViewSession extends Component {
     let countedPlayers = 0;
     return (<div className="session-container">
       <AppBar
-        title={`Date: ${moment(date).format("MMMM DD, YYYY")}`}
+        title={`Date: ${moment(date).utc().format("MMMM DD, YYYY")}`}
         iconElementLeft={<IconButton onClick={this.handleBack}><NavigationClose /></IconButton>}
       />
       <div className="session-container-body">

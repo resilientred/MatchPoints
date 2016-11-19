@@ -13,7 +13,6 @@
     "prestart": "npm run build",
     "pre-test-node": "babel-node ./app/test/dbSetup.js",
     "post-test-node": "node ./app/test/dbCleanup.js",
-    "start": "better-npm-run start-prod",
     "start-dev": "better-npm-run start-dev",
     "watch-client": "rm ./public/js/* && webpack -w",
     "test-node": "mocha -R spec --compilers js:babel-core/register app/test/api",

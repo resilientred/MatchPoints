@@ -1,81 +1,100 @@
 import React, { Component } from "react";
-import { asyncConnect } from "redux-async-connect";
 import { connect } from "react-redux";
-import { resetPassword } from "redux/modules/reset";
+import { browserHistory } from "react-router";
+import { resetPassword, setError } from "redux/modules/reset";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 
-//check whether params.location exist
-
-@asyncConnect([{
-  token: ({ location }) => {
-    debugger;
-    return Promise.resolve(location.query.token);
-  }
-}])
-@connect(() => ({}), { resetPassword })
+@connect(({ reset }) => ({ reset }), { resetPassword, setError })
 export default class ForgotReset extends Component {
   constructor(props) {
     super(props);
     this.state = {
       password: "",
       passwordCheck: "",
-      error: ""
+      error: {
+        first: "",
+        second: ""
+      }
     };
   }
-
-  componentDidMount() {
-    debugger;
+  handleChange = (field, val) => {
+    this.setState({
+      [field]: val,
+      error: {}
+    });
   }
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.state.password !== this.state.passwordCheck) {
-      this.setState({ error: "Passwords don't match" });
-      return;
-    }
-
-    this.props.resetPassword(this.props.token).then(() => {
-      this.setState({
-        token: "",
-        password: "",
-        passwordCheck: "",
-        error: ""
+    if (this.state.password.length <= 8) {
+      return this.setState({
+        error: {
+          first: "Password has to be at least 8 characters long"
+        }
       });
-    }).catch((error) => {
-      this.setState({ error });
+    }
+    if (this.state.password !== this.state.passwordCheck) {
+      return this.setState({
+        error: {
+          second: "Passwords don't match"
+        }
+      });
+    }
+    this.props.resetPassword(this.props.reset.token, this.state.password).then(() => {
+      browserHistory.push("/");
+      this.props.setPage(0);
+      this.setState({
+        password: "",
+        passwordCheck: ""
+      });
     });
   }
   render() {
-    if (!this.props.token) {
-      return (<div className="forms">
-        <h2>The token has expired</h2>
+    if (!this.props.reset.token) {
+      return (<div className="forms activated">
+        <form onSubmit={(e) => e.preventDefault()}>
+          <p>The token has expired.</p>
+          <RaisedButton
+            label="Back to Main Page"
+            primary={true}
+            labelColor="white"
+            onClick={() => {
+              browserHistory.push("/");
+              this.props.setPage(0);
+            }}
+          />
+        </form>
       </div>);
     }
 
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Reset Your Password</h3>
-        <div className="form-error">{this.state.error}</div>
+        <div className="form-error">{this.props.reset.error}</div>
         <div>
           <TextField
-            type="text"
+            type="password"
             hintText="New Password"
             floatingLabelText="New Password"
-            value={this.state.field}
-            onChange={e => this.setState({ field: e.target.value })}
+            errorText={this.state.error.first}
+            value={this.state.password}
+            onChange={e => this.handleChange("password", e.target.value)}
+            fullWidth={true}
           />
           <TextField
-            type="text"
+            type="password"
             hintText="Type the password again"
             floatingLabelText="Type the password again"
-            value={this.state.field}
-            onChange={e => this.setState({ field: e.target.value })}
+            errorText={this.state.error.second}
+            value={this.state.passwordCheck}
+            fullWidth={true}
+            onChange={e => this.handleChange("passwordCheck", e.target.value)}
           />
           <RaisedButton
             label="Reset Password"
             backgroundColor="#1565C0"
             labelColor="white"
-            style={{ marginRight: "10px" }}
+            style={{ marginRight: "10px", marginTop: "10px" }}
             onClick={this.handleSubmit}
           />
         </div>

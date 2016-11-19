@@ -9,7 +9,7 @@ import SelectField from "material-ui/SelectField";
 import MenuItem from "material-ui/MenuItem";
 import Dialog from "material-ui/Dialog";
 import { NumOfPlayers, ParticipantGroup } from "components";
-import { changeSchema } from "redux/modules/schemata";
+import { changeSchema, movePlayerUp, movePlayerDown } from "redux/modules/schemata";
 import { stopLoad } from "redux/modules/main";
 import { generatePDF, allowGenerate, clearPDF } from "redux/modules/pdf";
 import { setMinAndMax, temporarySave, saveSession } from "redux/modules/newSession";
@@ -25,7 +25,9 @@ import moment from "moment";
     clearPDF,
     stopLoad,
     saveSession,
-    temporarySave
+    temporarySave,
+    movePlayerUp,
+    movePlayerDown
   }
 )
 export default class Grouping extends Component {
@@ -163,6 +165,8 @@ export default class Grouping extends Component {
             players={this.props.sortedPlayers.slice(
               totalPlayerAdded - numPlayers, totalPlayerAdded
               )}
+            moveUp={i === 0 ? null : this.props.moveUp}
+            moveDown={i === arr.length - 1 ? null : this.props.moveDown}
           />);
         })
       }

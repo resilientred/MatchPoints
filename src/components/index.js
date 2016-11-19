@@ -9,6 +9,8 @@ export PlayerList from "./participants/playerList";
 export SelectedPlayerList from "./participants/selectedPlayerList";
 export SignUpForm from "./signup/signup";
 export PlayerForm from "./playerForm/playerForm";
+export Activated from "./activated/activated";
+export Confirmation from "./confirmation/confirmation";
 export RecordTableEnter from "./recordTableEnter/recordTableEnter";
 export RecordTableView from "./recordTableView/recordTableView";
 export ClubQueryDetail from "./clubQueryDetail/clubQueryDetail";

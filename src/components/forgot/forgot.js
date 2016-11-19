@@ -11,7 +11,7 @@ export default class Forgot extends Component {
     this.state = {
       field: "",
       error: "",
-      success: ""
+      success: null
     };
   }
 
@@ -36,25 +36,40 @@ export default class Forgot extends Component {
   render() {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
-        <h3>Forgot Password</h3>
+        {
+          !this.state.success && <h3>Forgot Password</h3>
+        }
+        <h4>{this.state.success}</h4>
         <div className="form-error">{this.state.error}</div>
-        <div>
-          <TextField
-            type="text"
-            hintText="Enter your username or email"
-            floatingLabelText="Enter your username or email"
-            value={this.state.field}
-            fullWidth={true}
-            onChange={e => this.setState({ field: e.target.value })}
-          />
-          <RaisedButton
-            label="Reset Password"
-            backgroundColor="#1565C0"
-            labelColor="white"
-            style={{ marginTop: "10px" }}
-            onClick={this.handleSubmit}
-          />
-        </div>
+        {
+          this.state.success &&
+            (<RaisedButton
+              label="Back to Main Page"
+              backgroundColor="#EF6C00"
+              labelColor="white"
+              onClick={() => this.props.setPage(0)}
+            />)
+        }
+        {
+          !this.state.success &&
+            (<div>
+              <TextField
+                type="text"
+                hintText="Enter your username or email"
+                floatingLabelText="Enter your username or email"
+                value={this.state.field}
+                fullWidth={true}
+                onChange={e => this.setState({ field: e.target.value })}
+              />
+              <RaisedButton
+                label="Reset Password"
+                backgroundColor="#1565C0"
+                labelColor="white"
+                style={{ marginTop: "10px" }}
+                onClick={this.handleSubmit}
+              />
+            </div>)
+        }
       </form>
     </div>);
   }

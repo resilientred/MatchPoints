@@ -6,7 +6,7 @@ import Mailer from "../helpers/mailer";
 
 const router = express.Router();
 
-router.get("", (req, res) => {
+router.get("/", (req, res) => {
   clubMethods.currentClub(req)
     .then((currentClub) => {
       return res.status(200).send(currentClub);
@@ -58,46 +58,10 @@ router.get("", (req, res) => {
     });
 })
 .post("/new", jsonParser, (req, res) => {
-  const isUserNotValid = (user) => {
-    const emailRegex = new RegExp(".+@.+..+", "i");
-    if (user.username.length < 8) {
-      return "Username must be at least 8 characters long";
-    }
-    if (user.password.length < 8) {
-      return "Password must be at least 8 characters long";
-    }
-    if (!emailRegex.test(user.email)) {
-      return "Email is not a valid format";
-    }
-
-    if (user.clubName.length === 0) {
-      return "Club name cannot be empty";
-    }
-    if (user.city.length === 0) {
-      return "City cannot be empty";
-    }
-    if (user.stateName.length === 0) {
-      return "State cannot be empty";
-    }
-
-    return null;
-  }
   const data = req.body.user;
-  const isNotValid = isUserNotValid(data);
-  if (isNotValid) {
-    res.status(422).send(isNotValid);
-  }
-  const newClub = new ClubModel({
-    username: data.username,
-    location: {
-      city: data.city,
-      state: data.stateName
-    },
-    email: data.email,
-    clubName: data.clubName
-  });
 
-  ClubModel.generatePasswordDigest(data.password)
+  ClubModel.saveNewClub(data)
+    .then(() => ClubModel.generatePasswordDigest(data.password))
     .then((digest) => {
       newClub.passwordDigest = digest;
       return newClub.save();
@@ -105,10 +69,7 @@ router.get("", (req, res) => {
       new Mailer(club).sendConfirmationEmail();
       return clubMethods.logIn(res, club);
     }).catch((err) => {
-      console.log(err);
-      console.log(err.code);
       res.status(422).send(err);
-      res.end();
     });
 });
 

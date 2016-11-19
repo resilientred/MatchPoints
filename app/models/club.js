@@ -5,10 +5,10 @@ import bcrypt from "bcrypt-as-promised";
 import shortid from "shortid";
 import { playerSchema, Player } from "./player";
 import { History } from "./history";
+import ClubValidation from "../validations/clubValidation";
 
 mongoose.Promise = require("bluebird");
 
-const saltRounds = 10;
 const Schema = mongoose.Schema;
 const clubSchema = new Schema({
   username: {
@@ -23,12 +23,70 @@ const clubSchema = new Schema({
     city: { type: String, required: true },
     state: { type: String, required: true }
   },
-  token: { type:String },
+  token: { type: String },
   confirmed: { type: Boolean, default: false },
   confirmToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
   id: { type: String, default: shortid.generate, index: true },
   players: [playerSchema]
 });
+
+clubSchema.statics.changeInfo = function(clubId, info) {
+  const { email, city, state } = info;
+
+  const error = ClubValidation.validateInfo(info);
+  if (error) {
+    return Promise.reject(error);
+  }
+
+  this.generatePasswordDigest(oldPassword)
+    .then((digest) => {
+      return this.findOneAndUpdate(
+        { passwordDigest: digest, _id: clubId },
+        { email, location: { city, state } }
+      );
+    }).catch((err) => {
+      console.log(err);
+      return Promise.reject("Old password does not match.");
+    });
+};
+
+clubSchema.statics.changePassword = function(clubId, info) {
+  const { oldPassword, newPassword } = info;
+  if (newPassword.length < 8) {
+    return Promise.reject("Password must have at least 8 characters.");
+  }
+
+  if (oldPassword === newPassword) {
+    return Promise.resolve();
+  }
+  this.generatePasswordDigest(oldPassword)
+    .then((digest) => {
+      return this.findOneAndUpdate(
+        { passwordDigest: digest, _id: clubId },
+        { password: newPassword }
+      );
+    }).catch((err) => {
+      console.log(err);
+      return Promise.reject("Old password does not match.")
+    });
+};
+
+clubSchema.statics.newUser = function(user) {
+  const err = ClubValidation.validate(user);
+  if (err) {
+    return Promise.reject(err);
+  }
+
+  return this.create({
+    username: data.username,
+    location: {
+      city: data.city,
+      state: data.stateName
+    },
+    email: data.email,
+    clubName: data.clubName
+  });
+}
 
 clubSchema.statics.resetSessionToken = function(club) {
   const token = URLSafeBase64.encode(crypto.randomBytes(32));
@@ -40,12 +98,11 @@ clubSchema.statics.resetSessionToken = function(club) {
 
 clubSchema.statics.confirmUser = function(token) {
   return this.findOne({ confirmToken: token }).then((user) => {
-    if (user.confirmed) {
-      return Promise.reject("This account has been validated");
-    } else {
-      user.confirmed = true;
-      return user.save();
-    }
+    user.confirmed = true;
+    user.confirmationToken = undefined;
+    return user.save();
+  }).catch((err) => {
+    return Promise.reject("The token may have expired.");
   });
 };
 
@@ -124,7 +181,7 @@ clubSchema.statics.findBySessionToken = function(sessionToken) {
 };
 
 clubSchema.statics.generatePasswordDigest = function(password) {
-  return bcrypt.hash(password, saltRounds);
+  return bcrypt.hash(password, 10);
 };
 
 clubSchema.statics.findClub = function(id) {
@@ -141,9 +198,9 @@ clubSchema.statics.resetPasswordWithToken = function(token, newPassword) {
     .then((digest) => {
       return this.findOneAndUpdate(
         { token: token },
-        { $set: { digest } }
+        { $set: { passwordDigest: digest, token: undefined } }
       );
-    })
+    });
 };
 
 const Club = mongoose.model("Club", clubSchema);

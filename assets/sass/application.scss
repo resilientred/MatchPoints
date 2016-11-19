@@ -469,6 +469,7 @@ input {
   margin-top: 10px;
   color: red;
 }
+
 .nav-bar li {
   cursor: pointer;
   color: white;
@@ -532,7 +533,10 @@ form {
     border-radius: 3px;
     cursor: pointer;
 }
-
+.activated p {
+  padding-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
+}
 .score-div {
   display: flex;
   flex-direction: row;

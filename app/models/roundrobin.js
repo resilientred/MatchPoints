@@ -18,7 +18,7 @@ const roundRobinSchema = new Schema({
 });
 
 roundRobinSchema.statics.findRoundRobinsByClub = function(clubId) {
-  return this.find({ _clubId: clubId });
+  return this.find({ _clubId: clubId }, null, { sort: { date: -1 } });
 };
 
 roundRobinSchema.statics.findRoundRobin = function(clubId, id) {
