@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
-import { LOAD, ERROR } from "./main";
+import { LOAD, MESSAGE } from "./main";
 
 const GENERATE_PDF_SUCCESS = "mp/pdf/GENERATE_PDF_SUCCESS";
 const ALLOW_GENERATE = "mp/pdf/ALLOW_GENERATE";
@@ -46,7 +46,7 @@ export const generatePDF = (addedPlayers, schemas, club, date) => {
   });
 
   return {
-    types: [LOAD, GENERATE_PDF_SUCCESS, ERROR],
+    types: [LOAD, GENERATE_PDF_SUCCESS, MESSAGE],
     promise
   };
 };

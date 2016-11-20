@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
-import { LOAD, ERROR } from "./main";
+import { LOAD, MESSAGE } from "./main";
 
 export const DELETE_PLAYER_SUCCESS = "mp/players/DELETE_PLAYER_SUCCESS";
 export const UPDATE_PLAYER_SUCCESS = "mp/players/UPDATE_PLAYER_SUCCESS";
@@ -9,7 +9,7 @@ export const FETCH_PLAYERS_SUCCESS = "mp/players/FETCH_PLAYERS_SUCCESS";
 
 export const fetchCurrentPlayers = () => {
   return {
-    types: [LOAD, FETCH_PLAYERS_SUCCESS, ERROR],
+    types: [LOAD, FETCH_PLAYERS_SUCCESS, MESSAGE],
     promise: axios.get("/api/my/players")
   };
 };
@@ -28,7 +28,7 @@ export const addPlayer = ({ name, rating }) => {
     }
   });
   return {
-    types: [LOAD, ADD_PLAYER_SUCCESS, ERROR],
+    types: [LOAD, ADD_PLAYER_SUCCESS, MESSAGE],
     promise
   };
 };
@@ -48,7 +48,7 @@ export const updatePlayer = ({ name, rating, id }) => {
   });
 
   return {
-    types: [LOAD, UPDATE_PLAYER_SUCCESS, ERROR],
+    types: [LOAD, UPDATE_PLAYER_SUCCESS, MESSAGE],
     promise
   };
 };
@@ -63,7 +63,7 @@ export const deletePlayer = (id) => {
   });
 
   return {
-    types: [LOAD, DELETE_PLAYER_SUCCESS, ERROR],
+    types: [LOAD, DELETE_PLAYER_SUCCESS, MESSAGE],
     promise
   };
 };

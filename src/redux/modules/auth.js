@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
+import { LOAD } from "redux/modules/main";
 
 const LOAD_AUTH = "mp/auth/LOAD_AUTH";
 export const LOGOUT = "mp/auth/LOGOUT";
@@ -8,6 +9,8 @@ const LOAD_AUTH_ERROR = "mp/auth/LOAD_AUTH_ERROR";
 export const LOGOUT_LOAD = "mp/auth/LOGOUT_LOAD";
 const LOGOUT_SUCCESS = "mp/auth/LOGOUT_SUCCESS";
 const LOGOUT_FAIL = "mp/auth/LOGOUT_FAIL";
+const ACTIVATE_CLUB = "mp/auth/ACTIVATE_CLUB";
+const CLEAR_ERROR = "mp/auth/CLEAR_ERROR";
 
 const initialState = {
   club: {},
@@ -18,6 +21,23 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case CLEAR_ERROR:
+      return {
+        ...state,
+        error: null
+      };
+    case ACTIVATE_CLUB:
+      if (state.club._id) {
+        return {
+          ...state,
+          club: {
+            ...state.club,
+            activated: true
+          }
+        };
+      }
+
+      return state;
     case LOAD_AUTH:
       return {
         ...state,
@@ -102,5 +122,20 @@ export const logOut = () => {
   return {
     types: [LOGOUT_LOAD, LOGOUT_SUCCESS, LOGOUT_FAIL],
     promise: axios.delete("/session")
+  };
+};
+
+export const activateClub = () => {
+  return {
+    types: [LOAD, ACTIVATE_CLUB, "NOT NEEDED"],
+    promise: new Promise((resolve) => {
+      setTimeout(() => resolve({ data: "" }), 500);
+    })
+  };
+};
+
+export const clearError = () => {
+  return {
+    type: CLEAR_ERROR
   };
 };

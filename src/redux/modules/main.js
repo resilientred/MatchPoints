@@ -2,12 +2,12 @@ import { LOAD_SESSIONS, LOAD_SESSIONS_ERROR, LOAD_SESSIONS_SUCCESS } from "redux
 
 export const LOAD = "mp/main/LOAD";
 export const STOP_LOAD = "mp/main/STOP_LOAD";
-export const ERROR = "mp/main/ERROR";
+export const MESSAGE = "mp/main/MESSAGE";
 const CLEAR_ERROR = "mp/main/CLEAR_ERROR";
 
 const initialState = {
   loading: false,
-  error: null
+  message: null
 };
 
 export default (state = initialState, action) => {
@@ -25,16 +25,16 @@ export default (state = initialState, action) => {
         loading: true
       };
     case LOAD_SESSIONS_ERROR:
-    case ERROR:
+    case MESSAGE:
       return {
         ...state,
-        error: action.payload,
+        message: action.payload,
         loading: false
       };
     case CLEAR_ERROR:
       return {
         ...state,
-        error: null
+        message: null
       };
     default:
       return state;
@@ -47,15 +47,15 @@ export const stopLoad = () => {
   };
 };
 
-export const clearError = () => {
+export const clearMessage = () => {
   return {
     type: CLEAR_ERROR
   };
 };
 
-export const setError = (msg) => {
+export const setMessage = (msg) => {
   return {
-    type: ERROR,
+    type: MESSAGE,
     payload: msg
   };
-}
+};

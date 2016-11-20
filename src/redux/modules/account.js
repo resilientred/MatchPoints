@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
+import { MESSAGE } from "redux/modules/main";
 
 const CHANGE_ERROR = "mp/infoChange/CHANGE_ERROR";
 
@@ -9,6 +10,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_ERROR:
+      return {
+        error: action.payload
+      };
     default:
       return state;
   }
@@ -24,6 +29,10 @@ export const changePassword = (oldPassword, newPassword) => {
     }
   });
 
+  return {
+    types: ["NOT NEEDED", "NOT NEEDED", CHANGE_ERROR],
+    promise
+  };
 };
 
 export const changeInfo = (info) => {
@@ -38,4 +47,23 @@ export const changeInfo = (info) => {
     }
   });
 
+  return {
+    types: ["NOT NEEDED", "NOT NEEDED", CHANGE_ERROR],
+    promise
+  };
+};
+
+
+export const resendEmail = () => {
+  const promise = axios({
+    url: "/api/my/accounts/resend",
+    method: "POST",
+    headers: {
+      "X-CSRF-TOKEN": getCSRF()
+    }
+  });
+  return {
+    types: ["NOT NEEDED", MESSAGE, MESSAGE],
+    promise
+  };
 };

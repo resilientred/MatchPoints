@@ -3,13 +3,13 @@ import { browserHistory } from "react-router";
 import { connect } from "react-redux";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
-import { logIn } from "redux/modules/auth";
+import { logIn, clearError } from "redux/modules/auth";
 import Divider from "material-ui/Divider";
 import { setPage } from "redux/modules/splash";
 
 const style = { position: "relative" };
 
-@connect(() => ({}), { logIn, setPage })
+@connect(({ auth: { error } }) => ({ error }), { logIn, setPage, clearError })
 export default class LogInForm extends Component {
   constructor(props) {
     super(props);
@@ -29,28 +29,24 @@ export default class LogInForm extends Component {
     this.setState(newField);
   }
 
-  handleSubmit = (e) => {
-    if (e) {
-      e.preventDefault();
-      if (e.target.tagName !== "BUTTON") {
+  handleSubmit = (event) => {
+    if (event) {
+      event.preventDefault();
+      if (event.target.tagName !== "BUTTON") {
         this.props.logIn(this.state).then(() => {
           this.setState({ username: "", password: "", error: "" });
           browserHistory.push("/club");
-        }).catch((error) => {
-          this.setState({ error });
         });
       }
     } else {
       this.props.logIn(this.state).then(() => {
         this.setState({ username: "", password: "", error: "" });
         browserHistory.push("/club");
-      }).catch((error) => {
-        this.setState({ error });
       });
     }
   }
-  guestLogIn = (e) => {
-    e.preventDefault();
+  guestLogIn = (event) => {
+    event.preventDefault();
     const user = "guest";
     const password = "password";
     this.setState({ username: "", password: "" });
@@ -66,11 +62,14 @@ export default class LogInForm extends Component {
       }
     }, 200);
   }
+  componentWillUnmount() {
+    if (this.props.error) this.props.clearError();
+  }
   render() {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Log In</h3>
-        <div className="form-error">{this.state.error}</div>
+        <div className="form-error">{this.state.error || this.props.error}</div>
         <div>
           <TextField
             type="text"

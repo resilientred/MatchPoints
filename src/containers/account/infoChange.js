@@ -21,10 +21,9 @@ export default class Info extends Component {
     const { error, changed, ...others } = this.state;
     const clubs = this.props.clubs;
     if (this.validate()) {
-      message = "Info has been changed successfully.";
-      this.props.changeInfo(this.state.email, this.state.oldPassword).
-        then((club) => {
-          this.props.setError(message);
+      this.props.submitChange(this.state.email, this.state.oldPassword)
+        .then((club) => {
+          this.props.setMessage("Info has been changed successfully.");
           this.setState({
             email: club.email,
             city: club.city,
@@ -32,6 +31,8 @@ export default class Info extends Component {
             oldPassword: "",
             error: {}
           });
+        }).catch((err) => {
+          this.props.setMessage(err);
         });
     }
   }
@@ -77,6 +78,15 @@ export default class Info extends Component {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <TextField
+          hintText="Old Password"
+          floatingLabelText="Old Password"
+          value={this.state.oldPassword}
+          onChange={e => this.handleChange("oldPassword", e.target.value)}
+          errorText={this.state.error.password}
+          type="password"
+          fullWidth={true}
+        />
+        <TextField
           floatingLabelText="Email"
           value={this.state.email}
           onChange={e => this.handleChange("email", e.target.value)}
@@ -100,17 +110,8 @@ export default class Info extends Component {
           type="text"
           fullWidth={true}
         />
-        <TextField
-          hintText="Old Password"
-          floatingLabelText="Old Password"
-          value={this.state.oldPassword}
-          onChange={e => this.handleChange("oldPassword", e.target.value)}
-          errorText={this.state.error.password}
-          type="password"
-          fullWidth={true}
-        />
         <RaisedButton
-          label="Change Password"
+          label="Change Information"
           backgroundColor="#1565C0"
           labelColor="white"
           style={{ marginRight: "10px" }}

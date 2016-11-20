@@ -59,15 +59,15 @@ class PlayerList extends Component {
     const playerList = [];
 
     for (const id in players) {
-      if (!players.hasOwnProperty(id)) continue;
-
-      if (input === "" || playerList.length >= 15) {
-        break;
-      }
-      const player = players[id];
-      if (player.name && player.name.toLowerCase().indexOf(input) > -1) {
-        playerList.push(this.playerRow(player));
-        filteredPlayers.push(player);
+      if (players.hasOwnProperty(id)) {
+        if (input === "" || playerList.length >= 15) {
+          break;
+        }
+        const player = players[id];
+        if (player.name && player.name.toLowerCase().indexOf(input) > -1) {
+          playerList.push(this.playerRow(player));
+          filteredPlayers.push(player);
+        }
       }
     }
     return (

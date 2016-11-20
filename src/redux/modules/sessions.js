@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
 import { SAVE_SESSION_SUCCESS } from "redux/modules/newSession";
-import { LOAD, ERROR } from "redux/modules/main";
+import { LOAD, MESSAGE } from "redux/modules/main";
 
 export const DELETE_SESSION_SUCCESS = "mp/sessions/DELETE_SESSION_SUCCESS";
 export const UPDATE_SESSION_SUCCESS = "mp/sessions/UPDATE_SESSION_SUCCESS";
@@ -87,7 +87,7 @@ export const postResult = (data, ratingUpdateList, id, date) => {
   });
 
   return {
-    types: [LOAD, UPDATE_SESSION_SUCCESS, ERROR],
+    types: [LOAD, UPDATE_SESSION_SUCCESS, MESSAGE],
     promise
   };
 };
@@ -104,7 +104,7 @@ export const updateResult = (data, ratingUpdateList, id, date) => {
   });
 
   return {
-    types: [LOAD, UPDATE_SESSION_SUCCESS, ERROR],
+    types: [LOAD, UPDATE_SESSION_SUCCESS, MESSAGE],
     promise
   };
 };
@@ -119,7 +119,7 @@ export const deleteSession = (id) => {
   });
 
   return {
-    types: [LOAD, DELETE_SESSION_SUCCESS, ERROR],
+    types: [LOAD, DELETE_SESSION_SUCCESS, MESSAGE],
     promise
   };
 };

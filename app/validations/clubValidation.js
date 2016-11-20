@@ -1,4 +1,4 @@
-class ClubValidation {
+export default class ClubValidation {
   validateUsername(username) {
     if (username.length < 8) {
       return "Username must be at least 8 characters long";
@@ -8,7 +8,7 @@ class ClubValidation {
   }
 
   validatePassword(password) {
-    if (user.password.length < 8) {
+    if (password.length < 8) {
       return "Password must be at least 8 characters long";
     }
 
@@ -18,7 +18,7 @@ class ClubValidation {
   validateEmail(email) {
     emailRegex = new RegExp(".+@.+..+", "i");
 
-    if (!emailRegex.test(user.email)) {
+    if (!emailRegex.test(email)) {
       return "Email is not a valid format";
     }
 

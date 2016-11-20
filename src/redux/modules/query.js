@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UPDATE_SESSION_SUCCESS } from "redux/modules/sessions";
-import { LOAD, ERROR } from "./main";
+import { LOAD, MESSAGE } from "./main";
 
 const FETCH_ALL_SUCCESS = "mp/clubs/FETCH_ALL_SUCCESS";
 const FETCH_SESSIONS_SUCCESS = "mp/clubs/FETCH_SESSIONS_SUCCESS";
@@ -81,14 +81,14 @@ export const setDate = (date) => {
 
 export const fetchRoundrobins = (clubId) => {
   return {
-    types: [LOAD, FETCH_SESSIONS_SUCCESS, ERROR],
+    types: [LOAD, FETCH_SESSIONS_SUCCESS, MESSAGE],
     promise: axios.get(`/api/clubs/${clubId}/sessions`)
   };
 };
 
 export const fetchAllClubs = () => {
   return {
-    types: [LOAD, FETCH_ALL_SUCCESS, ERROR],
+    types: [LOAD, FETCH_ALL_SUCCESS, MESSAGE],
     promise: axios.get("/api/clubs/all")
   };
 };

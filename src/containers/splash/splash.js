@@ -19,6 +19,9 @@ import { asyncConnect } from "redux-async-connect";
 }])
 @connect(({ splash: { page } }) => ({ page }), { setPage })
 class Splash extends Component {
+  componentWillUnmount() {
+    this.props.setPage(0);
+  }
   render() {
     const content = (() => {
       switch (this.props.page) {
@@ -32,7 +35,6 @@ class Splash extends Component {
           return <ResetForm setPage={this.props.setPage} />;
         case 5:
           return (<Activated
-            setPage={this.props.setPage}
             message="Your account has been activated successfully."
           />);
         case 6:

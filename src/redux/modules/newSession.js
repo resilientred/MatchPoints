@@ -2,7 +2,7 @@ import axios from "axios";
 import { getCSRF } from "helpers";
 import { ADD_PLAYER_SUCCESS, DELETE_PLAYER_SUCCESS, UPDATE_PLAYER_SUCCESS, FETCH_PLAYERS_SUCCESS } from "redux/modules/players";
 import { UPDATE_SESSION_SUCCESS } from "redux/modules/sessions";
-import { ERROR, LOAD } from "redux/modules/main";
+import { MESSAGE, LOAD } from "redux/modules/main";
 
 export const LOAD_PLAYERS = "mp/session/LOAD_PLAYERS";
 export const SET_MIN_AND_MAX = "mp/session/SET_MIN_AND_MAX";
@@ -176,7 +176,7 @@ export const saveSession = (data) => {
   });
 
   return {
-    types: [LOAD, SAVE_SESSION_SUCCESS, ERROR],
+    types: [LOAD, SAVE_SESSION_SUCCESS, MESSAGE],
     promise
   };
 };

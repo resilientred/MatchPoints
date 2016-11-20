@@ -5,7 +5,7 @@ import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import { signUp } from "redux/modules/auth";
 
-@connect(() => ({}), { signUp })
+@connect(({ auth: { error } }) => ({ error }), { signUp })
 export default class SignUpForm extends Component {
   constructor(props) {
     super(props);
@@ -20,6 +20,8 @@ export default class SignUpForm extends Component {
     };
   }
   isNotValid() {
+    const emailRegex = new RegExp(".+@.+..+", "i");
+
     if (this.state.clubName.length === 0) {
       return "Club name cannot be empty";
     }
@@ -60,8 +62,6 @@ export default class SignUpForm extends Component {
       this.props.signUp(this.state).then(() => {
         this.props.setPage(0);
         browserHistory.push("/club");
-      }).catch((err) => {
-        this.setState({ error: err });
       });
     }
   }
@@ -69,7 +69,7 @@ export default class SignUpForm extends Component {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Sign Up</h3>
-        <div style={{ color: "red" }}>{this.state.error}</div>
+        <div style={{ color: "red" }}>{this.state.error || this.props.error }</div>
         <div>
           <TextField
             type="text"

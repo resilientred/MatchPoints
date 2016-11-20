@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOAD, ERROR } from "redux/modules/main";
+import { LOAD, MESSAGE } from "redux/modules/main";
 import { DELETE_SESSION_SUCCESS } from "redux/modules/sessions";
 
 const FETCH_SESSION_SUCCESS = "mp/selectedSession/FETCH_SESSION_SUCCESS";
@@ -91,7 +91,7 @@ export const setSession = (session) => {
 
 export const fetchSession = (id) => {
   return {
-    types: [LOAD, FETCH_SESSION_SUCCESS, ERROR],
+    types: [LOAD, FETCH_SESSION_SUCCESS, MESSAGE],
     promise: axios.get(`/api/my/sessions/${id}`)
   };
 };

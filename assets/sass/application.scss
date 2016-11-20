@@ -702,6 +702,31 @@ footer {
   }
 
 }
+.confirmation-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 80%;
+  p {
+    font-family: 'Roboto', sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+  }
+  h3 {
+    font-size: 22px;
+    padding-bottom: 20px;
+  }
+
+}
+.confirmation-sent {
+  margin: 0 auto;
+  transform: translateY(50%);
+  width: 500px;
+  height: 250px;
+  padding: 20px;
+  border: 2px solid #E0E0E0;
+}
 
 @media (min-width: 944px) and (min-device-width: 944px){
   .banner-container {

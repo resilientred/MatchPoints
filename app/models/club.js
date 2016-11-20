@@ -33,7 +33,7 @@ const clubSchema = new Schema({
 clubSchema.statics.changeInfo = function(clubId, info) {
   const { email, city, state } = info;
 
-  const error = ClubValidation.validateInfo(info);
+  const error = new ClubValidation().validateInfo(info);
   if (error) {
     return Promise.reject(error);
   }
@@ -59,7 +59,7 @@ clubSchema.statics.changePassword = function(clubId, info) {
   if (oldPassword === newPassword) {
     return Promise.resolve();
   }
-  this.generatePasswordDigest(oldPassword)
+  return this.generatePasswordDigest(oldPassword)
     .then((digest) => {
       return this.findOneAndUpdate(
         { passwordDigest: digest, _id: clubId },
@@ -72,20 +72,24 @@ clubSchema.statics.changePassword = function(clubId, info) {
 };
 
 clubSchema.statics.newUser = function(user) {
-  const err = ClubValidation.validate(user);
+  const err = new ClubValidation().validate(user);
   if (err) {
     return Promise.reject(err);
   }
 
-  return this.create({
-    username: data.username,
-    location: {
-      city: data.city,
-      state: data.stateName
-    },
-    email: data.email,
-    clubName: data.clubName
-  });
+  return this.generatePasswordDigest(user.password)
+    .then((digest) => {
+      return this.create({
+        username: user.username,
+        location: {
+          city: user.city,
+          state: user.stateName
+        },
+        email: user.email,
+        clubName: user.clubName,
+        passwordDigest: digest
+      });
+    });
 }
 
 clubSchema.statics.resetSessionToken = function(club) {
@@ -96,12 +100,20 @@ clubSchema.statics.resetSessionToken = function(club) {
   );
 };
 
+clubSchema.statics.resetSessionTokenWithOldToken = function(token) {
+  const newToken = URLSafeBase64.encode(crypto.randomBytes(32));
+  return this.update(
+    { sessionToken: token },
+    { $set: { sessionToken: newToken } }
+  );
+};
+
 clubSchema.statics.confirmUser = function(token) {
-  return this.findOne({ confirmToken: token }).then((user) => {
-    user.confirmed = true;
-    user.confirmationToken = undefined;
-    return user.save();
-  }).catch((err) => {
+  return this.findOneAndUpdate(
+    { confirmToken: token },
+    { confirmed: true, confirmationToken: undefined },
+    { new: true }
+  ).catch((err) => {
     return Promise.reject("The token may have expired.");
   });
 };
@@ -169,8 +181,16 @@ clubSchema.methods.isPassword = function(password) {
   return bcrypt.compare(password, this.passwordDigest);
 };
 
-clubSchema.statics.findByUsernameAndPassword = function(username) {
-  return this.findOne({ username: username });
+clubSchema.statics.findByUsernameAndPassword = function(username, password) {
+  let club;
+  return this.findOne({ username: username })
+    .then((cl) => {
+      club = cl;
+      return cl.isPassword(password);
+    }).then((bool) => {
+      console.log(bool);
+      return Promise.resolve(club);
+    });
 };
 
 clubSchema.statics.findBySessionToken = function(sessionToken) {

@@ -16,12 +16,13 @@ export default class Forgot extends Component {
   }
 
   handleSubmit = (e) => {
+    e.preventDefault();
     const emailRegex = new RegExp(".+@.+..+", "i");
     let promise;
     if (!emailRegex.test(this.state.field)) {
       promise = this.props.resetWithUsername(this.state.field);
     } else {
-      promise = this.props.resetWithEmail(this.state.field)
+      promise = this.props.resetWithEmail(this.state.field);
     }
     promise.then(() => {
       this.setState({
@@ -58,7 +59,7 @@ export default class Forgot extends Component {
                 hintText="Enter your username or email"
                 floatingLabelText="Enter your username or email"
                 value={this.state.field}
-                fullWidth={true}
+                fullWidth={Boolean(true)}
                 onChange={e => this.setState({ field: e.target.value })}
               />
               <RaisedButton

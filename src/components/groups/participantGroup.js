@@ -6,7 +6,7 @@ import DownArrow from "react-icons/lib/md/keyboard-arrow-down";
 import IconButton from "material-ui/IconButton/IconButton";
 import PdfIcon from "react-icons/lib/md/picture-as-pdf";
 
-const ParticipantGroup = (props) => (
+const ParticipantGroup = (props) => {
   return (<div style={{ position: "relative" }}>
     <IconButton
       iconClassName="material-icons"
@@ -54,7 +54,7 @@ const ParticipantGroup = (props) => (
         (<IconButton
           iconClassName="material-icons"
           tooltip="Move one player up"
-          onClick={() => props.moveUp(i)}
+          onClick={() => props.moveUp(props.groupId)}
           style={{
             position: "absolute",
             left: "30px",
@@ -70,7 +70,7 @@ const ParticipantGroup = (props) => (
         (<IconButton
           iconClassName="material-icons"
           tooltip="Move one player down"
-          onClick={() => props.moveDown(i)}
+          onClick={() => props.moveDown(props.groupId)}
           style={{
             position: "absolute",
             left: "30px",
@@ -82,6 +82,6 @@ const ParticipantGroup = (props) => (
         </IconButton>)
     }
   </div>);
-});
+};
 
 export default ParticipantGroup;

@@ -1,13 +1,13 @@
 import express from "express";
 import ClubModel from "../models/club";
 import RoundRobinModel from "../models/roundrobin";
-import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appModules";
+import { jsonParser, csrfProtection, client } from "../helpers/appModules";
 import Mailer from "../helpers/mailer";
-
+import ClubHelper from "../helpers/clubHelper";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  clubMethods.currentClub(req)
+  ClubHelper.findCurrentClub(req)
     .then((currentClub) => {
       return res.status(200).send(currentClub);
     }).catch((err) => {
@@ -60,16 +60,17 @@ router.get("/", (req, res) => {
 .post("/new", jsonParser, (req, res) => {
   const data = req.body.user;
 
-  ClubModel.saveNewClub(data)
-    .then(() => ClubModel.generatePasswordDigest(data.password))
-    .then((digest) => {
-      newClub.passwordDigest = digest;
-      return newClub.save();
-    }).then((club) => {
+  ClubModel.newUser(data)
+    .then((club) => {
       new Mailer(club).sendConfirmationEmail();
-      return clubMethods.logIn(res, club);
+      return ClubHelper.logIn(club, res);
     }).catch((err) => {
-      res.status(422).send(err);
+      console.log(err);
+      if (err.code === 11000 || err.code === 11001) {
+        res.status(422).send("Username has already been taken");
+      } else {
+        res.status(422).send(err);
+      }
     });
 });
 

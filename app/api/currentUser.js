@@ -2,14 +2,20 @@ import express from "express";
 import ClubModel from "../models/club";
 import RoundRobinModel from "../models/roundrobin";
 import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appModules";
+import Mailer from "../helpers/mailer";
 
 const router = express.Router();
 
 router.post("/accounts/resend", (req, res) => {
   ClubModel.findOne({ _id: req.clubId })
-  .then(club => new Mailer(club).sendMail())
-  .then(() => res.status(200))
-  .catch(() => res.status(422).send("Something went wrong. Please try again later."));
+  .then((club) => {
+    return new Mailer(club).sendConfirmationEmail();
+  }).then(() => {
+    res.status(200).send("An email has been sent to your inbox.");
+  }).catch((err) => {
+    console.log(err);
+    res.status(422).send("Something went wrong. Please try again later.")
+  });
 })
 .get("/sessions", (req, res) => {
   const clubId = req.clubId;

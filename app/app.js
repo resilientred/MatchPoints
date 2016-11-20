@@ -2,7 +2,8 @@ import path from "path";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import express from "express";
-import { app, csrfProtection, clubMethods, jsonParser } from "./helpers/appModules";
+import { app, csrfProtection, jsonParser } from "./helpers/appModules";
+import ClubHelper  from "./helpers/clubHelper";
 import playerRoutes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
@@ -51,7 +52,7 @@ app.use("/api/clubs", clubRoutes);
 app.use("/api/pdfs", pdfRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/my", jsonParser, (req, res, next) => {
-  clubMethods.currentClub(req)
+  ClubHelper.findCurrentClub(req)
     .then((club) => {
       req.clubId = club._id;
       return next();

@@ -1,7 +1,7 @@
 import express from "express";
 import Mailer from "../helpers/mailer";
 import Club from "../models/club";
-import { csrfProtection, jsonParser, clubMethods } from "../helpers/appModules";
+import { csrfProtection, jsonParser } from "../helpers/appModules";
 import URLSafeBase64 from "urlsafe-base64";
 import crypto from "crypto";
 
@@ -10,7 +10,9 @@ const router = express.Router();
 router.get("/activate", (req, res) => {
   const token = req.query.token;
   Club.confirmUser(token)
-    .then(message => res.redirect("/activate/success"))
+    .then((club) => {
+      res.redirect("/activate/success");
+    })
     .catch(message => res.redirect("/activate/error"))
 })
 .post("/reset/request", csrfProtection, (req, res) => {
@@ -45,7 +47,7 @@ router.get("/activate", (req, res) => {
     .then((club) => {
       if (!club) return Promise.reject();
 
-      clubMethods.logOut(club.sessionToken);
+      Club.resetSessionToken(club.sessionToken);
       return res.status(200).send("success");
     }).catch((err) => {
       res.status(422).send("Token have expired.");

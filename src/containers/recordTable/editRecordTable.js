@@ -45,14 +45,14 @@ export default class EditRecordTable extends Component {
         let scoreAdjust;
         if (sign === 1) {
           scoreAdjust = parseInt(16 -
-            ((player1.rating - player2.rating) * 0.04), 10) - record[1] * 2;
+            ((player1.rating - player2.rating) * 0.04), 10) - (record[1] * 2);
         } else {
           scoreAdjust = -(parseInt(16 +
-            ((player1.rating - player2.rating) * 0.04), 10)) + record[0] * 2;
+            ((player1.rating - player2.rating) * 0.04), 10)) + (record[0] * 2);
         }
 
         if (sign === 1 && scoreAdjust < 0) {
-          scoreAdjust = 0 - record[1] * 2;
+          scoreAdjust = 0 - (record[1] * 2);
         }
         rc[player1Id] = {
           change: rc[player1Id] ? (rc[player1Id].change + scoreAdjust) : 0 + scoreAdjust,

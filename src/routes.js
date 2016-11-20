@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, IndexRoute } from "react-router";
-import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query, Reset, Confirmation } from "containers";
+import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query } from "containers";
+import { Confirmation } from "components";
 import { isAuthLoaded, loadAuth } from "redux/modules/auth";
 import ErrorPage from "./errorPage";
 
@@ -27,9 +28,6 @@ export default ({ getState, dispatch }) => {
       if (!club._id) {
         replace("/");
       }
-      if (!club.confirmed) {
-        replace("/confirm")
-      }
       callback();
     };
 
@@ -40,6 +38,20 @@ export default ({ getState, dispatch }) => {
     }
   };
 
+  const requireConfirmed = (nextState, replace, callback) => {
+    const { club } = getState().auth;
+    if (!club.confirmed) {
+      replace("/club/confirm");
+    }
+    callback();
+  };
+  const requireNotConfirmed = (nextState, replace, callback) => {
+    const { club } = getState().auth;
+    if (club.confirmed) {
+      replace("/club");
+    }
+    callback();
+  };
   return (
     <Route path="/" component={Main}>
       <Route onEnter={requireNotLoggedin}>
@@ -48,11 +60,15 @@ export default ({ getState, dispatch }) => {
 
       <Route onEnter={requireLoggedIn}>
         <Route path="club" component={Club}>
-          <IndexRoute component={NewRoundrobin} />
-          <Route path="confirm" component={Confirmation} />
-          <Route path="sessions" component={Sessions} />
-          <Route path="sessions/new" component={NewRoundrobin} />
-          <Route path="sessions/:id" component={Session} />
+          <Route onEnter={requireConfirmed}>
+            <IndexRoute component={NewRoundrobin} />
+            <Route path="sessions" component={Sessions} />
+            <Route path="sessions/new" component={NewRoundrobin} />
+            <Route path="sessions/:id" component={Session} />
+          </Route>
+          <Route onEnter={requireNotConfirmed}>
+            <Route path="confirm" component={Confirmation} />
+          </Route>
         </Route>
       </Route>
       <Route path="results" component={Query} />

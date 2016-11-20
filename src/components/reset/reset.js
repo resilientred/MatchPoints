@@ -52,11 +52,11 @@ export default class ForgotReset extends Component {
   render() {
     if (!this.props.reset.token) {
       return (<div className="forms activated">
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={e => e.preventDefault()}>
           <p>The token has expired.</p>
           <RaisedButton
             label="Back to Main Page"
-            primary={true}
+            primary={Boolean(true)}
             labelColor="white"
             onClick={() => {
               browserHistory.push("/");
@@ -79,7 +79,7 @@ export default class ForgotReset extends Component {
             errorText={this.state.error.first}
             value={this.state.password}
             onChange={e => this.handleChange("password", e.target.value)}
-            fullWidth={true}
+            fullWidth={Boolean(true)}
           />
           <TextField
             type="password"
@@ -87,7 +87,7 @@ export default class ForgotReset extends Component {
             floatingLabelText="Type the password again"
             errorText={this.state.error.second}
             value={this.state.passwordCheck}
-            fullWidth={true}
+            fullWidth={Boolean(true)}
             onChange={e => this.handleChange("passwordCheck", e.target.value)}
           />
           <RaisedButton

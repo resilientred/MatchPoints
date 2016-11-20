@@ -3,16 +3,17 @@ import { connect } from "react-redux";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
-import { changePassword, changeInfo } from "redux/modules/infoChange";
+import { changePassword, changeInfo } from "redux/modules/account";
+import { setMessage } from "redux/modules/main";
 
-@connect(({ auth: { club } }) => { club }, { changePassword, changeInfo })
+@connect(({ auth: { club } }) => { club }, { changePassword, changeInfo, setMessage })
 export default class Info extends Component {
   constructor(props) {
     super(props);
     this.state = { tab: 0 };
   }
 
-  changeTab(tab) {
+  setTab(tab) {
     this.setState({ tab });
   }
 
@@ -33,13 +34,15 @@ export default class Info extends Component {
         <CardText style={{ display: this.state.tab === 0 }}>
           <PasswordChange
             club={this.props.club}
-            submitChange={}
+            submitChange={this.props.changePassword}
+            setMessage={this.props.setMessage}
           />
         </CardText>
         <CardText style={{ display: this.state.tab === 1 }}>
           <InfoChange
             club={this.props.club}
-            submitChange={}
+            submitChange={this.props.changeInfo}
+            setMessage={this.props.setMessage}
           />
         </CardText>
       </Card>

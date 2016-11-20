@@ -155,7 +155,7 @@ export default class Grouping extends Component {
     let totalPlayerAdded = 0;
     return (<div>
       {
-        this.props.selected.map((numPlayers, i) => {
+        this.props.selected.map((numPlayers, i, arr) => {
           totalPlayerAdded += +numPlayers;
           return (<ParticipantGroup
             key={`${i}${numPlayers}`} groupId={i}

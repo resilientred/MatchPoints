@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { resendEmail } from "redux/modules/confirmation";
-import { setError } from "redux/modules/main";
+import { resendEmail } from "redux/modules/account";
+import { setMessage } from "redux/modules/main";
 
-@connect(() => ({}), { resend, setError })
+@connect(() => ({}), { resendEmail, setMessage })
 export default class Confirmation extends Component {
   constructor(props) {
     super(props);
@@ -13,21 +13,24 @@ export default class Confirmation extends Component {
   }
 
   resend = () => {
-    if (!resent) {
+    if (!this.state.resent) {
       this.props.resendEmail();
       this.setState({ resent: true });
       setTimeout(() => {
-        this.setSTate({ resent: false });
-      }, 30000)
+        this.setState({ resent: false });
+      }, 30000);
     } else {
-      this.props.setError("Please wait 30 seconds before retrying");
+      this.props.setMessage("Please wait 30 seconds before retrying");
     }
   }
   render() {
     return (
       <div className="confirmation-sent">
-        <p>We've sent you a confirmation email with a link to actviate your account.</p>
-        <p>Did not receive the email?<a onClick={this.resend}>Resend</a></p>
+        <div className="confirmation-container">
+          <h3>Confirmation Needed</h3>
+          <p>{"We've sent you a confirmation email with a link to actviate your account."}</p>
+          <p>Did not receive the email&#63;<a onClick={this.resend}>Resend</a></p>
+        </div>
       </div>
     );
   }

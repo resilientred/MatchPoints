@@ -47,16 +47,16 @@ export default class Info extends Component {
     const { error, ...others } = this.state;
 
     if (this.validate()) {
-      this.props.changePassword(this.state.oldPassword, this.state.newPassword)
+      this.props.submitChange(this.state.oldPassword, this.state.newPassword)
         .then((club) => {
-          this.props.setError("Password has been changed successfully.");
+          this.props.setMessage("Password has been changed successfully.");
           this.setState({
             oldPassword: "",
             newPassword: "",
             newPasswordConfirm: "",
             error: {}
           });
-        })
+        }).catch(err => this.props.setMessage(err))
     }
   }
   render() {
