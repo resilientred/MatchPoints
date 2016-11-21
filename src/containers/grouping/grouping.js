@@ -165,8 +165,8 @@ export default class Grouping extends Component {
             players={this.props.sortedPlayers.slice(
               totalPlayerAdded - numPlayers, totalPlayerAdded
               )}
-            moveUp={i === 0 ? null : this.props.moveUp}
-            moveDown={i === arr.length - 1 ? null : this.props.moveDown}
+            moveUp={i === 0 ? null : this.props.movePlayerUp}
+            moveDown={i === arr.length - 1 ? null : this.props.movePlayerDown}
           />);
         })
       }

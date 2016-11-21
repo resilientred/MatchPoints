@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
         return state;
       }
       const selected = [...state.selected];
-      selected[action.payload + 1] += 1;
+      selected[action.payload - 1] += 1;
       selected[action.payload] -= 1;
       return {
         ...state,
@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
         return state;
       }
       const selected = [...state.selected];
-      selected[action.payload - 1] += 1;
+      selected[action.payload + 1] += 1;
       selected[action.payload] -= 1;
       return {
         ...state,

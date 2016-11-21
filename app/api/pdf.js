@@ -47,29 +47,29 @@ router.post("/:clubId", jsonParser, csrfProtection, (req, res) => {
   //server can't handle more than two pdf
   const generatePDF = (start = 0) => {
     const promises = [];
-    const target = start + 2;
-    while (start < target) {
-      if (start >= schemas.length) {
+    let i = start;
+    while (i < start + 2) {
+      if (i >= schemas.length) {
         break;
       }
-      const promise = PDFGenerator.generatePDF(club, start + 1, addedPlayers.splice(0, schemas[start]), schemas[start], date);
+      const promise = PDFGenerator.generatePDF(club, i + 1, addedPlayers.splice(0, schemas[i]), schemas[i], date);
       promises.push(promise);
-      start++;
+      i++;
     }
 
     return Promise.all(promises).then((pdfs) => {
-      pdfs.forEach((url, i) => {
+      pdfs.forEach((url, j) => {
         client.setex(`pdf:${url}`, 60 * 15, "true", (err) => {
           return Promise.reject(err);
         });
 
         //something is wrong
-        urls[`group${(i + 1 + start - 2)}`] = url;
+        urls[`group${(j + 1 + i - (i - start))}`] = url;
       });
-      if (start >= schemas.length) {
+      if (addedPlayers.length === 0) {
         return Promise.resolve(urls);
       } else {
-        return generatePDF(start);
+        return generatePDF(i);
       }
     });
   }
