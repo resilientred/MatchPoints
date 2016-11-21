@@ -66,7 +66,7 @@ export default class PasswordChange extends Component {
                 error: {
                   password: message.oldPassword
                 }
-              })
+              });
             } else {
               this.props.setMessage(err.response.data);
             }

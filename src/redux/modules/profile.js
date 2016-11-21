@@ -3,7 +3,6 @@ import { getCSRF } from "helpers";
 import { MESSAGE } from "redux/modules/main";
 
 export const USER_CHANGED = "mp/infoChange/USER_CHANGED";
-const CHANGE_ERROR = "mp/infoChange/CHANGE_ERROR";
 
 // const initialState = {
 //   error: null

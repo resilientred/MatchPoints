@@ -40,7 +40,7 @@ export default class InfoChange extends Component {
                 error: {
                   ...message
                 }
-              })
+              });
             } else {
               this.props.setMessage(err.response.data);
             }

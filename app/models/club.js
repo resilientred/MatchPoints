@@ -40,7 +40,12 @@ clubSchema.statics.changeInfo = function(club, data) {
 
   return club.isPassword(data.password)
     .then(() => {
-      club.email = info.email;
+      if (club.email !== info.email) {
+        club.email = info.email;
+        //although this will work, it will still say "welcome to matchpoint";
+        club.confirmed = false;
+        club.confirmToken = URLSafeBase64.encode(crypto.randomBytes(32));
+      }
       club.location = { ...info };
       return club.save();
     }).catch((err) => {

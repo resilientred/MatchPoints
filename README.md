@@ -1,5 +1,5 @@
 # MatchPoints [Live Link](https://matchpoints.org)
-MatchPoints is a Full-stack web round-robin rating system. It is expected to provide a platform for round-robin organizers to:
+MatchPoints is a Full-stack web round-robin rating system. It provides a platform for round-robin organizers to:
 * group players
 * record results
 * calculate scores

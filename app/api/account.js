@@ -47,12 +47,14 @@ router.get("/activate", (req, res) => {
   const { token, newPassword } = req.body;
   Club.resetPasswordWithToken(token, newPassword)
     .then((club) => {
+      console.log(club);
       if (!club) return Promise.reject();
 
       Club.resetSessionToken(club.sessionToken);
       return res.status(200).send("success");
     }).catch((err) => {
-      res.status(422).send("Token have expired.");
+      console.log(err);
+      res.status(422).send("Token has expired.");
     });
 });
 

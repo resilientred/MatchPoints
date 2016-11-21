@@ -23,13 +23,13 @@ export default class Mailer {
 
   confirmationOptions() {
     let emailHTML = `<p>Dear ${this.recipient.username},</p><br />`;
-    emailHTML += "<p>Thank you for joining Match Points.To confirm your registration, click on the link below.</p>";
+    emailHTML += "<p>Thank you for joining MatchPoints. To verify your email address, please click on the link below.</p>";
     emailHTML += `<a href="${hostname}/accounts/activate?token=${this.recipient.confirmToken}">https://matchpoints.org/accounts/activate?token=${this.recipient.confirmToken}</a>`;
     emailHTML += "<p>Looking forward to serving your needs.</p><br />";
     emailHTML += `<p>Best,<br /><a href='${hostname}'>MatchPoints</a></p>`;
     let emailText = `Dear ${this.recipient.username},\n\n`;
     emailText += "Thank you for joining Match Points.\n\n";
-    emailText += "To confirm your registration, click on the link below:\n\n";
+    emailText += "To verify your email address, please click on the link below:\n\n";
     emailText += `${hostname}/accounts/activate?token=${this.recipient.confirmToken}\n\n`;
     emailText += "Looking forward to serving your needs.\n\n";
     emailText += `Best,\nMatchPoints\n(${hostname})`;
@@ -43,14 +43,13 @@ export default class Mailer {
   }
 
   resetOptions() {
-    let emailHTML = `<p>Dear ${this.recipient.username},</p><br />`;
-    emailHTML += "<p>Please follow the link below to reset your password</p>";
+    let emailHTML = `<p>Dear ${this.recipient.username},</p>`;
+    emailHTML += "<p>Please follow the link below to reset your password:</p>";
     emailHTML += `<a href="${hostname}/reset?token=${this.recipient.token}">https://matchpoints.org/reset?token=${this.recipient.token}</a>`;
     emailHTML += "<p>Please contact support.matchpoints@gmail.com if you have any questions.</p>";
     emailHTML += `<p>Best,<br /><a href='${hostname}'>MatchPoints</a></p>`;
     let emailText = `Dear ${this.recipient.username},\n\n`;
-    emailText += "Please follow the link below to reset your password<\n\n";
-    emailText += "To confirm your registration, click on the link below:\n\n";
+    emailText += "Please follow the link below to reset your password:<\n\n";
     emailText += `${hostname}/reset?token=${this.recipient.token}\n\n`;
     emailText += "Please contact support.matchpoints@gmail.com if you have any questions.\n\n";
     emailText +=`"Best,\nMatchPoints\n(${hostname})`;

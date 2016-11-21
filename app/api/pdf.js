@@ -62,6 +62,8 @@ router.post("/:clubId", jsonParser, csrfProtection, (req, res) => {
         client.setex(`pdf:${url}`, 60 * 15, "true", (err) => {
           return Promise.reject(err);
         });
+
+        //something is wrong
         urls[`group${(i + 1 + start - 2)}`] = url;
       });
       if (start >= schemas.length) {

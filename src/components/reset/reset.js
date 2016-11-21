@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { browserHistory } from "react-router";
-import { resetPassword, setError } from "redux/modules/reset";
+import { resetPassword } from "redux/modules/reset";
+import { setMessage } from "redux/modules/main";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 
-@connect(({ reset }) => ({ reset }), { resetPassword, setError })
+@connect(({ reset }) => ({ reset }), { resetPassword, setMessage })
 export default class ForgotReset extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +19,15 @@ export default class ForgotReset extends Component {
       }
     };
   }
+
+  componentWillUnmount() {
+    this.setState({
+      password: "",
+      passwordCheck: "",
+      error: ""
+    });
+  }
+
   handleChange = (field, val) => {
     this.setState({
       [field]: val,
@@ -26,7 +36,7 @@ export default class ForgotReset extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.state.password.length <= 8) {
+    if (this.state.password.length < 8) {
       return this.setState({
         error: {
           first: "Password has to be at least 8 characters long"
@@ -41,26 +51,39 @@ export default class ForgotReset extends Component {
       });
     }
     this.props.resetPassword(this.props.reset.token, this.state.password).then(() => {
-      browserHistory.push("/");
-      this.props.setPage(0);
-      this.setState({
-        password: "",
-        passwordCheck: ""
-      });
+      this.timeout = setTimeout(() => {
+        browserHistory.push("/");
+        this.props.setPage(1);
+      }, 5000);
+    }).catch(() => {
+      this.timeout = setTimeout(() => {
+        browserHistory.push("/");
+        this.props.setPage(1);
+      }, 5000);
     });
   }
+
   render() {
-    if (!this.props.reset.token) {
-      return (<div className="forms activated">
+    const { token, success } = this.props.reset;
+
+    if (!token || success) {
+      return (<div className="forms activated" style={{ top: "30%" }}>
         <form onSubmit={e => e.preventDefault()}>
-          <p>The token has expired.</p>
+          {
+            success ?
+              <h4>Password has been changed successfully.</h4>
+              :
+              <p>The token is invalid or has expired.</p>
+          }
+          <p>You will be redirected to login page in 5 seconds.</p>
           <RaisedButton
             label="Back to Main Page"
             primary={Boolean(true)}
             labelColor="white"
             onClick={() => {
+              clearTimeout(this.timeout);
               browserHistory.push("/");
-              this.props.setPage(0);
+              this.props.setPage(1);
             }}
           />
         </form>
@@ -70,7 +93,6 @@ export default class ForgotReset extends Component {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Reset Your Password</h3>
-        <div className="form-error">{this.props.reset.error}</div>
         <div>
           <TextField
             type="password"

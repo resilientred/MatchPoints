@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
+import { LOAD } from "redux/modules/main";
 
 const LOAD_CHANGE = "mp/reset/LOAD_CHANGE";
 const CHANGE_SUCCESS = "mp/reset/CHANGE_SUCCESS";
@@ -7,13 +8,16 @@ const CHANGE_ERROR = "mp/reset/CHANGE_ERROR";
 const SET_TOKEN = "mp/reset/SET_TOKEN";
 const SET_ERROR = "mp/reset/SET_ERROR";
 const initialState = {
-  token: null
+  token: null,
+  success: false
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_SUCCESS:
-      return {};
+      return {
+        success: true
+      };
     case SET_TOKEN:
       return {
         token: action.payload
@@ -21,8 +25,8 @@ export default (state = initialState, action) => {
     case CHANGE_ERROR:
     case SET_ERROR:
       return {
-        ...state,
-        error: action.payload
+        token: null,
+        success: false
       };
     default:
       return state;
@@ -38,7 +42,7 @@ export const resetWithUsername = (username) => {
     }
   });
   return {
-    types: ["NOT NEEDED", "NOT NEEDED", "NOT NEEDED"],
+    types: [LOAD, "NOT NEEDED", "NOT NEEDED"],
     promise
   };
 };
@@ -52,7 +56,7 @@ export const resetWithEmail = (email) => {
     }
   });
   return {
-    types: ["NOT NEEDED", "NOT NEEDED", "NOT NEEDED"],
+    types: [LOAD, "NOT NEEDED", "NOT NEEDED"],
     promise
   };
 };
