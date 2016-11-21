@@ -11,7 +11,6 @@ And allow users to:
 MatchPoints utilizes Redis to reduce the number of times data is fetched the database, thus reduce latency in many requests.
 
 ## Bug Fix
- - [x] Set-date becomes a day behind (moment always convert to local time)
  - [ ] Add way to flexibly change schema
 
 ## Expected Features (MVP)
@@ -30,7 +29,7 @@ MatchPoints utilizes Redis to reduce the number of times data is fetched the dat
  - [ ] Allow Users to customize scoring algorithm
 
 ## Languages:
- - Front-end: React.js with Flux architecture
+ - Front-end: React with Redux architecture
  - Back-end: Node.js/Express.js
  - Database: MongoDB with Mongoose ODM + Redis cache
  - Deployed on Amazon EC2 with ElastiCache
