@@ -2,22 +2,19 @@ import axios from "axios";
 import { getCSRF } from "helpers";
 import { MESSAGE } from "redux/modules/main";
 
+export const USER_CHANGED = "mp/infoChange/USER_CHANGED";
 const CHANGE_ERROR = "mp/infoChange/CHANGE_ERROR";
 
-const initialState = {
-  error: null
-};
+// const initialState = {
+//   error: null
+// };
 
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case CHANGE_ERROR:
-      return {
-        error: action.payload
-      };
-    default:
-      return state;
-  }
-};
+// export default (state = initialState, action) => {
+//   switch (action.type) {
+//     default:
+//       return state;
+//   }
+// };
 
 export const changePassword = (oldPassword, newPassword) => {
   const promise = axios({
@@ -30,17 +27,17 @@ export const changePassword = (oldPassword, newPassword) => {
   });
 
   return {
-    types: ["NOT NEEDED", "NOT NEEDED", CHANGE_ERROR],
+    types: ["NOT NEEDED", "NOT_NEEDED", USER_CHANGED],
     promise
   };
 };
 
-export const changeInfo = (info) => {
+export const changeInfo = (info, password) => {
   const promise = axios({
     method: "PATCH",
     url: "/api/my?type=info",
     data: {
-      data: { info }
+      data: { password, info }
     },
     headers: {
       "X-CSRF-TOKEN": getCSRF()
@@ -48,7 +45,7 @@ export const changeInfo = (info) => {
   });
 
   return {
-    types: ["NOT NEEDED", "NOT NEEDED", CHANGE_ERROR],
+    types: ["NOT NEEDED", "NOT_NEEDED", USER_CHANGED],
     promise
   };
 };

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
+import FlatButton from "material-ui/FlatButton";
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
-import { changePassword, changeInfo } from "redux/modules/account";
+import { changePassword, changeInfo } from "redux/modules/profile";
 import { setMessage } from "redux/modules/main";
+import { PasswordChange, InfoChange } from "components";
 
-@connect(({ auth: { club } }) => { club }, { changePassword, changeInfo, setMessage })
-export default class Info extends Component {
+@connect(({ auth: { club } }) => ({ club }), { changePassword, changeInfo, setMessage })
+export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = { tab: 0 };
@@ -18,27 +18,27 @@ export default class Info extends Component {
   }
 
   render() {
-    return (<div>
-      <Card>
-        <CardHeader title="Member Profile" />
+    return (<div className="profile-container">
+      <Card containerStyle={{ padding: "15px" }}>
+        <CardHeader title="Member Profile" titleStyle={{ fontSize: "24px" }}/>
         <CardActions>
           <FlatButton
             label="Change Password"
-            onChange={() => this.setTab(0)}
+            onClick={() => this.setTab(0)}
           />
           <FlatButton
             label="Change Info"
-            onChange={() => this.setTab(1)}
+            onClick={() => this.setTab(1)}
           />
         </CardActions>
-        <CardText style={{ display: this.state.tab === 0 }}>
+        <CardText style={{ display: this.state.tab === 0 ? "block" : "none" }}>
           <PasswordChange
             club={this.props.club}
             submitChange={this.props.changePassword}
             setMessage={this.props.setMessage}
           />
         </CardText>
-        <CardText style={{ display: this.state.tab === 1 }}>
+        <CardText style={{ display: this.state.tab === 1 ? "block" : "none" }}>
           <InfoChange
             club={this.props.club}
             submitChange={this.props.changeInfo}

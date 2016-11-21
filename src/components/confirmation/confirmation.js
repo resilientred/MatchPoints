@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { resendEmail } from "redux/modules/account";
+import { resendEmail } from "redux/modules/profile";
 import { setMessage } from "redux/modules/main";
 
 @connect(() => ({}), { resendEmail, setMessage })

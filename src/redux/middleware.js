@@ -33,7 +33,7 @@ export default ({ dispatch, getState }) => next => action => {
       next({ ...rest, payload: error.response.data, type: FAILURE });
     } else {
       console.log(error);
-      next({ ...rest, payload: "something went wrong", type: FAILURE });
+      next({ ...rest, payload: "Something went wrong...", type: FAILURE });
     }
   }).catch((error) => {
     if (REQUEST === LOAD) {
@@ -43,7 +43,7 @@ export default ({ dispatch, getState }) => next => action => {
       next({ ...rest, payload: error.response.data, type: FAILURE });
     } else {
       console.log(error);
-      next({ ...rest, payload: "something went wrong", type: FAILURE });
+      next({ ...rest, payload: "Something went wrong...", type: FAILURE });
     }
   });
 

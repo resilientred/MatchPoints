@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getCSRF } from "helpers";
 import { LOAD } from "redux/modules/main";
+import { USER_CHANGED } from "redux/modules/profile";
 
 const LOAD_AUTH = "mp/auth/LOAD_AUTH";
 export const LOGOUT = "mp/auth/LOGOUT";
@@ -32,7 +33,7 @@ export default (state = initialState, action) => {
           ...state,
           club: {
             ...state.club,
-            activated: true
+            confirmed: true
           }
         };
       }
@@ -66,6 +67,11 @@ export default (state = initialState, action) => {
         ...state,
         loaded: false,
         club: {}
+      };
+    case USER_CHANGED:
+      return {
+        ...state,
+        club: action.payload
       };
     default:
       return state;

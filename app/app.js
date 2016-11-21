@@ -54,7 +54,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/my", jsonParser, (req, res, next) => {
   ClubHelper.findCurrentClub(req)
     .then((club) => {
-      req.clubId = club._id;
+      req.club = club;
       return next();
     }).catch((err) => {
       res.status(403).send(err);

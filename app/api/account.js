@@ -9,8 +9,10 @@ const router = express.Router();
 
 router.get("/activate", (req, res) => {
   const token = req.query.token;
+  console.log(token);
   Club.confirmUser(token)
     .then((club) => {
+      console.log(club);
       res.redirect("/activate/success");
     })
     .catch(message => res.redirect("/activate/error"))

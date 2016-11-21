@@ -30,28 +30,28 @@ const clubSchema = new Schema({
   players: [playerSchema]
 });
 
-clubSchema.statics.changeInfo = function(clubId, info) {
-  const { email, city, state } = info;
+clubSchema.statics.changeInfo = function(club, data) {
+  const info = data.info;
 
   const error = new ClubValidation().validateInfo(info);
   if (error) {
     return Promise.reject(error);
   }
 
-  this.generatePasswordDigest(oldPassword)
-    .then((digest) => {
-      return this.findOneAndUpdate(
-        { passwordDigest: digest, _id: clubId },
-        { email, location: { city, state } }
-      );
+  return club.isPassword(data.password)
+    .then(() => {
+      club.email = info.email;
+      club.location = { ...info };
+      return club.save();
     }).catch((err) => {
       console.log(err);
-      return Promise.reject("Old password does not match.");
+      return Promise.reject({ password: "Old password does not match." });
     });
 };
 
-clubSchema.statics.changePassword = function(clubId, info) {
+clubSchema.statics.changePassword = function(club, info) {
   const { oldPassword, newPassword } = info;
+  let oldDigest;
   if (newPassword.length < 8) {
     return Promise.reject("Password must have at least 8 characters.");
   }
@@ -59,15 +59,14 @@ clubSchema.statics.changePassword = function(clubId, info) {
   if (oldPassword === newPassword) {
     return Promise.resolve();
   }
-  return this.generatePasswordDigest(oldPassword)
-    .then((digest) => {
-      return this.findOneAndUpdate(
-        { passwordDigest: digest, _id: clubId },
-        { password: newPassword }
-      );
+  return club.isPassword(oldPassword)
+    .then(() => {
+      return this.generatePasswordDigest(newPassword);
+    }).then((digest) => {
+      club.passwordDigest = digest;
+      return club.save();
     }).catch((err) => {
-      console.log(err);
-      return Promise.reject("Old password does not match.")
+      return Promise.reject({ oldPassword: "Old password does not match."});
     });
 };
 
@@ -80,7 +79,7 @@ clubSchema.statics.newUser = function(user) {
   return this.generatePasswordDigest(user.password)
     .then((digest) => {
       return this.create({
-        username: user.username,
+        username: user.username.toLowerCase(),
         location: {
           city: user.city,
           state: user.stateName
@@ -111,7 +110,7 @@ clubSchema.statics.resetSessionTokenWithOldToken = function(token) {
 clubSchema.statics.confirmUser = function(token) {
   return this.findOneAndUpdate(
     { confirmToken: token },
-    { confirmed: true, confirmationToken: undefined },
+    { confirmed: true, confirmToken: undefined },
     { new: true }
   ).catch((err) => {
     return Promise.reject("The token may have expired.");
@@ -196,7 +195,7 @@ clubSchema.statics.findByUsernameAndPassword = function(username, password) {
 clubSchema.statics.findBySessionToken = function(sessionToken) {
   return this.findOne(
     { sessionToken: sessionToken },
-    { passwordDigest: false, sessionToken: false, players: false, confirmToken: false }
+    { sessionToken: false, players: false, confirmToken: false }
   );
 };
 

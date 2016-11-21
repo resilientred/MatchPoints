@@ -59,6 +59,12 @@ export default class Navbar extends Component {
           checked={tab === 0}
         />
         <MenuItem
+          onTouchTap={() => this.handleLink("/club/profile", 4)}
+          primaryText="Profile"
+          insetChildren={Boolean(true)}
+          checked={tab === 4}
+        />
+        <MenuItem
           onTouchTap={() => this.handleLink("/club/sessions/new", 1)}
           primaryText="New Session"
           insetChildren={Boolean(true)}
@@ -117,7 +123,13 @@ export default class Navbar extends Component {
     if (this.props.club._id) {
       return (<ul className="nav">
         <li
-          onClick={() => this.handleLink("/club/sessions/new", 1)}
+          onClick={() => this.handleLink("/club/profile", 4)}
+          className={tab === 4 ? "active-links" : ""}
+        >
+          Profile
+        </li>
+        <li
+          onClick={() => this.handleLink("/club", 1)}
           className={tab === 1 ? "active-links" : ""}
         >
           New Session

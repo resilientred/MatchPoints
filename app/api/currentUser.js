@@ -7,18 +7,16 @@ import Mailer from "../helpers/mailer";
 const router = express.Router();
 
 router.post("/accounts/resend", (req, res) => {
-  ClubModel.findOne({ _id: req.clubId })
-  .then((club) => {
-    return new Mailer(club).sendConfirmationEmail();
-  }).then(() => {
-    res.status(200).send("An email has been sent to your inbox.");
-  }).catch((err) => {
-    console.log(err);
-    res.status(422).send("Something went wrong. Please try again later.")
-  });
+  new Mailer(club).sendConfirmationEmail()
+    .then(() => {
+      res.status(200).send("An email has been sent to your inbox.");
+    }).catch((err) => {
+      console.log(err);
+      res.status(422).send("Something went wrong. Please try again later.")
+    });
 })
 .get("/sessions", (req, res) => {
-  const clubId = req.clubId;
+  const clubId = req.club._id;
   client.get(`sessions:${clubId}`, (err, reply) => {
     if (!reply) {
       RoundRobinModel.findRoundRobinsByClub(clubId)
@@ -34,7 +32,7 @@ router.post("/accounts/resend", (req, res) => {
   })
 })
 .get("/sessions/:id", (req, res) => {
-  const clubId = req.clubId;
+  const clubId = req.club._id;
   const id = req.params.id;
 
   RoundRobinModel.findRoundRobin(clubId, id)
@@ -43,9 +41,9 @@ router.post("/accounts/resend", (req, res) => {
 })
 .delete("/sessions/:id", (req, res) => {
   const id = req.params.id;
-  RoundRobinModel.deleteRoundRobin(req.clubId, id)
+  RoundRobinModel.deleteRoundRobin(req.club._id, id)
     .then(() => {
-      client.del(`sessions:${req.clubId}`);
+      client.del(`sessions:${req.club._id}`);
       return res.status(200).send(id);
     }).catch((err) => {
       return res.status(500);
@@ -55,11 +53,11 @@ router.post("/accounts/resend", (req, res) => {
   const id = req.params.id;
   const { date, data, ratingUpdateList } = req.body.result;
 
-  ClubModel.postPlayersRating(req.clubId, ratingUpdateList, date)
+  ClubModel.postPlayersRating(req.club._id, ratingUpdateList, date)
     .then(() => RoundRobinModel.saveResult(id, data))
     .then((session) => {
-      client.del(`players:${req.clubId}`);
-      client.del(`sessions:${req.clubId}`);
+      client.del(`players:${req.club._id}`);
+      client.del(`sessions:${req.club._id}`);
       return res.status(200).send(session);
     }).catch((err) => {
       console.log(err);
@@ -67,7 +65,7 @@ router.post("/accounts/resend", (req, res) => {
     });
 })
 .post("/session/new", jsonParser, csrfProtection, (req, res) => {
-  const clubId = req.clubId;
+  const clubId = req.club._id;
   const data = req.body.session;
   const newRR = new RoundRobinModel({
    _clubId: clubId,
@@ -88,21 +86,25 @@ router.post("/accounts/resend", (req, res) => {
     });
 }).patch("", jsonParser, (req, res) => {
   const data = req.body.data;
-  const type = req.query;
-  const clubId = req.clubId;
+  const type = req.query.type;
 
   let promise;
   if (type === "password") {
-    promise = ClubModel.changePassword(clubId, data);
+    promise = ClubModel.changePassword(req.club, data);
   } else if (type === "info") {
-    promise = ClubModel.changeInfo(clubId, data);
+    promise = ClubModel.changeInfo(req.club, data);
   } else {
     res.status(404).send("No changes were made.");
     return;
   }
 
-  promise.then(() => res.status(200))
-    .catch((err) => res.status(422).send(err));
+  promise.then((club) => {
+    delete club.passwordDigest;
+    return res.status(200).send(club);
+  }).catch((err) => {
+    console.log(err);
+    res.status(422).send(err);
+  });
 
 });
 

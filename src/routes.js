@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, IndexRoute } from "react-router";
-import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query } from "containers";
+import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query, Profile } from "containers";
 import { Confirmation } from "components";
 import { isAuthLoaded, loadAuth } from "redux/modules/auth";
 import ErrorPage from "./errorPage";
@@ -62,6 +62,7 @@ export default ({ getState, dispatch }) => {
         <Route path="club" component={Club}>
           <Route onEnter={requireConfirmed}>
             <IndexRoute component={NewRoundrobin} />
+            <Route path="profile" component={Profile} />
             <Route path="sessions" component={Sessions} />
             <Route path="sessions/new" component={NewRoundrobin} />
             <Route path="sessions/:id" component={Session} />

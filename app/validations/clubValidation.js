@@ -16,7 +16,7 @@ export default class ClubValidation {
   };
 
   validateEmail(email) {
-    emailRegex = new RegExp(".+@.+..+", "i");
+    const emailRegex = new RegExp(".+@.+..+", "i");
 
     if (!emailRegex.test(email)) {
       return "Email is not a valid format";
@@ -43,12 +43,12 @@ export default class ClubValidation {
     }
   }
   validateInfo(club) {
-    err = this.validateClubName(club.clubName);
-    if (err) return err;
+    let err = this.validateEmail(club.email);
+    if (err) return { email: err };
     err = this.validateCity(club.city);
-    if (err) return err;
-    err = this.validateState(club.stateName);
-    if (err) return err;
+    if (err) return { city: err };
+    err = this.validateState(club.state);
+    if (err) return { state: err };
   }
   validate(club) {
     let err = this.validateUsername(club.username);

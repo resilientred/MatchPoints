@@ -14,3 +14,5 @@ export Confirmation from "./confirmation/confirmation";
 export RecordTableEnter from "./recordTableEnter/recordTableEnter";
 export RecordTableView from "./recordTableView/recordTableView";
 export ClubQueryDetail from "./clubQueryDetail/clubQueryDetail";
+export InfoChange from "./profile/infoChange";
+export PasswordChange from "./profile/passwordChange";

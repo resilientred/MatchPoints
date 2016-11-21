@@ -5,11 +5,12 @@ import ClubModel from "../models/club";
 
 const router = express.Router();
 router.route("/players").get((req, res) => {
-  client.get(`players:${req.clubId}`, (err, reply) => {
+  const clubId = req.club.clubId
+  client.get(`players:${clubId}`, (err, reply) => {
     if (!reply) {
-      ClubModel.findPlayers(req.clubId)
+      ClubModel.findPlayers(clubId)
         .then((data) => {
-          client.set(`players:${req.clubId}`, JSON.stringify(data.players));
+          client.set(`players:${clubId}`, JSON.stringify(data.players));
           res.status(200).send(data.players);
         }).catch((err) => {
           res.status(404).send(err);
@@ -22,6 +23,7 @@ router.route("/players").get((req, res) => {
 
 router.route("/players/new")
   .post(csrfProtection, (req, res) => {
+    const clubId = req.club.clubId
     const data = req.body.player;
     const err = {};
     let hasError = false;
@@ -38,9 +40,9 @@ router.route("/players/new")
       return;
     }
 
-    ClubModel.addPlayer(req.clubId, data)
+    ClubModel.addPlayer(clubId, data)
       .then((player) => {
-        client.del(`players:${req.clubId}`);
+        client.del(`players:${clubId}`);
         res.status(200).send(player);
       }).catch((err) => {
         res.status(422).send(err);
@@ -49,11 +51,12 @@ router.route("/players/new")
 
 router.route("/players/:id")
   .delete(csrfProtection, (req, res) => {
+    const clubId = req.club.clubId
     const id = req.params.id;
 
-    Club.removePlayer(req.clubId, id)
+    Club.removePlayer(clubId, id)
       .then((club) => {
-        client.del(`players:${req.clubId}`);
+        client.del(`players:${clubId}`);
         clubMethods.setCurrentClub(club);
         res.status(200).send(id);
       }).catch(() => {
@@ -61,12 +64,13 @@ router.route("/players/:id")
       });
   })
   .patch(csrfProtection, (req, res) => {
+    const clubId = req.club.clubId
     const id = req.params.id;
     const player = req.body.player;
-    console.log(req.body.player);
-    Club.updatePlayer(req.clubId, id, player)
+
+    Club.updatePlayer(clubId, id, player)
       .then(() => {
-        client.del(`players:${req.clubId}`);
+        client.del(`players:${clubId}`);
         res.status(200).send(player);
       }).catch((err) => {
         console.log(err);

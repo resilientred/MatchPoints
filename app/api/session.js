@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/new", jsonParser, csrfProtection, (req, res) => {
   const data = req.body.user;
-  Club.findByUsernameAndPassword(data.username, data.password)
+  Club.findByUsernameAndPassword(data.username.toLowerCase(), data.password)
     .then((club) => {
       console.log(club)
       ClubHelper.logIn(club, res);

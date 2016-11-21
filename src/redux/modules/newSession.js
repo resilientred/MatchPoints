@@ -113,7 +113,6 @@ export default (state = initialState, action) => {
         loading: true
       };
     case UPDATE_SESSION_SUCCESS:
-      //make sure the data in new session reflect the latest info
       return {
         ...state,
         loaded: false

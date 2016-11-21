@@ -7,6 +7,7 @@ export TabContainer from "./tabContainer/tabContainer";
 export UploadDialog from "./uploadDialog/uploadDialog";
 export Navbar from "./navbar/navbar";
 export Club from "./club/club";
+export Profile from "./profile/profile";
 export Sessions from "./sessions/sessions";
 export Session from "./session/session";
 export EditSession from "./session/editSession";

@@ -20,6 +20,10 @@ export default class LogInForm extends Component {
     };
   }
 
+  componentWillUnmount() {
+    if (this.props.error) this.props.clearError();
+  }
+
   updateField(field, e) {
     const newField = { [field]: e.target.value };
 
@@ -62,9 +66,7 @@ export default class LogInForm extends Component {
       }
     }, 200);
   }
-  componentWillUnmount() {
-    if (this.props.error) this.props.clearError();
-  }
+
   render() {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
