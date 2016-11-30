@@ -2,10 +2,12 @@ import express from "express";
 import Club from "../models/club";
 import { csrfProtection, clubMethods, client } from "../helpers/appModules";
 import ClubModel from "../models/club";
+import { validatePlayer } from "../models/player";
 
 const router = express.Router();
 router.route("/players").get((req, res) => {
   const clubId = req.club._id;
+
   client.get(`players:${clubId}`, (err, reply) => {
     if (!reply) {
       ClubModel.findPlayers(clubId)
@@ -13,7 +15,6 @@ router.route("/players").get((req, res) => {
           client.set(`players:${clubId}`, JSON.stringify(data.players));
           res.status(200).send(data.players);
         }).catch((err) => {
-          console.log(err);
           res.status(404).send("Unable to fetch players, please try again later.");
         });
     } else {
@@ -26,19 +27,10 @@ router.route("/players/new")
   .post(csrfProtection, (req, res) => {
     const clubId = req.club._id;
     const data = req.body.player;
-    const err = {};
-    let hasError = false;
-    if (data.rating === "0") {
-      err.rating = "Rating cannot be empty.";
-      hasError = true;
-    }
-    if (data.name === "") {
-      err.name = "Name cannot be empty.";
-      hasError = true;
-    }
+
+    const [hasError, err] = validatePlayer(data);
     if (hasError) {
-      res.status(422).send(err);
-      return;
+      return res.status(422).send(err);
     }
 
     ClubModel.addPlayer(clubId, data)
@@ -54,13 +46,12 @@ router.route("/players/:id")
   .delete(csrfProtection, (req, res) => {
     const clubId = req.club._id;
     const id = req.params.id;
-
     Club.removePlayer(clubId, id)
       .then((club) => {
         client.del(`players:${clubId}`);
-        clubMethods.setCurrentClub(club);
         res.status(200).send(id);
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         res.status(422).send("Unable to remove player");
       });
   })

@@ -166,7 +166,7 @@ clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
   });
 };
 clubSchema.statics.removePlayer = function(clubId, id) {
-  return this.findOneAndUpdate(
+  return this.update(
     { _id: clubId },
     { $pull: { players: { _id: id } } },
     { new: true }
@@ -200,7 +200,7 @@ clubSchema.statics.findByUsernameAndPassword = function(username, password) {
 clubSchema.statics.findBySessionToken = function(sessionToken) {
   return this.findOne(
     { sessionToken: sessionToken },
-    { sessionToken: false, players: false, confirmToken: false }
+    { sessionToken: false, players: false }
   );
 };
 

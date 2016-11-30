@@ -7,7 +7,7 @@ import Mailer from "../helpers/mailer";
 const router = express.Router();
 
 router.post("/accounts/resend", (req, res) => {
-  new Mailer(club).sendConfirmationEmail()
+  new Mailer(req.club).sendConfirmationEmail()
     .then(() => {
       res.status(200).send("An email has been sent to your inbox.");
     }).catch((err) => {

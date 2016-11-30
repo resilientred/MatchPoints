@@ -9,7 +9,7 @@ import { clearMessage } from "redux/modules/main";
 @connect(({ main: { loading, message } }) => ({ loading, message }), { clearMessage })
 export default class Main extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.error) {
+    if (nextProps.message) {
       setTimeout(this.props.clearMessage, 8000);
     }
   }

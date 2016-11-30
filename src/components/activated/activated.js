@@ -16,10 +16,11 @@ export default class Activated extends Component {
           backgroundColor="#EF6C00"
           labelColor="white"
           onClick={() => {
-            if (this.props.setPage) {
+            if (this.props.homepage) {
               this.props.setPage(0);
             } else {
               this.props.activateClub().then(() => {
+                this.props.setPage(0);
                 browserHistory.push("/club");
               });
             }

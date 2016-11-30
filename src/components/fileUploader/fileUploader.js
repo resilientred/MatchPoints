@@ -35,9 +35,6 @@ export default class FileUploader extends Component {
 
     return false;
   }
-  componentWillUnmount() {
-    this.listener.remove();
-  }
 
   clubChanged = () => {
     this.setState({ processing: false });

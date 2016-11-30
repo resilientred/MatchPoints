@@ -15,7 +15,7 @@ export default class Mailer {
       secure: true,
       auth: {
         user: "noreplymatchpoints@gmail.com",
-        pass: "password"
+        pass: "matchpointsorg"
       }
     };
     return NodeMailer.createTransport(smtpTransport(smtpOptions));

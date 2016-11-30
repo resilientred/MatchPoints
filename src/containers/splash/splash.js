@@ -35,11 +35,13 @@ class Splash extends Component {
           return <ResetForm setPage={this.props.setPage} />;
         case 5:
           return (<Activated
+            setPage={this.props.setPage}
             message="Your account has been activated successfully."
           />);
         case 6:
           return (<Activated
             setPage={this.props.setPage}
+            homepage={true}
             message="The token has expired or your account has already been activated."
           />);
         default:

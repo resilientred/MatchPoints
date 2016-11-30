@@ -11,7 +11,7 @@ import sessions from "./sessions";
 import schemata from "./schemata";
 import query from "./query";
 import reset from "./reset";
-import dialogs from "./dialogs";
+import upload from "./upload";
 import modals from "./modals";
 
 export default combineReducers({
@@ -27,6 +27,6 @@ export default combineReducers({
   sessions,
   schemata,
   query,
-  dialogs,
+  upload,
   modals
 });

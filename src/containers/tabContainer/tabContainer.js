@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Tabs, Tab } from "material-ui/Tabs";
 import { connect } from "react-redux";
 import { openNewModal } from "redux/modules/modals";
+import { openUpload } from "redux/modules/upload";
 import { setDate, toggleRegister } from "redux/modules/newSession";
 import { Grouping, Participants } from "containers";
 import RaisedButton from "material-ui/RaisedButton";
@@ -13,7 +14,7 @@ import DatePicker from "material-ui/DatePicker";
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers
   }),
-  ({ openNewModal, toggleRegister, setDate })
+  ({ openNewModal, toggleRegister, setDate, openUpload })
 )
 export default class TabContainer extends Component {
   constructor(props) {
@@ -47,7 +48,7 @@ export default class TabContainer extends Component {
         }}
       />
       <RaisedButton
-        onClick={() => this.handleOpen("uploadDialogOpen")}
+        onClick={this.props.openUpload}
         label="Upload Players"
         secondary={Boolean(true)}
         style={{
