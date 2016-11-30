@@ -547,8 +547,7 @@ form {
   color: red; }
 
 .nav-bar li {
-  cursor: pointer;
-  color: white; }
+  cursor: pointer; }
   .nav-bar li:hover {
     color: #FFA000; }
 

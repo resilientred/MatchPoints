@@ -16,6 +16,7 @@ export default class Navbar extends Component {
     this.props.preSetTab(window.location.pathname);
   }
 
+
   shouldComponentUpdate(nextProps) {
     if (this.props.navbar.opened !== nextProps.navbar.opened ||
       this.props.navbar.tab !== nextProps.navbar.tab) {
@@ -37,6 +38,7 @@ export default class Navbar extends Component {
     if (tab === 0) {
       this.props.setPage(0);
     }
+
     this.props.setTab(tab);
     browserHistory.push(link);
   }

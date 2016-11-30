@@ -47,7 +47,7 @@ export default class RoundRobinSessions extends Component {
           key={curSession.id}
           onClick={() => this.handleClick(curSession.id)}
           leftAvatar={<Avatar icon={<Event />} />}
-          primaryText={moment(curSession.date).format("MMMM DD, YYYY")}
+          primaryText={moment(curSession.date).utc().format("MMMM DD, YYYY")}
           rightIcon={<View />}
         />);
         finalized.push(session);
@@ -56,7 +56,7 @@ export default class RoundRobinSessions extends Component {
           key={curSession.id}
           onClick={() => this.handleClick(curSession.id)}
           leftAvatar={<Avatar icon={<Event />} />}
-          primaryText={moment(curSession.date).format("MMMM DD, YYYY")}
+          primaryText={moment(curSession.date).utc().format("MMMM DD, YYYY")}
           rightIcon={<Edit />}
         />);
         notFinalized.push(session);

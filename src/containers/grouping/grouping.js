@@ -11,6 +11,7 @@ import Dialog from "material-ui/Dialog";
 import { NumOfPlayers, ParticipantGroup } from "components";
 import { changeSchema, movePlayerUp, movePlayerDown } from "redux/modules/schemata";
 import { stopLoad } from "redux/modules/main";
+import { preSetTab } from "redux/modules/navbar";
 import { generatePDF, allowGenerate, clearPDF } from "redux/modules/pdf";
 import { setMinAndMax, temporarySave, saveSession } from "redux/modules/newSession";
 import moment from "moment";
@@ -27,7 +28,8 @@ import moment from "moment";
     saveSession,
     temporarySave,
     movePlayerUp,
-    movePlayerDown
+    movePlayerDown,
+    preSetTab
   }
 )
 export default class Grouping extends Component {
@@ -138,6 +140,7 @@ export default class Grouping extends Component {
         selectedSchema: this.props.selected,
         players: this.props.sortedPlayers
       }).then(() => {
+        this.props.preSetTab("/club/sessions");
         browserHistory.push("/club/sessions");
       });
     }
