@@ -18,6 +18,7 @@ const initialState = {
   loaded: false,
   allPlayers: {},
   addedPlayers: {},
+  sortedPlayers: new Heap(),
   numJoined: 0,
   date: new Date(),
   pdfs: null,

@@ -94,7 +94,6 @@ export default class FileUploader extends Component {
         >
           <input
             type="file"
-            value={this.state.file}
             onChange={this.updateFile}
             style={style}
           />

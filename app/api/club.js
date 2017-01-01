@@ -4,6 +4,7 @@ import RoundRobinModel from "../models/roundrobin";
 import { jsonParser, csrfProtection, client } from "../helpers/appModules";
 import Mailer from "../helpers/mailer";
 import ClubHelper from "../helpers/clubHelper";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -12,14 +13,6 @@ router.get("/", (req, res) => {
       return res.status(200).send(currentClub);
     }).catch((err) => {
       console.log(err);
-    });
-})
-.get("/:clubId/players", (req, res) => {
-  Club.findPlayers(req.params.clubId)
-    .then((players) => {
-      res.status(200).send(players);
-    }).catch((err) => {
-      res.status(422).send(err);
     });
 })
 .get("/all", (req, res) => {

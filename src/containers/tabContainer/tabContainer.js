@@ -35,7 +35,7 @@ export default class TabContainer extends Component {
     const minDate = new Date(today.setYear(today.getFullYear() - 1));
 
     const sortedPlayers = Object.keys(this.props.addedPlayers)
-      .map((_id => this.props.addedPlayers[_id]))
+      .map(_id => this.props.addedPlayers[_id])
       .sort((a, b) => b.rating - a.rating);
 
     const playerContent = (<div>

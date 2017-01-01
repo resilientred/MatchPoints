@@ -63,7 +63,6 @@ router.post("/:clubId", jsonParser, csrfProtection, (req, res) => {
           return Promise.reject(err);
         });
 
-        //something is wrong
         urls[`group${(j + 1 + i - (i - start))}`] = url;
       });
       if (addedPlayers.length === 0) {

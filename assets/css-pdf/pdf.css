@@ -1,48 +1,62 @@
-div, body, content, header {
+div,
+body,
+content,
+header {
   margin: 0;
   border: 0;
   padding: 0;
   font-family: sans-serif;
 }
+
 ul {
   margin-top: 0;
   list-style-type: none;
   text-align: center;
 }
+
 ul li {
   display: block;
   position: relative;
   right: 41%;
 }
+
 .separator {
   padding-top: 5px;
 }
+
 header {
   width: 100%;
   text-align: center;
   display: block;
 }
+
 .center {
   word-wrap: break-word;
   width: 50%;
 }
+
 .center h1 {
   text-decoration: underline;
 }
+
 .address {
   margin-top: -10px;
   display: block;
   font-size: 14px;
   margin-left: 25%;
 }
-.left, .right {
+
+.left,
+.right {
   width: 20%;
 }
+
 .cf {
   content: " ";
   clear: both;
   display: table;
 }
+
 header div {
   float: left;
 }
@@ -59,41 +73,48 @@ content ol {
   padding-bottom: 20px;
   margin-top: 10px;
 }
+
 ol li {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
 ol li span {
   margin-left: 10px;
 }
-content > div {
+
+content>div {
   float: left;
 }
+
 .schedule {
   margin-top: 10px;
   float: right;
   font-size: 15px;
 }
+
 .scenario {
   float: left;
   border-left: 2px solid black;
   min-height: 300px;
   text-align: center;
 }
+
 .schedule:last-child {
   border-right: 2px solid black;
 }
-
 
 .cell-div {
   float: left;
   padding: 0px 4px;
   border-right: 2px solid black;
 }
+
 .cell-div .cell:last-child {
   margin-left: 2px;
   border-right: 0px;
 }
+
 .cell {
   position: relative;
   float: left;
@@ -101,6 +122,7 @@ content > div {
   height: 35px;
   width: 30px;
 }
+
 .pos {
   position: absolute;
   top: 0;
@@ -110,7 +132,9 @@ content > div {
   width: 100%;
   font-size: 12px;
 }
-.g-num, .blank {
+
+.g-num,
+.blank {
   float: left;
   width: 20px;
   padding: 3px;
@@ -121,10 +145,12 @@ content > div {
 .grey {
   background-color: grey;
 }
+
 .row {
   padding: 5px;
   display: block;
 }
+
 .score-title {
   text-align: center;
   height: 35px;
@@ -132,4 +158,3 @@ content > div {
   width: 70px;
   border-right: 2px solid black;
 }
-
