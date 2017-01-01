@@ -11,14 +11,14 @@ const Participants = (props) => {
       players={props.allPlayers}
       title="All Players"
       addedPlayers={props.addedPlayers}
-      toggleRegister={props.toggleRegister}
+      registerPlayer={props.registerPlayer}
     />
     <Divider style={style} />
     <SelectedPlayerList
       players={props.sortedPlayers}
       title="Selected Players"
       addedPlayers={props.addedPlayers}
-      toggleRegister={props.toggleRegister}
+      unregisterPlayer={props.unregisterPlayer}
     />
     <Divider style={style} />
   </div>);

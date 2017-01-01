@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCSRF } from "helpers";
+import { getCSRF, Heap } from "helpers";
 import { ADD_PLAYER_SUCCESS, DELETE_PLAYER_SUCCESS, UPDATE_PLAYER_SUCCESS, FETCH_PLAYERS_SUCCESS } from "redux/modules/players";
 import { UPDATE_SESSION_SUCCESS } from "redux/modules/sessions";
 import { MESSAGE, LOAD } from "redux/modules/main";
@@ -9,7 +9,8 @@ export const SET_MIN_AND_MAX = "mp/session/SET_MIN_AND_MAX";
 export const PLAYERS_FAIL = "mp/session/FETCH_PLAYERS";
 export const RESTORE_SESSION = "mp/session/RESTORE_SESSION";
 export const ADD_PLAYERS_SUCCESS = "mp/session/ADD_PLAYERS_SUCCESS";
-export const TOGGLE_REGISTER = "mp/session/REGISTER_PLAYER";
+export const REGISTER_PLAYER = "mp/session/REGISTER_PLAYER";
+export const UNREGISTER_PLAYER = "mp/session/UNREGISTER_PLAYER";
 export const SAVE_SESSION_SUCCESS = "mp/session/SAVE_SESSION_SUCCESS";
 const SET_DATE = "mp/rr/SET_DATE";
 
@@ -17,8 +18,7 @@ const initialState = {
   loading: false,
   loaded: false,
   allPlayers: {},
-  addedPlayers: {},
-  sortedPlayers: new Heap(),
+  addedPlayers: new Heap(),
   numJoined: 0,
   date: new Date(),
   pdfs: null,
@@ -33,23 +33,16 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload
       };
-    case TOGGLE_REGISTER: {
-      const addedPlayers = Object.assign({}, state.addedPlayers);
-      let numJoined = state.numJoined;
-      if (addedPlayers[action.payload]) {
-        delete addedPlayers[action.payload];
-        numJoined--;
-      } else {
-        addedPlayers[action.payload] = state.allPlayers[action.payload];
-        numJoined++;
-      }
-
+    case REGISTER_PLAYER: {
+      const addedPlayers = state.addedPlayers.insert(state.allPlayers[action.payload]);
       return {
         ...state,
+        numJoined: state.numJoined++,
         addedPlayers,
-        numJoined
       };
     }
+    case UNREGISTER_PLAYER:
+
     case FETCH_PLAYERS_SUCCESS: {
       const allPlayers = {};
       action.payload.forEach((player) => {
@@ -151,9 +144,16 @@ export const setDate = (date) => {
   };
 };
 
-export const toggleRegister = (id) => {
+export const registerPlayer = (id) => {
   return {
-    type: TOGGLE_REGISTER,
+    type: REGISTER_PLAYER,
+    payload: id
+  };
+};
+
+export const unregisterPlayer = (id) => {
+  return {
+    type: UNREGISTER_PLAYER,
     payload: id
   };
 };

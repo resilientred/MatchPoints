@@ -83,7 +83,7 @@ class PlayerList extends Component {
           fixedHeader={Boolean(true)}
           selectable={Boolean(true)}
           multiSelectable={Boolean(true)}
-          onCellClick={i => this.props.toggleRegister(filteredPlayers[i]._id)}
+          onCellClick={i => this.props.registerPlayer(filteredPlayers[i]._id)}
         >
           <TableHeader displaySelectAll={false}>
             <TableRow>

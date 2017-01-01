@@ -6,7 +6,7 @@ const SelectedPlayerList = (props) => {
   const idRef = {};
   const playerList = props.players.map((player, i) => {
     idRef[i] = player._id;
-    return (<TableRow key={player._id} selected={!!props.addedPlayers[player._id]}>
+    return (<TableRow key={player._id} selected={props.addedPlayers.findIndex(player => player._id) > -1}>
       <TableRowColumn>{player.name}</TableRowColumn>
       <TableRowColumn>{player.rating}</TableRowColumn>
     </TableRow>);
@@ -20,7 +20,7 @@ const SelectedPlayerList = (props) => {
         fixedHeader={Boolean(true)}
         selectable={Boolean(true)}
         multiSelectable={Boolean(true)}
-        onCellClick={i => props.toggleRegister(idRef[i])}
+        onCellClick={i => props.unregisterPlayer(idRef[i])}
       >
         <TableHeader displaySelectAll={false}>
           <TableRow>

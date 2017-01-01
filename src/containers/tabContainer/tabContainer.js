@@ -3,7 +3,7 @@ import { Tabs, Tab } from "material-ui/Tabs";
 import { connect } from "react-redux";
 import { openNewModal } from "redux/modules/modals";
 import { openUpload } from "redux/modules/upload";
-import { setDate, toggleRegister } from "redux/modules/newSession";
+import { setDate, registerPlayer, unregisterPlayer } from "redux/modules/newSession";
 import { Grouping, Participants } from "containers";
 import RaisedButton from "material-ui/RaisedButton";
 import DatePicker from "material-ui/DatePicker";
@@ -14,7 +14,7 @@ import DatePicker from "material-ui/DatePicker";
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers
   }),
-  ({ openNewModal, toggleRegister, setDate, openUpload })
+  ({ openNewModal, registerPlayer, unregisterPlayer, setDate, openUpload })
 )
 export default class TabContainer extends Component {
   constructor(props) {
@@ -34,9 +34,7 @@ export default class TabContainer extends Component {
     const today = new Date();
     const minDate = new Date(today.setYear(today.getFullYear() - 1));
 
-    const sortedPlayers = Object.keys(this.props.addedPlayers)
-      .map(_id => this.props.addedPlayers[_id])
-      .sort((a, b) => b.rating - a.rating);
+    const sortedPlayers = this.props.addedPlayers.sort();
 
     const playerContent = (<div>
       <RaisedButton
@@ -64,7 +62,8 @@ export default class TabContainer extends Component {
         />
       </div>
       <Participants
-        toggleRegister={this.props.toggleRegister}
+        registerPlayer={this.props.registerPlayer}
+        unregisterPlayer={this.props.unregisterPlayer}
         sortedPlayers={sortedPlayers}
         addedPlayers={this.props.addedPlayers}
         allPlayers={this.props.allPlayers}

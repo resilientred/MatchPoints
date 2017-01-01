@@ -1,23 +1,25 @@
 import PlayerList from './playerList';
 
-class MaxHeap {
-  constructor() {
-    this.heap = [];
+export default class Heap {
+  constructor(heap) {
+    this.heap = heap || [];
   }
 
   /*
     void insert(<T> val)
   */
   insert(val) {
-    this.heap.push(val);
-    this.heapifyUp(this.heap.length - 1);
+    const copiedArr = this.heap.slice().push(val);
+    const newHeap = new Heap(copiedArr);
+    newHeap.heapifyUp(this.heap.length - 1);
+    return newHeap;
   }
 
   /*
     <T> remove()
     - Returns object with max value inside the heap
   */
-  remove() {
+  removeMax() {
     const max = this.heap[0];
     this.heap[0] = this.heap[this.heap.length - 1];
 
@@ -27,6 +29,16 @@ class MaxHeap {
     return max;
   }
 
+  remove(id) {
+    const idx = this.heap.findIndex(player => player.get('id') === id);
+    const copiedArr = this.heap.slice().push(val);
+    copiedArr[idx] = copiedArr[copiedArr.length - 1];
+    copiedArr.pop();
+    const newHeap = new Heap(copiedArr);
+
+    newHeap.heapifyDown(idx);
+    return newHeap;
+  }
   /*
     [0, 1, 2, 3, 4, 5, 6]
     parent Math.ceil(idx / 2) - 1
@@ -85,7 +97,7 @@ class MaxHeap {
     const heap = this.heap.slice();
     const sorted = [];
     while (this.heap.length > 0) {
-      sorted.push(this.remove());
+      sorted.push(this.removeMax());
     }
 
     if (order === 'ASC') {
@@ -100,7 +112,7 @@ class MaxHeap {
     const list = new PlayerList(schema);
 
     while (this.heap.length > 0) {
-      list.append(this.remove());
+      list.append(this.removeMax());
     }
 
     return list;
