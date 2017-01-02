@@ -27,4 +27,15 @@ export default class PlayerList {
     this.playerList[group][idx] = this.playerList[group - 1][swapIdx];
     this.playerList[group - 1][swapIdx] = target;
   }
+
+  demote(group, idx) {
+    if (group < 0 || group >= this.playerList.length ||
+      idx < 0 || idx >= this.schema[group]) {
+      return;
+    }
+    const target = this.playerList[group][idx];
+    const swapIdx = this.schema[group + 1] - 1;
+    this.playerList[group][idx] = this.playerList[group + 1][swapIdx];
+    this.playerList[group + 1][swapIdx] = target;
+  }
 }

@@ -153,21 +153,29 @@ export default class Grouping extends Component {
     }
   }
 
+  promote = (groupId, playerRank) => {
+    this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
+  }
+
+  demote = (groupId, playerRank) => {
+    this.props.addedPlayers.toPlayerList().demote(groupId, playerRank);
+  }
+
   groupTables() {
+    const playerList = this.props.addedPlayers.toPlayerList(this.props.selected).toArray();
     const pdfs = this.props.pdfs;
-    let totalPlayerAdded = 0;
+
     return (<div>
       {
         this.props.selected.map((numPlayers, i, arr) => {
-          totalPlayerAdded += +numPlayers;
           return (<ParticipantGroup
             key={`${i}${numPlayers}`} groupId={i}
             pdfDownload={!pdfs ? () => {} : this.download.bind(this, pdfs[`group${(i + 1)}`])}
             pdfLoaded={!!pdfs}
             numPlayers={numPlayers}
-            players={this.props.sortedPlayers.slice(
-              totalPlayerAdded - numPlayers, totalPlayerAdded
-              )}
+            players={playerList[i]}
+            promote={this.promote}
+            demote={this.demote}
             moveUp={i === 0 ? null : this.props.movePlayerUp}
             moveDown={i === arr.length - 1 ? null : this.props.movePlayerDown}
           />);
@@ -175,6 +183,7 @@ export default class Grouping extends Component {
       }
     </div>);
   }
+
   dialog() {
     const actions = [
       <FlatButton

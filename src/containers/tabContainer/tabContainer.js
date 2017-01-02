@@ -84,7 +84,7 @@ export default class TabContainer extends Component {
         { playerContent }
       </Tab>
       <Tab label="Grouping" value={1}>
-        <Grouping sortedPlayers={sortedPlayers} />
+        <Grouping sortedPlayers={sortedPlayers} addedPlayers={this.props.addedPlayers} />
       </Tab>
     </Tabs>);
   }
