@@ -1,7 +1,7 @@
-class PlayerList {
+export default class PlayerList {
   constructor(schema) {
     this.schema = schema;
-    this.playerList = schema.map(() => new Array());
+    this.playerList = schema.map(() => []);
     this.currentGroup = 0;
   }
 
@@ -22,7 +22,7 @@ class PlayerList {
     if (group < 1 || idx < 0 || idx >= this.schema[group]) {
       return;
     }
-    cosnt target = this.playerList[group][idx];
+    const target = this.playerList[group][idx];
     const swapIdx = this.schema[group - 1] - 1;
     this.playerList[group][idx] = this.playerList[group - 1][swapIdx];
     this.playerList[group - 1][swapIdx] = target;

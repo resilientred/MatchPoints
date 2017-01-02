@@ -1,42 +1,65 @@
-import PlayerList from './playerList';
+import PlayerList from "./playerList";
 
+/* Immutable implementation */
 export default class Heap {
-  constructor(heap) {
+  constructor(heap, map) {
     this.heap = heap || [];
+    this.map = map || {};
   }
 
+  find(id) {
+    return Number.isInteger(this.map[id]);
+  }
   /*
-    void insert(<T> val)
+    Heap<T> insert(<T> val)
+    returns a new heap with inserted value
   */
   insert(val) {
-    const copiedArr = this.heap.slice().push(val);
-    const newHeap = new Heap(copiedArr);
-    newHeap.heapifyUp(this.heap.length - 1);
+    const copiedArr = this.heap.slice()
+    copiedArr.push(val);
+
+    const copiedMap = {
+      ...this.map,
+      [val._id]: copiedArr.length - 1,
+    };
+    const newHeap = new Heap(copiedArr, copiedMap);
+    newHeap.heapifyUp(newHeap.heap.length - 1);
+
     return newHeap;
   }
 
   /*
-    <T> remove()
+    <T> removeMax()
     - Returns object with max value inside the heap
   */
   removeMax() {
     const max = this.heap[0];
     this.heap[0] = this.heap[this.heap.length - 1];
-
+    delete this.map[this.heap[0]._id];
     this.heap.pop();
     this.heapifyDown(0);
 
     return max;
   }
 
+  /*
+    Heap<T> remove(id)
+    - Returns a new heap with the player removed
+  */
   remove(id) {
-    const idx = this.heap.findIndex(player => player.get('id') === id);
-    const copiedArr = this.heap.slice().push(val);
-    copiedArr[idx] = copiedArr[copiedArr.length - 1];
-    copiedArr.pop();
-    const newHeap = new Heap(copiedArr);
+    const idx = this.map[id];
+    const copiedArr = this.heap.slice();
+    const copiedMap = Object.assign({}, this.map);
 
+    delete copiedMap[id];
+    if (idx < copiedArr.length - 1) {
+      copiedMap[copiedArr[copiedArr.length - 1]._id] = idx;
+      copiedArr[idx] = copiedArr[copiedArr.length - 1];
+    }
+    copiedArr.pop();
+    const newHeap = new Heap(copiedArr, copiedMap);
     newHeap.heapifyDown(idx);
+
     return newHeap;
   }
   /*
@@ -59,6 +82,8 @@ export default class Heap {
   }
 
   swap(idx1, idx2) {
+    this.map[this.heap[idx1]._id] = idx2;
+    this.map[this.heap[idx2]._id] = idx1;
     [this.heap[idx1], this.heap[idx2]] = [this.heap[idx2], this.heap[idx1]];
   }
 
@@ -90,29 +115,28 @@ export default class Heap {
   }
 
   childIndices(idx) {
-    return [idx * 2 + 1, idx * 2 + 2].filter(i => i < this.heap.length);
+    return [(idx * 2) + 1, (idx * 2) + 2].filter(i => i < this.heap.length);
   }
 
-  sort(order = 'DESC') {
-    const heap = this.heap.slice();
+  sort(order = "DESC") {
+    const copiedHeap = new Heap(this.heap.slice(), Object.assign({}, this.map));
     const sorted = [];
-    while (this.heap.length > 0) {
-      sorted.push(this.removeMax());
+    while (copiedHeap.heap.length > 0) {
+      sorted.push(copiedHeap.removeMax());
     }
 
-    if (order === 'ASC') {
+    if (order === "ASC") {
       sorted.reverse();
     }
 
-    this.heap = heap;
     return sorted;
   }
 
   toPlayerList(schema) {
     const list = new PlayerList(schema);
-
-    while (this.heap.length > 0) {
-      list.append(this.removeMax());
+    const copiedHeap = new Heap(this.heap.slice(), Object.assign({}, this.map));
+    while (copiedHeap.length > 0) {
+      list.append(copiedHeap.removeMax());
     }
 
     return list;

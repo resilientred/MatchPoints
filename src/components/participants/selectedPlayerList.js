@@ -6,7 +6,7 @@ const SelectedPlayerList = (props) => {
   const idRef = {};
   const playerList = props.players.map((player, i) => {
     idRef[i] = player._id;
-    return (<TableRow key={player._id} selected={props.addedPlayers.findIndex(player => player._id) > -1}>
+    return (<TableRow key={player._id} selected={!!props.addedPlayers.find(player._id)}>
       <TableRowColumn>{player.name}</TableRowColumn>
       <TableRowColumn>{player.rating}</TableRowColumn>
     </TableRow>);

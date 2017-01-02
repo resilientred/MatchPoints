@@ -12,6 +12,7 @@ const Participants = (props) => {
       title="All Players"
       addedPlayers={props.addedPlayers}
       registerPlayer={props.registerPlayer}
+      unregisterPlayer={props.unregisterPlayer}
     />
     <Divider style={style} />
     <SelectedPlayerList

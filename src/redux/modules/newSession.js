@@ -35,13 +35,22 @@ export default (state = initialState, action) => {
       };
     case REGISTER_PLAYER: {
       const addedPlayers = state.addedPlayers.insert(state.allPlayers[action.payload]);
+      const numJoined = state.numJoined + 1;
       return {
         ...state,
-        numJoined: state.numJoined++,
+        numJoined,
         addedPlayers,
       };
     }
-    case UNREGISTER_PLAYER:
+    case UNREGISTER_PLAYER: {
+      const addedPlayers = state.addedPlayers.remove(action.payload);
+      const numJoined = state.numJoined - 1;
+      return {
+        ...state,
+        numJoined,
+        addedPlayers,
+      };
+    }
 
     case FETCH_PLAYERS_SUCCESS: {
       const allPlayers = {};

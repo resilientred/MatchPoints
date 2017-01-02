@@ -26,9 +26,17 @@ class PlayerList extends Component {
     this.setState({ input: "" });
   }
 
+  toggleRegister = (id) => {
+    if (this.props.addedPlayers.find(id)) {
+      this.props.unregisterPlayer(id);
+    } else {
+      this.props.registerPlayer(id);
+    }
+  }
+
   playerRow(player) {
     return (
-      <TableRow key={player._id} selected={!!this.props.addedPlayers[player._id]}>
+      <TableRow key={player._id} selected={!!this.props.addedPlayers.find(player._id)}>
         <TableRowColumn className="col-name">{player.name}</TableRowColumn>
         <TableRowColumn className="col-rating">{player.rating}</TableRowColumn>
         <TableRowColumn className="col-button">
@@ -83,7 +91,7 @@ class PlayerList extends Component {
           fixedHeader={Boolean(true)}
           selectable={Boolean(true)}
           multiSelectable={Boolean(true)}
-          onCellClick={i => this.props.registerPlayer(filteredPlayers[i]._id)}
+          onCellClick={i => this.toggleRegister(filteredPlayers[i]._id)}
         >
           <TableHeader displaySelectAll={false}>
             <TableRow>
