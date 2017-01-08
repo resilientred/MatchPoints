@@ -1,16 +1,16 @@
-import axios from "axios";
-import { LOAD, MESSAGE } from "redux/modules/main";
-import { DELETE_SESSION_SUCCESS } from "redux/modules/sessions";
+import axios from 'axios';
+import { LOAD, MESSAGE } from 'redux/modules/main';
+import { DELETE_SESSION_SUCCESS } from 'redux/modules/sessions';
 
-const FETCH_SESSION_SUCCESS = "mp/selectedSession/FETCH_SESSION_SUCCESS";
-const SELECT_SESSION = "mp/selectedSession/SELECT_SESSION";
-const UPDATE_SCORE = "mp/selectedSession/UPDATE_SCORE";
+const FETCH_SESSION_SUCCESS = 'mp/selectedSession/FETCH_SESSION_SUCCESS';
+const SELECT_SESSION = 'mp/selectedSession/SELECT_SESSION';
+const UPDATE_SCORE = 'mp/selectedSession/UPDATE_SCORE';
 const initialState = {
   loading: false,
   loaded: false,
   session: null,
   scoreChange: [],
-  scoreUpdate: {}
+  scoreUpdate: {},
 };
 
 export default (state = initialState, action) => {
@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
         loaded: false,
         session: null,
         scoreChange: [],
-        scoreUpdate: {}
+        scoreUpdate: {},
       };
     case UPDATE_SCORE: {
       const { idx, scoreChangeInGroup } = action.payload;
@@ -36,9 +36,9 @@ export default (state = initialState, action) => {
         scoreChange: [
           ...state.scoreChange.slice(0, idx),
           scoreChangeInGroup[0],
-          ...state.scoreChange.slice(idx + 1)
+          ...state.scoreChange.slice(idx + 1),
         ],
-        scoreUpdate
+        scoreUpdate,
       };
     }
     case FETCH_SESSION_SUCCESS:
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
           scoreUpdate: {},
           session,
           result,
-          scoreChange
+          scoreChange,
         };
       }
       return {
@@ -62,7 +62,7 @@ export default (state = initialState, action) => {
         loading: false,
         session,
         scoreChange: session.scoreChange,
-        scoreUpdate: null
+        scoreUpdate: null,
       };
     }
     default:
@@ -85,14 +85,14 @@ export const isLoaded = (state, id) => {
 export const setSession = (session) => {
   return {
     type: SELECT_SESSION,
-    payload: session
+    payload: session,
   };
 };
 
 export const fetchSession = (id) => {
   return {
     types: [LOAD, FETCH_SESSION_SUCCESS, MESSAGE],
-    promise: axios.get(`/api/my/sessions/${id}`)
+    promise: axios.get(`/api/my/sessions/${id}`),
   };
 };
 
@@ -100,7 +100,7 @@ export const updateScore = (scoreChangeInGroup, idx) => {
   return {
     type: UPDATE_SCORE,
     payload: {
-      scoreChangeInGroup, idx
-    }
+      scoreChangeInGroup, idx,
+    },
   };
 };

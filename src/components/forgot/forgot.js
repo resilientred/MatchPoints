@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
-import { connect } from "react-redux";
-import { resetWithUsername, resetWithEmail } from "redux/modules/reset";
+import React, { Component } from 'react';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import { connect } from 'react-redux';
+import { resetWithUsername, resetWithEmail } from 'redux/modules/reset';
 
 @connect(() => ({}), { resetWithEmail, resetWithUsername })
 export default class Forgot extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      field: "",
-      error: "",
-      success: null
+      field: '',
+      error: '',
+      success: null,
     };
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const emailRegex = new RegExp(".+@.+..+", "i");
+    const emailRegex = new RegExp('.+@.+..+', 'i');
     let promise;
     if (!emailRegex.test(this.state.field)) {
       promise = this.props.resetWithUsername(this.state.field);
@@ -26,9 +26,9 @@ export default class Forgot extends Component {
     }
     promise.then(() => {
       this.setState({
-        field: "",
-        error: "",
-        success: "An email has been sent to your email with instructions to reset your password."
+        field: '',
+        error: '',
+        success: 'An email has been sent to your email with instructions to reset your password.',
       });
     }).catch(() => {
       this.setState({ error: `No account matches ${this.state.field}` });
@@ -66,7 +66,7 @@ export default class Forgot extends Component {
                 label="Reset Password"
                 backgroundColor="#1565C0"
                 labelColor="white"
-                style={{ marginTop: "10px" }}
+                style={{ marginTop: '10px' }}
                 onClick={this.handleSubmit}
               />
             </div>)

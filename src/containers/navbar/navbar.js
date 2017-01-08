@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { browserHistory } from "react-router";
-import Drawer from "material-ui/Drawer";
-import MenuItem from "material-ui/MenuItem";
-import { connect } from "react-redux";
-import { openLogin, setPage } from "redux/modules/splash";
-import { logIn, logOut } from "redux/modules/auth";
-import { open, close, setTab, preSetTab } from "redux/modules/navbar";
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import { connect } from 'react-redux';
+import { openLogin, setPage } from 'redux/modules/splash';
+import { logIn, logOut } from 'redux/modules/auth';
+import { open, close, setTab, preSetTab } from 'redux/modules/navbar';
 
 @connect(
   ({ auth: { club }, navbar }) => ({ club, navbar }),
@@ -31,7 +31,7 @@ export default class Navbar extends Component {
 
   handleLogout = () => {
     this.props.logOut().then(() => {
-      browserHistory.push("/");
+      browserHistory.push('/');
     });
   }
   handleLink(link, tab) {
@@ -55,31 +55,31 @@ export default class Navbar extends Component {
         zDepth={5}
       >
         <MenuItem
-          onTouchTap={() => this.handleLink("/club", 0)}
+          onTouchTap={() => this.handleLink('/club', 0)}
           primaryText="Home"
           insetChildren={Boolean(true)}
           checked={tab === 0}
         />
         <MenuItem
-          onTouchTap={() => this.handleLink("/club/profile", 4)}
+          onTouchTap={() => this.handleLink('/club/profile', 4)}
           primaryText="Profile"
           insetChildren={Boolean(true)}
           checked={tab === 4}
         />
         <MenuItem
-          onTouchTap={() => this.handleLink("/club/sessions/new", 1)}
+          onTouchTap={() => this.handleLink('/club/sessions/new', 1)}
           primaryText="New Session"
           insetChildren={Boolean(true)}
           checked={tab === 1}
         />
         <MenuItem
-          onTouchTap={() => this.handleLink("/club/sessions", 2)}
+          onTouchTap={() => this.handleLink('/club/sessions', 2)}
           primaryText="Old Sessions"
           insetChildren={Boolean(true)}
           checked={tab === 2}
         />
         <MenuItem
-          onTouchTap={() => this.handleLink("/results", 3)}
+          onTouchTap={() => this.handleLink('/results', 3)}
           primaryText="Browse Results"
           insetChildren={Boolean(true)}
           checked={tab === 3}
@@ -99,19 +99,19 @@ export default class Navbar extends Component {
       onRequestChange={this.props.close}
     >
       <MenuItem
-        onTouchTap={() => this.handleLink("/", 0)}
+        onTouchTap={() => this.handleLink('/', 0)}
         primaryText="Home"
         checked={tab === 0}
         insetChildren={Boolean(true)}
       />
       <MenuItem
-        onTouchTap={() => this.handleLink("/results", 3)}
+        onTouchTap={() => this.handleLink('/results', 3)}
         primaryText="Browse Results"
         insetChildren={Boolean(true)}
         checked={tab === 3}
       />
       {
-        window.location.pathname === "/" ||
+        window.location.pathname === '/' ||
           <MenuItem
             primaryText="Log In"
             onTouchTap={this.props.openLogin}
@@ -125,26 +125,26 @@ export default class Navbar extends Component {
     if (this.props.club._id) {
       return (<ul className="nav">
         <li
-          onClick={() => this.handleLink("/club/profile", 4)}
-          className={tab === 4 ? "active-links" : ""}
+          onClick={() => this.handleLink('/club/profile', 4)}
+          className={tab === 4 ? 'active-links' : ''}
         >
           Profile
         </li>
         <li
-          onClick={() => this.handleLink("/club", 1)}
-          className={tab === 1 ? "active-links" : ""}
+          onClick={() => this.handleLink('/club', 1)}
+          className={tab === 1 ? 'active-links' : ''}
         >
           New Session
         </li>
         <li
-          onClick={() => this.handleLink("/club/sessions", 2)}
-          className={tab === 2 ? "active-links" : ""}
+          onClick={() => this.handleLink('/club/sessions', 2)}
+          className={tab === 2 ? 'active-links' : ''}
         >
           Old Sessions
         </li>
         <li
-          onClick={() => this.handleLink("/results", 3)}
-          className={tab === 3 ? "active-links" : ""}
+          onClick={() => this.handleLink('/results', 3)}
+          className={tab === 3 ? 'active-links' : ''}
         >
           Browse Results
         </li>
@@ -152,9 +152,9 @@ export default class Navbar extends Component {
       </ul>);
     }
     return (<ul className="nav">
-      <li onClick={() => this.handleLink("/results", 3)} className={tab === 3 ? "active-links" : ""}>Browse Results</li>
+      <li onClick={() => this.handleLink('/results', 3)} className={tab === 3 ? 'active-links' : ''}>Browse Results</li>
       {
-        location.pathname === "/" ||
+        location.pathname === '/' ||
           <li className="nav-links" onClick={this.props.openLogin}>Log In</li>
       }
     </ul>);
@@ -164,7 +164,7 @@ export default class Navbar extends Component {
 
     return (<div className="nav-bar">
       <div>
-        <div className="logo" onClick={() => this.handleLink(this.props.club._id ? "/club" : "/", 0)}>
+        <div className="logo" onClick={() => this.handleLink(this.props.club._id ? '/club' : '/', 0)}>
           MatchPoints
         </div>
         { collapsedIcon }

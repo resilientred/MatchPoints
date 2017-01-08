@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
+import React, { Component } from 'react';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class InfoChange extends Component {
   constructor(props) {
@@ -10,36 +10,37 @@ export default class InfoChange extends Component {
     this.state = {
       email: club.email,
       ...club.location,
-      oldPassword: "",
-      error: {}
+      oldPassword: '',
+      error: {},
     };
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
+    // eslint-disable-next-line no-unused-vars
     const { error, oldPassword, ...others } = this.state;
 
     if (this.validate()) {
       this.props.submitChange(others, oldPassword)
         .then((club) => {
-          this.props.setMessage("Info has been changed successfully.");
+          this.props.setMessage('Info has been changed successfully.');
           this.setState({
             email: club.email,
             location: {
-              ...club.location
+              ...club.location,
             },
-            oldPassword: "",
-            error: {}
+            oldPassword: '',
+            error: {},
           });
         }).catch((err) => {
           if (err.response) {
             console.log(err.response);
             const message = err.response.data;
-            if (typeof message === "object") {
+            if (typeof message === 'object') {
               this.setState({
                 error: {
-                  ...message
-                }
+                  ...message,
+                },
               });
             } else {
               this.props.setMessage(err.response.data);
@@ -52,35 +53,35 @@ export default class InfoChange extends Component {
   handleChange(field, val) {
     this.setState({
       [field]: val,
-      error: {}
+      error: {},
     });
   }
 
   validate() {
     if (this.state.state.length === 0) {
       this.setState({
-        error: { state: "State cannot be empty." }
+        error: { state: 'State cannot be empty.' },
       });
       return false;
     }
 
     if (this.state.city.length === 0) {
       this.setState({ error: {
-        state: "City cannot be empty."
+        state: 'City cannot be empty.',
       } });
       return false;
     }
 
     if (this.state.oldPassword.length === 0) {
       this.setState({ error: {
-        password: "Please fill in your old password."
+        password: 'Please fill in your old password.',
       } });
       return false;
     }
-    const emailRegex = new RegExp(".+@.+..+", "i");
+    const emailRegex = new RegExp('.+@.+..+', 'i');
     if (!emailRegex.test(this.state.email)) {
       this.setState({ error: {
-        email: "Not a valid email"
+        email: 'Not a valid email',
       } });
 
       return false;
@@ -94,7 +95,7 @@ export default class InfoChange extends Component {
         hintText="Old Password"
         floatingLabelText="Old Password"
         value={this.state.oldPassword}
-        onChange={e => this.handleChange("oldPassword", e.target.value)}
+        onChange={e => this.handleChange('oldPassword', e.target.value)}
         errorText={this.state.error.password}
         type="password"
         fullWidth={Boolean(true)}
@@ -102,7 +103,7 @@ export default class InfoChange extends Component {
       <TextField
         floatingLabelText="Email"
         value={this.state.email}
-        onChange={e => this.handleChange("email", e.target.value)}
+        onChange={e => this.handleChange('email', e.target.value)}
         errorText={this.state.error.email}
         type="email"
         fullWidth={Boolean(true)}
@@ -110,7 +111,7 @@ export default class InfoChange extends Component {
       <TextField
         floatingLabelText="City"
         value={this.state.city}
-        onChange={e => this.handleChange("city", e.target.value)}
+        onChange={e => this.handleChange('city', e.target.value)}
         errorText={this.state.error.city}
         type="text"
         fullWidth={Boolean(true)}
@@ -118,7 +119,7 @@ export default class InfoChange extends Component {
       <TextField
         floatingLabelText="State"
         value={this.state.state}
-        onChange={e => this.handleChange("state", e.target.value)}
+        onChange={e => this.handleChange('state', e.target.value)}
         errorText={this.state.error.state}
         type="text"
         fullWidth={Boolean(true)}
@@ -128,7 +129,7 @@ export default class InfoChange extends Component {
         label="Change Information"
         backgroundColor="#1565C0"
         labelColor="white"
-        style={{ marginRight: "10px" }}
+        style={{ marginRight: '10px' }}
         onClick={this.handleSubmit}
       />
     </form>);

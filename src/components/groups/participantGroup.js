@@ -1,19 +1,21 @@
-import React from "react";
+import React from 'react';
 import { Table, TableBody, TableRow,
-  TableHeader, TableHeaderColumn, TableRowColumn } from "material-ui/Table";
-import UpArrow from "react-icons/lib/md/keyboard-arrow-up";
-import DownArrow from "react-icons/lib/md/keyboard-arrow-down";
-import IconButton from "material-ui/IconButton/IconButton";
-import PdfIcon from "react-icons/lib/md/picture-as-pdf";
+  TableHeader, TableHeaderColumn, TableRowColumn } from 'material-ui/Table';
+import UpArrow from 'react-icons/lib/md/keyboard-arrow-up';
+import PromoteButton from 'react-icons/lib/fa/arrow-up';
+import DownArrow from 'react-icons/lib/md/keyboard-arrow-down';
+import DemoteButton from 'react-icons/lib/fa/arrow-down';
+import IconButton from 'material-ui/IconButton/IconButton';
+import PdfIcon from 'react-icons/lib/md/picture-as-pdf';
 
 const ParticipantGroup = (props) => {
-  return (<div style={{ position: "relative" }}>
+  return (<div style={{ position: 'relative' }}>
     <IconButton
       iconClassName="material-icons"
-      style={{ position: "absolute", right: "0", top: "5px", zIndex: 10 }}
+      style={{ position: 'absolute', right: '0', top: '5px', zIndex: 10 }}
       onClick={props.pdfDownload}
       disabled={!props.pdfLoaded}
-      tooltip={!props.pdfLoaded ? "You must generate first" : "Download pdf"}
+      tooltip={!props.pdfLoaded ? 'You must generate first' : 'Download pdf'}
     >
       <PdfIcon />
     </IconButton>
@@ -36,7 +38,7 @@ const ParticipantGroup = (props) => {
       <TableBody
         displayRowCheckbox={false}
         showRowHover={Boolean(true)}
-        style={{ position: "relative" }}
+        style={{ position: 'relative' }}
       >
         {
           props.players.map((player, i) => (
@@ -44,6 +46,36 @@ const ParticipantGroup = (props) => {
               <TableRowColumn>{i + 1}</TableRowColumn>
               <TableRowColumn>{player.name}</TableRowColumn>
               <TableRowColumn>{player.rating}</TableRowColumn>
+              {
+                props.promote &&
+                <IconButton
+                  iconClassName="material-icons"
+                  tooltip="Promote Player"
+                  onClick={() => props.promote(props.groupId, i)}
+                  style={{
+                    left: '30px',
+                    top: '57px',
+                    zIndex: 10,
+                  }}
+                >
+                  <PromoteButton />
+                </IconButton>
+              }
+              {
+                props.demote &&
+                <IconButton
+                  iconClassName="material-icons"
+                  tooltip="Demote Player"
+                  onClick={() => props.demote(props.groupId, i)}
+                  style={{
+                    left: '30px',
+                    top: '57px',
+                    zIndex: 10,
+                  }}
+                >
+                  <DemoteButton />
+                </IconButton>
+              }
             </TableRow>
           ))
         }
@@ -56,10 +88,10 @@ const ParticipantGroup = (props) => {
           tooltip="Move one player up"
           onClick={() => props.moveUp(props.groupId)}
           style={{
-            position: "absolute",
-            left: "30px",
-            top: "57px",
-            zIndex: 10
+            position: 'absolute',
+            left: '30px',
+            top: '57px',
+            zIndex: 10,
           }}
         >
           <UpArrow />
@@ -72,10 +104,10 @@ const ParticipantGroup = (props) => {
           tooltip="Move one player down"
           onClick={() => props.moveDown(props.groupId)}
           style={{
-            position: "absolute",
-            left: "30px",
-            bottom: "1px",
-            zIndex: 10
+            position: 'absolute',
+            left: '30px',
+            bottom: '1px',
+            zIndex: 10,
           }}
         >
           <DownArrow />

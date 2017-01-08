@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { closeUpload } from "redux/modules/upload";
-import { FileUploader } from "components";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { closeUpload } from 'redux/modules/upload';
+import { FileUploader } from 'components';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
-@connect(({ upload }) => ({ open: upload.dialogOpen }),
+@connect(({ uploadReducer }) => ({ open: uploadReducer.dialogOpen }),
   { close: closeUpload })
 export default class UploadDialog extends Component {
   shouldComponentUpdate(nextProps) {
@@ -21,7 +21,7 @@ export default class UploadDialog extends Component {
         label="Close"
         secondary={Boolean(true)}
         onTouchTap={this.props.close}
-      />
+      />,
     ];
 
     return (<Dialog

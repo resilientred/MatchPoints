@@ -1,17 +1,17 @@
-import React from "react";
+import React from 'react';
 import { Table, TableBody, TableHeader,
-  TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
+  TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
-const style = { paddingLeft: "0" };
+const style = { paddingLeft: '0' };
 
 const RecordTableEnter = (props) => {
   const { sizeOfGroup, start, joinedPlayers, result, groupNum } = props;
   return (<Table
     selectable={false}
     multiSelectable={false}
-    wrapperStyle={{ minWidth: "650px" }}
+    wrapperStyle={{ minWidth: '650px' }}
   >
     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
       <TableRow>
@@ -24,7 +24,7 @@ const RecordTableEnter = (props) => {
                     case 0:
                       return `Group ${groupNum}`;
                     case 1:
-                      return "Name";
+                      return 'Name';
                     default:
                       return `vs. ${(i - 1)}`;
                   }
@@ -63,7 +63,7 @@ const RecordTableEnter = (props) => {
                   if ((i - 2) > j) {
                     content = (<div className="score-div">
                       <SelectField
-                        style={{ marginRight: "5px", width: "50%" }}
+                        style={{ marginRight: '5px', width: '50%' }}
                         key={`row${j}:${i}-1`}
                         onChange={(e, idx, val) => props.updateResult(j, i - 2, 0, e, idx, val)}
                         value={result[j][i - 2][0]}
@@ -78,7 +78,7 @@ const RecordTableEnter = (props) => {
                         />
                       </SelectField>
                       <SelectField
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                         key={`row${j}:${i}-2`}
                         onChange={(e, idx, val) => props.updateResult(j, i - 2, 1, e, idx, val)}
                         value={result[j][i - 2][1]}
@@ -96,7 +96,7 @@ const RecordTableEnter = (props) => {
                   } else {
                     content = (<div>
                       <SelectField
-                        style={{ marginRight: "5px", width: "50%" }}
+                        style={{ marginRight: '5px', width: '50%' }}
                         key={`row${j}:${i}-1`}
                         value={result[i - 2][j][1]}
                         disabled
@@ -107,7 +107,7 @@ const RecordTableEnter = (props) => {
                         <MenuItem value={3} primaryText="3" />
                       </SelectField>
                       <SelectField
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                         key={`row${j}:${i}-2`}
                         value={result[i - 2][j][0]}
                         disabled

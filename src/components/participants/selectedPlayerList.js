@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 import { Table, TableBody, TableHeader,
-  TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
+  TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 const SelectedPlayerList = (props) => {
   const idRef = {};

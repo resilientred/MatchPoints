@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import { Table, TableBody, TableHeader,
-  TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
+  TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 const RecordTableView = (props) => {
   const { sizeOfGroup, start, joinedPlayers, scoreChange, groupNum } = props;
   return (<Table
     selectable={false}
     multiSelectable={false}
-    wrapperStyle={{ minWidth: "1000px" }}
+    wrapperStyle={{ minWidth: '1000px' }}
   >
     <TableHeader
       displaySelectAll={false}
@@ -22,20 +22,20 @@ const RecordTableView = (props) => {
             switch (i) {
               case 0:
                 content = `Group ${groupNum}`;
-                style = { paddingLeft: "5px", paddingRight: "5px" };
+                style = { paddingLeft: '5px', paddingRight: '5px' };
                 break;
               case 1:
-                content = "Name";
-                style = { paddingLeft: "0" };
+                content = 'Name';
+                style = { paddingLeft: '0' };
                 break;
               case 2:
-                content = "Before";
+                content = 'Before';
                 break;
               case sizeOfGroup + 3:
-                content = "Change";
+                content = 'Change';
                 break;
               case sizeOfGroup + 4:
-                content = "After";
+                content = 'After';
                 break;
               default:
                 content = i - 2;
@@ -58,7 +58,7 @@ const RecordTableView = (props) => {
             if (n === 0) {
               return (<TableRowColumn
                 key={`row${m}:${n}`}
-                style={{ paddingLeft: "5px", paddingRight: "5px" }}
+                style={{ paddingLeft: '5px', paddingRight: '5px' }}
               >
                 {(m + 1)}
               </TableRowColumn>);
@@ -68,7 +68,7 @@ const RecordTableView = (props) => {
             let style;
             switch (n) {
               case 1:
-                style = { whiteSpace: "initial", paddingLeft: "0" };
+                style = { whiteSpace: 'initial', paddingLeft: '0' };
                 cellContent = curPlayer.name;
                 break;
               case 2:

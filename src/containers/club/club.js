@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import CircularProgress from "material-ui/CircularProgress";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import CircularProgress from 'material-ui/CircularProgress';
+import { connect } from 'react-redux';
 
 @connect(({ auth: { club } }) => ({ club }))
 export default class Club extends Component {

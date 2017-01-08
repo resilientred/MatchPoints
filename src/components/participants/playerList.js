@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Table, TableBody, TableHeader,
-  TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
-import { deletePlayer } from "redux/modules/players";
-import { openEditModal } from "redux/modules/modals";
-import IconButton from "material-ui/IconButton";
-import Close from "react-icons/lib/md/close";
-import ModeEdit from "react-icons/lib/md/mode-edit";
-import PlayerSearchField from "./playerSearchField";
+  TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import { deletePlayer } from 'redux/modules/players';
+import { openEditModal } from 'redux/modules/modals';
+import IconButton from 'material-ui/IconButton';
+import Close from 'react-icons/lib/md/close';
+import ModeEdit from 'react-icons/lib/md/mode-edit';
+import PlayerSearchField from './playerSearchField';
 
 @connect(() => ({}), { openEditModal, deletePlayer })
 class PlayerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: ""
+      input: '',
     };
   }
 
@@ -23,7 +23,7 @@ class PlayerList extends Component {
   }
 
   clearInput = () => {
-    this.setState({ input: "" });
+    this.setState({ input: '' });
   }
 
   toggleRegister = (id) => {
@@ -68,7 +68,7 @@ class PlayerList extends Component {
 
     for (const id in players) {
       if (players.hasOwnProperty(id)) {
-        if (input === "" || playerList.length >= 15) {
+        if (input === '' || playerList.length >= 15) {
           break;
         }
         const player = players[id];

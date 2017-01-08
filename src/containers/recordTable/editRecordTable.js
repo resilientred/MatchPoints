@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Tabs, Tab } from "material-ui/Tabs";
-import RaisedButton from "material-ui/RaisedButton";
-import { RecordTableEnter, RecordTableView } from "components";
+import React, { Component } from 'react';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import RaisedButton from 'material-ui/RaisedButton';
+import { RecordTableEnter, RecordTableView } from 'components';
 
 export default class EditRecordTable extends Component {
   constructor(props) {
@@ -9,7 +9,7 @@ export default class EditRecordTable extends Component {
     this.state = {
       result: [...Array(this.props.sizeOfGroup)].map(() =>
         [...Array(this.props.sizeOfGroup)].map(() => [0, 0])),
-      tab: 0
+      tab: 0,
     };
   }
 
@@ -56,11 +56,11 @@ export default class EditRecordTable extends Component {
         }
         rc[player1Id] = {
           change: rc[player1Id] ? (rc[player1Id].change + scoreAdjust) : 0 + scoreAdjust,
-          ratingBefore: +player1.rating
+          ratingBefore: +player1.rating,
         };
         rc[player2Id] = {
           change: rc[player2Id] ? (rc[player2Id].change - scoreAdjust) : 0 - scoreAdjust,
-          ratingBefore: +player2.rating
+          ratingBefore: +player2.rating,
         };
 
         return scoreAdjust;
@@ -73,7 +73,7 @@ export default class EditRecordTable extends Component {
   updateResult = (i, j, k, e, idx, val) => {
     this.state.result[i][j][k] = val;
     this.setState({
-      result: this.state.result
+      result: this.state.result,
     });
   }
 
@@ -83,9 +83,9 @@ export default class EditRecordTable extends Component {
         value={this.state.tab}
         onChange={this.changeTab}
         contentContainerStyle={{
-          padding: "20px",
-          border: "1px solid #E0E0E0",
-          overflow: "scroll"
+          padding: '20px',
+          border: '1px solid #E0E0E0',
+          overflow: 'scroll',
         }}
       >
         <Tab label="Enter Result" value={0}>

@@ -1,4 +1,4 @@
-import PlayerList from "./playerList";
+import PlayerList from './playerList';
 
 /* Immutable implementation */
 export default class Heap {
@@ -118,14 +118,14 @@ export default class Heap {
     return [(idx * 2) + 1, (idx * 2) + 2].filter(i => i < this.heap.length);
   }
 
-  sort(order = "DESC") {
+  sort(order = 'DESC') {
     const copiedHeap = new Heap(this.heap.slice(), Object.assign({}, this.map));
     const sorted = [];
     while (copiedHeap.heap.length > 0) {
       sorted.push(copiedHeap.removeMax());
     }
 
-    if (order === "ASC") {
+    if (order === 'ASC') {
       sorted.reverse();
     }
 

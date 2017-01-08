@@ -1,8 +1,8 @@
-import React from "react";
-import Divider from "material-ui/Divider";
-import { PlayerList, SelectedPlayerList } from "components";
+import React from 'react';
+import Divider from 'material-ui/Divider';
+import { PlayerList, SelectedPlayerList } from 'components';
 
-const style = { position: "relative" };
+const style = { position: 'relative' };
 
 const Participants = (props) => {
   return (<div className="player-lists">

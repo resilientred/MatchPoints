@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Tabs, Tab } from "material-ui/Tabs";
-import { ClubQuery } from "containers";
-import { fetchAllClubs, hasLoaded } from "redux/modules/query";
-import { asyncConnect } from "redux-async-connect";
+import React, { Component } from 'react';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import { ClubQuery } from 'containers';
+import { fetchAllClubs, hasLoaded } from 'redux/modules/query';
+import { asyncConnect } from 'redux-async-connect';
 
 @asyncConnect([{
   promise: ({ store }) => {
@@ -13,13 +13,13 @@ import { asyncConnect } from "redux-async-connect";
     }
 
     return promise;
-  }
+  },
 }])
 export default class Query extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      tab: 0
+      tab: 0,
     };
   }
   handleTabChange = (tab) => {
@@ -32,8 +32,8 @@ export default class Query extends Component {
           value={this.state.tab}
           onChange={this.handleTabChange}
           contentContainerStyle={{
-            padding: "20px",
-            border: "1px solid #E0E0E0",
+            padding: '20px',
+            border: '1px solid #E0E0E0',
           }}
         >
           <Tab label="Club" value={0}>

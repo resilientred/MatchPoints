@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { browserHistory } from "react-router";
-import moment from "moment";
-import AppBar from "material-ui/AppBar";
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-import NavigationClose from "material-ui/svg-icons/navigation/close";
-import IconButton from "material-ui/IconButton";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import { EditRecordTable } from "containers";
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import moment from 'moment';
+import AppBar from 'material-ui/AppBar';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import { EditRecordTable } from 'containers';
 
 export default class EditSession extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentTab: 0,
-      open: false
+      open: false,
     };
   }
 
@@ -31,7 +31,7 @@ export default class EditSession extends Component {
         this.props.scoreChange,
         this.props.scoreUpdate, session._id, session.date
       ).then(() => {
-        return browserHistory.push("/club/sessions");
+        return browserHistory.push('/club/sessions');
       });
     }
   }
@@ -40,10 +40,10 @@ export default class EditSession extends Component {
   }
   handleDelete = () => {
     this.props.deleteSession(this.props.id);
-    browserHistory.push("/club/sessions");
+    browserHistory.push('/club/sessions');
   }
   handleBack = () => {
-    browserHistory.push("/club/sessions");
+    browserHistory.push('/club/sessions');
   }
   iconMenu() {
     return (<IconMenu
@@ -71,7 +71,7 @@ export default class EditSession extends Component {
     let countedPlayers = 0;
     return (<div className="session-container">
       <AppBar
-        title={`Date: ${moment(date).utc().format("MMMM DD, YYYY")}`}
+        title={`Date: ${moment(date).utc().format('MMMM DD, YYYY')}`}
         iconElementLeft={<IconButton onClick={this.handleBack}><NavigationClose /></IconButton>}
         iconElementRight={this.iconMenu()}
       />

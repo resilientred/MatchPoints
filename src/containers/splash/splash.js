@@ -1,21 +1,24 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { setPage } from "redux/modules/splash";
-import { setToken } from "redux/modules/reset";
-import { LogInForm, SignUpForm, ForgotForm, ResetForm, Activated } from "components";
-import { asyncConnect } from "redux-async-connect";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { setPage } from 'redux/modules/splash';
+import { setToken } from 'redux/modules/reset';
+import { LogInForm, SignUpForm, ForgotForm, ResetForm, Activated } from 'components';
+import { asyncConnect } from 'redux-async-connect';
 
 @asyncConnect([{
   promise: ({ store, location }) => {
-    if (location.pathname === "/reset") {
-      return Promise.all([store.dispatch(setPage(4)), store.dispatch(setToken(location.query.token))]);
-    } else if (location.pathname === "/activate/success") {
+    if (location.pathname === '/reset') {
+      return Promise.all([
+        store.dispatch(setPage(4)),
+        store.dispatch(setToken(location.query.token)),
+      ]);
+    } else if (location.pathname === '/activate/success') {
       return Promise.resolve(store.dispatch(setPage(5)));
-    } else if (location.pathname === "/activate/error") {
+    } else if (location.pathname === '/activate/error') {
       return Promise.resolve(store.dispatch(setPage(6)));
     }
     return null;
-  }
+  },
 }])
 @connect(({ splash: { page } }) => ({ page }), { setPage })
 class Splash extends Component {
@@ -41,7 +44,7 @@ class Splash extends Component {
         case 6:
           return (<Activated
             setPage={this.props.setPage}
-            homepage={true}
+            homepage={Boolean(true)}
             message="The token has expired or your account has already been activated."
           />);
         default:

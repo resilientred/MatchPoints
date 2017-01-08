@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import SnackBar from "material-ui/Snackbar";
-import CircularProgress from "material-ui/CircularProgress";
-import { Navbar } from "containers";
-import { clearMessage } from "redux/modules/main";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import SnackBar from 'material-ui/Snackbar';
+import CircularProgress from 'material-ui/CircularProgress';
+import { Navbar } from 'containers';
+import { clearMessage } from 'redux/modules/main';
 
 @connect(({ main: { loading, message } }) => ({ loading, message }), { clearMessage })
 export default class Main extends Component {
@@ -29,7 +29,7 @@ export default class Main extends Component {
         <SnackBar
           open={!!this.props.message}
           onRequestClose={this.handleClose}
-          message={this.props.message || ""}
+          message={this.props.message || ''}
           autoHideDuration={8000}
         />
       </div>

@@ -1,13 +1,13 @@
-import { LOAD_SESSIONS, LOAD_SESSIONS_ERROR, LOAD_SESSIONS_SUCCESS } from "redux/modules/sessions";
+import { LOAD_SESSIONS, LOAD_SESSIONS_ERROR, LOAD_SESSIONS_SUCCESS } from 'redux/modules/sessions';
 
-export const LOAD = "mp/main/LOAD";
-export const STOP_LOAD = "mp/main/STOP_LOAD";
-export const MESSAGE = "mp/main/MESSAGE";
-const CLEAR_ERROR = "mp/main/CLEAR_ERROR";
+export const LOAD = 'mp/main/LOAD';
+export const STOP_LOAD = 'mp/main/STOP_LOAD';
+export const MESSAGE = 'mp/main/MESSAGE';
+const CLEAR_ERROR = 'mp/main/CLEAR_ERROR';
 
 const initialState = {
   loading: false,
-  message: null
+  message: null,
 };
 
 export default (state = initialState, action) => {
@@ -16,25 +16,25 @@ export default (state = initialState, action) => {
     case STOP_LOAD:
       return {
         ...state,
-        loading: false
+        loading: false,
       };
     case LOAD_SESSIONS:
     case LOAD:
       return {
         ...state,
-        loading: true
+        loading: true,
       };
     case LOAD_SESSIONS_ERROR:
     case MESSAGE:
       return {
         ...state,
         message: action.payload,
-        loading: false
+        loading: false,
       };
     case CLEAR_ERROR:
       return {
         ...state,
-        message: null
+        message: null,
       };
     default:
       return state;
@@ -43,19 +43,19 @@ export default (state = initialState, action) => {
 
 export const stopLoad = () => {
   return {
-    type: STOP_LOAD
+    type: STOP_LOAD,
   };
 };
 
 export const clearMessage = () => {
   return {
-    type: CLEAR_ERROR
+    type: CLEAR_ERROR,
   };
 };
 
 export const setMessage = (msg) => {
   return {
     type: MESSAGE,
-    payload: msg
+    payload: msg,
   };
 };

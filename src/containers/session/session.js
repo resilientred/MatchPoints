@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { EditSession, ViewSession } from "containers";
-import { asyncConnect } from "redux-async-connect";
-import { fetchSession, isLoaded, updateScore } from "redux/modules/selectedSession";
-import { deleteSession, postResult } from "redux/modules/sessions";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { EditSession, ViewSession } from 'containers';
+import { asyncConnect } from 'redux-async-connect';
+import { fetchSession, isLoaded, updateScore } from 'redux/modules/selectedSession';
+import { deleteSession, postResult } from 'redux/modules/sessions';
 
 @asyncConnect([{
   promise: ({ store, params }) => {
@@ -13,9 +13,12 @@ import { deleteSession, postResult } from "redux/modules/sessions";
     }
 
     return promise;
-  }
+  },
 }])
-@connect(({ selectedSession: { session, scoreChange, scoreUpdate } }) => ({ session, scoreChange, scoreUpdate }),
+@connect(
+  ({ selectedSession: { session, scoreChange, scoreUpdate } }) => {
+    return ({ session, scoreChange, scoreUpdate });
+  },
   { deleteSession, postResult, updateScore })
 export default class RoundrobinSession extends Component {
   render() {

@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { browserHistory } from "react-router";
-import moment from "moment";
-import AppBar from "material-ui/AppBar";
-import NavigationClose from "material-ui/svg-icons/navigation/close";
-import IconButton from "material-ui/IconButton";
-import { ViewRecordTable } from "containers";
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import moment from 'moment';
+import AppBar from 'material-ui/AppBar';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import IconButton from 'material-ui/IconButton';
+import { ViewRecordTable } from 'containers';
 
 export default class ViewSession extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentTab: 0,
-      open: false
+      open: false,
     };
   }
 
@@ -23,7 +23,7 @@ export default class ViewSession extends Component {
     this.setState({ open: false });
   }
   handleBack = () => {
-    browserHistory.push("/club/sessions");
+    browserHistory.push('/club/sessions');
   }
   render() {
     const { session: { date, selectedSchema, players }, scoreChange } = this.props;
@@ -31,7 +31,7 @@ export default class ViewSession extends Component {
     let countedPlayers = 0;
     return (<div className="session-container">
       <AppBar
-        title={`Date: ${moment(date).utc().format("MMMM DD, YYYY")}`}
+        title={`Date: ${moment(date).utc().format('MMMM DD, YYYY')}`}
         iconElementLeft={<IconButton onClick={this.handleBack}><NavigationClose /></IconButton>}
       />
       <div className="session-container-body">

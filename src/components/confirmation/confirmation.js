@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { resendEmail } from "redux/modules/profile";
-import { setMessage } from "redux/modules/main";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { resendEmail } from 'redux/modules/profile';
+import { setMessage } from 'redux/modules/main';
 
 @connect(() => ({}), { resendEmail, setMessage })
 export default class Confirmation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      resent: false
+      resent: false,
     };
   }
 
@@ -20,7 +20,7 @@ export default class Confirmation extends Component {
         this.setState({ resent: false });
       }, 30000);
     } else {
-      this.props.setMessage("Please wait 30 seconds before retrying");
+      this.props.setMessage('Please wait 30 seconds before retrying');
     }
   }
   render() {

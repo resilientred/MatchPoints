@@ -1,18 +1,18 @@
-import axios from "axios";
-import { UPDATE_SESSION_SUCCESS } from "redux/modules/sessions";
-import { LOAD, MESSAGE } from "./main";
+import axios from 'axios';
+import { UPDATE_SESSION_SUCCESS } from 'redux/modules/sessions';
+import { LOAD, MESSAGE } from './main';
 
-const FETCH_ALL_SUCCESS = "mp/clubs/FETCH_ALL_SUCCESS";
-const FETCH_SESSIONS_SUCCESS = "mp/clubs/FETCH_SESSIONS_SUCCESS";
-const SET_CLUB = "mp/clubs/SET_CLUB";
-const SET_DATE = "mp/clubs/SET_DATE";
+const FETCH_ALL_SUCCESS = 'mp/clubs/FETCH_ALL_SUCCESS';
+const FETCH_SESSIONS_SUCCESS = 'mp/clubs/FETCH_SESSIONS_SUCCESS';
+const SET_CLUB = 'mp/clubs/SET_CLUB';
+const SET_DATE = 'mp/clubs/SET_DATE';
 
 const initialState = {
   loaded: false,
   clubs: [],
   selectedClub: null,
   roundrobins: {},
-  selectedDate: null
+  selectedDate: null,
 };
 
 export default (state = initialState, action) => {
@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
       return {
         selectedClub: null,
         roundrobins: {},
-        selectedDate: null
+        selectedDate: null,
       };
     case FETCH_ALL_SUCCESS: {
       const clubs = {};
@@ -33,7 +33,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loaded: true,
-        clubs
+        clubs,
       };
     }
     case FETCH_SESSIONS_SUCCESS: {
@@ -41,7 +41,7 @@ export default (state = initialState, action) => {
       roundrobins[state.selectedClub._id] = action.payload;
       return {
         ...state,
-        roundrobins
+        roundrobins,
       };
     }
     case SET_CLUB: {
@@ -49,7 +49,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedClub,
-        selectedDate: null
+        selectedDate: null,
       };
     }
     case SET_DATE: {
@@ -57,7 +57,7 @@ export default (state = initialState, action) => {
       const selectedDate = roundrobins.find(rr => rr._id === action.payload);
       return {
         ...state,
-        selectedDate
+        selectedDate,
       };
     }
     default:
@@ -68,28 +68,28 @@ export default (state = initialState, action) => {
 export const setClub = (id) => {
   return {
     type: SET_CLUB,
-    payload: id
+    payload: id,
   };
 };
 
 export const setDate = (date) => {
   return {
     type: SET_DATE,
-    payload: date
+    payload: date,
   };
 };
 
 export const fetchRoundrobins = (clubId) => {
   return {
     types: [LOAD, FETCH_SESSIONS_SUCCESS, MESSAGE],
-    promise: axios.get(`/api/clubs/${clubId}/sessions`)
+    promise: axios.get(`/api/clubs/${clubId}/sessions`),
   };
 };
 
 export const fetchAllClubs = () => {
   return {
     types: [LOAD, FETCH_ALL_SUCCESS, MESSAGE],
-    promise: axios.get("/api/clubs/all")
+    promise: axios.get('/api/clubs/all'),
   };
 };
 

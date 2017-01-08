@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { browserHistory } from "react-router";
-import { connect } from "react-redux";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
-import { logIn, clearError } from "redux/modules/auth";
-import Divider from "material-ui/Divider";
-import { setPage } from "redux/modules/splash";
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import { logIn, clearError } from 'redux/modules/auth';
+import Divider from 'material-ui/Divider';
+import { setPage } from 'redux/modules/splash';
 
-const style = { position: "relative" };
+const style = { position: 'relative' };
 
 @connect(({ auth: { error } }) => ({ error }), { logIn, setPage, clearError })
 export default class LogInForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      password: "",
-      error: ""
+      username: '',
+      password: '',
+      error: '',
     };
   }
 
@@ -28,7 +28,7 @@ export default class LogInForm extends Component {
     const newField = { [field]: e.target.value };
 
     if (this.state.error) {
-      newField.error = "";
+      newField.error = '';
     }
     this.setState(newField);
   }
@@ -36,24 +36,24 @@ export default class LogInForm extends Component {
   handleSubmit = (event) => {
     if (event) {
       event.preventDefault();
-      if (event.target.tagName !== "BUTTON") {
+      if (event.target.tagName !== 'BUTTON') {
         this.props.logIn(this.state).then(() => {
-          this.setState({ username: "", password: "", error: "" });
-          browserHistory.push("/club");
+          this.setState({ username: '', password: '', error: '' });
+          browserHistory.push('/club');
         });
       }
     } else {
       this.props.logIn(this.state).then(() => {
-        this.setState({ username: "", password: "", error: "" });
-        browserHistory.push("/club");
+        this.setState({ username: '', password: '', error: '' });
+        browserHistory.push('/club');
       });
     }
   }
   guestLogIn = (event) => {
     event.preventDefault();
-    const user = "guest";
-    const password = "password";
-    this.setState({ username: "", password: "" });
+    const user = 'guest';
+    const password = 'password';
+    this.setState({ username: '', password: '' });
     let count = 0;
     const int = setInterval(() => {
       if (count < 5) {
@@ -78,7 +78,7 @@ export default class LogInForm extends Component {
             hintText="username"
             floatingLabelText="Username"
             value={this.state.username}
-            onChange={e => this.updateField("username", e)}
+            onChange={e => this.updateField('username', e)}
           />
         </div>
         <div>
@@ -87,7 +87,7 @@ export default class LogInForm extends Component {
             hintText="password"
             floatingLabelText="Password"
             value={this.state.password}
-            onChange={e => this.updateField("password", e)}
+            onChange={e => this.updateField('password', e)}
           />
         </div>
         <div className="button-div">
@@ -95,7 +95,7 @@ export default class LogInForm extends Component {
             label="Log In"
             backgroundColor="#1565C0"
             labelColor="white"
-            style={{ marginRight: "10px" }}
+            style={{ marginRight: '10px' }}
             onClick={this.handleSubmit}
           />
           <RaisedButton label="Guest" backgroundColor="#EF6C00" labelColor="white" onClick={this.guestLogIn} />

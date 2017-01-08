@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { asyncConnect } from "redux-async-connect";
-import { browserHistory } from "react-router";
-import { connect } from "react-redux";
-import { List, ListItem } from "material-ui/List";
-import { fetchUserRRSessions } from "redux/modules/sessions";
-import { setSession } from "redux/modules/selectedSession";
-import Avatar from "material-ui/Avatar";
-import Subheader from "material-ui/Subheader";
-import Divider from "material-ui/Divider";
-import Edit from "react-icons/lib/md/edit";
-import View from "react-icons/lib/md/pageview";
-import Event from "react-icons/lib/md/event";
-import Warning from "react-icons/lib/md/warning";
-import moment from "moment";
+import React, { Component } from 'react';
+import { asyncConnect } from 'redux-async-connect';
+import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
+import { List, ListItem } from 'material-ui/List';
+import { fetchUserRRSessions } from 'redux/modules/sessions';
+import { setSession } from 'redux/modules/selectedSession';
+import Avatar from 'material-ui/Avatar';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import Edit from 'react-icons/lib/md/edit';
+import View from 'react-icons/lib/md/pageview';
+import Event from 'react-icons/lib/md/event';
+import Warning from 'react-icons/lib/md/warning';
+import moment from 'moment';
 
 @asyncConnect([{
   promise: ({ store }) => {
@@ -23,7 +23,7 @@ import moment from "moment";
     }
 
     return promise;
-  }
+  },
 }])
 @connect(({ sessions }) => ({ sessions: sessions.sessions }), { setSession })
 export default class RoundRobinSessions extends Component {
@@ -47,7 +47,7 @@ export default class RoundRobinSessions extends Component {
           key={curSession.id}
           onClick={() => this.handleClick(curSession.id)}
           leftAvatar={<Avatar icon={<Event />} />}
-          primaryText={moment(curSession.date).utc().format("MMMM DD, YYYY")}
+          primaryText={moment(curSession.date).utc().format('MMMM DD, YYYY')}
           rightIcon={<View />}
         />);
         finalized.push(session);
@@ -56,7 +56,7 @@ export default class RoundRobinSessions extends Component {
           key={curSession.id}
           onClick={() => this.handleClick(curSession.id)}
           leftAvatar={<Avatar icon={<Event />} />}
-          primaryText={moment(curSession.date).utc().format("MMMM DD, YYYY")}
+          primaryText={moment(curSession.date).utc().format('MMMM DD, YYYY')}
           rightIcon={<Edit />}
         />);
         notFinalized.push(session);
@@ -67,9 +67,9 @@ export default class RoundRobinSessions extends Component {
       <List>
         <Subheader
           style={{
-            fontSize: "24px",
-            textAlign: "center",
-            marginBottom: "10px"
+            fontSize: '24px',
+            textAlign: 'center',
+            marginBottom: '10px',
           }}
         >Previous Sessions</Subheader>
         <Divider />
@@ -77,7 +77,7 @@ export default class RoundRobinSessions extends Component {
         {
           !notFinalized.length &&
             <ListItem
-              key={"noth"}
+              key={'noth'}
               primaryText="There are no pending sessions..."
               leftAvatar={<Avatar icon={<Warning />} />}
               disabled
@@ -91,7 +91,7 @@ export default class RoundRobinSessions extends Component {
         {
           !finalized.length &&
             <ListItem
-              key={"noth"}
+              key={'noth'}
               primaryText="There are no saved sessions..."
               leftAvatar={<Avatar icon={<Warning />} />}
               disabled

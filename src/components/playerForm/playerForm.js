@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
-import IconButton from "material-ui/IconButton/IconButton";
-import Close from "react-icons/lib/md/close";
+import React, { Component } from 'react';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton/IconButton';
+import Close from 'react-icons/lib/md/close';
 
 class PlayerForm extends Component {
   constructor(props) {
     super(props);
 
     const def = {
-      name: "",
-      rating: "0"
+      name: '',
+      rating: '0',
     };
     if (props.player) {
       def.id = props.player._id;
@@ -20,33 +20,33 @@ class PlayerForm extends Component {
     this.state = {
       ...def,
       errorText: {
-        name: "",
-        rating: ""
-      }
+        name: '',
+        rating: '',
+      },
     };
   }
 
 
   componentDidUpdate(prevProps) {
     if (!prevProps.modalOpen && this.props.modalOpen) {
-      document.getElementById("name").focus();
+      document.getElementById('name').focus();
     }
   }
 
   validateFields() {
-    if (this.state.name === "") {
+    if (this.state.name === '') {
       this.setState({
         errorText: {
-          name: "Name field cannot be empty."
-        }
+          name: 'Name field cannot be empty.',
+        },
       });
       return false;
     }
-    if (this.state.rating === "0" || this.state.rating === "") {
+    if (this.state.rating === '0' || this.state.rating === '') {
       this.setState({
         errorText: {
-          rating: "Rating field cannot be empty."
-        }
+          rating: 'Rating field cannot be empty.',
+        },
       });
       return false;
     }
@@ -55,18 +55,18 @@ class PlayerForm extends Component {
   }
   updateRating = (e) => {
     const state = { rating: e.target.value };
-    if (this.state.errorText.rating !== "") {
-      if (e.target.value !== "0") {
-        state.errorText = Object.assign(this.state.errorText, { rating: "" });
+    if (this.state.errorText.rating !== '') {
+      if (e.target.value !== '0') {
+        state.errorText = Object.assign(this.state.errorText, { rating: '' });
       }
     }
     this.setState(state);
   }
   updateName = (e) => {
     const state = { name: e.target.value };
-    if (this.state.errorText.name !== "") {
-      if (e.target.value !== "") {
-        state.errorText = Object.assign(this.state.errorText, { name: "" });
+    if (this.state.errorText.name !== '') {
+      if (e.target.value !== '') {
+        state.errorText = Object.assign(this.state.errorText, { name: '' });
       }
     }
     this.setState(state);
@@ -74,7 +74,7 @@ class PlayerForm extends Component {
   handleSubmit = () => {
     if (this.validateFields()) {
       this.props.callback(this.state).then(() => {
-        this.setState({ name: "", rating: "0" });
+        this.setState({ name: '', rating: '0' });
         this.props.closeModal();
       });
     }
@@ -82,11 +82,11 @@ class PlayerForm extends Component {
   render() {
     return (<div
       className="player-form"
-      style={{ display: this.props.modalOpen ? "block" : "none" }}
+      style={{ display: this.props.modalOpen ? 'block' : 'none' }}
     >
       <form>
         <IconButton
-          style={{ position: "absolute", right: "10px", top: "10px" }}
+          style={{ position: 'absolute', right: '10px', top: '10px' }}
           iconClassName="material-icons"
           onClick={this.props.closeModal}
           tooltip="Close Form" touch={Boolean(true)}
@@ -120,7 +120,7 @@ class PlayerForm extends Component {
         <RaisedButton
           fullWidth={Boolean(true)}
           label={this.props.title}
-          style={{ marginTop: "20px" }}
+          style={{ marginTop: '20px' }}
           onTouchTap={this.handleSubmit}
         />
       </form>

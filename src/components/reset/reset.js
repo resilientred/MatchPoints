@@ -1,37 +1,37 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { browserHistory } from "react-router";
-import { resetPassword } from "redux/modules/reset";
-import { setMessage } from "redux/modules/main";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
+import { resetPassword } from 'redux/modules/reset';
+import { setMessage } from 'redux/modules/main';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 @connect(({ reset }) => ({ reset }), { resetPassword, setMessage })
 export default class ForgotReset extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      password: "",
-      passwordCheck: "",
+      password: '',
+      passwordCheck: '',
       error: {
-        first: "",
-        second: ""
-      }
+        first: '',
+        second: '',
+      },
     };
   }
 
   componentWillUnmount() {
     this.setState({
-      password: "",
-      passwordCheck: "",
-      error: ""
+      password: '',
+      passwordCheck: '',
+      error: '',
     });
   }
 
   handleChange = (field, val) => {
     this.setState({
       [field]: val,
-      error: {}
+      error: {},
     });
   }
   handleSubmit = (event) => {
@@ -39,25 +39,25 @@ export default class ForgotReset extends Component {
     if (this.state.password.length < 8) {
       return this.setState({
         error: {
-          first: "Password has to be at least 8 characters long"
-        }
+          first: 'Password has to be at least 8 characters long',
+        },
       });
     }
     if (this.state.password !== this.state.passwordCheck) {
       return this.setState({
         error: {
-          second: "Passwords don't match"
-        }
+          second: "Passwords don't match",
+        },
       });
     }
     this.props.resetPassword(this.props.reset.token, this.state.password).then(() => {
       this.timeout = setTimeout(() => {
-        browserHistory.push("/");
+        browserHistory.push('/');
         this.props.setPage(1);
       }, 5000);
     }).catch(() => {
       this.timeout = setTimeout(() => {
-        browserHistory.push("/");
+        browserHistory.push('/');
         this.props.setPage(1);
       }, 5000);
     });
@@ -67,7 +67,7 @@ export default class ForgotReset extends Component {
     const { token, success } = this.props.reset;
 
     if (!token || success) {
-      return (<div className="forms activated" style={{ top: "30%" }}>
+      return (<div className="forms activated" style={{ top: '30%' }}>
         <form onSubmit={e => e.preventDefault()}>
           {
             success ?
@@ -82,7 +82,7 @@ export default class ForgotReset extends Component {
             labelColor="white"
             onClick={() => {
               clearTimeout(this.timeout);
-              browserHistory.push("/");
+              browserHistory.push('/');
               this.props.setPage(1);
             }}
           />
@@ -100,7 +100,7 @@ export default class ForgotReset extends Component {
             floatingLabelText="New Password"
             errorText={this.state.error.first}
             value={this.state.password}
-            onChange={e => this.handleChange("password", e.target.value)}
+            onChange={e => this.handleChange('password', e.target.value)}
             fullWidth={Boolean(true)}
           />
           <TextField
@@ -110,13 +110,13 @@ export default class ForgotReset extends Component {
             errorText={this.state.error.second}
             value={this.state.passwordCheck}
             fullWidth={Boolean(true)}
-            onChange={e => this.handleChange("passwordCheck", e.target.value)}
+            onChange={e => this.handleChange('passwordCheck', e.target.value)}
           />
           <RaisedButton
             label="Reset Password"
             backgroundColor="#1565C0"
             labelColor="white"
-            style={{ marginRight: "10px", marginTop: "10px" }}
+            style={{ marginRight: '10px', marginTop: '10px' }}
             onClick={this.handleSubmit}
           />
         </div>

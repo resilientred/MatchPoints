@@ -1,9 +1,9 @@
-import { SET_MIN_AND_MAX } from "redux/modules/newSession";
-import { updateSchemata } from "redux/modules/schemata";
-import { stopLoad, LOAD } from "redux/modules/main";
+import { SET_MIN_AND_MAX } from 'redux/modules/newSession';
+import { updateSchemata } from 'redux/modules/schemata';
+import { stopLoad, LOAD } from 'redux/modules/main';
 
 export default ({ dispatch, getState }) => next => action => {
-  if (typeof action === "function") {
+  if (typeof action === 'function') {
     return action(dispatch, getState);
   }
 
@@ -33,7 +33,7 @@ export default ({ dispatch, getState }) => next => action => {
       next({ ...rest, payload: error.response.data, type: FAILURE });
     } else {
       console.log(error);
-      next({ ...rest, payload: "Something went wrong...", type: FAILURE });
+      next({ ...rest, payload: 'Something went wrong...', type: FAILURE });
     }
   }).catch((error) => {
     if (REQUEST === LOAD) {
@@ -43,7 +43,7 @@ export default ({ dispatch, getState }) => next => action => {
       next({ ...rest, payload: error.response.data, type: FAILURE });
     } else {
       console.log(error);
-      next({ ...rest, payload: "Something went wrong...", type: FAILURE });
+      next({ ...rest, payload: 'Something went wrong...', type: FAILURE });
     }
   });
 

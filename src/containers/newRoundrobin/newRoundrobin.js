@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { openEditModal, openNewModal, closeNewModal, closeEditModal } from "redux/modules/modals";
-import { fetchCurrentPlayers, addPlayer, updatePlayer } from "redux/modules/players";
-import { PlayerForm } from "components";
-import { TabContainer, UploadDialog } from "containers";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { openEditModal, openNewModal, closeNewModal, closeEditModal } from 'redux/modules/modals';
+import { fetchCurrentPlayers, addPlayer, updatePlayer } from 'redux/modules/players';
+import { PlayerForm } from 'components';
+import { TabContainer, UploadDialog } from 'containers';
 
 @connect(({ newSession, modals }) => ({ session: newSession, modals }),
   {
@@ -13,7 +13,7 @@ import { TabContainer, UploadDialog } from "containers";
     closeEditModal,
     fetchCurrentPlayers,
     addPlayer,
-    updatePlayer
+    updatePlayer,
   })
 export default class NewRRSession extends Component {
   componentWillMount() {

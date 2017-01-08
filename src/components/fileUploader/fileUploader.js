@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { upload, startLoading, stopLoading } from "redux/modules/upload";
-import RaisedButton from "material-ui/RaisedButton";
-import CircularProgress from "material-ui/CircularProgress";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { upload, startLoading, stopLoading } from 'redux/modules/upload';
+import RaisedButton from 'material-ui/RaisedButton';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const style = {
-  cursor: "pointer",
-  position: "absolute",
+  cursor: 'pointer',
+  position: 'absolute',
   top: 0,
   bottom: 0,
   right: 0,
   left: 0,
-  width: "100%",
-  opacity: 0
+  width: '100%',
+  opacity: 0,
 };
 
 @connect(({ upload: { processing } }) => ({ processing }),
@@ -23,7 +23,7 @@ export default class FileUploader extends Component {
     this.state = {
       data_uri: null,
       filename: null,
-      filetype: null
+      filetype: null,
     };
   }
 
@@ -48,14 +48,14 @@ export default class FileUploader extends Component {
         this.setState({
           data_uri: uploadFile.target.result,
           filename: file.name,
-          filetype: file.type
+          filetype: file.type,
         });
         this.props.stopLoading();
       };
       reader.readAsDataURL(file);
     } else {
       this.setState({
-        filename: `Unrecognized file type: .${file.type}`
+        filename: `Unrecognized file type: .${file.type}`,
       });
     }
   }
@@ -65,7 +65,7 @@ export default class FileUploader extends Component {
       this.props.upload({
         data_uri: this.state.data_uri,
         filename: this.state.filename,
-        filetype: this.state.filetype
+        filetype: this.state.filetype,
       });
     }
   }
@@ -79,7 +79,7 @@ export default class FileUploader extends Component {
   render() {
     const buttonLabel = this.state.filename ?
       `File:  ${this.state.filename}` :
-      "Choose a file (.csv or .json)";
+      'Choose a file (.csv or .json)';
     return (
       <form
         id="upload-form"
@@ -87,7 +87,7 @@ export default class FileUploader extends Component {
         onSubmit={this.uploadFile}
       >
         <RaisedButton
-          style={{ midWidth: "150px", marginRight: "10px" }}
+          style={{ midWidth: '150px', marginRight: '10px' }}
           label={buttonLabel}
           labelPosition="before"
           containerElement="label"

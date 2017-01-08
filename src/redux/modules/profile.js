@@ -1,8 +1,8 @@
-import axios from "axios";
-import { getCSRF } from "helpers";
-import { MESSAGE } from "redux/modules/main";
+import axios from 'axios';
+import { getCSRF } from 'helpers';
+import { MESSAGE } from 'redux/modules/main';
 
-export const USER_CHANGED = "mp/infoChange/USER_CHANGED";
+export const USER_CHANGED = 'mp/infoChange/USER_CHANGED';
 
 // const initialState = {
 //   error: null
@@ -17,49 +17,49 @@ export const USER_CHANGED = "mp/infoChange/USER_CHANGED";
 
 export const changePassword = (oldPassword, newPassword) => {
   const promise = axios({
-    method: "PATCH",
-    url: "/api/my?type=password",
+    method: 'PATCH',
+    url: '/api/my?type=password',
     data: { data: { oldPassword, newPassword } },
     headers: {
-      "X-CSRF-TOKEN": getCSRF()
-    }
+      'X-CSRF-TOKEN': getCSRF(),
+    },
   });
 
   return {
-    types: ["NOT NEEDED", "NOT_NEEDED", USER_CHANGED],
-    promise
+    types: ['NOT NEEDED', 'NOT_NEEDED', USER_CHANGED],
+    promise,
   };
 };
 
 export const changeInfo = (info, password) => {
   const promise = axios({
-    method: "PATCH",
-    url: "/api/my?type=info",
+    method: 'PATCH',
+    url: '/api/my?type=info',
     data: {
-      data: { password, info }
+      data: { password, info },
     },
     headers: {
-      "X-CSRF-TOKEN": getCSRF()
-    }
+      'X-CSRF-TOKEN': getCSRF(),
+    },
   });
 
   return {
-    types: ["NOT NEEDED", "NOT_NEEDED", USER_CHANGED],
-    promise
+    types: ['NOT NEEDED', 'NOT_NEEDED', USER_CHANGED],
+    promise,
   };
 };
 
 
 export const resendEmail = () => {
   const promise = axios({
-    url: "/api/my/accounts/resend",
-    method: "POST",
+    url: '/api/my/accounts/resend',
+    method: 'POST',
     headers: {
-      "X-CSRF-TOKEN": getCSRF()
-    }
+      'X-CSRF-TOKEN': getCSRF(),
+    },
   });
   return {
-    types: ["NOT NEEDED", MESSAGE, MESSAGE],
-    promise
+    types: ['NOT NEEDED', MESSAGE, MESSAGE],
+    promise,
   };
 };
