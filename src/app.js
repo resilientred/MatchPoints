@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
 document.addEventListener('DOMContentLoaded', () => {
   injectTapEventPlugin();
   if (process.env.DEVTOOLS && !window.devToolsExtension) {
-    const DevTools = require('./components/DevTools/DevTools');
+    const DevTools = require('./components/DevTools');
     render(<Provider store={store}>
       <div>
         <Router

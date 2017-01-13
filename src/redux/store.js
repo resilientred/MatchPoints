@@ -6,7 +6,7 @@ let createStoreWithMiddleware;
 
 if (process.env.DEVTOOLS) {
   const { persistState } = require('redux-devtools');
-  const DevTools = require('../components/DevTools/DevTools');
+  const DevTools = require('../components/DevTools');
   createStoreWithMiddleware = compose(
     applyMiddleware(middleware),
     window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),

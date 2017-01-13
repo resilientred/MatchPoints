@@ -1,7 +1,13 @@
 {
-  "presets": ["react", "es2015", "babel-preset-stage-0"],
+  "passPerPreset": true,
+  "presets": [
+    { "plugins": [ "transform-runtime" ] },
+    {
+      "passPerPreset": false,
+      "presets": ["react", "es2015", "stage-0"],
+    }
+  ],
   "plugins": [
-    "transform-runtime",
     "add-module-exports",
     "transform-decorators-legacy"
   ],

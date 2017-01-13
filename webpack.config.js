@@ -20,6 +20,7 @@ module.exports = {
     inline: true,
     progress: true,
     colors: true,
+    stats: 'errors-only',
     contentBase: './public',
     port: 5000
   },
@@ -37,6 +38,7 @@ module.exports = {
       'src',
       'node_modules'
     ],
+    mainFiles: ['index'],
     extensions: ['', '.js', '.jsx']
   },
   plugins: [
