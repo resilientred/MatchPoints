@@ -209,7 +209,7 @@ export default class Grouping extends Component {
         <MenuItem
           primaryText="Generate PDF"
           onClick={this.generatePDF}
-          disabled={this.props.generated || !this.props.selected.length}
+          disabled={!this.props.selected.length}
         />
         <MenuItem
           primaryText="Save"

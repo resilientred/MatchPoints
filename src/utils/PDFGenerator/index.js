@@ -1,7 +1,7 @@
 import pdfMake from 'pdfMake';
 import Scheduler from 'utils/Scheduler';
 
-class PDFGenerator {
+export default class PDFGenerator {
   constructor(clubName, players, schema, numOfPlayers, date) {
     this.clubName = clubName;
     this.players = players;
@@ -24,16 +24,16 @@ class PDFGenerator {
       width: 'auto',
       table: {
         headerRows: 1,
-        widths: [ 'auto' ],
+        widths: ['auto'],
         body: [
           [{
             text: `${numOfPlayers} Players`,
             fontSize: 18,
             bold: true,
             alignment: 'center',
-            margin: [ 0, 0, 0, 5],
+            margin: [0, 0, 0, 5],
           }],
-          ...body
+          ...body,
         ],
       },
       layout: {
@@ -42,8 +42,8 @@ class PDFGenerator {
         },
         vLineWidth: () => {
           return 2;
-        }
-      }
+        },
+      },
     };
   }
 
@@ -79,21 +79,21 @@ class PDFGenerator {
         {
           width: 'auto',
           fontSize: 18,
-          text: this.date
+          text: this.date,
         },
         {
           width: '*',
           fontSize: 28,
           bold: true,
           alignment: 'center',
-          text: this.clubName
+          text: this.clubName,
         },
         {
           width: 'auto',
           fontSize: 18,
-          text: `Group ${num}`
-        }
-      ]
+          text: `Group ${num}`,
+        },
+      ],
     };
 
     if (pageBreak) {
@@ -132,11 +132,11 @@ class PDFGenerator {
             {
               width: 'auto',
               text: player.rating,
-              fontSize: 26
-            }
+              fontSize: 26,
+            },
           ],
           columnGap: 5,
-          margin: [0, 7]
+          margin: [0, 7],
         };
       }),
       fontSize: 26,

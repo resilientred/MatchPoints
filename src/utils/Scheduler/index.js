@@ -1,4 +1,4 @@
-import RotatingArray from "util/RotatingArray";
+import RotatingArray from 'util/RotatingArray';
 import Schedules from './schedules';
 
 class Schedule {
@@ -7,8 +7,8 @@ class Schedule {
   }
 
   findSchedule(people) {
-    if (this.schedules[String(people)]) {
-      return this.schedules[String(people)];
+    if (this.schedules[+people]) {
+      return this.schedules[+people];
     }
 
     const ra = new RotatingArray(people);
