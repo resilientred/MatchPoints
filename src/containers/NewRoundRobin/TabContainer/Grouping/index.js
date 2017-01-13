@@ -12,7 +12,6 @@ import { NumOfPlayers, ParticipantGroup } from 'components';
 import { changeSchema, movePlayerUp, movePlayerDown } from 'redux/modules/schemata';
 import { stopLoad } from 'redux/modules/main';
 import { preSetTab } from 'redux/modules/navbar';
-import { generatePDF, allowGenerate, clearPDF } from 'redux/modules/pdf';
 import { setMinAndMax, temporarySave, saveSession } from 'redux/modules/newSession';
 import moment from 'moment';
 
@@ -20,10 +19,7 @@ import moment from 'moment';
   ({ auth: { club }, newSession, pdf, schemata }) => ({ club, ...newSession, ...pdf, ...schemata }),
   {
     changeSchema,
-    generatePDF,
-    allowGenerate,
     setMinAndMax,
-    clearPDF,
     stopLoad,
     saveSession,
     temporarySave,
@@ -40,14 +36,6 @@ export default class Grouping extends Component {
       title: null,
       message: null,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.pdfs && nextProps.pdfs) {
-      setTimeout(() => {
-        this.props.allowGenerate();
-      }, 30000);
-    }
   }
 
   handleDialogClose = () => {

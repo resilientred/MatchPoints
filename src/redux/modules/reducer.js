@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { reducer as reduxAsyncConnect } from 'redux-async-connect';
 import auth from './auth';
 import main from './main';
-import pdf from './pdf';
 import navbar from './navbar';
 import splash from './splash';
 import newSession from './newSession';
@@ -18,7 +17,6 @@ export default combineReducers({
   reduxAsyncConnect,
   auth,
   main,
-  pdf,
   splash,
   reset,
   navbar,
