@@ -12,6 +12,7 @@ import { NumOfPlayers, ParticipantGroup } from 'components';
 import { changeSchema, movePlayerUp, movePlayerDown } from 'redux/modules/schemata';
 import { stopLoad } from 'redux/modules/main';
 import { preSetTab } from 'redux/modules/navbar';
+import PDFGenerator from 'utils/PDFGenerator';
 import { setMinAndMax, temporarySave, saveSession } from 'redux/modules/newSession';
 import moment from 'moment';
 
@@ -83,21 +84,9 @@ export default class Grouping extends Component {
     if (selectedGroup) {
       this.totalPlayerAdded = 0;
       this.props.changeSchema(selectedGroup.split(',').map(el => +el));
-
-      if (this.props.pdf) {
-        this.props.clearPDF();
-      }
     }
   }
   generatePDF = () => {
-    if (this.props.generated) {
-      this.setState({
-        title: 'Whooops..',
-        message: 'You may only generate once every 30secs.',
-        dialogOpen: true,
-      });
-      return;
-    }
     if (this.props.schemata[0].length === 0) {
       this.setState({
         title: 'Ooooops..',
@@ -106,11 +95,13 @@ export default class Grouping extends Component {
       });
       return;
     }
-    this.props.generatePDF(
+    PDFGenerator.new(
+      this.props.club.clubName,
       this.props.sortedPlayers,
+      this.props.schemata.selected,
       this.props.selected,
-      this.props.club,
-      moment(this.props.date).format('YYYY-MM-DD'));
+      this.props.newSession.numJoined,
+      moment(this.props.date).format('YYYY-MM-DD')).generate();
   }
 
   handleSave = () => {
