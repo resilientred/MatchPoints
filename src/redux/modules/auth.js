@@ -1,23 +1,23 @@
-import axios from "axios";
-import { getCSRF } from "helpers";
-import { LOAD } from "redux/modules/main";
-import { USER_CHANGED } from "redux/modules/profile";
+import axios from 'axios';
+import { getCSRF } from 'helpers';
+import { LOAD } from 'redux/modules/main';
+import { USER_CHANGED } from 'redux/modules/profile';
 
-const LOAD_AUTH = "mp/auth/LOAD_AUTH";
-export const LOGOUT = "mp/auth/LOGOUT";
-export const LOAD_AUTH_SUCCESS = "mp/auth/LOAD_AUTH_SUCCESS";
-const LOAD_AUTH_ERROR = "mp/auth/LOAD_AUTH_ERROR";
-export const LOGOUT_LOAD = "mp/auth/LOGOUT_LOAD";
-const LOGOUT_SUCCESS = "mp/auth/LOGOUT_SUCCESS";
-const LOGOUT_FAIL = "mp/auth/LOGOUT_FAIL";
-const ACTIVATE_CLUB = "mp/auth/ACTIVATE_CLUB";
-const CLEAR_ERROR = "mp/auth/CLEAR_ERROR";
+const LOAD_AUTH = 'mp/auth/LOAD_AUTH';
+export const LOGOUT = 'mp/auth/LOGOUT';
+export const LOAD_AUTH_SUCCESS = 'mp/auth/LOAD_AUTH_SUCCESS';
+const LOAD_AUTH_ERROR = 'mp/auth/LOAD_AUTH_ERROR';
+export const LOGOUT_LOAD = 'mp/auth/LOGOUT_LOAD';
+const LOGOUT_SUCCESS = 'mp/auth/LOGOUT_SUCCESS';
+const LOGOUT_FAIL = 'mp/auth/LOGOUT_FAIL';
+const ACTIVATE_CLUB = 'mp/auth/ACTIVATE_CLUB';
+const CLEAR_ERROR = 'mp/auth/CLEAR_ERROR';
 
 const initialState = {
   club: {},
   error: null,
   loading: false,
-  loaded: false
+  loaded: false,
 };
 
 export default (state = initialState, action) => {
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
     case CLEAR_ERROR:
       return {
         ...state,
-        error: null
+        error: null,
       };
     case ACTIVATE_CLUB:
       if (state.club._id) {
@@ -33,8 +33,8 @@ export default (state = initialState, action) => {
           ...state,
           club: {
             ...state.club,
-            confirmed: true
-          }
+            confirmed: true,
+          },
         };
       }
 
@@ -46,13 +46,13 @@ export default (state = initialState, action) => {
       };
     case LOAD_AUTH_SUCCESS: {
       const club = {
-        ...action.payload
+        ...action.payload,
       };
       return {
         ...state,
         club,
         loading: false,
-        loaded: true
+        loaded: true,
       };
     }
     case LOAD_AUTH_ERROR:
@@ -60,18 +60,18 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         loaded: true,
-        error: typeof action.payload === "object" ? "Something went wrong" : action.payload
+        error: typeof action.payload === 'object' ? 'Something went wrong' : action.payload,
       };
     case LOGOUT_LOAD:
       return {
         ...state,
         loaded: false,
-        club: {}
+        club: {},
       };
     case USER_CHANGED:
       return {
         ...state,
-        club: action.payload
+        club: action.payload,
       };
     default:
       return state;
@@ -80,11 +80,11 @@ export default (state = initialState, action) => {
 
 
 export const loadAuth = () => {
-  const promise = axios.get("/api/clubs");
+  const promise = axios.get('/api/clubs');
 
   return {
     types: [LOAD_AUTH, LOAD_AUTH_SUCCESS, LOAD_AUTH_ERROR],
-    promise
+    promise,
   };
 };
 
@@ -94,54 +94,54 @@ export const isAuthLoaded = (state) => {
 
 export const logIn = (user) => {
   const promise = axios({
-    method: "POST",
-    url: "/session/new",
+    method: 'POST',
+    url: '/session/new',
     data: { user },
     headers: {
-      "X-CSRF-TOKEN": getCSRF()
-    }
+      'X-CSRF-TOKEN': getCSRF(),
+    },
   });
 
   return {
     types: [LOAD_AUTH, LOAD_AUTH_SUCCESS, LOAD_AUTH_ERROR],
-    promise
+    promise,
   };
 };
 
 export const signUp = (user) => {
   const promise = axios({
-    method: "POST",
-    url: "/api/clubs/new",
+    method: 'POST',
+    url: '/api/clubs/new',
     data: { user },
     headers: {
-      "X-CSRF-TOKEN": getCSRF()
-    }
+      'X-CSRF-TOKEN': getCSRF(),
+    },
   });
 
   return {
     types: [LOAD_AUTH, LOAD_AUTH_SUCCESS, LOAD_AUTH_ERROR],
-    promise
+    promise,
   };
 };
 
 export const logOut = () => {
   return {
     types: [LOGOUT_LOAD, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise: axios.delete("/session")
+    promise: axios.delete('/session'),
   };
 };
 
 export const activateClub = () => {
   return {
-    types: [LOAD, ACTIVATE_CLUB, "NOT NEEDED"],
+    types: [LOAD, ACTIVATE_CLUB, 'NOT NEEDED'],
     promise: new Promise((resolve) => {
-      setTimeout(() => resolve({ data: "" }), 500);
-    })
+      setTimeout(() => resolve({ data: '' }), 500);
+    }),
   };
 };
 
 export const clearError = () => {
   return {
-    type: CLEAR_ERROR
+    type: CLEAR_ERROR,
   };
 };

@@ -1,16 +1,16 @@
-import axios from "axios";
-import { getCSRF } from "helpers";
-import { ADD_PLAYERS_SUCCESS } from "./newSession";
+import axios from 'axios';
+import { getCSRF } from 'helpers';
+import { ADD_PLAYERS_SUCCESS } from './newSession';
 
-const LOAD = "mp/upload/LOAD";
-const STOP_LOAD = "mp/upload/STOP_LOAD";
-const FAIL = "mp/upload/FAIL";
-const OPEN_UPLOAD_DIALOG = "mp/dialogs/OPEN_UPLOAD_DIALOG";
-const CLOSE_UPLOAD_DIALOG = "mp/dialogs/CLOSE_UPLOAD_DIALOG";
+const LOAD = 'mp/upload/LOAD';
+const STOP_LOAD = 'mp/upload/STOP_LOAD';
+const FAIL = 'mp/upload/FAIL';
+const OPEN_UPLOAD_DIALOG = 'mp/dialogs/OPEN_UPLOAD_DIALOG';
+const CLOSE_UPLOAD_DIALOG = 'mp/dialogs/CLOSE_UPLOAD_DIALOG';
 
 const initialState = {
   dialogOpen: false,
-  processing: false
+  processing: false,
 };
 
 export default (state = initialState, action) => {
@@ -18,23 +18,23 @@ export default (state = initialState, action) => {
     case LOAD:
       return {
         ...state,
-        processing: true
+        processing: true,
       };
     case OPEN_UPLOAD_DIALOG:
       return {
         ...state,
-        dialogOpen: true
+        dialogOpen: true,
       };
     case ADD_PLAYERS_SUCCESS:
     case CLOSE_UPLOAD_DIALOG:
       return {
         dialogOpen: false,
-        processing: false
+        processing: false,
       };
     case STOP_LOAD:
       return {
         ...state,
-        processing: false
+        processing: false,
       };
     default:
       return state;
@@ -43,13 +43,13 @@ export default (state = initialState, action) => {
 
 export const openUpload = () => {
   return {
-    type: OPEN_UPLOAD_DIALOG
+    type: OPEN_UPLOAD_DIALOG,
   };
 };
 
 export const closeUpload = () => {
   return {
-    type: CLOSE_UPLOAD_DIALOG
+    type: CLOSE_UPLOAD_DIALOG,
   };
 };
 
@@ -63,16 +63,16 @@ export const stopLoading = () => {
 
 export const upload = (data) => {
   const promise = axios({
-    url: "/api/upload/players",
-    method: "POST",
+    url: '/api/upload/players',
+    method: 'POST',
     headers: {
-      "X-CSRF-TOKEN": getCSRF()
+      'X-CSRF-TOKEN': getCSRF(),
     },
-    data
+    data,
   });
 
   return {
     types: [LOAD, ADD_PLAYERS_SUCCESS, FAIL],
-    promise
+    promise,
   };
 };

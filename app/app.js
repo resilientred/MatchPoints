@@ -8,7 +8,6 @@ import playerRoutes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
 import accountRoutes from "./api/account";
-import pdfRoutes from "./api/pdf";
 import uploadRoutes from "./api/upload";
 import currentUserRoutes from "./api/currentUser";
 import Roundrobin from './models/roundrobin';
@@ -50,7 +49,6 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/clubs", clubRoutes);
-app.use("/api/pdfs", pdfRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/my", jsonParser, (req, res, next) => {
   ClubHelper.findCurrentClub(req)

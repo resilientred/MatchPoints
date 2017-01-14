@@ -1,29 +1,45 @@
-var path = require("path");
-var webpack = require("webpack");
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   context: __dirname,
-  entry: "./src/app.js",
+  entry: [
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://localhost:5000',
+    path.join(__dirname, 'src', 'app.js')
+  ],
   output: {
-    path: path.join(__dirname, "public", "js"),
-    filename: "bundle.js"
+    path: path.join(__dirname, 'public'),
+    publicPath: 'http://localhost:5000/',
+    filename: 'bundle.js'
+  },
+  devServer: {
+    historyApiFallback: true,
+    hot: true,
+    inline: true,
+    progress: true,
+    colors: true,
+    stats: 'errors-only',
+    contentBase: './public',
+    port: 5000
   },
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ["babel", "eslint-loader"]
+        loaders: ['babel', 'eslint-loader']
       }
     ]
   },
   resolve: {
     modulesDirectories: [
-      "src",
-      "node_modules"
+      'src',
+      'node_modules'
     ],
-    extensions: ["", ".js", ".jsx"]
+    mainFiles: ['index'],
+    extensions: ['', '.js', '.jsx']
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -31,6 +47,7 @@ module.exports = {
         'NODE_ENV': JSON.stringify('development'),
         'DEVTOOLS': true
       }
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ]
 };

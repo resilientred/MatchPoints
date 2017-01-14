@@ -1,12 +1,12 @@
-import { findSchemata } from "helpers";
+import { findSchemata } from 'helpers';
 
-const FOUND_SCHEMATA = "mp/session/FOUND_SCHEMATA";
-const CHANGE_SCHEMA = "mp/session/CHANGE_SCHEMA";
-const MOVE_PLAYER_UP = "mp/session/MOVE_PLAYER_UP";
-const MOVE_PLAYER_DOWN = "mp/session/MOVE_PLAYER_DOWN";
+const FOUND_SCHEMATA = 'mp/session/FOUND_SCHEMATA';
+const CHANGE_SCHEMA = 'mp/session/CHANGE_SCHEMA';
+const MOVE_PLAYER_UP = 'mp/session/MOVE_PLAYER_UP';
+const MOVE_PLAYER_DOWN = 'mp/session/MOVE_PLAYER_DOWN';
 const initialState = {
   selected: [],
-  schemata: [[]]
+  schemata: [[]],
 };
 
 export default (state = initialState, action) => {
@@ -15,12 +15,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         schemata: action.payload,
-        selected: []
+        selected: [],
       };
     case CHANGE_SCHEMA:
       return {
         ...state,
-        selected: action.payload
+        selected: action.payload,
       };
     case MOVE_PLAYER_UP: {
       if (action.payload === 0) {
@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
       selected[action.payload] -= 1;
       return {
         ...state,
-        selected
+        selected,
       };
     }
     case MOVE_PLAYER_DOWN: {
@@ -43,7 +43,7 @@ export default (state = initialState, action) => {
       selected[action.payload] -= 1;
       return {
         ...state,
-        selected
+        selected,
       };
     }
     default:
@@ -59,27 +59,27 @@ export const updateSchemata = (numJoined, min, max) => {
 
   return {
     type: FOUND_SCHEMATA,
-    payload: findSchemata(numJoined, range)
+    payload: findSchemata(numJoined, range),
   };
 };
 
 export const changeSchema = (schema) => {
   return {
     type: CHANGE_SCHEMA,
-    payload: schema
+    payload: schema,
   };
 };
 
 export const movePlayerUp = (group) => {
   return {
     type: MOVE_PLAYER_UP,
-    payload: group
+    payload: group,
   };
 };
 
 export const movePlayerDown = (group) => {
   return {
     type: MOVE_PLAYER_DOWN,
-    payload: group
+    payload: group,
   };
 };

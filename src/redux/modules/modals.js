@@ -1,14 +1,14 @@
-const OPEN_EDIT_MODAL = "mp/modals/OPEN_EDIT_MODAL";
-const OPEN_NEW_MODAL = "mp/modals/OPEN_NEW_MODAL";
-const CLOSE_EDIT_MODAL = "mp/modals/CLOSE_EDIT_MODAL";
-const CLOSE_NEW_MODAL = "mp/modals/CLOSE_NEW_MODAL";
+const OPEN_EDIT_MODAL = 'mp/modals/OPEN_EDIT_MODAL';
+const OPEN_NEW_MODAL = 'mp/modals/OPEN_NEW_MODAL';
+const CLOSE_EDIT_MODAL = 'mp/modals/CLOSE_EDIT_MODAL';
+const CLOSE_NEW_MODAL = 'mp/modals/CLOSE_NEW_MODAL';
 
 const initialState = {
   newPlayerModal: false,
   editPlayerModal: {
     open: false,
-    player: null
-  }
+    player: null,
+  },
 };
 
 export default (state = initialState, action) => {
@@ -19,8 +19,8 @@ export default (state = initialState, action) => {
         newPlayerModal: true,
         editPlayerModal: {
           open: false,
-          player: null
-        }
+          player: null,
+        },
       };
     case OPEN_EDIT_MODAL: {
       const player = action.payload;
@@ -32,9 +32,9 @@ export default (state = initialState, action) => {
           player: {
             _id: player._id,
             name: player.name,
-            rating: player.rating
-          }
-        }
+            rating: player.rating,
+          },
+        },
       };
     }
     case CLOSE_EDIT_MODAL:
@@ -42,13 +42,13 @@ export default (state = initialState, action) => {
         ...state,
         editPlayerModal: {
           open: false,
-          player: null
-        }
+          player: null,
+        },
       };
     case CLOSE_NEW_MODAL:
       return {
         ...state,
-        newPlayerModal: false
+        newPlayerModal: false,
       };
     default:
       return state;
@@ -58,23 +58,23 @@ export default (state = initialState, action) => {
 export const openEditModal = (player) => {
   return {
     type: OPEN_EDIT_MODAL,
-    payload: player
+    payload: player,
   };
 };
 
 export const openNewModal = () => {
   return {
-    type: OPEN_NEW_MODAL
+    type: OPEN_NEW_MODAL,
   };
 };
 export const closeEditModal = () => {
   return {
-    type: CLOSE_EDIT_MODAL
+    type: CLOSE_EDIT_MODAL,
   };
 };
 
 export const closeNewModal = () => {
   return {
-    type: CLOSE_NEW_MODAL
+    type: CLOSE_NEW_MODAL,
   };
 };

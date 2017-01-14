@@ -41,6 +41,6 @@ pdfs
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 build
-utils
+/utils
 public/js
 dump.rdb
