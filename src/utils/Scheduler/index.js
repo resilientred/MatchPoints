@@ -1,4 +1,4 @@
-import RotatingArray from 'util/RotatingArray';
+import RotatingArray from 'utils/RotatingArray';
 import Schedules from './schedules';
 
 class Schedule {

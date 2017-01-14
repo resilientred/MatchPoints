@@ -17,7 +17,7 @@ import { setMinAndMax, temporarySave, saveSession } from 'redux/modules/newSessi
 import moment from 'moment';
 
 @connect(
-  ({ auth: { club }, newSession, pdf, schemata }) => ({ club, ...newSession, ...pdf, ...schemata }),
+  ({ auth: { club }, newSession, schemata }) => ({ club, ...newSession, ...schemata }),
   {
     changeSchema,
     setMinAndMax,
@@ -95,12 +95,11 @@ export default class Grouping extends Component {
       });
       return;
     }
-    PDFGenerator.new(
+    new PDFGenerator(
       this.props.club.clubName,
       this.props.sortedPlayers,
-      this.props.schemata.selected,
       this.props.selected,
-      this.props.newSession.numJoined,
+      this.props.numJoined,
       moment(this.props.date).format('YYYY-MM-DD')).generate();
   }
 

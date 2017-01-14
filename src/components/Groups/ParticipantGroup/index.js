@@ -6,19 +6,9 @@ import PromoteButton from 'react-icons/lib/fa/arrow-up';
 import DownArrow from 'react-icons/lib/md/keyboard-arrow-down';
 import DemoteButton from 'react-icons/lib/fa/arrow-down';
 import IconButton from 'material-ui/IconButton/IconButton';
-import PdfIcon from 'react-icons/lib/md/picture-as-pdf';
 
 const ParticipantGroup = (props) => {
   return (<div style={{ position: 'relative' }}>
-    <IconButton
-      iconClassName="material-icons"
-      style={{ position: 'absolute', right: '0', top: '5px', zIndex: 10 }}
-      onClick={props.pdfDownload}
-      disabled={!props.pdfLoaded}
-      tooltip={!props.pdfLoaded ? 'You must generate first' : 'Download pdf'}
-    >
-      <PdfIcon />
-    </IconButton>
     <Table
       selectable={false}
       multiSelectable={false}
