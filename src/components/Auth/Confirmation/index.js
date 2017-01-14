@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { resendEmail } from 'redux/modules/profile';
 import { setMessage } from 'redux/modules/main';
 
+import './styles.scss';
+
 @connect(() => ({}), { resendEmail, setMessage })
 export default class Confirmation extends Component {
   constructor(props) {

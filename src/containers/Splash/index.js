@@ -5,6 +5,8 @@ import { setToken } from 'redux/modules/reset';
 import { LogInForm, SignUpForm, ForgotForm, ResetForm, Activated } from 'components';
 import { asyncConnect } from 'redux-async-connect';
 
+import './styles.scss';
+
 @asyncConnect([{
   promise: ({ store, location }) => {
     if (location.pathname === '/reset') {

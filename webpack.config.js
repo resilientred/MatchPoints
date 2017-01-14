@@ -30,6 +30,10 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['babel', 'eslint-loader']
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass'],
       }
     ]
   },

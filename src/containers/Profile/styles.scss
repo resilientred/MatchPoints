@@ -1,0 +1,21 @@
+.profile-container {
+  padding: 20px;
+  width: 80%;
+  margin: 0 auto;
+  height: 500px;
+  transform: translateY(10%);
+
+  form {
+    overflow: scroll;
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background-color: none;
+    box-shadow: none;
+    z-index: inherit;
+  }
+}

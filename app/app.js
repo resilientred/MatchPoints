@@ -35,18 +35,6 @@ app.use("/favicon.ico", (req, res) => {
   res.end();
 });
 
-if (process.env.NODE_ENV === "development") {
-  const sassMiddleware = require("node-sass-middleware");
-  app.use(
-    sassMiddleware({
-      src: path.join(__dirname, "..", "assets", "sass"),
-      dest: path.join(__dirname, "..", "public", "styles"),
-      prefix: "/styles",
-      debug: true
-    })
-  );
-}
-
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/clubs", clubRoutes);
 app.use("/api/upload", uploadRoutes);

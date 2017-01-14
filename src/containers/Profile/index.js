@@ -6,6 +6,8 @@ import { changePassword, changeInfo } from 'redux/modules/profile';
 import { setMessage } from 'redux/modules/main';
 import { PasswordChange, InfoChange } from 'components';
 
+import './styles.scss';
+
 @connect(({ auth: { club } }) => ({ club }), { changePassword, changeInfo, setMessage })
 export default class Profile extends Component {
   constructor(props) {

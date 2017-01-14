@@ -1,0 +1,48 @@
+.nav {
+  position: relative;
+  display: flex;
+  right: -15%;
+  font-size: 16px;
+  li {
+    font-family: 'Roboto', sans-serif;
+    margin-left: 15px;
+  }
+  li:hover {
+    @include reg-transition-no-delay(color, 0.2s, ease-out)
+  }
+}
+
+.nav-bar {
+  color: white;
+  background-color: #673AB7;
+  font-weight: 400;
+  z-index: 99;
+  display: flex;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  height: 60px;
+  content: " ";
+  position: relative;
+
+  & > div {
+    height: 60px;
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+      font-family: 'Roboto', sans-serif;
+      font-size: 25px;
+      cursor: pointer;
+      color: white;
+      @include reg-transition-no-delay(color, 0.5s, ease-in-out)
+    }
+    .logo:hover {
+      color: #FFA000;
+    }
+  }
+}

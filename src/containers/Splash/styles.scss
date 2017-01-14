@@ -1,0 +1,58 @@
+.banner-container:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+.banner-container {
+  position: relative;
+  z-index: 1;
+  transform: translateY(-5%);
+  .banner-text {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-shadow: 1px 1px #000000;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 1.5px;
+    button {
+      align-self: center;
+      width: 50%;
+      min-width: 150px;
+      margin-top: 25px;
+      color: white;
+      font-size: 20px;
+      border: 1px solid white;
+      padding: 10px 20px;
+      border-radius: 3px;
+      background-color: rgba(0, 0, 0, 0.9);
+      transition: background-color 0.5s ease-in-out;
+    }
+    button:hover {
+      background-color: rgb(33, 33, 33)
+    }
+  }
+}
+
+.banner {
+  background-image: url("/images/tt_banner.jpg");
+  background-size: cover;
+  -ms-background-position-x: center;
+  -ms-background-position-y: top;
+  background-position: center top;
+  transform: translateY(0%);
+  width: 100%;
+  min-height: 800px;
+  height: 100vw;
+  opacity: 0.9;
+  -webkit-filter: blur(0.2px);
+  -moz-filter: blur(0.2px);
+  -o-filter: blur(0.2px);
+  -ms-filter: blur(0.2px);
+  filter: blur(0.2px);
+}

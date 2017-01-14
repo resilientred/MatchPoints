@@ -6,6 +6,8 @@ import CircularProgress from 'material-ui/CircularProgress';
 import { clearMessage } from 'redux/modules/main';
 import Navbar from './Navbar';
 
+import './styles.scss';
+
 @connect(({ main: { loading, message } }) => ({ loading, message }), { clearMessage })
 export default class Main extends Component {
   componentWillReceiveProps(nextProps) {
