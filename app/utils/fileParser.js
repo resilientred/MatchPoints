@@ -1,7 +1,7 @@
 import fs from "fs";
 import readline from "readline";
-import Club from "../app/models/club";
-import { Player } from "../app/models/player";
+import Club from "../models/club";
+import { Player } from "../models/player";
 
 export default class PlayerParser {
   static csvToPlayers(file, id) {

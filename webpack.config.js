@@ -43,7 +43,10 @@ module.exports = {
       'node_modules'
     ],
     mainFiles: ['index'],
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
+    alias: {
+      assets: path.join(__dirname, 'src', 'assets'),
+    }
   },
   plugins: [
     new webpack.DefinePlugin({

@@ -84,6 +84,7 @@ export default class Grouping extends Component {
     if (selectedGroup) {
       this.totalPlayerAdded = 0;
       this.props.changeSchema(selectedGroup.split(',').map(el => +el));
+      this.props.addedPlayers.removePlayerList();
     }
   }
   generatePDF = () => {
@@ -123,13 +124,6 @@ export default class Grouping extends Component {
       });
     }
   }
-  download = (link) => {
-    try {
-      window.open(`/api/pdfs/download/${link}`);
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   promote = (groupId, playerRank) => {
     // debugger;
@@ -143,15 +137,12 @@ export default class Grouping extends Component {
 
   groupTables() {
     const playerList = this.props.addedPlayers.toPlayerList(this.props.selected).toArray();
-    const pdfs = this.props.pdfs;
 
     return (<div>
       {
         this.props.selected.map((numPlayers, i, arr) => {
           return (<ParticipantGroup
             key={`${i}${numPlayers}`} groupId={i}
-            pdfDownload={!pdfs ? () => {} : this.download.bind(this, pdfs[`group${(i + 1)}`])}
-            pdfLoaded={!!pdfs}
             numPlayers={numPlayers}
             players={playerList[i]}
             promote={i === 0 ? null : this.promote}
