@@ -123,35 +123,29 @@ export default class Grouping extends Component {
       });
     }
   }
-  download = (link) => {
-    try {
-      window.open(`/api/pdfs/download/${link}`);
-    } catch (e) {
-      console.log(e);
+
+  promote = (groupId, playerRank) => {
+    const success = this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
+    if (success) {
+      this.forceUpdate();
     }
   }
 
-  promote = (groupId, playerRank) => {
-    // debugger;
-    this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
-  }
-
   demote = (groupId, playerRank) => {
-    // debugger;
-    this.props.addedPlayers.toPlayerList().demote(groupId, playerRank);
+    const success = this.props.addedPlayers.toPlayerList().demote(groupId, playerRank);
+    if (success) {
+      this.forceUpdate();
+    }
   }
 
   groupTables() {
     const playerList = this.props.addedPlayers.toPlayerList(this.props.selected).toArray();
-    const pdfs = this.props.pdfs;
 
     return (<div>
       {
         this.props.selected.map((numPlayers, i, arr) => {
           return (<ParticipantGroup
             key={`${i}${numPlayers}`} groupId={i}
-            pdfDownload={!pdfs ? () => {} : this.download.bind(this, pdfs[`group${(i + 1)}`])}
-            pdfLoaded={!!pdfs}
             numPlayers={numPlayers}
             players={playerList[i]}
             promote={i === 0 ? null : this.promote}

@@ -35,37 +35,37 @@ const ParticipantGroup = (props) => {
             <TableRow className="table-row" key={player._id}>
               <TableRowColumn>{i + 1}</TableRowColumn>
               <TableRowColumn>{player.name}</TableRowColumn>
-              <TableRowColumn>{player.rating}</TableRowColumn>
-              {
-                props.promote &&
-                <IconButton
-                  iconClassName="material-icons"
-                  tooltip="Promote Player"
-                  onClick={() => props.promote(props.groupId, i)}
-                  style={{
-                    left: '30px',
-                    top: '57px',
-                    zIndex: 10,
-                  }}
-                >
-                  <PromoteButton />
-                </IconButton>
-              }
-              {
-                props.demote &&
-                <IconButton
-                  iconClassName="material-icons"
-                  tooltip="Demote Player"
-                  onClick={() => props.demote(props.groupId, i)}
-                  style={{
-                    left: '30px',
-                    top: '57px',
-                    zIndex: 10,
-                  }}
-                >
-                  <DemoteButton />
-                </IconButton>
-              }
+              <TableRowColumn>
+                {player.rating}
+                {
+                  props.promote &&
+                    <IconButton
+                      iconClassName="material-icons"
+                      tooltip="Promote Player"
+                      onClick={() => props.promote(props.groupId, i)}
+                      style={{
+                        left: '15px',
+                        zIndex: 10,
+                      }}
+                    >
+                      <PromoteButton />
+                    </IconButton>
+                }
+                {
+                  props.demote &&
+                  <IconButton
+                    iconClassName="material-icons"
+                    tooltip="Demote Player"
+                    onClick={() => props.demote(props.groupId, i)}
+                    style={{
+                      left: '30px',
+                      zIndex: 10,
+                    }}
+                  >
+                    <DemoteButton />
+                  </IconButton>
+                }
+              </TableRowColumn>
             </TableRow>
           ))
         }

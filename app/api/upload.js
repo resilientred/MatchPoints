@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import shortid from "shortid";
-import PlayerParser from "../../utils/fileParser";
+import PlayerParser from "../utils/fileParser";
 import { jsonParser, clubMethods, csrfProtection } from "../helpers/appModules";
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");

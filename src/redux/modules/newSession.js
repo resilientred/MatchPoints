@@ -1,7 +1,17 @@
 import axios from 'axios';
 import { getCSRF, Heap } from 'helpers';
-import { ADD_PLAYER_SUCCESS, DELETE_PLAYER_SUCCESS, UPDATE_PLAYER_SUCCESS, FETCH_PLAYERS_SUCCESS } from 'redux/modules/players';
+import {
+  ADD_PLAYER_SUCCESS,
+  DELETE_PLAYER_SUCCESS,
+  UPDATE_PLAYER_SUCCESS,
+  FETCH_PLAYERS_SUCCESS,
+} from 'redux/modules/players';
 import { UPDATE_SESSION_SUCCESS } from 'redux/modules/sessions';
+import {
+  CHANGE_SCHEMA,
+  MOVE_PLAYER_UP,
+  MOVE_PLAYER_DOWN,
+} from 'redux/modules/schemata';
 import { MESSAGE, LOAD } from 'redux/modules/main';
 
 export const LOAD_PLAYERS = 'mp/session/LOAD_PLAYERS';
@@ -131,6 +141,13 @@ export default (state = initialState, action) => {
         pdfs: null,
         max: null,
         min: null,
+      };
+    case CHANGE_SCHEMA:
+    case MOVE_PLAYER_UP:
+    case MOVE_PLAYER_DOWN:
+      return {
+        ...state,
+        addedPlayers: state.addedPlayers.removePlayerList(),
       };
     default:
       return state;

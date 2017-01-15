@@ -1,3 +1,6 @@
+// import store from 'redux/store';
+// import { updatePlayerList } from 'redux/modules/newSession';
+
 export default class PlayerList {
   constructor(schema) {
     this.schema = schema;
@@ -20,22 +23,60 @@ export default class PlayerList {
 
   promote(group, idx) {
     if (group < 1 || idx < 0 || idx >= this.schema[group]) {
-      return;
+      return false;
     }
-    const target = this.playerList[group][idx];
-    const swapIdx = this.schema[group - 1] - 1;
-    this.playerList[group][idx] = this.playerList[group - 1][swapIdx];
-    this.playerList[group - 1][swapIdx] = target;
+    const promoteTarget = this.playerList[group][idx];
+    // swap with last member of the higher group
+    const swapTargetGroup = this.playerList[group - 1];
+    const swapTarget = swapTargetGroup[swapTargetGroup.length - 1];
+
+    const targetGroupList = [
+      swapTarget,
+      ...this.playerList[group].slice(0, idx),
+      ...this.playerList[group].slice(idx + 1),
+    ];
+
+    const swapGroupList = [
+      ...swapTargetGroup.slice(0, -1),
+      promoteTarget,
+    ];
+    this.playerList = [
+      ...this.playerList.slice(0, group - 1),
+      swapGroupList,
+      targetGroupList,
+      ...this.playerList.slice(group + 1),
+    ];
+
+    return true;
   }
 
   demote(group, idx) {
     if (group < 0 || group >= this.playerList.length ||
       idx < 0 || idx >= this.schema[group]) {
-      return;
+      return false;
     }
-    const target = this.playerList[group][idx];
-    const swapIdx = this.schema[group + 1] - 1;
-    this.playerList[group][idx] = this.playerList[group + 1][swapIdx];
-    this.playerList[group + 1][swapIdx] = target;
+    const demoteTarget = this.playerList[group][idx];
+
+    // swap with the first memebr of the lower group
+    const swapTarget = this.playerList[group + 1][0];
+    const targetGroupList = [
+      ...this.playerList[group].slice(0, idx),
+      ...this.playerList[group].slice(idx + 1),
+      swapTarget,
+    ];
+
+    const swapGroupList = [
+      demoteTarget,
+      ...this.playerList[group + 1].slice(1),
+    ];
+
+    this.playerList = [
+      ...this.playerList.slice(0, group),
+      targetGroupList,
+      swapGroupList,
+      ...this.playerList.slice(group + 2),
+    ];
+
+    return true;
   }
 }

@@ -55,17 +55,6 @@ app.use("/api/*", (req, res) => {
 });
 app.use("/session", sessionRoutes);
 app.use("/accounts", accountRoutes);
-app.get("/temporaryFixRoute", (res, req) => {
-  Roundrobin.find({date: '2016-12-03T00:00:00.000Z'}).then((roundrobin) => {
-    const player5 = roundrobin.players[5];
-    const player6 = roundrobin.players[6];
-    console.log(player5.name, player6.name);
-    Roundrobin.update({date: '2016-12-03T00:00:00.000Z'}, {$set: {
-      "players.5": player6, "players.6": player5
-    } })
-    res.send(JSON.stringify(roundrobin, null, 4));
-  });
-});
 app.get("*", csrfProtection, (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });

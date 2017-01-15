@@ -1,3 +1,5 @@
+@import '~assets/variables.scss';
+
 html, body, div, span,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, em, img, q, s, strong,
@@ -99,40 +101,6 @@ input {
   border: 2px solid black;
   border-radius: 4px;
 }
-
-@mixin reg-transition($anim-part, $duration, $curve, $delay){
-  -webkit-transition: $anim-part $duration $curve $delay;
-  transition: $anim-part $duration $curve $delay;
-  -o-transition: $anim-part $duration $curve $delay;
-  -moz-transition: $anim-part $duration $curve $delay;
-}
-@mixin reg-transition-no-delay($anim-part, $duration, $curve){
-  -webkit-transition: $anim-part $duration $curve;
-  transition: $anim-part $duration $curve;
-  -o-transition: $anim-part $duration $curve;
-  -moz-transition: $anim-part $duration $curve;
-}
-@mixin default-font {
-  font-family: 'Roboto', sans-serif;
-}
-@mixin reg-anim ($name, $duration, $timing) {
-    animation-name: $name;
-    -moz-animation-name: $name;
-    -webkit-animation-name: $name;
-    -o-animation-name: $name;
-    animation-duration: $duration;
-    -moz-animation-duration: $duration;
-    -webkit-animation-duration: $duration;
-    -o-animation-duration: $duration;
-    animation-timing-function: $timing;
-    -moz-animation-timing-function: $timing;
-    -webkit-animation-timing-function: $timing;
-    -o-animation-timing-function: $timing;
-}
-
-@mixin selected {@include reg-transition(all, 0.6s, ease-out, 0.2s);}
-
-@mixin hover {@include reg-transition(all, 0.4s, ease-out, 0.1s);}
 
 h3 {
   @include default-font;

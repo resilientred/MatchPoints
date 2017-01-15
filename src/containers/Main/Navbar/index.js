@@ -7,6 +7,8 @@ import { openLogin, setPage } from 'redux/modules/splash';
 import { logIn, logOut } from 'redux/modules/auth';
 import { open, close, setTab, preSetTab } from 'redux/modules/navbar';
 
+import './styles.scss';
+
 @connect(
   ({ auth: { club }, navbar }) => ({ club, navbar }),
   { openLogin, logIn, logOut, open, close, setTab, preSetTab, setPage }

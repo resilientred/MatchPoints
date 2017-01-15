@@ -146,4 +146,9 @@ export default class Heap {
     this.playerList = list;
     return list;
   }
+
+  removePlayerList() {
+    this.playerList = null;
+    return this;
+  }
 }
