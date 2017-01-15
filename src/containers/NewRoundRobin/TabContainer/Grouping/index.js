@@ -84,7 +84,6 @@ export default class Grouping extends Component {
     if (selectedGroup) {
       this.totalPlayerAdded = 0;
       this.props.changeSchema(selectedGroup.split(',').map(el => +el));
-      this.props.addedPlayers.removePlayerList();
     }
   }
   generatePDF = () => {
@@ -126,13 +125,17 @@ export default class Grouping extends Component {
   }
 
   promote = (groupId, playerRank) => {
-    // debugger;
-    this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
+    const success = this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
+    if (success) {
+      this.forceUpdate();
+    }
   }
 
   demote = (groupId, playerRank) => {
-    // debugger;
-    this.props.addedPlayers.toPlayerList().demote(groupId, playerRank);
+    const success = this.props.addedPlayers.toPlayerList().demote(groupId, playerRank);
+    if (success) {
+      this.forceUpdate();
+    }
   }
 
   groupTables() {

@@ -1,9 +1,9 @@
 import { findSchemata } from 'helpers';
 
 const FOUND_SCHEMATA = 'mp/session/FOUND_SCHEMATA';
-const CHANGE_SCHEMA = 'mp/session/CHANGE_SCHEMA';
-const MOVE_PLAYER_UP = 'mp/session/MOVE_PLAYER_UP';
-const MOVE_PLAYER_DOWN = 'mp/session/MOVE_PLAYER_DOWN';
+export const CHANGE_SCHEMA = 'mp/session/CHANGE_SCHEMA';
+export const MOVE_PLAYER_UP = 'mp/session/MOVE_PLAYER_UP';
+export const MOVE_PLAYER_DOWN = 'mp/session/MOVE_PLAYER_DOWN';
 const initialState = {
   selected: [],
   schemata: [[]],
