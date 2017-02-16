@@ -58,12 +58,11 @@ class Splash extends Component {
       }
     })();
 
-    return (<div>
-      <div className="banner-container">
-        <div className="banner" />
-        { content }
-      </div>
-    </div>);
+    return (<div className="banner-container">
+      <div className="banner" />
+      { content }
+    </div>
+    );
   }
 }
 

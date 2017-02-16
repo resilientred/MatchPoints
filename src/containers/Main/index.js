@@ -17,7 +17,7 @@ export default class Main extends Component {
   }
   render() {
     return (<MuiThemeProvider>
-      <div>
+      <div className="app-container">
         <Navbar />
         { this.props.children }
         {

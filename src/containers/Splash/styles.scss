@@ -5,6 +5,9 @@
 }
 
 .banner-container {
+  flex: 1;
+  height: 100%;
+  display: flex;
   position: relative;
   z-index: 1;
   transform: translateY(-5%);
@@ -47,8 +50,7 @@
   background-position: center top;
   transform: translateY(0%);
   width: 100%;
-  min-height: 800px;
-  height: 100vw;
+  flex: 1;
   opacity: 0.9;
   -webkit-filter: blur(0.2px);
   -moz-filter: blur(0.2px);

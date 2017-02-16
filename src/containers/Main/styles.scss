@@ -1,5 +1,16 @@
 @import '~assets/variables.scss';
 
+html,
+body,
+.app-container,
+#root {
+  height: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
 html, body, div, span,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, em, img, q, s, strong,
@@ -314,14 +325,6 @@ h1 {
   transform: translateX(-60%);
 }
 
-li.active-links {
-  color: black;
-  cursor: initial;
-  @include reg-transition-no-delay(color, 0.5s, ease-in-out)
-  &:hover {
-    color: black;
-  }
-}
 form {
   max-height: 430px;
   overflow: scroll;
@@ -346,14 +349,6 @@ form {
     display: flex;
     margin-top: 30px;
     margin-bottom: 50px;
-  }
-}
-
-.nav-bar li {
-  cursor: pointer;
-
-  &:hover {
-    color: #FFA000;
   }
 }
 
@@ -384,11 +379,6 @@ form {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-}
-
-.collapsed-icon {
-  display: none;
-  font-size: 40px;
 }
 
 .player-form {
@@ -478,6 +468,7 @@ form {
   > *:first-child {
     margin-right: 20px;
   }
+
 }
 .club-info-container {
   margin-top: 5%;
@@ -489,12 +480,14 @@ form {
     margin-top: 10px;
   }
 }
+
 footer {
   margin-top: 10px;
   bottom: 0;
   margin-left: 49%;
   position: static;
 }
+
 .git {
   cursor: pointer;
   left: 20px;
@@ -503,6 +496,7 @@ footer {
   background-image: url("/images/git.png");
   background-size: cover;
 }
+
 .git:hover {
   width: 50px;
   height: 50px;
@@ -510,22 +504,6 @@ footer {
   background-size: cover;
 }
 
-@media (max-width: 800px){
-  .nav {
-    display: none;
-  }
-
-  .collapsed-icon {
-    margin-right: -40%;
-    display: flex;
-    cursor: pointer;
-    transition: color 0.5s;
-    &:hover {
-      color: black;
-    }
-  }
-
-}
 
 @media (min-width: 944px) and (min-device-width: 944px){
   .banner-container {
