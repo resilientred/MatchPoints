@@ -1,10 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import reducer from './modules/reducer';
 import middleware from './middleware';
 
 let createStoreWithMiddleware;
 
-if (process.env.DEVTOOLS) {
+if (process.env.NODE_ENV === 'development' && process.env.DEVTOOLS) {
   const { persistState } = require('redux-devtools');
   const DevTools = require('../components/DevTools');
   createStoreWithMiddleware = compose(
@@ -15,7 +14,12 @@ if (process.env.DEVTOOLS) {
 } else {
   createStoreWithMiddleware = applyMiddleware(middleware)(createStore);
 }
+const reducer = require('./modules/reducer');
 
 const store = createStoreWithMiddleware(reducer);
-
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  module.hot.accept('./modules/reducer', () => {
+    store.replaceReducer(require('./modules/reducer'));
+  });
+}
 export default store;

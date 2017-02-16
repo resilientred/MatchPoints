@@ -29,18 +29,22 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ['babel', 'eslint-loader']
+        loaders: ['babel', 'eslint']
       },
       {
         test: /\.scss$/,
         loaders: ['style', 'css', 'sass'],
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css'],
       }
     ]
   },
   resolve: {
     modulesDirectories: [
       'src',
-      'node_modules'
+      'node_modules',
     ],
     mainFiles: ['index'],
     extensions: ['', '.js', '.jsx'],
@@ -52,7 +56,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('development'),
-        'DEVTOOLS': true
+        'DEVTOOLS': false
       }
     }),
     new webpack.HotModuleReplacementPlugin()
