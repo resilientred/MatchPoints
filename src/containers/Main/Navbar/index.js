@@ -14,14 +14,17 @@ import './styles.scss';
   { openLogin, logIn, logOut, open, close, setTab, preSetTab, setPage }
 )
 export default class Navbar extends Component {
-  componentWillMount() {
-    this.props.preSetTab(window.location.pathname);
+  state = {
+    expanded: true,
   }
 
+  componentWillMount() {
+    this.props.preSetTab(window.location.pathname);
+    window.addEventListener('resize', this.handleResize);
+  }
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props.navbar.opened !== nextProps.navbar.opened ||
-      this.props.navbar.tab !== nextProps.navbar.tab) {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.navbar !== nextProps.navbar || this.state !== nextState) {
       return true;
     }
     if ((!this.props.club._id && nextProps.club._id) ||
@@ -29,6 +32,19 @@ export default class Navbar extends Component {
       return true;
     }
     return false;
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = (ev) => {
+    const width = ev.target.innerWidth;
+    if (!this.state.expanded && width > 800) {
+      this.setState({ expanded: true });
+    } else if (this.state.expanded && width <= 800) {
+      this.setState({ expanded: false });
+    }
   }
 
   handleLogout = () => {
@@ -55,6 +71,7 @@ export default class Navbar extends Component {
         docked={false}
         onRequestChange={this.props.close}
         zDepth={5}
+        className="sliding-menu"
       >
         <MenuItem
           onTouchTap={() => this.handleLink('/club', 0)}
@@ -99,6 +116,7 @@ export default class Navbar extends Component {
       openSecondary={Boolean(true)}
       docked={false}
       onRequestChange={this.props.close}
+      className="sliding-menu"
     >
       <MenuItem
         onTouchTap={() => this.handleLink('/', 0)}
@@ -122,6 +140,7 @@ export default class Navbar extends Component {
       }
     </Drawer>);
   }
+
   normalNav() {
     const tab = this.props.navbar.tab;
     if (this.props.club._id) {
@@ -161,17 +180,18 @@ export default class Navbar extends Component {
       }
     </ul>);
   }
-  render() {
-    const collapsedIcon = <div className="collapsed-icon" onClick={this.props.open}>&#9776;</div>;
 
+  render() {
+    const { expanded } = this.state;
+    console.log(expanded);
     return (<div className="nav-bar">
       <div>
         <div className="logo" onClick={() => this.handleLink(this.props.club._id ? '/club' : '/', 0)}>
           MatchPoints
         </div>
-        { collapsedIcon }
-        { this.normalNav() }
-        { this.slideNav() }
+        {!expanded && <div className="collapsed-icon" onClick={this.props.open}>&#9776;</div>}
+        {expanded && this.normalNav()}
+        {!expanded && this.slideNav()}
       </div>
     </div>);
   }

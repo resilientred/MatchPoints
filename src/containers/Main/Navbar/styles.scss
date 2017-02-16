@@ -3,8 +3,8 @@
 .nav {
   position: relative;
   display: flex;
-  right: -15%;
   font-size: 16px;
+
   li {
     font-family: 'Roboto', sans-serif;
     margin-left: 15px;
@@ -16,7 +16,7 @@
 
 .nav-bar {
   color: white;
-  background-color: #673AB7;
+  background-color: transparent;
   font-weight: 400;
   z-index: 99;
   display: flex;
@@ -25,11 +25,11 @@
   margin-left: auto;
   height: 60px;
   content: " ";
-  position: relative;
+  position: absolute;
 
   & > div {
     height: 60px;
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
@@ -46,5 +46,35 @@
     .logo:hover {
       color: #FFA000;
     }
+  }
+
+  li {
+    cursor: pointer;
+
+    &:hover {
+      color: #FFA000;
+    }
+
+    &.active-links {
+      color: black;
+      cursor: initial;
+      @include reg-transition-no-delay(color, 0.5s, ease-in-out)
+      &:hover {
+        color: black;
+      }
+    }
+  }
+
+  .collapsed-icon {
+    cursor: pointer;
+    transition: color 0.5s;
+
+    &:hover {
+      color: black;
+    }
+  }
+
+  .sliding-menu {
+    position: absolute;
   }
 }
