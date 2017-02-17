@@ -44,6 +44,7 @@ export default class Tutorial extends Component {
         left: rect.left,
         width: rect.width,
         height: rect.height,
+        className: rect.top > (window.innerHeight / 2) ? 'top' : 'bottom',
       },
     });
   }
@@ -93,14 +94,19 @@ export default class Tutorial extends Component {
                 height,
               }}
             >
+              <div className={`arrow ${className}`} />
+              <div className={`text ${className}`}>
+                {currentEl.text}
+              </div>
             </div>
         }
         <div className="buttons">
-          {
-            this.props.elements.length > idx + 1 &&
-              <div className="button" onClick={this.handleNext}>Next</div>
-          }
           {idx !== 0 && <div className="button" onClick={this.handlePrev}>Prev</div>}
+          <div
+            className="button"
+            onClick={this.handleNext}>
+            {this.props.elements.length > idx + 1 ? 'Next' : 'Finish'}
+          </div>
         </div>
       </div>
     );
