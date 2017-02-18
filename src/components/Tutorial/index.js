@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { endTutorial, disableTutorial } from 'redux/modules/tutorial';
 import './styles.scss';
 
+@connect(({ tutorial }) => ({ tutorial }),  { endTutorial, disableTutorial })
 export default class Tutorial extends Component {
   /*
     Props -
@@ -64,7 +67,7 @@ export default class Tutorial extends Component {
   handleNext = () => {
     const { queue, idx } = this.state;
     if (queue.length === 0) {
-      this.props.closeTutorial();
+      this.props.endTutorial();
     } else {
       this.setState({
         currentEl: queue[0],
