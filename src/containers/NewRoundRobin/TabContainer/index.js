@@ -3,6 +3,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import { connect } from 'react-redux';
 import { openNewModal } from 'redux/modules/modals';
 import { openUpload } from 'redux/modules/upload';
+import { startTutorial } from 'redux/modules/tutorial';
 import { setDate, registerPlayer, unregisterPlayer } from 'redux/modules/newSession';
 import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
@@ -15,19 +16,21 @@ import Participants from './Participants';
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers,
   }),
-  ({ openNewModal, registerPlayer, unregisterPlayer, setDate, openUpload })
+  ({ openNewModal, registerPlayer, unregisterPlayer, setDate, openUpload, startTutorial })
 )
 export default class TabContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tab: 0,
-    };
+  state = {
+    tab: 0,
+  };
+
+  componentDidMount() {
+    this.props.startTutorial('registration');
   }
 
   toggleTab = (tab) => {
     if (tab.target) return;
-
+    if (tab === 1) this.props.startTutorial('grouping');
+    if (tab === 0) this.props.startTutorial('registration');
     this.setState({ tab });
   }
 
