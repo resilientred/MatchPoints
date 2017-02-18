@@ -3,7 +3,13 @@ import { connect } from 'react-redux';
 import { endTutorial, disableTutorial } from 'redux/modules/tutorial';
 import './styles.scss';
 
-@connect(({ tutorial }) => ({ tutorial }),  { endTutorial, disableTutorial })
+@connect(
+  ({ tutorial }) => ({
+    data: tutorial.data,
+    tutorialStart: tutorial.tutorialStart,
+  }),
+  { endTutorial, disableTutorial }
+)
 export default class Tutorial extends Component {
   /*
     Props -
@@ -15,7 +21,7 @@ export default class Tutorial extends Component {
   */
   state = {
     currentEl: null,
-    queue: this.props.elements,
+    queue: [],
     idx: -1,
     highlighter: {
       top: null,
@@ -26,8 +32,15 @@ export default class Tutorial extends Component {
     },
   };
 
-  componentDidMount() {
-    this.handleNext();
+  componentWillReceiveProps(nextProps) {
+    const { data } = nextProps;
+    if (this.props.data !== data && data.elements.length > 0) {
+      this.setState({
+        queue: data.elements,
+        currentEl: null,
+        idx: -1,
+      }, this.handleNext);
+    }
   }
 
   autoPlay = () => {
@@ -39,8 +52,11 @@ export default class Tutorial extends Component {
   }
 
   updateTutorial = () => {
-    const el = this.state.currentEl;
-    const rect = document.querySelector(el.selector).getBoundingClientRect();
+    const { clickTiming, selector, clickTarget } = this.state.currentEl;
+    if (clickTiming === 'before') {
+      document.querySelector(clickTarget).click();
+    }
+    const rect = document.querySelector(selector).getBoundingClientRect();
     this.setState({
       highlighter: {
         top: rect.top,
@@ -49,12 +65,16 @@ export default class Tutorial extends Component {
         height: rect.height,
         className: rect.top > (window.innerHeight / 2) ? 'top' : 'bottom',
       },
+    }, () => {
+      if (clickTiming === 'after') {
+        document.querySelector(clickTarget).click();
+      }
     });
   }
 
   handlePrev = () => {
     const { queue, idx } = this.state;
-    const { elements } = this.props;
+    const { elements } = this.props.data;
     if (idx > 0) {
       this.setState({
         currentEl: elements[idx - 1],
@@ -82,6 +102,10 @@ export default class Tutorial extends Component {
   }
 
   render() {
+    if (!this.props.tutorialStart) {
+      return <div />;
+    }
+
     const { idx, highlighter, currentEl } = this.state;
     const { left, top, width, height, className } = highlighter;
     return (
@@ -107,8 +131,12 @@ export default class Tutorial extends Component {
           {idx !== 0 && <div className="button" onClick={this.handlePrev}>Prev</div>}
           <div
             className="button"
-            onClick={this.handleNext}>
-            {this.props.elements.length > idx + 1 ? 'Next' : 'Finish'}
+            onClick={this.handleNext}
+          >
+            {this.props.data.elements.length > idx + 1 ? 'Next' : 'Finish'}
+          </div>
+          <div className="button" onClick={this.props.endTutorial}>
+            Close
           </div>
         </div>
       </div>
