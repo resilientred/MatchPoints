@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 import { connect } from 'react-redux';
 
+import './styles.scss';
+
 @connect(({ auth: { club } }) => ({ club }))
 export default class Club extends Component {
   render() {

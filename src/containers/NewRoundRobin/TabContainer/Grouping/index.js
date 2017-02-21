@@ -53,6 +53,7 @@ export default class Grouping extends Component {
     if (schemata.length) {
       return (<div>
         <SelectField
+          className="select-schema-field"
           value={selected.join(',')}
           onChange={this.changeSchema}
           floatingLabelStyle={floatingStyle}
@@ -189,13 +190,14 @@ export default class Grouping extends Component {
 
     return (<div className="grouping">
       <IconMenu
+        className="group-menu"
         style={{
           position: 'absolute',
           right: 0,
           top: '-20px',
           zIndex: '50',
         }}
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+        iconButtonElement={<IconButton className="group-menu-icon"><MoreVertIcon /></IconButton>}
         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       >

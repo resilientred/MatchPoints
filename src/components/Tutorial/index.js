@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 import { endTutorial, disableTutorial } from 'redux/modules/tutorial';
 import './styles.scss';
@@ -53,8 +54,15 @@ export default class Tutorial extends Component {
 
   updateTutorial = () => {
     const { clickTiming, selector, clickTarget } = this.state.currentEl;
+    const f = findDOMNode;
+    debugger;
     if (clickTiming === 'before') {
-      document.querySelector(clickTarget).click();
+      const clickEvent = new MouseEvent('click', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': false,
+      });
+      document.querySelector(clickTarget).dispatchEvent(clickEvent);
     }
     const rect = document.querySelector(selector).getBoundingClientRect();
     this.setState({

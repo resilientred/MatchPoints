@@ -12,6 +12,7 @@ import query from './query';
 import reset from './reset';
 import uploadReducer from './upload';
 import modals from './modals';
+import tutorial from './tutorial';
 
 export default combineReducers({
   reduxAsyncConnect,
@@ -27,4 +28,5 @@ export default combineReducers({
   query,
   uploadReducer,
   modals,
+  tutorial,
 });

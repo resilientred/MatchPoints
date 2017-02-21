@@ -8,7 +8,7 @@ import DemoteButton from 'react-icons/lib/fa/arrow-down';
 import IconButton from 'material-ui/IconButton/IconButton';
 
 const ParticipantGroup = (props) => {
-  return (<div style={{ position: 'relative' }}>
+  return (<div style={{ position: 'relative' }} className="participant-group-tables">
     <Table
       selectable={false}
       multiSelectable={false}

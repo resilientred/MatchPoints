@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Tutorial } from 'components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SnackBar from 'material-ui/Snackbar';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -19,7 +20,7 @@ export default class Main extends Component {
     return (<MuiThemeProvider>
       <div className="app-container">
         <Navbar />
-        { this.props.children }
+        {this.props.children}
         {
           this.props.loading &&
             (<div className="overlay">
@@ -34,6 +35,7 @@ export default class Main extends Component {
           message={this.props.message || ''}
           autoHideDuration={8000}
         />
+        <Tutorial />
       </div>
     </MuiThemeProvider>);
   }

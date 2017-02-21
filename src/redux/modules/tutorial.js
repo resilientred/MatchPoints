@@ -1,3 +1,5 @@
+import tutorialConstant from 'constants';
+
 const DISABLE_TUTORIAL = 'mp/user/DISABLE_TUTORIAL';
 const ENABLE_TUTORIAL = 'mp/user/ENABLE_TUTORIAL';
 const START_TUTORIAL = 'mp/user/START_TUTORIAL';
@@ -5,20 +7,32 @@ const END_TUTORIAL = 'mp/user/END_TUTORIAL';
 
 const initialState = {
   tutorialStart: false,
-  elements: [],
+  data: { elements: [] },
+  visited: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case START_TUTORIAL:
+    case START_TUTORIAL: {
+      const component = action.payload;
+      if (localStorage.getItem('tutorial') === false || state.visited[component]) {
+        return state;
+      }
+
       return {
         tutorialStart: true,
-        elements: action.payload,
+        data: tutorialConstant[component],
+        visited: {
+          ...state.visited,
+          [component]: true,
+        },
       };
+    }
     case END_TUTORIAL:
       return {
+        ...state,
         tutorialStart: false,
-        elements: [],
+        data: initialState.data,
       };
     default:
       return state;
@@ -30,7 +44,7 @@ export const disableTutorial = () => {
   return {
     type: DISABLE_TUTORIAL,
   };
-}
+};
 
 /* put this in profile */
 export const enableTutorial = () => {
@@ -40,10 +54,10 @@ export const enableTutorial = () => {
   };
 };
 
-export const startTutorial = (elements) => {
+export const startTutorial = (component) => {
   return {
     type: START_TUTORIAL,
-    payload: elements,
+    payload: component,
   };
 };
 

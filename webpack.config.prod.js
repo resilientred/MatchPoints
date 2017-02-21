@@ -3,25 +3,46 @@ var path = require("path");
 
 module.exports = {
   context: __dirname,
-  entry: "./frontend/matchPoints.js",
+  entry: "./src/app.js",
   output: {
     path: path.join(__dirname, "public", "js"),
     filename: "bundle.js"
   },
-  module: {
+ module: {
     loaders: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: "babel",
+        loaders: ['babel']
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass'],
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css'],
+      },
+      {
+        test: /\.ttf$/,
+        loader: 'url',
         query: {
-          presets: ["react", "es2015", "stage-0"]
+          limit: '10000',
+          mimetype: 'application/octet-stream'
         }
       }
     ]
   },
   resolve: {
-    extensions: ["", ".js", ".jsx"]
+    modulesDirectories: [
+      'src',
+      'node_modules',
+    ],
+    mainFiles: ['index'],
+    extensions: ['', '.js', '.jsx'],
+    alias: {
+      assets: path.join(__dirname, 'src', 'assets'),
+    }
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({

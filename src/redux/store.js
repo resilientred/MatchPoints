@@ -3,6 +3,7 @@ import middleware from './middleware';
 
 let createStoreWithMiddleware;
 
+
 if (process.env.NODE_ENV === 'development' && process.env.DEVTOOLS) {
   const { persistState } = require('redux-devtools');
   const DevTools = require('../components/DevTools');
@@ -11,9 +12,14 @@ if (process.env.NODE_ENV === 'development' && process.env.DEVTOOLS) {
     window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
     persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
   )(createStore);
+} else if (process.env.NODE_ENV === 'development') {
+  const createLogger = require('redux-logger');
+  const logger = createLogger();
+  createStoreWithMiddleware = applyMiddleware(middleware, logger)(createStore);
 } else {
   createStoreWithMiddleware = applyMiddleware(middleware)(createStore);
 }
+
 const reducer = require('./modules/reducer');
 
 const store = createStoreWithMiddleware(reducer);

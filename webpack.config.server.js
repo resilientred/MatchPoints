@@ -12,14 +12,38 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.js/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ['babel-loader', 'eslint-loader'],
+        loaders: ['babel', 'eslint']
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass'],
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css'],
+      },
+      {
+        test: /\.ttf$/,
+        loader: 'url',
+        query: {
+          limit: '10000',
+          mimetype: 'application/octet-stream'
+        }
       }
     ]
   },
   resolve: {
-    extensions: ['', '.js']
+    modulesDirectories: [
+      'src',
+      'node_modules',
+    ],
+    mainFiles: ['index'],
+    extensions: ['', '.js', '.jsx'],
+    alias: {
+      assets: path.join(__dirname, 'src', 'assets'),
+    }
   },
   plugins: [
     new webpack.DefinePlugin({
