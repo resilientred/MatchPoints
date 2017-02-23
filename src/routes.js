@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import { Main, Splash, Club, NewRoundrobin, Sessions, Session, Query, Profile, PDFGenerator } from 'containers';
-import { Confirmation } from 'components';
+import { Confirmation, Loading } from 'components';
 import { isAuthLoaded, loadAuth } from 'redux/modules/auth';
 import ErrorPage from './errorPage';
 
@@ -76,6 +76,7 @@ export default ({ getState, dispatch }) => {
       <Route path="results" component={Query} />
       <Route path="reset" component={Splash} />
       <Route path="activate/*" component={Splash} />
+      <Route path="loading" component={Loading} />
       <Route path="*" component={ErrorPage} />
     </Route>
   );
