@@ -12,7 +12,7 @@ import './styles.scss';
 @connect(({ main: { loading, message } }) => ({ loading, message }), { clearMessage })
 export default class Main extends Component {
   static contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.any,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -40,7 +40,10 @@ export default class Main extends Component {
           message={this.props.message || ''}
           autoHideDuration={8000}
         />
-        <Tutorial />
+        <Tutorial
+          router={this.context.router}
+          pathname={this.props.location.pathname}
+        />
       </div>
     </MuiThemeProvider>);
   }

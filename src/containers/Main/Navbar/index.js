@@ -21,6 +21,7 @@ export default class Navbar extends Component {
   componentWillMount() {
     this.props.preSetTab(this.props.pathname);
     window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -38,8 +39,8 @@ export default class Navbar extends Component {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  handleResize = (ev) => {
-    const width = ev.target.innerWidth;
+  handleResize = () => {
+    const width = window.innerWidth;
     if (!this.state.expanded && width > 800) {
       this.setState({ expanded: true });
     } else if (this.state.expanded && width <= 800) {
@@ -184,7 +185,7 @@ export default class Navbar extends Component {
 
   render() {
     const { expanded } = this.state;
-    return (<div className="nav-bar" style={{ backgroundColor: this.props.pathname === '/' ? 'transparent' : 'rgb(103, 58, 183)' }}>
+    return (<div className={`nav-bar ${this.props.pathname === '/' ? 'no-color' : 'color'}`}>
       <div>
         <div className="logo" onClick={() => this.handleLink(this.props.club._id ? '/club' : '/', 0)}>
           MatchPoints

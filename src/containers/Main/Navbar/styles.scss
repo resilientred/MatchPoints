@@ -17,6 +17,7 @@
 .nav-bar {
   color: white;
   background-color: transparent;
+  box-shadow: 0;
   font-weight: 400;
   z-index: 99;
   display: flex;
@@ -79,5 +80,34 @@
 
   .sliding-menu {
     position: absolute;
+  }
+
+  &.color {
+    background-color: white;
+    color: #c0c0c0;
+    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .16);
+    & > div {
+      .logo {
+        color: #666666;
+      }
+    }
+
+    li {
+      cursor: pointer;
+      font-size: 18px;
+
+      &:hover {
+        color: #FFA000;
+      }
+
+      &.active-links {
+        color: black;
+        cursor: initial;
+        @include reg-transition-no-delay(color, 0.5s, ease-in-out)
+        &:hover {
+          color: black;
+        }
+      }
+    }
   }
 }
