@@ -8,7 +8,11 @@ import './styles.scss';
     data: tutorial.data,
     tutorialStart: tutorial.tutorialStart,
   }),
-  { endTutorial, disableTutorial }
+  dispatch => ({
+    dispatch,
+    endTutorial: () => dispatch(endTutorial()),
+    disableTutorial: () => dispatch(disableTutorial())
+  })
 )
 export default class Tutorial extends Component {
   /*
@@ -35,11 +39,29 @@ export default class Tutorial extends Component {
   componentWillReceiveProps(nextProps) {
     const { data } = nextProps;
     if (this.props.data !== data && data.elements.length > 0) {
+      if (data.mockActions && data.mockActions.setup) {
+        const setupCallbacks = data.mockActions.setup;
+        for (let i = 0; i < setupCallbacks.length; i++) {
+          const { type, payload } = setupCallbacks[i];
+          this.props.dispatch({
+            type,
+            payload,
+          });
+        }
+      }
       this.setState({
         queue: data.elements,
         currentEl: null,
         idx: -1,
       }, this.handleNext);
+    }
+
+    if (this.props.tutorialStart && !nextProps.tutorialStart) {
+      this.props.router.replace('/loading');
+      const path = this.props.pathname;
+      setTimeout(() => {
+        this.props.router.replace(path);
+      }, 1000);
     }
   }
 
@@ -52,7 +74,7 @@ export default class Tutorial extends Component {
   }
 
   updateTutorial = () => {
-    const { eventTiming, selector, eventTarget, event } = this.state.currentEl;
+    const { eventTiming, selector, eventTarget, attribute, event } = this.state.currentEl;
     if (eventTiming === 'before') {
       const clickEvent = new MouseEvent(event, {
         view: window,
@@ -61,20 +83,35 @@ export default class Tutorial extends Component {
       });
       document.querySelector(eventTarget).dispatchEvent(clickEvent);
     }
-    const rect = document.querySelector(selector).getBoundingClientRect();
-    this.setState({
-      highlighter: {
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-        className: rect.top > (window.innerHeight / 2) ? 'top' : 'bottom',
-      },
-    }, () => {
-      if (eventTiming === 'after') {
-        document.querySelector(eventTarget).click();
+
+    let elementToHighlight;
+    if (attribute) {
+      const elements = document.querySelectorAll(selector);
+      for (let i = 0; i < elements.length; i++) {
+        if (Object.keys(attribute).every(key => elements[i].style[key] === attribute[key])) {
+          elementToHighlight = elements[i];
+          break;
+        }
       }
-    });
+    } else {
+      elementToHighlight = document.querySelector(selector);
+    }
+    if (elementToHighlight) {
+      const rect = elementToHighlight.getBoundingClientRect();
+      this.setState({
+        highlighter: {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+          className: rect.top > (window.innerHeight / 2) ? 'top' : 'bottom',
+        },
+      }, () => {
+        if (eventTiming === 'after') {
+          document.querySelector(eventTarget).click();
+        }
+      });
+    }
   }
 
   handlePrev = () => {
@@ -92,6 +129,17 @@ export default class Tutorial extends Component {
   handleNext = () => {
     const { queue, idx } = this.state;
     if (queue.length === 0) {
+      const mockActions = this.props.data.mockActions;
+      if (data.mockActions && data.mockActions.cleanup) {
+        const setupCallbacks = data.mockActions.cleanup;
+        for (let i = 0; i < setupCallbacks.length; i++) {
+          const { type, payload } = setupCallbacks[i];
+          this.props.dispatch({
+            type,
+            payload,
+          });
+        }
+      }
       this.props.endTutorial();
     } else {
       this.setState({
@@ -120,10 +168,10 @@ export default class Tutorial extends Component {
             <div
               className="highlighter"
               style={{
-                left,
-                top,
-                width,
-                height,
+                left: left - 5,
+                top: top - 5,
+                width: width + 10,
+                height: height + 10,
               }}
             >
               <div className={`arrow ${className}`} />
