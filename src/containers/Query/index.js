@@ -38,7 +38,7 @@ export default class Query extends Component {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-         }}
+        }}
         contentContainerStyle={{
           padding: '20px',
           border: '1px solid #E0E0E0',

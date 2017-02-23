@@ -13,24 +13,32 @@ export default class ClubQuery extends Component {
       this.props.setDate(date);
     }
   }
+
   changeClub = (e, idx, clubId) => {
     this.props.setClub(clubId);
-    if (!this.props.roundrobins[clubId]) {
+    if (clubId && !this.props.roundrobins[clubId]) {
       this.props.fetchRoundrobins(clubId);
     }
   }
   render() {
     const { clubs, selectedClub, selectedDate, roundrobins } = this.props;
+    const selected = selectedClub && selectedClub._id;
+    const resultsAvailable = selectedClub &&
+      roundrobins[selectedClub._id] && roundrobins[selectedClub._id].length > 0;
+    // eslint-disable-next-line no-nested-ternary
+    const dateLabelText = selected ?
+      (resultsAvailable ? 'Select a Date' : 'No results found') : 'Select a club first';
+
     return (<div className="club-result-container">
       <div className="name-select-div">
         <SelectField
           value={selectedClub && selectedClub._id}
           onChange={this.changeClub}
           floatingLabelText="Select a Club"
-          floatingLabelFixed={Boolean(true)}
+          floatingLabelFixed={Boolean(false)}
         >
           {
-            Object.keys(clubs).map((id, i) => (
+            Object.keys(clubs).length > 0 && Object.keys(clubs).map((id, i) => (
               <MenuItem key={i} value={id} primaryText={clubs[id].clubName} />
             ))
           }
@@ -38,15 +46,19 @@ export default class ClubQuery extends Component {
         <SelectField
           value={selectedDate && selectedDate._id}
           onChange={this.changeDate}
-          floatingLabelText="Select a Date"
-          floatingLabelFixed={Boolean(true)}
+          floatingLabelText={dateLabelText}
+          floatingLabelFixed={Boolean(false)}
         >
           {
-            selectedClub && roundrobins[selectedClub._id] ?
-              roundrobins[selectedClub._id].map((roundrobin, i) => (
-                <MenuItem key={i} value={roundrobin._id} primaryText={moment(roundrobin.date).utc().format('MMMM DD, YYYY')} />
-             )) :
-              <MenuItem key="empty" value={null} primaryText="No dates available" />
+            selected && resultsAvailable ? roundrobins[selectedClub._id].map((roundrobin, i) => (
+              <MenuItem
+                key={i}
+                value={roundrobin._id}
+                primaryText={moment(roundrobin.date).utc().format('MMMM DD, YYYY')}
+              />
+            )) : <MenuItem
+              value="nothing"
+            />
           }
         </SelectField>
       </div>
@@ -56,7 +68,11 @@ export default class ClubQuery extends Component {
           <div>Location: { `${selectedClub.location.city}, ${selectedClub.location.state}`}</div>
         </div>)
       }
-      <ClubQueryDetail {...selectedDate} />
+      <ClubQueryDetail
+        {...selectedDate}
+        clubSelected={selected}
+        resultsAvailable={resultsAvailable}
+      />
     </div>);
   }
 }

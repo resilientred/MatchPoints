@@ -2,14 +2,20 @@ import React from 'react';
 import { RecordTableView } from 'components';
 
 const ClubQueryDetail = (props) => {
-  if (!props._id) {
-    return (<div style={{ marginTop: '20px' }}>
-      Please select a date...
-    </div>);
+  let err;
+  if (!props.clubSelected) {
+    err = 'Please select a club...';
+  } else if (!props.resultsAvailable) {
+    err = 'The club has never posted any results.';
+  } else if (!props._id) {
+    err = 'Please select a date...';
+  } else if (!props.finalized) {
+    err = 'The results have not been posted yet...';
   }
-  if (!props.finalized) {
-    return (<div style={{ marginTop: '20px' }}>
-      The results have not been posted yet...
+
+  if (err) {
+      return (<div style={{ marginTop: '20px' }}>
+      {err}
     </div>);
   }
   let countedPlayers = 0;
