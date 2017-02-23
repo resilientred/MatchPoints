@@ -1,2 +1,2 @@
-export InfoChange from './infoChange';
-export PasswordChange from './passwordChange';
+export InfoChange from './InfoChange';
+export PasswordChange from './PasswordChange';

@@ -1,2 +1,2 @@
-export ParticipantGroup from './participantGroup';
-export NumOfPlayers from './numOfPlayers';
+export ParticipantGroup from './ParticipantGroup';
+export NumOfPlayers from './NumOfPlayers';
