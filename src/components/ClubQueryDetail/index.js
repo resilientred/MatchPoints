@@ -3,17 +3,17 @@ import { RecordTableView } from 'components';
 
 const ClubQueryDetail = (props) => {
   if (!props._id) {
-    return (<div style={{ marginTop: '5%' }}>
+    return (<div style={{ marginTop: '20px' }}>
       Please select a date...
     </div>);
   }
   if (!props.finalized) {
-    return (<div style={{ marginTop: '5%' }}>
+    return (<div style={{ marginTop: '20px' }}>
       The results have not been posted yet...
     </div>);
   }
   let countedPlayers = 0;
-  return (<div style={{ overflow: 'scroll', marginTop: '5%' }}>
+  return (<div style={{ overflow: 'scroll', marginTop: '20px' }}>
     {
       props.selectedSchema.map((sizeOfGroup, i) => {
         countedPlayers += +sizeOfGroup;

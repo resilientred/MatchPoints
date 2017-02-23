@@ -83,6 +83,7 @@ export default class TabContainer extends Component {
         padding: '20px',
         border: '1px solid #E0E0E0',
         minHeight: '400px',
+        backgroundColor: 'white',
       }}
       value={this.state.tab}
       onChange={this.toggleTab}

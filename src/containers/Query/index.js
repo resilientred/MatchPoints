@@ -4,6 +4,8 @@ import { fetchAllClubs, hasLoaded } from 'redux/modules/query';
 import { asyncConnect } from 'redux-async-connect';
 import ClubQuery from './ClubQuery';
 
+import './styles.scss';
+
 @asyncConnect([{
   promise: ({ store }) => {
     let promise;
@@ -22,25 +24,31 @@ export default class Query extends Component {
       tab: 0,
     };
   }
+
   handleTabChange = (tab) => {
     this.setState({ tab });
   }
+
   render() {
-    return (<div>
-      <div className="result-query-container">
-        <Tabs
-          value={this.state.tab}
-          onChange={this.handleTabChange}
-          contentContainerStyle={{
-            padding: '20px',
-            border: '1px solid #E0E0E0',
-          }}
-        >
-          <Tab label="Club" value={0}>
-            <ClubQuery />
-          </Tab>
-        </Tabs>
-      </div>
+    return (<div className="result-query-container">
+      <Tabs
+        value={this.state.tab}
+        onChange={this.handleTabChange}
+        style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+         }}
+        contentContainerStyle={{
+          padding: '20px',
+          border: '1px solid #E0E0E0',
+          height: '100%',
+        }}
+      >
+        <Tab label="Club" value={0}>
+          <ClubQuery />
+        </Tab>
+      </Tabs>
     </div>);
   }
 }
