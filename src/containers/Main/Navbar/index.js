@@ -19,7 +19,7 @@ export default class Navbar extends Component {
   }
 
   componentWillMount() {
-    this.props.preSetTab(window.location.pathname);
+    this.props.preSetTab(this.props.pathname);
     window.addEventListener('resize', this.handleResize);
   }
 
@@ -52,6 +52,7 @@ export default class Navbar extends Component {
       browserHistory.push('/');
     });
   }
+
   handleLink(link, tab) {
     if (tab === 0) {
       this.props.setPage(0);
@@ -131,7 +132,7 @@ export default class Navbar extends Component {
         checked={tab === 3}
       />
       {
-        window.location.pathname === '/' ||
+        this.props.pathname === '/' ||
           <MenuItem
             primaryText="Log In"
             onTouchTap={this.props.openLogin}
@@ -175,7 +176,7 @@ export default class Navbar extends Component {
     return (<ul className="nav">
       <li onClick={() => this.handleLink('/results', 3)} className={tab === 3 ? 'active-links' : ''}>Browse Results</li>
       {
-        location.pathname === '/' ||
+        this.props.pathname === '/' ||
           <li className="nav-links" onClick={this.props.openLogin}>Log In</li>
       }
     </ul>);
@@ -183,7 +184,7 @@ export default class Navbar extends Component {
 
   render() {
     const { expanded } = this.state;
-    return (<div className="nav-bar">
+    return (<div className="nav-bar" style={{ backgroundColor: this.props.pathname === '/' ? 'transparent' : 'rgb(103, 58, 183)' }}>
       <div>
         <div className="logo" onClick={() => this.handleLink(this.props.club._id ? '/club' : '/', 0)}>
           MatchPoints

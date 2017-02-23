@@ -11,15 +11,20 @@ import './styles.scss';
 
 @connect(({ main: { loading, message } }) => ({ loading, message }), { clearMessage })
 export default class Main extends Component {
+  static contextTypes = {
+    router: React.PropTypes.func.isRequired
+  };
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.message) {
       setTimeout(this.props.clearMessage, 8000);
     }
   }
+
   render() {
     return (<MuiThemeProvider>
       <div className="app-container">
-        <Navbar />
+        <Navbar pathname={this.props.location.pathname} />
         {this.props.children}
         {
           this.props.loading &&
