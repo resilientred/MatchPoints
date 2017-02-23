@@ -1,0 +1,51 @@
+.player-query {
+  /*border: 1px solid #E0E0E0;*/
+  width: 80%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  table {
+    margin-bottom: 5%;
+  }
+  .big-container {
+    margin: 0 auto;
+  }
+}
+
+.player-result-main-container {
+  padding: 20px;
+}
+
+.result-query-container {
+  margin: 0 auto;
+  width: 80%;
+  padding-top: 100px;
+  padding-bottom: 20px;
+  height: 100%;
+}
+
+.name-select-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  > *:first-child {
+    margin-right: 20px;
+  }
+}
+
+.club-info-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  > div {
+    margin-top: 10px;
+  }
+}
+
+@media (min-width: 335px) and (min-device-width: 335px) {
+  .name-select-div {
+    display: flex;
+    flex-direction: column;
+  }
+}
