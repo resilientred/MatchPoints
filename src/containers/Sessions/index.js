@@ -67,9 +67,10 @@ export default class RoundRobinSessions extends Component {
       <List>
         <Subheader
           style={{
-            fontSize: '24px',
+            fontSize: '28px',
             textAlign: 'center',
             marginBottom: '10px',
+            fontFamily: '"Ropa Sans", sans-serif',
           }}
         >Previous Sessions</Subheader>
         <Divider />

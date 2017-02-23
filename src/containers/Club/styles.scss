@@ -3,10 +3,16 @@
   justify-content: column;
   width: 100%;
   height: 100%;
-  background-color: #f1f1f1;
+  background-color: white;
 
   .club-body {
-    margin-top: 70px;
+    padding-top: 70px;
     flex: 1;
+  }
+
+  .club-children {
+    padding-top: 20px;
+    height: 100%;
+    padding-bottom: 20px;
   }
 }
