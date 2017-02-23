@@ -47,8 +47,9 @@ const tutorialElements = {
       },
       {
         selector: '.group-menu',
-        clickTarget: '.group-menu-icon',
-        clickTiming: 'before',
+        event: 'touchend',
+        eventTarget: '.group-menu-icon',
+        eventTiming: 'before',
         text: 'This is where you can print out schedules and save the session.',
       },
     ],
