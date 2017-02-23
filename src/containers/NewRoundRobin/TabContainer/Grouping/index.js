@@ -8,7 +8,7 @@ import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
-import { NumOfPlayers, ParticipantGroup } from 'components';
+import { /* NumOfPlayers, */ ParticipantGroup } from 'components';
 import { changeSchema, movePlayerUp, movePlayerDown } from 'redux/modules/schemata';
 import { stopLoad } from 'redux/modules/main';
 import { preSetTab } from 'redux/modules/navbar';
@@ -53,7 +53,7 @@ export default class Grouping extends Component {
     if (schemata.length) {
       return (<div>
         <SelectField
-          className="select-schema-field"
+          id="select-schema-field"
           value={selected.join(',')}
           onChange={this.changeSchema}
           floatingLabelStyle={floatingStyle}
@@ -87,6 +87,7 @@ export default class Grouping extends Component {
       this.props.changeSchema(selectedGroup.split(',').map(el => +el));
     }
   }
+
   generatePDF = () => {
     if (this.props.schemata[0].length === 0) {
       this.setState({
@@ -178,15 +179,16 @@ export default class Grouping extends Component {
     </Dialog>);
   }
   render() {
-    let schemata;
     let groupTables;
 
-    if (this.props.max && this.props.min) {
+    /*
+      if (this.props.max && this.props.min) {
       schemata = this.schemata();
-      if (this.props.selected.length) {
-        groupTables = this.groupTables();
-      }
+    */
+    if (this.props.selected.length) {
+      groupTables = this.groupTables();
     }
+    // }
 
     return (<div className="grouping">
       <IconMenu
@@ -212,15 +214,15 @@ export default class Grouping extends Component {
           disabled={!this.props.selected.length}
         />
       </IconMenu>
-      <NumOfPlayers
-        setMinAndMax={this.props.setMinAndMax}
-        min={this.props.min}
-        max={this.props.max}
-      />
 
-      {schemata}
+      {this.schemata()}
       {groupTables}
       {this.state.dialog && this.dialog()}
     </div>);
   }
 }
+/* <NumOfPlayers
+  setMinAndMax={this.props.setMinAndMax}
+  min={this.props.min}
+  max={this.props.max}
+/> */
