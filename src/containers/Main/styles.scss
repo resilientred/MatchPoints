@@ -1,5 +1,7 @@
-@import '~assets/variables.scss';
 @import '~assets/IndieFlower.scss';
+@import url('https://fonts.googleapis.com/css?family=Ropa+Sans');
+@import '~assets/variables.scss';
+@import '~assets/mixins.scss';
 
 html,
 body,
@@ -142,8 +144,9 @@ h3 {
 }
 
 .tab-container {
+  @include light-box-shadow;
   width: 90%;
-  margin: 5% auto 0 auto;
+  margin: 20px auto 0 auto;
   position: relative;
 /*  min-width: 400px;*/
 }
@@ -168,6 +171,7 @@ h3 {
   flex-wrap: nowrap;
   align-items: center;
 }
+
 .col-rating {
   width: 100px;
 }
@@ -207,9 +211,8 @@ h3 {
     width: 90%;
     margin-right: auto;
     margin-left: auto;
-    /*min-width: 350px;*/
-
   }
+
   .player-lists {
   display: flex;
   flex-direction: column;
@@ -418,6 +421,10 @@ form {
   :first-child {
     margin-right: 20px;
   }
+}
+
+.club-children {
+  padding-bottom: 20px;
 }
 
 @media (min-width: 944px) and (min-device-width: 944px){

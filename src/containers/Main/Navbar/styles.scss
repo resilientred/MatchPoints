@@ -1,4 +1,5 @@
 @import '~assets/variables.scss';
+@import '~assets/mixins.scss';
 
 .nav {
   position: relative;
@@ -38,8 +39,8 @@
     align-items: center;
 
     .logo {
-      font-family: 'Roboto', sans-serif;
-      font-size: 25px;
+      font-family: 'Ropa Sans', sans-serif;
+      font-size: 28px;
       cursor: pointer;
       color: white;
       @include reg-transition-no-delay(color, 0.5s, ease-in-out)
@@ -79,13 +80,14 @@
   }
 
   .sliding-menu {
+    font-family: 'Ropa Sans', sans-serif;
     position: absolute;
   }
 
   &.color {
+    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .16);
     background-color: white;
     color: #c0c0c0;
-    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .16);
     & > div {
       .logo {
         color: #666666;
@@ -108,6 +110,15 @@
           color: black;
         }
       }
+    }
+
+    &:after {
+      content: " ";
+      position: absolute;
+      bottom: -5px;
+      width: 100%;
+      height: 5px;
+      box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .16);
     }
   }
 }
