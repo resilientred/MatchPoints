@@ -25,7 +25,8 @@ export default class Navbar extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.navbar !== nextProps.navbar || this.state !== nextState) {
+    if (this.props.pathname !== nextProps.pathname ||
+      this.props.navbar !== nextProps.navbar || this.state !== nextState) {
       return true;
     }
     if ((!this.props.club._id && nextProps.club._id) ||
