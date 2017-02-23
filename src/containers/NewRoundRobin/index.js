@@ -24,6 +24,7 @@ export default class NewRRSession extends Component {
       this.props.fetchCurrentPlayers();
     }
   }
+
   render() {
     const { newPlayerModal, editPlayerModal } = this.props.modals;
     return (<div className="tab-container">

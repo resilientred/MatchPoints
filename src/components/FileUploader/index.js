@@ -15,17 +15,14 @@ const style = {
   opacity: 0,
 };
 
-@connect(({ upload: { processing } }) => ({ processing }),
+@connect(({ uploadReducer: { processing } }) => ({ processing }),
   { upload, startLoading, stopLoading })
 export default class FileUploader extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data_uri: null,
-      filename: null,
-      filetype: null,
-    };
-  }
+  state = {
+    data_uri: null,
+    filename: null,
+    filetype: null,
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.processing !== nextState.processing ||
@@ -76,6 +73,7 @@ export default class FileUploader extends Component {
       </div>
     </div>));
   }
+
   render() {
     const buttonLabel = this.state.filename ?
       `File:  ${this.state.filename}` :
