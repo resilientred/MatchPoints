@@ -1,3 +1,5 @@
+@import '~assets/mixins.scss';
+
 .player-query {
   /*border: 1px solid #E0E0E0;*/
   width: 80%;
@@ -21,12 +23,21 @@
   padding-top: 100px;
   padding-bottom: 20px;
   height: 100%;
+
+  > div {
+    @include light-box-shadow;
+
+    > div:last-child {
+      @include container-box-shadow;
+    }
+  }
 }
 
 .name-select-div {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
   > *:first-child {
     margin-right: 20px;
   }

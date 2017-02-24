@@ -14,12 +14,12 @@ const ClubQueryDetail = (props) => {
   }
 
   if (err) {
-    return (<div style={{ marginTop: '20px' }}>
+    return (<div style={{ marginTop: '40px' }}>
       {err}
     </div>);
   }
   let countedPlayers = 0;
-  return (<div style={{ overflow: 'scroll', marginTop: '20px' }}>
+  return (<div style={{ overflow: 'scroll', marginTop: '40px' }}>
     {
       props.selectedSchema.map((sizeOfGroup, i) => {
         countedPlayers += +sizeOfGroup;

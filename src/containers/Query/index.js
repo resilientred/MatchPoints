@@ -39,13 +39,13 @@ export default class Query extends Component {
           display: 'flex',
           flexDirection: 'column',
         }}
+        tabItemContainerStyle={{ backgroundColor: 'white' }}
         contentContainerStyle={{
           padding: '20px',
-          border: '1px solid #E0E0E0',
           height: '100%',
         }}
       >
-        <Tab label="Club" value={0}>
+        <Tab label="Club" value={0} className="tab-menu-tab">
           <ClubQuery />
         </Tab>
       </Tabs>
