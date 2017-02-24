@@ -79,12 +79,9 @@ export default class TabContainer extends Component {
     </div>);
 
     return (<Tabs
-      tabItemContainerStyle={{
-        backgroundColor: 'white'
-      }}
+      tabItemContainerStyle={{ backgroundColor: 'white' }}
       contentContainerStyle={{
         padding: '20px',
-        border: '1px solid #E0E0E0',
         minHeight: '400px',
         backgroundColor: 'white',
       }}

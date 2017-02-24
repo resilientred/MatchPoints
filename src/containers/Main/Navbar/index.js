@@ -64,6 +64,11 @@ export default class Navbar extends Component {
     browserHistory.push(link);
   }
 
+  openLogin = () => {
+    browserHistory.push('/');
+    this.props.openLogin();
+  }
+
   slideNav() {
     const { tab, opened } = this.props.navbar;
 
@@ -137,7 +142,8 @@ export default class Navbar extends Component {
         this.props.pathname === '/' ||
           <MenuItem
             primaryText="Log In"
-            onTouchTap={this.props.openLogin}
+            onClick={this.openLogin}
+            onTouchTap={this.openLogin}
             insetChildren={Boolean(true)}
           />
       }
@@ -179,14 +185,18 @@ export default class Navbar extends Component {
       <li onClick={() => this.handleLink('/results', 3)} className={tab === 3 ? 'active-links' : ''}>Browse Results</li>
       {
         this.props.pathname === '/' ||
-          <li className="nav-links" onClick={this.props.openLogin}>Log In</li>
+          <li className="nav-links" onClick={this.openLogin}>Log In</li>
       }
     </ul>);
   }
 
   render() {
     const { expanded } = this.state;
-    return (<div className={`nav-bar ${this.props.pathname === '/' ? 'no-color' : 'color'}`}>
+    return (<div
+      className={`nav-bar ${this.props.pathname === '/' ||
+        this.props.pathname === '/activate/success' ? 'no-color' : 'color'}`
+      }
+    >
       <div>
         <div className="logo" onClick={() => this.handleLink(this.props.club._id ? '/club' : '/', 0)}>
           MatchPoints

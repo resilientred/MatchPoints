@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run start-dev\"",
-    "clean": "rm -rf build utils && mkdir build utils utils/uploads",
-    "build-css": "node-sass ./assets/sass/application.scss | cleancss -o ./public/styles/application.css",
-    "build-server": "babel -d ./build ./app && babel -d ./utils ./helpers && cp ./helpers/schedule.txt ./utils/schedule.txt",
-    "webpack": "node ./node_modules/webpack/bin/webpack.js",
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "babel -d ./build ./app",
+    "webpack": "node ./node_modules/webpack/bin/webpack.js --config ./webpack.config.prod.js",
     "build": "better-npm-run build",
     "prestart": "npm run build",
     "pre-test-node": "babel-node ./app/test/dbSetup.js",
@@ -36,7 +35,7 @@
       }
     },
     "build": {
-      "command": "npm run clean && npm run build-server && npm run build-css && npm run webpack"
+      "command": "npm run clean && npm run build-server && npm run webpack"
     }
   },
   "keywords": [],

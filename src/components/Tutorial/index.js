@@ -11,7 +11,7 @@ import './styles.scss';
   dispatch => ({
     dispatch,
     endTutorial: () => dispatch(endTutorial()),
-    disableTutorial: () => dispatch(disableTutorial())
+    disableTutorial: () => dispatch(disableTutorial()),
   })
 )
 export default class Tutorial extends Component {
@@ -130,8 +130,8 @@ export default class Tutorial extends Component {
     const { queue, idx } = this.state;
     if (queue.length === 0) {
       const mockActions = this.props.data.mockActions;
-      if (data.mockActions && data.mockActions.cleanup) {
-        const setupCallbacks = data.mockActions.cleanup;
+      if (mockActions && mockActions.cleanup) {
+        const setupCallbacks = mockActions.cleanup;
         for (let i = 0; i < setupCallbacks.length; i++) {
           const { type, payload } = setupCallbacks[i];
           this.props.dispatch({

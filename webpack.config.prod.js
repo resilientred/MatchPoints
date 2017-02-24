@@ -15,6 +15,7 @@ module.exports = {
         exclude: /node_modules/,
         loaders: ['babel']
       },
+      { test: /\.json$/, loader: 'json-loader' },
       {
         test: /\.scss$/,
         loaders: ['style', 'css', 'sass'],
@@ -55,7 +56,6 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env": {
         "NODE_ENV": JSON.stringify("production"),
-        "REDIS_HOST": JSON.stringify("matchpoints-redis.ho1ans.0001.usw1.cache.amazonaws.com:6379")
       }
     })
   ]

@@ -50,5 +50,9 @@
     margin: 10px 0;
     display: flex !important;
     align-items: center;
+
+    &:last-child {
+      margin-top: 15px;
+    }
   }
 }
