@@ -78,17 +78,17 @@ export default class EditRecordTable extends Component {
   }
 
   render() {
-    return (<div>
+    return (<div className="tab-container" style={{ width: '100%' }}>
       <Tabs
         value={this.state.tab}
         onChange={this.changeTab}
+        tabItemContainerStyle={{ backgroundColor: 'white' }}
         contentContainerStyle={{
           padding: '20px',
-          border: '1px solid #E0E0E0',
           overflow: 'scroll',
         }}
       >
-        <Tab label="Enter Result" value={0}>
+        <Tab label="Enter Result" value={0} className="tab-menu-tab">
           <RaisedButton
             backgroundColor="#E64A19"
             labelColor="white"
@@ -101,7 +101,7 @@ export default class EditRecordTable extends Component {
             updateResult={this.updateResult}
           />
         </Tab>
-        <Tab label="View Result" value={1}>
+        <Tab label="View Result" value={1} className="tab-menu-tab">
           <RecordTableView {...this.props} result={this.state.result} />
         </Tab>
       </Tabs>

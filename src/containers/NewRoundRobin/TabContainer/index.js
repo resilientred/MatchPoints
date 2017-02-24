@@ -9,7 +9,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 import Grouping from './Grouping';
 import Participants from './Participants';
-import './styles.scss';
 
 @connect(
   ({ newSession }) => ({
@@ -88,10 +87,10 @@ export default class TabContainer extends Component {
       value={this.state.tab}
       onChange={this.toggleTab}
     >
-      <Tab label="Registration" value={0} className="tab-menu-tab">
+      <Tab label="Registration" value={0} className="registration-tab tab-menu-tab">
         {playerContent}
       </Tab>
-      <Tab label="Grouping" value={1} className="tab-menu-tab">
+      <Tab label="Grouping" value={1} className="grouping-tab tab-menu-tab">
         <Grouping sortedPlayers={sortedPlayers} addedPlayers={this.props.addedPlayers} />
       </Tab>
     </Tabs>);

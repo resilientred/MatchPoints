@@ -145,7 +145,7 @@ h3 {
 
 .tab-container {
   @include light-box-shadow;
-  width: 90%;
+  width: 80%;
   height: 100%;
   margin: 0 auto;
   position: relative;
@@ -257,9 +257,36 @@ h3 {
 }
 
 .session-container {
-  margin: 5% auto 0 auto;
+  height: 100%;
+  @include light-box-shadow;
+  margin: 0 auto;
   width: 80%;
-  border: 1px solid #E0E0E0;
+  /*border: 1px solid #E0E0E0;*/
+  .app-bar {
+    background-color: white !important;
+    z-index: 2 !important;
+
+    h1 {
+      color: #666 !important;
+      font-family: 'Ropa Sans', sans-serif;
+    }
+
+    svg {
+      color: #666 !important;
+      fill: #666 !important;
+    }
+  }
+}
+
+.tab-menu-tab {
+  letter-spacing: 0.3px;
+  color: #666 !important;
+  -webkit-tap-highlight-color: black !important;
+
+  div {
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 18px;
+  }
 }
 
 .session-container-body {
@@ -281,15 +308,18 @@ h3 {
   align-items: center;
   padding: 15px 5px;
   border-bottom: 1px solid #F1EFEF;
+
   &> * {
     font-size: 18px;
     margin-right: 10px;
   }
+
   .result-entry-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
   }
+
   button {
     cursor: pointer;
     padding: 10px;
@@ -378,14 +408,18 @@ form {
 
 .player-form {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 30px;
-  width: auto;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   z-index: 300;
+  animation: modalOpen 0.5s ease-in-out;
 
   form {
+    width: 330px;
+    margin: 0;
     overflow: visible;
   }
 
@@ -483,5 +517,17 @@ form {
 
   .club-children {
     position: relative;
+  }
+}
+
+@keyframes modalOpen {
+  0% {
+    opacity: 0;
+    transform: translateY(-150px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

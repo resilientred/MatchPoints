@@ -1,8 +1,8 @@
-import { TEST_DATA_PARTICIPANTS, RESTORE_STATE } from 'redux/modules/newSession';
+// import { TEST_DATA_PARTICIPANTS, RESTORE_STATE } from 'redux/modules/newSession';
 
 const tutorialElements = {
   registration: {
-    mockActions: {
+    /* mockActions: {
       setup: [
         {
           type: TEST_DATA_PARTICIPANTS,
@@ -50,7 +50,7 @@ const tutorialElements = {
           type: RESTORE_STATE,
         },
       ],
-    },
+    }, */
     elements: [
       {
         selector: '.registration-tab',

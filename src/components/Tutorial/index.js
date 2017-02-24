@@ -39,16 +39,16 @@ export default class Tutorial extends Component {
   componentWillReceiveProps(nextProps) {
     const { data } = nextProps;
     if (this.props.data !== data && data.elements.length > 0) {
-      if (data.mockActions && data.mockActions.setup) {
-        const setupCallbacks = data.mockActions.setup;
-        for (let i = 0; i < setupCallbacks.length; i++) {
-          const { type, payload } = setupCallbacks[i];
-          this.props.dispatch({
-            type,
-            payload,
-          });
-        }
-      }
+      // if (data.mockActions && data.mockActions.setup) {
+      //   const setupCallbacks = data.mockActions.setup;
+      //   for (let i = 0; i < setupCallbacks.length; i++) {
+      //     const { type, payload } = setupCallbacks[i];
+      //     this.props.dispatch({
+      //       type,
+      //       payload,
+      //     });
+      //   }
+      // }
       this.setState({
         queue: data.elements,
         currentEl: null,
@@ -56,13 +56,13 @@ export default class Tutorial extends Component {
       }, this.handleNext);
     }
 
-    if (this.props.tutorialStart && !nextProps.tutorialStart) {
-      this.props.router.replace('/loading');
-      const path = this.props.pathname;
-      setTimeout(() => {
-        this.props.router.replace(path);
-      }, 1000);
-    }
+    // if (this.props.tutorialStart && !nextProps.tutorialStart) {
+    //   this.props.router.replace('/loading');
+    //   const path = this.props.pathname;
+    //   setTimeout(() => {
+    //     this.props.router.replace(path);
+    //   }, 1000);
+    // }
   }
 
   autoPlay = () => {
@@ -74,7 +74,7 @@ export default class Tutorial extends Component {
   }
 
   updateTutorial = () => {
-    const { eventTiming, selector, eventTarget, attribute, event } = this.state.currentEl;
+    const { eventTiming, selector, eventTarget, /* attribute, */ event } = this.state.currentEl;
     if (eventTiming === 'before') {
       const clickEvent = new MouseEvent(event, {
         view: window,
@@ -83,19 +83,17 @@ export default class Tutorial extends Component {
       });
       document.querySelector(eventTarget).dispatchEvent(clickEvent);
     }
-
-    let elementToHighlight;
-    if (attribute) {
-      const elements = document.querySelectorAll(selector);
-      for (let i = 0; i < elements.length; i++) {
-        if (Object.keys(attribute).every(key => elements[i].style[key] === attribute[key])) {
-          elementToHighlight = elements[i];
-          break;
-        }
-      }
-    } else {
-      elementToHighlight = document.querySelector(selector);
-    }
+    const elementToHighlight = document.querySelector(selector);
+    // if (attribute) {
+    //   const elements = document.querySelectorAll(selector);
+    //   for (let i = 0; i < elements.length; i++) {
+    //     if (Object.keys(attribute).every(key => elements[i].style[key] === attribute[key])) {
+    //       elementToHighlight = elements[i];
+    //       break;
+    //     }
+    //   }
+    // } else {
+    // }
     if (elementToHighlight) {
       const rect = elementToHighlight.getBoundingClientRect();
       this.setState({
@@ -111,6 +109,8 @@ export default class Tutorial extends Component {
           document.querySelector(eventTarget).click();
         }
       });
+    } else {
+      this.handleNext();
     }
   }
 
@@ -129,17 +129,17 @@ export default class Tutorial extends Component {
   handleNext = () => {
     const { queue, idx } = this.state;
     if (queue.length === 0) {
-      const mockActions = this.props.data.mockActions;
-      if (mockActions && mockActions.cleanup) {
-        const setupCallbacks = mockActions.cleanup;
-        for (let i = 0; i < setupCallbacks.length; i++) {
-          const { type, payload } = setupCallbacks[i];
-          this.props.dispatch({
-            type,
-            payload,
-          });
-        }
-      }
+      // const mockActions = this.props.data.mockActions;
+      // if (mockActions && mockActions.cleanup) {
+      //   const setupCallbacks = mockActions.cleanup;
+      //   for (let i = 0; i < setupCallbacks.length; i++) {
+      //     const { type, payload } = setupCallbacks[i];
+      //     this.props.dispatch({
+      //       type,
+      //       payload,
+      //     });
+      //   }
+      // }
       this.props.endTutorial();
     } else {
       this.setState({

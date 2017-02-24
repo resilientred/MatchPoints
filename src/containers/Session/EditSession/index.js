@@ -71,8 +71,16 @@ export default class EditSession extends Component {
     let countedPlayers = 0;
     return (<div className="session-container">
       <AppBar
+        className="app-bar"
         title={`Date: ${moment(date).utc().format('MMMM DD, YYYY')}`}
-        iconElementLeft={<IconButton onClick={this.handleBack}><NavigationClose /></IconButton>}
+        iconElementLeft={
+          <IconButton
+            onClick={this.handleBack}
+            className="closeIcon"
+          >
+            <NavigationClose />
+          </IconButton>
+        }
         iconElementRight={this.iconMenu()}
       />
       <div className="session-container-body">

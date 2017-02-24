@@ -52,7 +52,10 @@ class Splash extends Component {
           />);
         default:
           return (<div className="banner-text">
-            <p>Having a Round Robin Tournament? <br />Find all your players and results in one spot</p>
+            <p>
+              Having a Round Robin Tournament? <br />
+              Find all your players and results in one spot
+            </p>
             <div className="buttons">
               <RaisedButton
                 className="login-button"
@@ -60,9 +63,7 @@ class Splash extends Component {
                 label="Log In"
                 backgroundColor="#0E3652"
                 labelColor="white"
-                style={{
-                  backgroundColor: '#0E3652'
-                }}
+                style={{ backgroundColor: '#0E3652' }}
               />
               <RaisedButton
                 className="login-button"
