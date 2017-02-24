@@ -4,6 +4,7 @@ import { setPage } from 'redux/modules/splash';
 import { setToken } from 'redux/modules/reset';
 import { LogInForm, SignUpForm, ForgotForm, ResetForm, Activated } from 'components';
 import { asyncConnect } from 'redux-async-connect';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import './styles.scss';
 
@@ -51,16 +52,33 @@ class Splash extends Component {
           />);
         default:
           return (<div className="banner-text">
-            <p>One-stop shop for Round Robin Tournament Management..</p>
-            <button onClick={() => this.props.setPage(1)}>Log In</button>
-            <button onClick={() => this.props.setPage(2)}>Sign Up</button>
+            <p>Having a Round Robin Tournament? <br />Find all your players and results in one spot</p>
+            <div className="buttons">
+              <RaisedButton
+                className="login-button"
+                onClick={() => this.props.setPage(1)}
+                label="Log In"
+                backgroundColor="#0E3652"
+                labelColor="white"
+                style={{
+                  backgroundColor: '#0E3652'
+                }}
+              />
+              <RaisedButton
+                className="login-button"
+                onClick={() => this.props.setPage(2)}
+                label="Sign Up"
+                backgroundColor="#0E5249"
+                labelColor="white"
+                style={{ backgroundColor: '#0E5249' }}
+              />
+            </div>
           </div>);
       }
     })();
 
     return (<div className="banner-container">
-      <div className="banner" />
-      { content }
+      {content}
     </div>
     );
   }

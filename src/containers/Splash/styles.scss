@@ -1,60 +1,54 @@
-.banner-container:after {
-  clear: both;
-  display: block;
-  content: "";
-}
+@import '~assets/mixins.scss';
 
 .banner-container {
-  flex: 1;
-  height: 100%;
-  display: flex;
-  position: relative;
-  z-index: 1;
-
-  .banner-text {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    text-shadow: 1px 1px #000000;
-    font-size: 36px;
-    text-align: center;
-    letter-spacing: 1.5px;
-    button {
-      align-self: center;
-      width: 50%;
-      min-width: 150px;
-      margin-top: 25px;
-      color: white;
-      font-size: 20px;
-      border: 1px solid white;
-      padding: 10px 20px;
-      border-radius: 3px;
-      background-color: rgba(0, 0, 0, 0.9);
-      transition: background-color 0.5s ease-in-out;
-    }
-    button:hover {
-      background-color: rgb(33, 33, 33)
-    }
-  }
-}
-
-.banner {
   background-image: url("/images/tt_banner.jpg");
   background-size: cover;
   -ms-background-position-x: center;
   -ms-background-position-y: top;
   background-position: center top;
   transform: translateY(0%);
-  width: 100%;
-  flex: 1;
   opacity: 0.9;
   -webkit-filter: blur(0.2px);
   -moz-filter: blur(0.2px);
   -o-filter: blur(0.2px);
   -ms-filter: blur(0.2px);
   filter: blur(0.2px);
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  position: relative;
+  z-index: 1;
+
+  .banner-text {
+    display: flex;
+    position: relative;
+    top: -30px;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    width: auto;
+    max-width: 90%;
+
+    p {
+      text-shadow: 3px 3px #000000;
+      font-size: 36px;
+      text-align: center;
+      letter-spacing: 0px;
+    }
+  }
+
+  .buttons {
+    margin-top: 50px;
+  }
+
+  .login-button {
+    box-shadow: rgba(255, 255, 255, 0.4) 0px 1px 4px !important;
+    width: 150px;
+    margin: 10px 0;
+    display: flex !important;
+    align-items: center;
+  }
 }
