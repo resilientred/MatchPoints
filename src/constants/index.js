@@ -1,12 +1,63 @@
+import { TEST_DATA_PARTICIPANTS, RESTORE_STATE } from 'redux/modules/newSession';
+
 const tutorialElements = {
   registration: {
+    mockActions: {
+      setup: [
+        {
+          type: TEST_DATA_PARTICIPANTS,
+          payload: {
+            1: {
+              _id: 1,
+              name: 'Thyra Wade',
+              rating: 1250,
+            },
+            2: {
+              _id: 2,
+              name: 'Oscar Huff',
+              rating: 1600,
+            },
+            3: {
+              _id: 3,
+              name: 'Hadley Wallis',
+              rating: 1210,
+            },
+            4: {
+              _id: 4,
+              name: 'Fionntan Chase',
+              rating: 1130,
+            },
+            5: {
+              _id: 5,
+              name: 'Brenton Watson',
+              rating: 1090,
+            },
+            6: {
+              _id: 6,
+              name: 'Andrey Stern',
+              rating: 1270,
+            },
+            7: {
+              _id: 7,
+              name: 'Harvey Hagebak',
+              rating: 1503,
+            },
+          },
+        },
+      ],
+      cleanup: [
+        {
+          type: RESTORE_STATE,
+        },
+      ],
+    },
     elements: [
       {
         selector: '.registration-tab',
         text: 'This is where you would add players to the roster.',
       },
       {
-        selector: '.session-date-picker',
+        selector: '.session-date-picker > div',
         text: 'You can select the date of the session here.',
       },
       {
@@ -28,25 +79,20 @@ const tutorialElements = {
     ],
   },
   grouping: {
-    mockStates: {
-      reducer: 'grouping',
-      states: {},
-    },
     elements: [
       {
-        selector: '.min-max',
-        text: 'These fields are for adjusting the number of players allowed within a group',
-      },
-      {
-        selector: '.select-schema-field',
-        text: 'This is where you select the desired group arrangement according to the min and max value selected',
+        selector: '#select-schema-field',
+        text: 'This is where you select the desired group arrangement.',
       },
       {
         selector: '.participant-group-tables',
         text: 'These are the arranged groups.',
       },
       {
-        selector: '.group-menu',
+        selector: 'div',
+        attribute: {
+          zIndex: 2100,
+        },
         event: 'touchend',
         eventTarget: '.group-menu-icon',
         eventTiming: 'before',
@@ -55,5 +101,6 @@ const tutorialElements = {
     ],
   },
 };
+
 
 export default tutorialElements;

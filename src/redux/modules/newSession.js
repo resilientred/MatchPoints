@@ -14,6 +14,10 @@ import {
 } from 'redux/modules/schemata';
 import { MESSAGE, LOAD } from 'redux/modules/main';
 
+export const RESTORE_STATE = 'mp/session/RESTORE_STATE';
+export const TEST_DATA_PARTICIPANTS = 'mp/session/TEST_DATA_PARTICIPANTS';
+export const TEST_DATA_GROUPING = 'mp/session/TEST_DATA_GROUPING';
+export const NEW_SESSION = 'mp/session/';
 export const LOAD_PLAYERS = 'mp/session/LOAD_PLAYERS';
 export const SET_MIN_AND_MAX = 'mp/session/SET_MIN_AND_MAX';
 export const PLAYERS_FAIL = 'mp/session/FETCH_PLAYERS';
@@ -25,6 +29,7 @@ export const SAVE_SESSION_SUCCESS = 'mp/session/SAVE_SESSION_SUCCESS';
 const SET_DATE = 'mp/rr/SET_DATE';
 
 const initialState = {
+  prevState: null,
   loading: false,
   loaded: false,
   allPlayers: {},
@@ -32,12 +37,26 @@ const initialState = {
   numJoined: 0,
   date: new Date(),
   pdfs: null,
-  max: null,
-  min: null,
+  max: 7,
+  min: 3,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case RESTORE_STATE:
+      return {
+        ...initialState,
+        ...state.prevstate,
+      };
+    case TEST_DATA_PARTICIPANTS: {
+      const currentState = Object.assign({}, initialState);
+      delete currentState.prevState;
+      return {
+        ...state,
+        prevState: currentState,
+        allPlayers: action.payload,
+      };
+    }
     case SET_MIN_AND_MAX:
       return {
         ...state,

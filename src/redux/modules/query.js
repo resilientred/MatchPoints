@@ -9,7 +9,7 @@ const SET_DATE = 'mp/clubs/SET_DATE';
 
 const initialState = {
   loaded: false,
-  clubs: [],
+  clubs: {},
   selectedClub: null,
   roundrobins: {},
   selectedDate: null,
@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
       };
     }
     case SET_CLUB: {
-      const selectedClub = state.clubs[action.payload];
+      const selectedClub = action.payload && state.clubs[action.payload];
       return {
         ...state,
         selectedClub,
