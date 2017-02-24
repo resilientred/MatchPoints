@@ -1,6 +1,6 @@
 import Scheduler from 'utils/Scheduler';
 import pdfMake from 'pdfMake/build/pdfmake';
-import 'pdfMake/build/vfs_fonts';
+import 'pdfmake/build/vfs_fonts';
 
 export default class PDFGenerator {
   constructor(clubName, players, schema, numOfPlayers, date) {

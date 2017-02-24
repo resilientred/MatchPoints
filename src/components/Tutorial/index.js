@@ -176,7 +176,7 @@ export default class Tutorial extends Component {
             >
               <div className={`arrow ${className}`} />
               <div className={`text ${className}`}>
-                {currentEl.text}
+                {currentEl && currentEl.text}
               </div>
             </div>
         }

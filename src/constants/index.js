@@ -84,18 +84,18 @@ const tutorialElements = {
         selector: '#select-schema-field',
         text: 'This is where you select the desired group arrangement.',
       },
+      // {
+      //   selector: '.participant-group-tables',
+      //   text: 'These are the arranged groups.',
+      // },
       {
-        selector: '.participant-group-tables',
-        text: 'These are the arranged groups.',
-      },
-      {
-        selector: 'div',
-        attribute: {
-          zIndex: 2100,
-        },
-        event: 'touchend',
-        eventTarget: '.group-menu-icon',
-        eventTiming: 'before',
+        // selector: 'div',
+        // attribute: {
+        //   zIndex: 2100,
+        // },
+        // event: 'touchend',
+        selector: '.group-menu-icon',
+        // eventTiming: 'before',
         text: 'This is where you can print out schedules and save the session.',
       },
     ],
