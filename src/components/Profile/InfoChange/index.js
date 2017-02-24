@@ -129,7 +129,7 @@ export default class InfoChange extends Component {
         label="Change Information"
         backgroundColor="#1565C0"
         labelColor="white"
-        style={{ marginRight: '10px' }}
+        style={{ marginRight: '10px', marginTop: '10px' }}
         onClick={this.handleSubmit}
       />
     </form>);

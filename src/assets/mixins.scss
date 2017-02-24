@@ -7,3 +7,11 @@
   z-index: 99;
   background-color: rgba($color, $opacity);
 }
+
+@mixin container-box-shadow {
+  box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .16);
+}
+
+@mixin light-box-shadow {
+  box-shadow: 0px 1px 5px #dcdcdc;
+}

@@ -10,7 +10,7 @@ class PlayerForm extends Component {
 
     const def = {
       name: '',
-      rating: '0',
+      rating: '',
     };
     if (props.player) {
       def.id = props.player._id;
@@ -29,7 +29,7 @@ class PlayerForm extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.modalOpen && this.props.modalOpen) {
-      document.getElementById('name').focus();
+      document.querySelector('#name input').focus();
     }
   }
 
@@ -74,7 +74,7 @@ class PlayerForm extends Component {
   handleSubmit = () => {
     if (this.validateFields()) {
       this.props.callback(this.state).then(() => {
-        this.setState({ name: '', rating: '0' });
+        this.setState({ name: '', rating: '' });
         this.props.closeModal();
       });
     }

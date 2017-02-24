@@ -1,29 +1,36 @@
+@import '~assets/mixins.scss';
+
 .confirmation-container {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   width: 100%;
+
   p {
     font-family: 'Roboto', sans-serif;
     padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 18px;
+    padding-bottom: 10px;
+    font-size: 17px;
+    line-height: 24px;
+
     a {
       padding-left: 5px;
       text-decoration: underline;
     }
   }
+
   h3 {
-    font-size: 22px;
-    padding-bottom: 20px;
+    font-size: 26px;
+    padding-bottom: 10px;
+    font-family: 'Ropa Sans', sans-serif;
   }
 }
 
 .confirmation-sent {
+  @include light-box-shadow;
   margin: 0 auto;
   transform: translateY(50%);
   width: 400px;
   height: 250px;
-  padding: 35px;
-  border: 2px solid #E0E0E0;
+  padding: 45px 35px;
 }

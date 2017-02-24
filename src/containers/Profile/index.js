@@ -21,9 +21,15 @@ export default class Profile extends Component {
 
   render() {
     return (<div className="profile-container">
-      <Card containerStyle={{ padding: '15px' }}>
-        <CardHeader title="Member Profile" titleStyle={{ fontSize: '24px' }} />
-        <CardActions>
+      <Card containerStyle={{ padding: '15px', height: '100%' }}>
+        <CardHeader
+          title="Member Profile"
+          titleStyle={{
+            fontSize: '28px',
+            fontFamily: '"Ropa Sans", sans-serif',
+          }}
+        />
+        <CardActions style={{ borderBottom: '1px solid #e0e0e0' }}>
           <FlatButton
             label="Change Password"
             onClick={() => this.setTab(0)}

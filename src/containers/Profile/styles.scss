@@ -1,11 +1,17 @@
 .profile-container {
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   width: 80%;
   margin: 0 auto;
-  height: 500px;
-  transform: translateY(10%);
+  height: 100%;
+
+  & > div {
+    height: 100%;
+  }
 
   form {
+    flex: 1;
     overflow: scroll;
     position: relative;
     width: 80%;

@@ -4,6 +4,7 @@ export RecordTableEnter from './RecordTableEnter';
 export RecordTableView from './RecordTableView';
 export ClubQueryDetail from './ClubQueryDetail';
 export Tutorial from './Tutorial';
+export Loading from './Loading';
 export * from './Auth';
 export * from './Profile';
 export * from './Groups';

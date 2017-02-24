@@ -14,7 +14,7 @@ const ClubQueryDetail = (props) => {
   }
 
   if (err) {
-      return (<div style={{ marginTop: '20px' }}>
+    return (<div style={{ marginTop: '20px' }}>
       {err}
     </div>);
   }
