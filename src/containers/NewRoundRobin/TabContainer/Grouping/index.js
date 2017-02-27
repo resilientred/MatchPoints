@@ -45,14 +45,14 @@ export default class Grouping extends Component {
 
   schemata() {
     const { schemata, selected } = this.props;
-    if (schemata.length > 0) {
+    if (!Array.isArray(schemata[0]) || schemata.length > 0) {
       let errorText = selected.length > 0 ? '' : 'Select an arrangement';
-      let errorColor = selected.length > 0 ? 'red' : 'orange';
+      let errorColor = selected.length > 0 ? 'black' : 'orange';
       const floatingStyle = {
         zIndex: selected.length ? 'auto' : 999,
         color: selected.length ? '#E0E0E0' : 'orange',
       };
-      if (schemata[0].length === 0) {
+      if (Array.isArray(schemata[0]) && schemata[0].length === 0) {
         errorText = 'Please select more players';
         errorColor = 'red';
         floatingStyle.color = 'red';
@@ -193,14 +193,9 @@ export default class Grouping extends Component {
   render() {
     let groupTables;
 
-    /*
-      if (this.props.max && this.props.min) {
-      schemata = this.schemata();
-    */
     if (this.props.selected.length) {
       groupTables = this.groupTables();
     }
-    // }
 
     return (<div className="grouping">
       <IconMenu

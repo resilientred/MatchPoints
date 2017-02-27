@@ -60,6 +60,7 @@ const RecordTableEnter = (props) => {
                   cellStyle = style;
                   break;
                 default:
+                  cellStyle = { paddingLeft: '10px', paddingRight: '10px' };
                   if ((i - 2) > j) {
                     content = (<div className="score-div">
                       <SelectField
