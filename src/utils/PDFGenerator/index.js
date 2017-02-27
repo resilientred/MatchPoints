@@ -1,5 +1,5 @@
 import Scheduler from 'utils/Scheduler';
-import pdfMake from 'pdfMake/build/pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake';
 import 'pdfmake/build/vfs_fonts';
 
 export default class PDFGenerator {

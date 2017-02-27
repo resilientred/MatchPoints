@@ -26,6 +26,11 @@ a:hover {
 
 body {
   line-height: 1;
+
+  &.no-scroll {
+    overflow: hidden;
+    position: fixed;
+  }
 }
 
 ol, ul {

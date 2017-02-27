@@ -36,19 +36,14 @@ export default class Tutorial extends Component {
     },
   };
 
+  componentDidMount() {
+    window.addEventListener('resize', this.handleSize.bind(this));
+  }
+
   componentWillReceiveProps(nextProps) {
     const { data } = nextProps;
     if (this.props.data !== data && data.elements.length > 0) {
-      // if (data.mockActions && data.mockActions.setup) {
-      //   const setupCallbacks = data.mockActions.setup;
-      //   for (let i = 0; i < setupCallbacks.length; i++) {
-      //     const { type, payload } = setupCallbacks[i];
-      //     this.props.dispatch({
-      //       type,
-      //       payload,
-      //     });
-      //   }
-      // }
+      document.querySelector('body').className = 'no-scroll';
       this.setState({
         queue: data.elements,
         currentEl: null,
@@ -56,13 +51,28 @@ export default class Tutorial extends Component {
       }, this.handleNext);
     }
 
-    // if (this.props.tutorialStart && !nextProps.tutorialStart) {
-    //   this.props.router.replace('/loading');
-    //   const path = this.props.pathname;
-    //   setTimeout(() => {
-    //     this.props.router.replace(path);
-    //   }, 1000);
-    // }
+    if (this.props.tutorialStart && !nextProps.tutorialStart) {
+      document.querySelector('body').className = '';
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleSize.bind(this));
+  }
+
+  handleSize = () => {
+    const { currentEl: { selector } } = this.state;
+    const elementToHighlight = document.querySelector(selector);
+    const rect = elementToHighlight.getBoundingClientRect();
+    this.setState({
+      highlighter: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+        className: rect.top > (window.innerHeight / 2) ? 'top' : 'bottom',
+      },
+    });
   }
 
   autoPlay = () => {
@@ -84,16 +94,6 @@ export default class Tutorial extends Component {
       document.querySelector(eventTarget).dispatchEvent(clickEvent);
     }
     const elementToHighlight = document.querySelector(selector);
-    // if (attribute) {
-    //   const elements = document.querySelectorAll(selector);
-    //   for (let i = 0; i < elements.length; i++) {
-    //     if (Object.keys(attribute).every(key => elements[i].style[key] === attribute[key])) {
-    //       elementToHighlight = elements[i];
-    //       break;
-    //     }
-    //   }
-    // } else {
-    // }
     if (elementToHighlight) {
       const rect = elementToHighlight.getBoundingClientRect();
       this.setState({
@@ -129,17 +129,6 @@ export default class Tutorial extends Component {
   handleNext = () => {
     const { queue, idx } = this.state;
     if (queue.length === 0) {
-      // const mockActions = this.props.data.mockActions;
-      // if (mockActions && mockActions.cleanup) {
-      //   const setupCallbacks = mockActions.cleanup;
-      //   for (let i = 0; i < setupCallbacks.length; i++) {
-      //     const { type, payload } = setupCallbacks[i];
-      //     this.props.dispatch({
-      //       type,
-      //       payload,
-      //     });
-      //   }
-      // }
       this.props.endTutorial();
     } else {
       this.setState({
