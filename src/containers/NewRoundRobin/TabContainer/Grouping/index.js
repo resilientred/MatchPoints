@@ -45,39 +45,51 @@ export default class Grouping extends Component {
 
   schemata() {
     const { schemata, selected } = this.props;
-    const floatingStyle = {
-      zIndex: selected.length ? 'auto' : 999,
-      color: selected.length ? '#E0E0E0' : 'orange',
-    };
+    if (schemata.length > 0) {
+      let errorText = selected.length > 0 ? '' : 'Select an arrangement';
+      let errorColor = selected.length > 0 ? 'red' : 'orange';
+      const floatingStyle = {
+        zIndex: selected.length ? 'auto' : 999,
+        color: selected.length ? '#E0E0E0' : 'orange',
+      };
+      if (schemata[0].length === 0) {
+        errorText = 'Please select more players';
+        errorColor = 'red';
+        floatingStyle.color = 'red';
+      }
 
-    if (schemata.length) {
-      return (<div>
-        <SelectField
-          id="select-schema-field"
-          value={selected.join(',')}
-          onChange={this.changeSchema}
-          floatingLabelStyle={floatingStyle}
-          floatingLabelText="Select a schema"
-          floatingLabelFixed={Boolean(true)}
-          style={{ zIndex: selected.length ? 'auto' : 999 }}
-          errorText={selected.length ? '' : 'Select an arrangement'}
-          errorStyle={{ color: 'orange' }}
-        >
-          {
-            schemata ?
-              schemata.map(schema => (
-                <MenuItem
-                  key={schema}
-                  value={schema.join(',')}
-                  primaryText={schema.join(', ')}
-                />
-              ))
-              :
-              <MenuItem key={'noth'} disabled={Boolean(true)} primaryText="No Available Schemas..." />
-          }
-        </SelectField>
-      </div>);
+      return (<SelectField
+        id="select-schema-field"
+        value={selected.join(',')}
+        onChange={this.changeSchema}
+        floatingLabelStyle={floatingStyle}
+        floatingLabelText="Select a schema"
+        floatingLabelFixed={Boolean(true)}
+        style={{ zIndex: selected.length ? 'auto' : 999 }}
+        labelStyle={{ color: errorColor }}
+        errorText={errorText}
+        errorStyle={{ color: errorColor }}
+      >
+        {
+          schemata[0].length > 0 ?
+            schemata.map(schema => (
+              <MenuItem
+                key={schema}
+                value={schema.join(',')}
+                primaryText={schema.join(', ')}
+              />
+            ))
+            :
+            <MenuItem
+              key="noth"
+              value=""
+              disabled={Boolean(true)}
+              primaryText="No arrangement available"
+            />
+        }
+      </SelectField>);
     }
+
     return null;
   }
 

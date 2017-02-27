@@ -9,14 +9,16 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 import Grouping from './Grouping';
 import Participants from './Participants';
+import { updateSchemata } from 'redux/modules/schemata';
 
 @connect(
   ({ newSession }) => ({
     date: newSession.date,
+    numJoined: newSession.numJoined,
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers,
   }),
-  ({ openNewModal, registerPlayer, unregisterPlayer, setDate, openUpload, startTutorial })
+  ({ openNewModal, registerPlayer, unregisterPlayer, setDate, openUpload, startTutorial, updateSchemata })
 )
 export default class TabContainer extends Component {
   state = {
@@ -29,7 +31,10 @@ export default class TabContainer extends Component {
 
   toggleTab = (tab) => {
     if (tab.target) return;
-    if (tab === 1) this.props.startTutorial('grouping');
+    if (tab === 1) {
+      this.props.startTutorial('grouping');
+      this.props.updateSchemata(this.props.numJoined);
+    }
     if (tab === 0) this.props.startTutorial('registration');
     this.setState({ tab });
   }
