@@ -49,6 +49,7 @@
       font-size: 28px;
       cursor: pointer;
       color: white;
+      flex: 1;
       @include reg-transition-no-delay(color, 0.5s, ease-in-out)
     }
 
@@ -125,6 +126,7 @@
       bottom: -5px;
       width: 100%;
       height: 5px;
+      left: 0;
       box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .16);
     }
   }
