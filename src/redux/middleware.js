@@ -1,5 +1,3 @@
-import { SET_MIN_AND_MAX } from 'redux/modules/newSession';
-import { updateSchemata } from 'redux/modules/schemata';
 import { stopLoad, LOAD } from 'redux/modules/main';
 
 export default ({ dispatch, getState }) => next => action => {
@@ -7,12 +5,6 @@ export default ({ dispatch, getState }) => next => action => {
     return action(dispatch, getState);
   }
 
-  if (action.type === SET_MIN_AND_MAX) {
-    const { min, max } = action.payload;
-    if (min && max) {
-      dispatch(updateSchemata(getState().newSession.numJoined, min, max));
-    }
-  }
   const { promise, types, ...rest } = action;
   if (!promise) {
     return next(action);

@@ -154,7 +154,7 @@ export default (state = initialState, action) => {
         loading: false,
         loaded: false,
         allPlayers: {},
-        addedPlayers: {},
+        addedPlayers: new Heap(),
         numJoined: 0,
         date: new Date(),
         pdfs: null,

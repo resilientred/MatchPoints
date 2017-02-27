@@ -51,7 +51,7 @@ export default (state = initialState, action) => {
   }
 };
 
-export const updateSchemata = (numJoined, min, max) => {
+export const updateSchemata = (numJoined, min = 3, max = 7) => {
   const range = [];
   for (let i = max; i >= min; i--) {
     range.push(i);
