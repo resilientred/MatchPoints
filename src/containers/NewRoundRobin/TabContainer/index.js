@@ -6,14 +6,8 @@ import { connect } from 'react-redux';
 import { openNewModal } from 'redux/modules/modals';
 import { openUpload } from 'redux/modules/upload';
 import { startTutorial } from 'redux/modules/tutorial';
-import {
-  setDate,
-  registerPlayer,
-  unregisterPlayer,
-  saveTempSession,
-  getTempSession,
-  restoreTempSession,
-} from 'redux/modules/newSession';
+import { setDate, registerPlayer, unregisterPlayer } from 'redux/modules/newSession';
+import { saveTempSession, getTempSession, restoreTempSession } from 'redux/modules/tempSession';
 import { updateSchemata } from 'redux/modules/schemata';
 import Grouping from './Grouping';
 import Participants from './Participants';
@@ -34,6 +28,7 @@ import Participants from './Participants';
     startTutorial,
     updateSchemata,
     saveTempSession,
+    restoreTempSession,
   })
 )
 export default class TabContainer extends Component {

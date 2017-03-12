@@ -15,7 +15,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case START_TUTORIAL: {
       const component = action.payload;
-      if (localStorage.getItem('tutorial') === false || state.visited[component]) {
+      if (localStorage.getItem('tutorial') === 'false' || state.visited[component]) {
         return state;
       }
 

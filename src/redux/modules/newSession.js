@@ -146,6 +146,15 @@ export default (state = initialState, action) => {
         ...state,
         loading: true,
       };
+    case RESTORE_TEMP_SESSION: {
+      const { addedPlayers: { heap, map }, date } = action.payload;
+      return {
+        ...state,
+        ...action.payload,
+        addedPlayers: new Heap(heap, map),
+        date: new Date(date),
+      };
+    }
     case UPDATE_SESSION_SUCCESS:
       return {
         ...state,
