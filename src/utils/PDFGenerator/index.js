@@ -5,7 +5,7 @@ import 'pdfmake/build/vfs_fonts';
 export default class PDFGenerator {
   constructor(clubName, players, schema, numOfPlayers, date) {
     this.clubName = clubName;
-    this.players = players;
+    this.players = players.playerList;
     this.schema = schema;
     this.numOfPlayers = numOfPlayers;
     this.date = date;
@@ -145,10 +145,10 @@ export default class PDFGenerator {
     return header;
   }
 
-  body(start, numOfPlayers) {
+  body(groupNum, numOfPlayers) {
     return {
       columns: [
-        this.playerList(start, numOfPlayers),
+        this.playerList(groupNum, numOfPlayers),
         ...PDFGenerator.scheduleTable(numOfPlayers),
       ],
       margin: [
@@ -160,10 +160,10 @@ export default class PDFGenerator {
     };
   }
 
-  playerList(start, num) {
+  playerList(groupNum, num) {
     return {
       width: '*',
-      ol: this.players.slice(start, start + num).map(player => {
+      ol: this.players[groupNum].map(player => {
         return {
           columns: [
             {
@@ -188,14 +188,11 @@ export default class PDFGenerator {
 
   generate() {
     const content = [];
-    let numAdded = 0;
     this.schema.forEach((num, i) => {
       content.push(this.header(i, i !== 0));
       content.push(PDFGenerator.link());
-      content.push(this.body(numAdded, num));
+      content.push(this.body(i, num));
       content.push(PDFGenerator.scoreBoxes(num));
-
-      numAdded += num;
     });
 
     const docDefinition = {

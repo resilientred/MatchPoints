@@ -54,7 +54,6 @@ export const updatePlayer = ({ name, rating, id }) => {
 };
 
 export const deletePlayer = (id) => {
-  console.log(id);
   const promise = axios({
     url: `/api/my/players/${id}`,
     headers: {

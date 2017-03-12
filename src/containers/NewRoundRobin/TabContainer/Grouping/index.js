@@ -111,10 +111,11 @@ export default class Grouping extends Component {
     }
     new PDFGenerator(
       this.props.club.clubName,
-      this.props.sortedPlayers,
+      this.props.addedPlayers.toPlayerList(),
       this.props.selected,
       this.props.numJoined,
-      moment(this.props.date).format('YYYY-MM-DD')).generate();
+      moment(this.props.date).format('YYYY-MM-DD'),
+    ).generate();
   }
 
   handleSave = () => {
@@ -140,6 +141,7 @@ export default class Grouping extends Component {
 
   promote = (groupId, playerRank) => {
     const success = this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
+    console.log(this.props.addedPlayers.toPlayerList());
     if (success) {
       this.forceUpdate();
     }
@@ -190,6 +192,7 @@ export default class Grouping extends Component {
       {this.content}
     </Dialog>);
   }
+
   render() {
     let groupTables;
 

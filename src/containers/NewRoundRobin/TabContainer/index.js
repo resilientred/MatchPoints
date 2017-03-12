@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Tabs, Tab } from 'material-ui/Tabs';
+import RaisedButton from 'material-ui/RaisedButton';
+import DatePicker from 'material-ui/DatePicker';
 import { connect } from 'react-redux';
 import { openNewModal } from 'redux/modules/modals';
 import { openUpload } from 'redux/modules/upload';
 import { startTutorial } from 'redux/modules/tutorial';
 import { setDate, registerPlayer, unregisterPlayer } from 'redux/modules/newSession';
-import RaisedButton from 'material-ui/RaisedButton';
-import DatePicker from 'material-ui/DatePicker';
+import { updateSchemata } from 'redux/modules/schemata';
 import Grouping from './Grouping';
 import Participants from './Participants';
-import { updateSchemata } from 'redux/modules/schemata';
 
 @connect(
   ({ newSession }) => ({
@@ -18,15 +18,30 @@ import { updateSchemata } from 'redux/modules/schemata';
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers,
   }),
-  ({ openNewModal, registerPlayer, unregisterPlayer, setDate, openUpload, startTutorial, updateSchemata })
+  ({
+    openNewModal,
+    registerPlayer,
+    unregisterPlayer,
+    setDate,
+    openUpload,
+    startTutorial,
+    updateSchemata,
+  })
 )
 export default class TabContainer extends Component {
   state = {
     tab: 0,
+    sortedPlayers: [],
   };
 
   componentDidMount() {
     this.props.startTutorial('registration');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.addedPlayers !== nextProps.addedPlayers) {
+      this.setState({ sortedPlayers: nextProps.addedPlayers.sort() });
+    }
   }
 
   toggleTab = (tab) => {
@@ -42,8 +57,6 @@ export default class TabContainer extends Component {
   render() {
     const today = new Date();
     const minDate = new Date(today.setYear(today.getFullYear() - 1));
-
-    const sortedPlayers = this.props.addedPlayers.sort();
 
     const playerContent = (<div>
       <RaisedButton
@@ -76,7 +89,7 @@ export default class TabContainer extends Component {
       <Participants
         registerPlayer={this.props.registerPlayer}
         unregisterPlayer={this.props.unregisterPlayer}
-        sortedPlayers={sortedPlayers}
+        sortedPlayers={this.state.sortedPlayers}
         addedPlayers={this.props.addedPlayers}
         allPlayers={this.props.allPlayers}
       />
@@ -96,7 +109,10 @@ export default class TabContainer extends Component {
         {playerContent}
       </Tab>
       <Tab label="Grouping" value={1} className="grouping-tab tab-menu-tab">
-        <Grouping sortedPlayers={sortedPlayers} addedPlayers={this.props.addedPlayers} />
+        <Grouping
+          sortedPlayers={this.state.sortedPlayers}
+          addedPlayers={this.props.addedPlayers}
+        />
       </Tab>
     </Tabs>);
   }
