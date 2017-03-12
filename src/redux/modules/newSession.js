@@ -13,6 +13,7 @@ import {
   MOVE_PLAYER_DOWN,
 } from 'redux/modules/schemata';
 import { MESSAGE, LOAD } from 'redux/modules/main';
+import { RESTORE_TEMP_SESSION } from 'redux/modules/tempSession';
 
 export const RESTORE_STATE = 'mp/session/RESTORE_STATE';
 export const TEST_DATA_PARTICIPANTS = 'mp/session/TEST_DATA_PARTICIPANTS';
@@ -26,6 +27,7 @@ export const ADD_PLAYERS_SUCCESS = 'mp/session/ADD_PLAYERS_SUCCESS';
 export const REGISTER_PLAYER = 'mp/session/REGISTER_PLAYER';
 export const UNREGISTER_PLAYER = 'mp/session/UNREGISTER_PLAYER';
 export const SAVE_SESSION_SUCCESS = 'mp/session/SAVE_SESSION_SUCCESS';
+
 const SET_DATE = 'mp/rr/SET_DATE';
 
 const initialState = {
