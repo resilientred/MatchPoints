@@ -17,6 +17,12 @@ export default class PlayerList {
     }
   }
 
+  flatten() {
+    const list = [];
+    this.playerList.forEach(group => list.push(...group));
+    return list;
+  }
+
   toArray() {
     return this.playerList;
   }

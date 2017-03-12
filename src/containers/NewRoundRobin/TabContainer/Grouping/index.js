@@ -131,7 +131,7 @@ export default class Grouping extends Component {
         numOfPlayers: this.props.numJoined,
         schemata: this.props.schemata,
         selectedSchema: this.props.selected,
-        players: this.props.sortedPlayers,
+        players: this.props.addedPlayers.toPlayerList().flatten(),
       }).then(() => {
         this.props.preSetTab('/club/sessions');
         browserHistory.push('/club/sessions');
@@ -141,7 +141,6 @@ export default class Grouping extends Component {
 
   promote = (groupId, playerRank) => {
     const success = this.props.addedPlayers.toPlayerList().promote(groupId, playerRank);
-    console.log(this.props.addedPlayers.toPlayerList());
     if (success) {
       this.forceUpdate();
     }
