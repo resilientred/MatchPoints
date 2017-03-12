@@ -47,12 +47,15 @@ export const disableTutorial = () => {
   };
 };
 
-/* put this in profile */
 export const enableTutorial = () => {
   localStorage.setItem('tutorial', true);
   return {
     type: ENABLE_TUTORIAL,
   };
+};
+
+export const isTutorialEnabled = () => {
+  return localStorage.getItem('tutorial');
 };
 
 export const startTutorial = (component) => {

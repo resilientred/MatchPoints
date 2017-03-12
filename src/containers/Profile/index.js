@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
 import { changePassword, changeInfo } from 'redux/modules/profile';
 import { setMessage } from 'redux/modules/main';
 import { PasswordChange, InfoChange } from 'components';
-
+import { enableTutorial, disableTutorial, isTutorialEnabled } from 'redux/modules/tutorial';
 import './styles.scss';
 
-@connect(({ auth: { club } }) => ({ club }), { changePassword, changeInfo, setMessage })
+@connect(
+  ({ auth: { club } }) => ({ club }),
+  { changePassword, changeInfo, setMessage, enableTutorial, disableTutorial }
+)
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +23,17 @@ export default class Profile extends Component {
     this.setState({ tab });
   }
 
+  handleToggleTutorial = () => {
+    if (JSON.parse(isTutorialEnabled())) {
+      this.props.disableTutorial();
+    } else {
+      this.props.enableTutorial();
+    }
+    this.forceUpdate();
+  }
+
   render() {
+    const tutorialEnabled = JSON.parse(isTutorialEnabled());
     return (<div className="profile-container">
       <Card containerStyle={{ padding: '15px', height: '100%' }}>
         <CardHeader
@@ -38,6 +52,10 @@ export default class Profile extends Component {
             label="Change Info"
             onClick={() => this.setTab(1)}
           />
+          <FlatButton
+            label="Settings"
+            onClick={() => this.setTab(2)}
+          />
         </CardActions>
         <CardText style={{ display: this.state.tab === 0 ? 'block' : 'none' }}>
           <PasswordChange
@@ -52,6 +70,19 @@ export default class Profile extends Component {
             submitChange={this.props.changeInfo}
             setMessage={this.props.setMessage}
           />
+        </CardText>
+        <CardText style={{ display: this.state.tab === 2 ? 'block' : 'none' }}>
+          <div className="setting-container">
+            <div className={tutorialEnabled ? 'enabled' : 'disabled'}>
+              <span>Tutorial:</span>{tutorialEnabled ? 'Enabled' : 'Disabled'}
+              <RaisedButton
+                label={tutorialEnabled ? 'Disable' : 'Enable'}
+                onClick={this.handleToggleTutorial}
+                labelColor="white"
+                style={{ marginLeft: '30px' }}
+              />
+            </div>
+          </div>
         </CardText>
       </Card>
     </div>);

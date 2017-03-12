@@ -25,3 +25,38 @@
     z-index: inherit;
   }
 }
+
+.setting-container {
+  padding: 20px 0;
+  font-family: 'Ropa Sans', sans-serif;
+  font-size: 16px;
+  color: #D32F2F;
+
+  .disabled button {
+    background-color: #388E3C !important;
+
+    &:hover {
+      background-color: rgba(#388E3C, 0.75) !important;
+    }
+  }
+
+  .enabled button {
+    background-color: #D32F2F !important;
+
+    &:hover {
+      background-color: rgba(#D32F2F, 0.75) !important;
+    }
+  }
+
+  .enabled {
+    color: #388E3C;
+  }
+
+  span {
+    text-transform: uppercase;
+    color: black;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+
+}
