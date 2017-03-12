@@ -6,7 +6,14 @@ import { connect } from 'react-redux';
 import { openNewModal } from 'redux/modules/modals';
 import { openUpload } from 'redux/modules/upload';
 import { startTutorial } from 'redux/modules/tutorial';
-import { setDate, registerPlayer, unregisterPlayer } from 'redux/modules/newSession';
+import {
+  setDate,
+  registerPlayer,
+  unregisterPlayer,
+  saveTempSession,
+  getTempSession,
+  restoreTempSession,
+} from 'redux/modules/newSession';
 import { updateSchemata } from 'redux/modules/schemata';
 import Grouping from './Grouping';
 import Participants from './Participants';
@@ -26,6 +33,7 @@ import Participants from './Participants';
     openUpload,
     startTutorial,
     updateSchemata,
+    saveTempSession,
   })
 )
 export default class TabContainer extends Component {
@@ -36,12 +44,23 @@ export default class TabContainer extends Component {
 
   componentDidMount() {
     this.props.startTutorial('registration');
+    const tempSession = getTempSession();
+    if (tempSession) {
+      this.props.restoreTempSession();
+    }
+    this.int = setInterval(() => {
+      this.props.saveTempSession();
+    }, 30000);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.addedPlayers !== nextProps.addedPlayers) {
       this.setState({ sortedPlayers: nextProps.addedPlayers.sort() });
     }
+  }
+
+  componentWillUnmount() {
+    if (this.int) clearInterval(this.int);
   }
 
   toggleTab = (tab) => {
