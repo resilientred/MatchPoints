@@ -152,6 +152,13 @@ export default class Tutorial extends Component {
     const { left, top, width, height, className } = highlighter;
     return (
       <div className="tutorial-container">
+        <div className"disable">
+          <div
+            className="button"
+            onClick={this.handleDisableTutorial}
+          >
+            Disable Tutorial
+          </div>
         {
           left && top &&
             <div

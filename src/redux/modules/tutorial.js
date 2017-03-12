@@ -28,6 +28,7 @@ export default (state = initialState, action) => {
         },
       };
     }
+    case DISABLE_TUTORIAL:
     case END_TUTORIAL:
       return {
         ...state,
