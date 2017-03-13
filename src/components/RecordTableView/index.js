@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, TableBody, TableHeader,
   TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import './styles.scss';
 
 const RecordTableView = (props) => {
   const { sizeOfGroup, start, joinedPlayers, scoreChange, groupNum } = props;
@@ -10,15 +11,18 @@ const RecordTableView = (props) => {
     wrapperStyle={{ minWidth: '1000px' }}
   >
     <TableHeader
+      className="record-table-header"
       displaySelectAll={false}
       adjustForCheckbox={false}
       enableSelectAll={false}
     >
       <TableRow>
         {
-          [...Array(sizeOfGroup + 5)].map((_, i) => {
+          [...Array(sizeOfGroup + 6)].map((_, i) => {
             let content;
             let style = {};
+            let className;
+
             switch (i) {
               case 0:
                 content = `Group ${groupNum}`;
@@ -26,6 +30,7 @@ const RecordTableView = (props) => {
                 break;
               case 1:
                 content = 'Name';
+                className = 'name';
                 style = { paddingLeft: '0' };
                 break;
               case 2:
@@ -35,26 +40,33 @@ const RecordTableView = (props) => {
                 content = 'Change';
                 break;
               case sizeOfGroup + 4:
+                content = 'Bonus';
+                break;
+              case sizeOfGroup + 5:
                 content = 'After';
                 break;
               default:
                 content = i - 2;
                 break;
             }
-            return (<TableHeaderColumn key={`head${(i - 1)}`} style={style}>
+            return (<TableHeaderColumn
+              key={`head${(i - 1)}`}
+              style={style}
+              className={className}
+            >
               { content }
             </TableHeaderColumn>);
           })
         }
       </TableRow>
     </TableHeader>
-    <TableBody displayRowCheckbox={false}>
+    <TableBody displayRowCheckbox={false} className="record-table-body">
       {
         [...Array(sizeOfGroup)].map((__, m) => {
           const curPlayer = joinedPlayers[m + start];
           let ratingChangeSum = 0;
-
-          return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 5)].map((_, n) => {
+          let bonus = 0;
+          return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 6)].map((_, n) => {
             if (n === 0) {
               return (<TableRowColumn
                 key={`row${m}:${n}`}
@@ -66,25 +78,41 @@ const RecordTableView = (props) => {
             if (n === m + 3) return <TableRowColumn key={`row${m}:${n}`}>0</TableRowColumn>;
             let cellContent;
             let style;
+            let className;
             switch (n) {
               case 1:
                 style = { whiteSpace: 'initial', paddingLeft: '0' };
                 cellContent = curPlayer.name;
+                className = 'name';
                 break;
               case 2:
                 cellContent = curPlayer.rating;
                 break;
-              case sizeOfGroup + 3:
+              case sizeOfGroup + 3: {
+                const hasBonus = ratingChangeSum > 24;
+                if (hasBonus) {
+                  bonus = ratingChangeSum - 24;
+                }
                 cellContent = ratingChangeSum;
                 break;
+              }
               case sizeOfGroup + 4:
-                cellContent = ratingChangeSum + +curPlayer.rating;
+                cellContent = bonus;
+                break;
+              case sizeOfGroup + 5:
+                cellContent = ratingChangeSum + bonus + +curPlayer.rating;
                 break;
               default:
                 break;
             }
-            if (n === sizeOfGroup + 3 || n === sizeOfGroup + 4 || n === 1 || n === 2) {
-              return <TableRowColumn key={`row${m}:${n}`} style={style}>{cellContent}</TableRowColumn>;
+            if (n === sizeOfGroup + 3 ||
+              n === sizeOfGroup + 4 ||
+              n === sizeOfGroup + 5 ||
+              n === 1 ||
+              n === 2) {
+              return (<TableRowColumn key={`row${m}:${n}`} style={style} className={className}>
+                {cellContent}
+              </TableRowColumn>);
             }
 
             if (!scoreChange) {

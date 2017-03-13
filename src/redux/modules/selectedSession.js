@@ -29,7 +29,15 @@ export default (state = initialState, action) => {
       const scoreUpdateInGroup = scoreChangeInGroup[1];
 
       Object.keys(scoreUpdateInGroup).forEach((playerId) => {
-        scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
+        if (scoreUpdateInGroup[playerId].change > 24) {
+          scoreUpdate[playerId] = {
+            ...scoreUpdateInGroup[playerId],
+            change: 24 + ((scoreUpdateInGroup[playerId].change - 24) * 2),
+          };
+          console.log(scoreUpdate[playerId]);
+        } else {
+          scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
+        }
       });
       return {
         ...state,

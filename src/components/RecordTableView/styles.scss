@@ -1,0 +1,13 @@
+.record-table-header,
+.record-table-body {
+  th,
+  td {
+    text-align: center !important;
+    padding: 0 !important;
+    width: 35px !important;
+
+    &.name {
+      width: 56px !important;
+    }
+  }
+}
