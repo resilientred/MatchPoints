@@ -37,10 +37,10 @@ const RecordTableView = (props) => {
                 content = 'Before';
                 break;
               case sizeOfGroup + 3:
-                content = 'Change';
+                content = 'Bonus';
                 break;
               case sizeOfGroup + 4:
-                content = 'Bonus';
+                content = 'Change';
                 break;
               case sizeOfGroup + 5:
                 content = 'After';
@@ -88,19 +88,20 @@ const RecordTableView = (props) => {
               case 2:
                 cellContent = curPlayer.rating;
                 break;
+              case sizeOfGroup + 4:
+                cellContent = ratingChangeSum;
+                break;
               case sizeOfGroup + 3: {
                 const hasBonus = ratingChangeSum > 24;
                 if (hasBonus) {
                   bonus = ratingChangeSum - 24;
                 }
-                cellContent = ratingChangeSum;
+                cellContent = bonus;
+                ratingChangeSum += bonus;
                 break;
               }
-              case sizeOfGroup + 4:
-                cellContent = bonus;
-                break;
               case sizeOfGroup + 5:
-                cellContent = ratingChangeSum + bonus + +curPlayer.rating;
+                cellContent = ratingChangeSum + +curPlayer.rating;
                 break;
               default:
                 break;

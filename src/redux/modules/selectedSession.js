@@ -34,7 +34,6 @@ export default (state = initialState, action) => {
             ...scoreUpdateInGroup[playerId],
             change: 24 + ((scoreUpdateInGroup[playerId].change - 24) * 2),
           };
-          console.log(scoreUpdate[playerId]);
         } else {
           scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
         }
