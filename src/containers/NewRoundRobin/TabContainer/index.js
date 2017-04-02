@@ -39,13 +39,13 @@ export default class TabContainer extends Component {
 
   componentDidMount() {
     this.props.startTutorial('registration');
-    const tempSession = getTempSession();
-    if (tempSession) {
-      this.props.restoreTempSession();
-    }
-    this.int = setInterval(() => {
-      this.props.saveTempSession();
-    }, 30000);
+    // const tempSession = getTempSession();
+    // if (tempSession) {
+    //   this.props.restoreTempSession();
+    // }
+    // this.int = setInterval(() => {
+    //   this.props.saveTempSession();
+    // }, 30000);
   }
 
   componentWillReceiveProps(nextProps) {
