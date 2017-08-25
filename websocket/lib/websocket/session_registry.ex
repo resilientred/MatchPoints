@@ -9,12 +9,12 @@ defmodule MatchPoints.SessionRegistry do
     GenServer.call(:registry, {:whereis_name, session_name})
   end
 
-  def register_name(session_name) do
-    GenServer.call(:registry, {:register_name, room_name, pid})
+  def register_name(session_name, pid) do
+    GenServer.call(:registry, {:register_name, session_name, pid})
   end
 
   def unregister_name(session_name) do
-    GenServer.cast(:registry, {:unregister_name, room_name})
+    GenServer.cast(:registry, {:unregister_name, session_name})
   end
 
   def send(session_name, message) do
@@ -28,21 +28,15 @@ defmodule MatchPoints.SessionRegistry do
     end
   end
 
-  def init(_)
+  def init(_) do
     {:ok, Map.new}
   end
 
   def handle_call({:whereis_name, session_name}, _from, state) do
-    case Map.get(state, session_name) do
-      nil ->
-        {:reply, :yes, Map.put(state, room_name, pid)}
-
-      _ ->
-        {:reply, :no, state}
-    end
+    {:reply, Map.get(state, session_name, :undefined), state}
   end
 
-  def handle_cast({:register_name, session_name, pid}, _from, state) do
+  def handle_call({:register_name, session_name, pid}, _from, state) do
     case Map.get(state, session_name) do
       nil ->
         {:reply, :yes, Map.put(state, session_name, pid)}

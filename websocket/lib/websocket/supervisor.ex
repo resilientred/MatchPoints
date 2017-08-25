@@ -10,7 +10,7 @@ defmodule MatchPoints.Supervisor do
   end
 
   def init(_) do
-    children [
+    children = [
       worker(MatchPoints.Server, [])
     ]
 

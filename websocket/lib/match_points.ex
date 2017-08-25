@@ -12,7 +12,8 @@ defmodule MatchPoints do
       supervisor(MatchPoints.Endpoint, []),
       # Start your own worker by calling: MatchPoints.Worker.start_link(arg1, arg2, arg3)
       # worker(MatchPoints.Worker, [arg1, arg2, arg3]),
-      supervisor(MatchPoints.Supervisor, [])
+      supervisor(MatchPoints.Supervisor, []),
+      worker(MatchPoints.SessionRegistry, []),
       worker(Mongo, [[name: :mongo, database: "roundrobindb", pool: DBConnection.Poolboy]])
     ]
 
