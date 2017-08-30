@@ -1,8 +1,9 @@
 defmodule MatchPoints.UserSocket do
   use Phoenix.Socket
+  alias MatchPoints.Server
 
   ## Channels
-  # channel "room:*", MatchPoints.RoomChannel
+  channel "session:*", MatchPoints.SessionChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,8 +20,14 @@ defmodule MatchPoints.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{session_token: session_token}, socket) do
+    socket = assign(socket, :session_token, sesssion_token)
+    case MatchPoints.Utils.get_session_name(session_token) do
+      {:ok, session_name} ->
+        {:ok, assign(socket, :session_name, session_name)}
+      {:error, _} ->
+         {:error, 'Cannot initialize session'}
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
@@ -33,5 +40,5 @@ defmodule MatchPoints.UserSocket do
   #     MatchPoints.Endpoint.broadcast("users_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(_socket), do: nil
+  def id(_socket), do: "session:#{socket.assigns.session_name}"
 end
