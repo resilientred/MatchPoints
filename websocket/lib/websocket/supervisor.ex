@@ -1,5 +1,6 @@
 defmodule MatchPoints.Supervisor do
   use Supervisor
+  alias MatchPoints.Server
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: :mp_supervisor)
@@ -7,6 +8,20 @@ defmodule MatchPoints.Supervisor do
 
   def start_room(name) do
     Supervisor.start_child(:mp_supervisor, [name])
+  end
+
+  def initialize_if_havent(name, token) do
+    case start_room(name) do
+      {:ok, _pid} ->
+        players = MatchPoints.Utils.get_players(token)
+        Server.set_players(name, players)
+        {:ok, players}
+      {:error, _reason} ->
+        players = Server.get_players(name, players)
+        {:ok, players}
+      _ ->
+        {:error, []}
+    end
   end
 
   def init(_) do
