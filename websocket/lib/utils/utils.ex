@@ -30,7 +30,6 @@ defmodule MatchPoints.Utils do
     end
   end
 
-
   def get_body(response) do
     response.body
   end
