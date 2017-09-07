@@ -27,6 +27,6 @@ export default class ClubHelper {
     delete club.confirmToken;
 
     res.cookie("matchpoint_session", sessionToken,
-      { maxAge: 14 * 24 * 60 * 60 * 1000 }).send(club);
+      { maxAge: 14 * 24 * 60 * 60 * 1000 }).send({ club });
   }
 }

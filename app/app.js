@@ -24,6 +24,30 @@ app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use(cookieParser());
 
 app.use((err, req, res, next) => {
+  let errorMessage = err.message;
+  if (!errorMessage) {
+    switch (err.code) {
+      case 500:
+        errorMessage = 'Internal Server Error';
+        break;
+
+      case 400:
+        errorMessage = 'Bad Request';
+        break;
+
+      case 404:
+        errorMessage = 'Not found';
+        break;
+
+      case 422:
+        errorMessage = 'Unprocessable entity';
+        break;
+    }
+  }
+  res.status(err.code).send({ error_description: errorMEssage });
+});
+
+app.use((err, req, res, next) => {
   if (err.code !== "EBADCSRFTOKEN") {
     next(err);
   } else {

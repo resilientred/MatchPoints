@@ -1,5 +1,5 @@
 {
   "verbose": true,
-  "ignore": ["./package.json", "frontend/**", "public/js/**", "pdfs/**", "helpers/uploads/**", "src/**"],
+  "ignore": ["./package.json", "frontend/**", "public/js/**", "pdfs/**", "helpers/uploads/**", "src/**", "websocket/**"],
   "delay": "500ms"
 }

@@ -7,15 +7,17 @@ import ClubHelper from "../helpers/clubHelper";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   ClubHelper.findCurrentClub(req)
     .then((currentClub) => {
-      return res.status(200).send(currentClub);
+      res.status(200).send({
+        club: currentClub || {}
+      });
     }).catch((err) => {
-      console.log(err);
+      next({ code: 500 });
     });
 })
-.get("/all", (req, res) => {
+.get("/all", (req, res, next) => {
   ClubModel.findAll()
     .then((roundrobins) => {
       res.status(200).send(roundrobins);
