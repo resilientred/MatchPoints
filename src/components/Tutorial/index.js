@@ -37,7 +37,7 @@ export default class Tutorial extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleSize.bind(this));
+    window.addEventListener('resize', this.handleSize);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +57,7 @@ export default class Tutorial extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleSize.bind(this));
+    window.removeEventListener('resize', this.handleSize);
   }
 
   handleSize = () => {

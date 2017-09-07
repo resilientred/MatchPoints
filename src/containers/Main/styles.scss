@@ -343,7 +343,7 @@ h1 {
 
 form {
   max-height: 430px;
-  overflow: scroll;
+  overflow: auto;
   @include reg-transition(opacity, 0.5s, ease-in-out, 0.5s)
   position: relative;
   width: 100%;
