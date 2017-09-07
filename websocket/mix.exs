@@ -17,7 +17,7 @@ defmodule MatchPoints.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {MatchPoints, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :mongodb, :poolboy]]
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :poolboy, :httpoison]]
   end
 
   # Specifies which paths to compile per environment.
@@ -32,7 +32,7 @@ defmodule MatchPoints.Mixfile do
      {:phoenix_pubsub, "~> 1.0"},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
-     {:mongodb, ">= 0.0.0"},
-     {:poolboy, ">= 0.0.0"}]
+     {:poolboy, ">= 0.0.0"},
+     {:httpoison, "~> 0.13"}]
   end
 end

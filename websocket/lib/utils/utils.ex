@@ -14,8 +14,8 @@ defmodule MatchPoints.Utils do
     |> get_body
     |> Poison.decode!
     case data do
-      {:ok, club} -> {:ok, club["_id"]}
-      {_} -> {:error, _}
+      nil -> {:error, "Unable to get session name"}
+      _ -> {:ok, data["club"]["_id"]}
     end
   end
 
@@ -25,8 +25,8 @@ defmodule MatchPoints.Utils do
     |> get_body
     |> Poison.decode!
     case data do
-      {:ok, players} -> {:ok, players}
-      {_} -> {:error, _}
+      nil -> {:error, "Unable to get player list"}
+      _ -> {:ok, data["players"]}
     end
   end
 

@@ -14,7 +14,6 @@ defmodule MatchPoints do
       # worker(MatchPoints.Worker, [arg1, arg2, arg3]),
       supervisor(MatchPoints.Supervisor, []),
       worker(MatchPoints.SessionRegistry, []),
-      worker(Mongo, [[name: :mongo, database: "roundrobindb", pool: DBConnection.Poolboy]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

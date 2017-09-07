@@ -1,6 +1,5 @@
 defmodule MatchPoints.UserSocket do
   use Phoenix.Socket
-  alias MatchPoints.Server
 
   ## Channels
   channel "session:*", MatchPoints.SessionChannel
@@ -20,10 +19,12 @@ defmodule MatchPoints.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(%{session_token: session_token}, socket) do
-    socket = assign(socket, :session_token, sesssion_token)
+  def connect(params, socket) do
+    session_token = params["session_token"]
+    socket = assign(socket, :session_token, session_token)
     case MatchPoints.Utils.get_session_name(session_token) do
       {:ok, session_name} ->
+        IO.inspect(session_name)
         {:ok, assign(socket, :session_name, session_name)}
       {:error, _} ->
          {:error, 'Cannot initialize session'}

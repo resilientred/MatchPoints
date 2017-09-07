@@ -13,14 +13,13 @@ defmodule MatchPoints.Supervisor do
   def initialize_if_havent(name, token) do
     case start_room(name) do
       {:ok, _pid} ->
-        players = MatchPoints.Utils.get_players(token)
+        players = MatchPoints.Utils.get_player_list(token)
         Server.set_players(name, players)
-        {:ok, players}
+        {:ok, %{data: Server.get_initial_state(name)}}
       {:error, _reason} ->
-        players = Server.get_players(name, players)
-        {:ok, players}
+        {:ok, %{data: Server.get_initial_state(name)}}
       _ ->
-        {:error, []}
+        {:error, %{}}
     end
   end
 
