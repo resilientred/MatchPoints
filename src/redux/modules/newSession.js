@@ -85,7 +85,7 @@ export default (state = initialState, action) => {
 
     case FETCH_PLAYERS_SUCCESS: {
       const allPlayers = {};
-      action.payload.forEach((player) => {
+      action.payload.players.forEach((player) => {
         allPlayers[player._id] = player;
       });
 

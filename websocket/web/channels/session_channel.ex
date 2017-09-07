@@ -18,22 +18,22 @@ defmodule MatchPoints.SessionChannel do
     :ok
   end
 
-  def handle_in({:after_join, state}, socket) do
-    push socket, "initial_state", state
+  def handle_info({:after_join, state}, socket) do
+    push socket, "INITIAL_STATE", state
     {:noreply, socket}
   end
 
-  def handle_in("unregister_player", playerId, socket) do
+  def handle_in("UNREGISTER_PLAYER", playerId, socket) do
     %{session_name: session_name} = socket.assigns
     Server.unregister_player(session_name, playerId)
-    broadcast! socket, "player_unregistered", playerId
+    broadcast! socket, "PLAYER_UNREGISTERED", playerId
     {:noreply, socket}
   end
 
-  def handle_in("register_player", player, socket) do
+  def handle_in("REGISTER_PLAYER", player, socket) do
     %{session_name: session_name} = socket.assigns
     Server.register_player(session_name, player)
-    broadcast! socket, "player_registered", player
+    broadcast! socket, "PLAYER_REGISTERED", player
     {:noreply, socket}
   end
 

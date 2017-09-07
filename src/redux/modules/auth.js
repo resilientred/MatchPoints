@@ -44,17 +44,13 @@ export default (state = initialState, action) => {
         ...state,
         loading: true,
       };
-    case LOAD_AUTH_SUCCESS: {
-      const club = {
-        ...action.payload,
-      };
+    case LOAD_AUTH_SUCCESS:
       return {
         ...state,
-        club,
+        club: action.payload.club,
         loading: false,
         loaded: true,
       };
-    }
     case LOAD_AUTH_ERROR:
       return {
         ...state,

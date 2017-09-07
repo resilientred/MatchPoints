@@ -7,6 +7,7 @@ import { Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { ReduxAsyncConnect } from 'redux-async-connect';
 import store from './redux/store';
+import startWebsocket from './redux/socketMiddleware';
 import getRoutes from './routes';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -15,6 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 document.addEventListener('DOMContentLoaded', () => {
   injectTapEventPlugin();
+  startWebsocket(store);
   if (process.env.DEVTOOLS && !window.devToolsExtension) {
     const DevTools = require('./components/DevTools');
     render(<Provider store={store}>

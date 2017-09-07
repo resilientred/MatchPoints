@@ -5,7 +5,7 @@ import Club from "../models/club";
 
 const router = express.Router();
 
-router.post("/new", jsonParser, csrfProtection, (req, res) => {
+router.post("/new", jsonParser, csrfProtection, (req, res, next) => {
   const data = req.body.user;
   Club.findByUsernameAndPassword(data.username.toLowerCase(), data.password)
     .then((club) => {
@@ -13,8 +13,7 @@ router.post("/new", jsonParser, csrfProtection, (req, res) => {
       ClubHelper.logIn(club, res);
     })
     .catch((error) => {
-      res.status(404).send("Username or password error.");
-      res.end();
+      next({ code: 404, message: "Username or password error." });
     });
 }).delete("/", (req, res) => {
   Club.resetSessionTokenWithOldToken(req.cookies.matchpoint_session)

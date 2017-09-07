@@ -5,7 +5,7 @@ export const saveTempSession = () => {
     const { newSession } = getState();
     window.localStorage.setItem(
       'matchpoint_session',
-      JSON.stringify(Object.assign({}, newSession, { date: new Date() })
+      JSON.stringify(Object.assign({}, newSession, { date: new Date() }))
     );
   };
 };
