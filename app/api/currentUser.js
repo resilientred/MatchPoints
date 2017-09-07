@@ -39,14 +39,14 @@ router.post("/accounts/resend", (req, res) => {
     .then(roundrobin => res.status(200).send(roundrobin))
     .catch(() => res.status(422).send("Cannot retrieve the session data."));
 })
-.delete("/sessions/:id", (req, res) => {
+.delete("/sessions/:id", (req, res, next) => {
   const id = req.params.id;
   RoundRobinModel.deleteRoundRobin(req.club._id, id)
     .then(() => {
       client.del(`sessions:${req.club._id}`);
       return res.status(200).send(id);
     }).catch((err) => {
-      return res.status(500);
+      return next({ code: 500 });
     });
 })
 .post("/sessions/:id", jsonParser, csrfProtection, (req, res) => {
