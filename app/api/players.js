@@ -5,7 +5,7 @@ import ClubModel from "../models/club";
 import { validatePlayer } from "../models/player";
 
 const router = express.Router();
-router.route("/players").get((req, res) => {
+router.route("/players").get((req, res, next) => {
   const clubId = req.club._id;
 
   client.get(`players:${clubId}`, (err, reply) => {
@@ -13,14 +13,24 @@ router.route("/players").get((req, res) => {
       ClubModel.findPlayers(clubId)
         .then((data) => {
           client.set(`players:${clubId}`, JSON.stringify(data.players));
-          res.status(200).send(data.players);
+          res.status(200).send({ players: data.players });
         }).catch((err) => {
-          res.status(404).send("Unable to fetch players, please try again later.");
+          next({ code: 500, message: "Unable to fetch players, please try again later." });
         });
     } else {
-      res.status(200).send(JSON.parse(reply));
+      res.status(200).send({ players: JSON.parse(reply) });
     }
   })
+});
+
+router.route("/players/active").get((req, res, next) => {
+  const clubId = req.club._id;
+  ClubModel.getMostActivePlayers(clubId)
+    .then((data) => {
+      res.status(200).send({ players: data });
+    }).catch((_) => {
+      next({ code: 500 });
+    })
 });
 
 router.route("/players/new")

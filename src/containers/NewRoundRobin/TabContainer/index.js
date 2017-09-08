@@ -13,11 +13,12 @@ import Grouping from './Grouping';
 import Participants from './Participants';
 
 @connect(
-  ({ newSession }) => ({
+  ({ newSession, players }) => ({
     date: newSession.date,
     numJoined: newSession.numJoined,
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers,
+    activePlayers: players.activePlayers,
   }),
   ({
     openNewModal,
@@ -106,6 +107,7 @@ export default class TabContainer extends Component {
         sortedPlayers={this.state.sortedPlayers}
         addedPlayers={this.props.addedPlayers}
         allPlayers={this.props.allPlayers}
+        activePlayers={this.props.activePlayers}
       />
     </div>);
 

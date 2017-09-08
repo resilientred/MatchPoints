@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { openEditModal, openNewModal, closeNewModal, closeEditModal } from 'redux/modules/modals';
-import { fetchCurrentPlayers, addPlayer, updatePlayer } from 'redux/modules/players';
+import {
+  fetchCurrentPlayers,
+  addPlayer,
+  updatePlayer,
+  fetchActivePlayers,
+} from 'redux/modules/players';
 import { PlayerForm } from 'components';
 import UploadDialog from './UploadDialog';
 import TabContainer from './TabContainer';
@@ -14,6 +19,7 @@ import TabContainer from './TabContainer';
     closeNewModal,
     closeEditModal,
     fetchCurrentPlayers,
+    fetchActivePlayers,
     addPlayer,
     updatePlayer,
   }
@@ -22,6 +28,7 @@ export default class NewRRSession extends Component {
   componentWillMount() {
     if (!this.props.session.loaded && !this.props.session.loading) {
       this.props.fetchCurrentPlayers();
+      this.props.fetchActivePlayers();
     }
   }
 
