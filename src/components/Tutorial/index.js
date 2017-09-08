@@ -61,6 +61,7 @@ export default class Tutorial extends Component {
   }
 
   handleSize = () => {
+    if (!this.state.currentEl) return;
     const { currentEl: { selector } } = this.state;
     const elementToHighlight = document.querySelector(selector);
     const rect = elementToHighlight.getBoundingClientRect();
