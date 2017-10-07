@@ -23,10 +23,20 @@ router.route("/players").get((req, res, next) => {
         players = JSON.parse(reply);
         res.status(200).send({ players });
       } catch (_e) {
-        next({ code: 404 });
+        next({ code: 500 });
       }
     }
   })
+});
+
+router.route("/players/active").get((req, res, next) => {
+  const clubId = req.club._id;
+  ClubModel.getMostActivePlayers(clubId)
+    .then((data) => {
+      res.status(200).send({ players: data });
+    }).catch((_) => {
+      next({ code: 500 });
+    })
 });
 
 router.route("/players/new")

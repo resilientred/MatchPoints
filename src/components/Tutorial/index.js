@@ -37,7 +37,7 @@ export default class Tutorial extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleSize.bind(this));
+    window.addEventListener('resize', this.handleSize);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,10 +57,11 @@ export default class Tutorial extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleSize.bind(this));
+    window.removeEventListener('resize', this.handleSize);
   }
 
   handleSize = () => {
+    if (!this.state.currentEl) return;
     const { currentEl: { selector } } = this.state;
     const elementToHighlight = document.querySelector(selector);
     const rect = elementToHighlight.getBoundingClientRect();

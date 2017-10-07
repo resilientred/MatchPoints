@@ -153,7 +153,7 @@ h3 {
   width: 80%;
   margin: 0 auto;
   position: relative;
-  overflow: scroll;
+  overflow: auto;
 
   & > div[value="1"] {
     display: flex;
@@ -231,7 +231,7 @@ h3 {
 
     & > div {
       height: 300px;
-      overflow: scroll;
+      overflow: auto;
 
       &:nth-child(even) {
         margin-top: 20px;
@@ -246,6 +246,7 @@ h3 {
 
 
 .sessions-list {
+  overflow-y: auto;
   @include light-box-shadow;
   height: 100%;
   padding: 20px;

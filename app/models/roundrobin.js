@@ -33,7 +33,7 @@ roundRobinSchema.statics.saveResult = function(id, scoreChange) {
 };
 
 roundRobinSchema.statics.deleteRoundRobin = function(clubId, id) {
-  return this.remove({ id: id, _clubId: clubId });
+  return this.remove({ id: id, _clubId: clubId, finalized: false });
 };
 
 roundRobinSchema.statics.updateResult = function(id, result, scoreChange) {

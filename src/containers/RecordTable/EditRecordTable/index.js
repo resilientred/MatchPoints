@@ -81,7 +81,7 @@ export default class EditRecordTable extends Component {
         tabItemContainerStyle={{ backgroundColor: 'white' }}
         contentContainerStyle={{
           padding: '20px',
-          overflow: 'scroll',
+          overflow: 'auto',
         }}
       >
         <Tab label="Enter Result" value={0} className="tab-menu-tab">

@@ -123,6 +123,7 @@ export default class LogInForm extends Component {
             onClick={this.handleSubmit}
           />
           <RaisedButton label="Guest" backgroundColor="#EF6C00" labelColor="white" onClick={this.guestLogIn} />
+          <input type="submit" style={{ display: 'none' }} />
         </div>
         <div className="forgot-password">
           <a onClick={() => this.props.setPage(3)}>

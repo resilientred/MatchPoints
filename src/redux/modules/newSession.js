@@ -94,7 +94,7 @@ export default (state = initialState, action) => {
         allPlayers,
         loading: false,
         loaded: true,
-        players: action.payload,
+        players: action.payload.players,
       };
     }
     case DELETE_PLAYER_SUCCESS: {

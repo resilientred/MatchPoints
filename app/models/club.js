@@ -227,6 +227,16 @@ clubSchema.statics.resetPasswordWithToken = function(token, newPassword) {
     });
 };
 
+clubSchema.statics.getMostActivePlayers = function(id) {
+  return this.aggregate([
+    { $match: { _id: id }},
+    { $unwind: "$players" },
+    { $project: { _id: "$players._id", sessionCount: { $size: "$players.ratingHistory" }} },
+    { $sort: { sessionCount: -1 }},
+    { $limit: 10 }
+  ]);
+}
+
 const Club = mongoose.model("Club", clubSchema);
 
 export default Club;

@@ -61,7 +61,7 @@ class PlayerList extends Component {
     );
   }
   render() {
-    const players = this.props.players;
+    const { players, activePlayers } = this.props;
     const input = this.state.input;
     const filteredPlayers = [];
     const playerList = [];
@@ -72,7 +72,17 @@ class PlayerList extends Component {
           break;
         }
         const player = players[id];
-        if (player.name && player.name.toLowerCase().indexOf(input) > -1) {
+        if (player.name && player.name.toLowerCase().includes(input)) {
+          playerList.push(this.playerRow(player));
+          filteredPlayers.push(player);
+        }
+      }
+    }
+
+    if (playerList.length === 0) {
+      for (const { _id } of activePlayers) {
+        const player = players[_id];
+        if (player.name) {
           playerList.push(this.playerRow(player));
           filteredPlayers.push(player);
         }
