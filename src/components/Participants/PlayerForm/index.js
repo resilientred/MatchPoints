@@ -34,43 +34,35 @@ class PlayerForm extends Component {
   }
 
   validateFields() {
+    let isValid = true;
+    const errorText = {};
     if (this.state.name === '') {
-      this.setState({
-        errorText: {
-          name: 'Name field cannot be empty.',
-        },
-      });
-      return false;
+      errorText.name = 'Name field cannot be empty.';
+      isValid = false;
     }
     if (this.state.rating === '0' || this.state.rating === '') {
-      this.setState({
-        errorText: {
-          rating: 'Rating field cannot be empty.',
-        },
-      });
-      return false;
+      errorText.rating = 'Rating field cannot be empty.';
+      isValid = false;
     }
 
-    return true;
+    return false;
   }
   updateRating = (e) => {
-    const state = { rating: e.target.value };
-    if (this.state.errorText.rating !== '') {
-      if (e.target.value !== '0') {
-        state.errorText = Object.assign(this.state.errorText, { rating: '' });
-      }
+    const { rating, ...errorText } = this.state.errorText;
+    if (rating && e.target.value !== '0') {
+      this.setState({ errorText });
     }
-    this.setState(state);
+    this.setState({ rating: e.target.value });
   }
+
   updateName = (e) => {
-    const state = { name: e.target.value };
-    if (this.state.errorText.name !== '') {
-      if (e.target.value !== '') {
-        state.errorText = Object.assign(this.state.errorText, { name: '' });
-      }
+    const { name, ...errorText } = this.state.errorText;
+    if (name && e.target.value) {
+      this.setState({ errorText });
     }
-    this.setState(state);
+    this.setState({ name: e.target.value });
   }
+
   handleSubmit = () => {
     if (this.validateFields()) {
       this.props.callback(this.state).then(() => {
