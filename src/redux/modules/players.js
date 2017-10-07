@@ -7,6 +7,27 @@ export const UPDATE_PLAYER_SUCCESS = 'mp/players/UPDATE_PLAYER_SUCCESS';
 export const ADD_PLAYER_SUCCESS = 'mp/players/ADD_PLAYER_SUCCESS';
 export const FETCH_PLAYERS_SUCCESS = 'mp/players/FETCH_PLAYERS_SUCCESS';
 
+const initialState = {
+  loaded: false,
+  player: null,
+  err: null,
+};
+
+export default function players(state = initialState, action) {
+  switch (action.type) {
+    case ADD_PLAYER_SUCCESS:
+    case UPDATE_PLAYER_SUCCESS:
+    case DELETE_PLAYER_SUCCESS:
+      return {
+        ...state,
+        loaded: false,
+        player: action.payload,
+      };
+
+    default:
+      return state;
+  }
+}
 export const fetchCurrentPlayers = () => {
   return {
     types: [LOAD, FETCH_PLAYERS_SUCCESS, MESSAGE],

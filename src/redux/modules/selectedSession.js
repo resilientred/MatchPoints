@@ -9,7 +9,7 @@ const initialState = {
   loading: false,
   loaded: false,
   session: null,
-  scoreChange: [],
+  scoreChange: {},
   scoreUpdate: {},
 };
 
@@ -21,13 +21,49 @@ export default (state = initialState, action) => {
         loaded: false,
         session: null,
         scoreChange: [],
+        results: {},
         scoreUpdate: {},
       };
     case UPDATE_SCORE: {
       const { idx, scoreChangeInGroup } = action.payload;
       const scoreUpdate = Object.assign({}, state.scoreUpdate);
       const scoreUpdateInGroup = scoreChangeInGroup[1];
+      // scoreChange would be something different,
+      // hopefully can be just a list of object { id: change }
+      /*
+        results { id<int>: { id1<int>: [3, 0], id2<int>: [0, 3] } }
 
+        // get the player list with wins/losses
+        // this is only when sort is clicked*
+        const playerRecords = Object.keys(results).map((playerId) => {
+          const versusRecords = results[playerId];
+          const record = {
+            id: playerId,
+            wins: 0,
+            losses: 0,
+          };
+          Object.keys(versusRecords).forEach((otherPlayer) => {
+            const [wins, losses] = versusRecords[otherPlayer];
+            record.wins += wins;
+            record.losses + = losses;
+          });
+
+          return record;
+        });
+        // sort
+        const sorted = playerRecords.sort((p1, p2) => {
+          if (p1.wins > p2.wins) {
+            return -1;
+          } else if (p1.wins < p2.wins) {
+            return 1;
+          } else if (p1.losses < p2.losses) {
+            return -1;
+          } else {
+            // also should see the match between them
+            return 0;
+          }
+        });
+      */
       Object.keys(scoreUpdateInGroup).forEach((playerId) => {
         if (scoreUpdateInGroup[playerId].change > 24) {
           scoreUpdate[playerId] = {
@@ -38,6 +74,7 @@ export default (state = initialState, action) => {
           scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
         }
       });
+
       return {
         ...state,
         scoreChange: [
@@ -52,9 +89,23 @@ export default (state = initialState, action) => {
     case SELECT_SESSION: {
       const session = action.payload;
       if (!session.finalized) {
-        const scoreChange = [...Array(session.selectedSchema.length)];
-        const result = [...Array(session.sizeOfGroup)].map(() =>
-          [...Array(session.sizeOfGroup)].map(() => [0, 0]));
+        debugger;
+        const { players } = session;
+        const scoreChange = {};
+        for (const player of players) {
+          scoreChange[player._id] = 0;
+        }
+        const result = {};
+        session.selectedSchema.reduce((acc, numInGroup) => {
+          const playersInGroup = players.slice(acc, acc + numInGroup);
+          playersInGroup.forEach((player, i) => {
+            result[player._id] = {};
+            [...playersInGroup.slice(0, i), ...playersInGroup.slice(i + 1)].forEach((other) => {
+              result[player._id][other._id] = [0, 0];
+            });
+          });
+          return acc + numInGroup;
+        }, 0);
         return {
           loaded: true,
           loading: false,

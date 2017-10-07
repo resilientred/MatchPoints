@@ -1,0 +1,16 @@
+const actionTypes = {
+  RESTORE_STATE: 'mp/session/RESTORE_STATE',
+  TEST_DATA_PARTICIPANTS: 'mp/session/TEST_DATA_PARTICIPANTS',
+  TEST_DATA_GROUPING: 'mp/session/TEST_DATA_GROUPING',
+  NEW_SESSION: 'mp/session/',
+  LOAD_PLAYERS: 'mp/session/LOAD_PLAYERS',
+  SET_MIN_AND_MAX: 'mp/session/SET_MIN_AND_MAX',
+  PLAYERS_FAIL: 'mp/session/FETCH_PLAYERS',
+  RESTORE_SESSION: 'mp/session/RESTORE_SESSION',
+  ADD_PLAYERS_SUCCESS: 'mp/session/ADD_PLAYERS_SUCCESS',
+  REGISTER_PLAYER: 'mp/session/REGISTER_PLAYER',
+  UNREGISTER_PLAYER: 'mp/session/UNREGISTER_PLAYER',
+  SAVE_SESSION_SUCCESS: 'mp/session/SAVE_SESSION_SUCCESS',
+}
+
+export default actionTypes;

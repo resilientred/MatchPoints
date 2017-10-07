@@ -60,6 +60,9 @@ const RecordTableEnter = (props) => {
                   cellStyle = style;
                   break;
                 default:
+                  // this should first declare the other person
+                  // but figure out what i - 2 > j means lol
+                  // shit
                   cellStyle = { paddingLeft: '10px', paddingRight: '10px' };
                   if ((i - 2) > j) {
                     content = (<div className="score-div">

@@ -16,7 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 document.addEventListener('DOMContentLoaded', () => {
   injectTapEventPlugin();
-  startWebsocket(store);
+  // startWebsocket(store);
   if (process.env.DEVTOOLS && !window.devToolsExtension) {
     const DevTools = require('./components/DevTools');
     render(<Provider store={store}>

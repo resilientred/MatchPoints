@@ -17,8 +17,8 @@ import ViewSession from './ViewSession';
   },
 }])
 @connect(
-  ({ selectedSession: { session, scoreChange, scoreUpdate } }) => {
-    return ({ session, scoreChange, scoreUpdate });
+  ({ selectedSession: { session, scoreChange, scoreUpdate, results } }) => {
+    return ({ session, scoreChange, scoreUpdate, results });
   },
   { deleteSession, postResult, updateScore })
 export default class RoundrobinSession extends Component {
@@ -38,6 +38,7 @@ export default class RoundrobinSession extends Component {
       updateScore={this.props.updateScore}
       postResult={this.props.postResult}
       scoreUpdate={this.props.scoreUpdate}
+      results={results}
     />);
   }
 }

@@ -4,18 +4,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { RecordTableEnter, RecordTableView } from 'components';
 
 export default class EditRecordTable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      result: [...Array(this.props.sizeOfGroup)].map(() =>
-        [...Array(this.props.sizeOfGroup)].map(() => [0, 0])),
-      tab: 0,
-    };
-  }
+  state = {
+    tab: 0,
+  };
 
   handleCalculate = () => {
     this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
   }
+
   changeTab = (tab) => {
     this.setState({ tab });
   }
@@ -25,7 +21,7 @@ export default class EditRecordTable extends Component {
     const calculatedScore = [];
     const rc = {};
 
-    this.state.result.forEach((indRecord, i) => {
+    this.props.results.forEach((indRecord, i) => {
       const currentRecord = indRecord.map((record, j) => {
         if (j < i) return -calculatedScore[j][i];
         if (i === j) return 0;
@@ -97,12 +93,12 @@ export default class EditRecordTable extends Component {
           />
           <RecordTableEnter
             {...this.props}
-            result={this.state.result}
+            results={this.props.results}
             updateResult={this.updateResult}
           />
         </Tab>
         <Tab label="View Result" value={1} className="tab-menu-tab">
-          <RecordTableView {...this.props} result={this.state.result} />
+          <RecordTableView {...this.props} result={this.props.results} />
         </Tab>
       </Tabs>
     </div>);

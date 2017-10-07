@@ -90,10 +90,10 @@ export default class EditSession extends Component {
             return (<EditRecordTable
               key={i}
               groupNum={i + 1}
-              start={countedPlayers - sizeOfGroup}
               finalized={finalized}
-              joinedPlayers={players}
+              joinedPlayers={players.slice(countedPlayers, countedPlayers + sizeOfGroup)}
               sizeOfGroup={+sizeOfGroup}
+              results={this.props.results}
               updateScore={this.props.updateScore}
               scoreChange={scoreChange.length ? scoreChange[i] : []}
             />);
