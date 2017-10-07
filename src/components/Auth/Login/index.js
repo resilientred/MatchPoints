@@ -16,7 +16,7 @@ export default class LogInForm extends Component {
     this.state = {
       username: '',
       password: '',
-      error: '',
+      errors: {},
     };
   }
 
@@ -25,53 +25,75 @@ export default class LogInForm extends Component {
   }
 
   updateField(field, e) {
-    const newField = { [field]: e.target.value };
+    const { [field]: fieldError, ...errors } = this.state.errors;
 
-    if (this.state.error) {
-      newField.error = '';
+    if (fieldError) {
+      this.setState({ errors });
     }
-    this.setState(newField);
+    this.setState({ [field]: e.target.value });
+  }
+
+  validate() {
+    let isValid = true;
+    const errors = {};
+    if (this.state.username.length <= 5) {
+      errors.username = 'Username cannot be shorter than 5 characters.';
+      isValid = false;
+    }
+
+    if (this.state.password.length <= 5) {
+      errors.password = 'Password cannot be shorter than 5 characters.';
+      isValid = false;
+    }
+
+    this.setState({ errors });
+    return isValid;
   }
 
   handleSubmit = (event) => {
-    if (event) {
-      event.preventDefault();
-      if (event.target.tagName !== 'BUTTON') {
+    if (this.validate()) {
+      if (event) {
+        event.preventDefault();
+        if (event.target.tagName !== 'BUTTON') {
+          this.props.logIn(this.state).then(() => {
+            this.setState({ username: '', password: '', error: '' });
+            browserHistory.push('/club');
+          });
+        }
+      } else {
         this.props.logIn(this.state).then(() => {
           this.setState({ username: '', password: '', error: '' });
           browserHistory.push('/club');
         });
       }
-    } else {
-      this.props.logIn(this.state).then(() => {
-        this.setState({ username: '', password: '', error: '' });
-        browserHistory.push('/club');
-      });
     }
   }
   guestLogIn = (event) => {
     event.preventDefault();
     const user = 'guest';
     const password = 'password';
-    this.setState({ username: '', password: '' });
-    let count = 0;
-    const int = setInterval(() => {
-      if (count < 5) {
-        this.setState({ username: this.state.username + user[count++] });
-      } else if (count < 13) {
-        this.setState({ password: this.state.password + password[count++ - 5] });
-      } else {
-        clearInterval(int);
-        this.handleSubmit();
-      }
-    }, 200);
+    this.setState({ username: '', password: '' },
+      () => {
+        let count = 0;
+        const int = setInterval(() => {
+          if (count < 5) {
+            this.setState({ username: this.state.username + user[count++] });
+          } else if (count < 13) {
+            this.setState({ password: this.state.password + password[count++ - 5] });
+          } else {
+            clearInterval(int);
+            this.handleSubmit();
+          }
+        }, 200);
+      });
   }
 
   render() {
-    return (<div className="forms">
+    const { errors } = this.state;
+    return (<div className="forms" style={{ maxHeight: '70vh' }}>
       <form onSubmit={this.handleSubmit}>
         <h3>Log In</h3>
-        <div className="form-error">{this.state.error || this.props.error}</div>
+        <div className="form-error">{this.props.error}</div>
         <div>
           <TextField
             type="text"
@@ -79,6 +101,7 @@ export default class LogInForm extends Component {
             floatingLabelText="Username"
             value={this.state.username}
             onChange={e => this.updateField('username', e)}
+            errorText={errors.username}
           />
         </div>
         <div>
@@ -88,6 +111,7 @@ export default class LogInForm extends Component {
             floatingLabelText="Password"
             value={this.state.password}
             onChange={e => this.updateField('password', e)}
+            errorText={errors.password}
           />
         </div>
         <div className="button-div">
