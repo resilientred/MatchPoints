@@ -5,8 +5,8 @@ import {
   fetchCurrentPlayers,
   addPlayer,
   updatePlayer,
-  fetchActivePlayers,
 } from 'redux/modules/players';
+import { fetchActivePlayers } from 'redux/modules/activePlayers';
 import { PlayerForm } from 'components';
 import UploadDialog from './UploadDialog';
 import TabContainer from './TabContainer';

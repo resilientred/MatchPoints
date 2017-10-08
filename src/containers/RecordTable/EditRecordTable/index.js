@@ -16,6 +16,8 @@ export default class EditRecordTable extends Component {
     this.setState({ tab });
   }
   calculateScore() {
+    // scoreChange = [{ id: 1000, change: 100, before }];
+    //
     const joinedPlayers = this.props.joinedPlayers;
     const startIdx = this.props.start;
     const calculatedScore = [];
@@ -50,14 +52,8 @@ export default class EditRecordTable extends Component {
         if (sign === 1 && scoreAdjust < 0) {
           scoreAdjust = 0 - (record[1] * 2);
         }
-        rc[player1Id] = {
-          change: rc[player1Id] ? (rc[player1Id].change + scoreAdjust) : 0 + scoreAdjust,
-          ratingBefore: +player1.rating,
-        };
-        rc[player2Id] = {
-          change: rc[player2Id] ? (rc[player2Id].change - scoreAdjust) : 0 - scoreAdjust,
-          ratingBefore: +player2.rating,
-        };
+        rc[player1Id] += scoreAdjust;
+        rc[player2Id] -= scoreAdjust;
 
         return scoreAdjust;
       });
@@ -66,12 +62,12 @@ export default class EditRecordTable extends Component {
     return [calculatedScore, rc];
   }
 
-  updateResult = (i, j, k, e, idx, val) => {
-    this.state.result[i][j][k] = val;
-    this.setState({
-      result: this.state.result,
-    });
-  }
+  // updateResult = (i, j, k, val) => {
+  //   this.state.result[i][j][k] = val;
+  //   this.setState({
+  //     result: this.state.result,
+  //   });
+  // }
 
   render() {
     return (<div className="tab-container" style={{ width: '100%' }}>
@@ -94,11 +90,11 @@ export default class EditRecordTable extends Component {
           <RecordTableEnter
             {...this.props}
             results={this.props.results}
-            updateResult={this.updateResult}
+            updateResult={this.props.updateResult}
           />
         </Tab>
         <Tab label="View Result" value={1} className="tab-menu-tab">
-          <RecordTableView {...this.props} result={this.props.results} />
+          {/* <RecordTableView {...this.props} result={this.props.results} /> */}
         </Tab>
       </Tabs>
     </div>);

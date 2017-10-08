@@ -5,10 +5,12 @@ import { DELETE_SESSION_SUCCESS } from 'redux/modules/sessions';
 const FETCH_SESSION_SUCCESS = 'mp/selectedSession/FETCH_SESSION_SUCCESS';
 const SELECT_SESSION = 'mp/selectedSession/SELECT_SESSION';
 const UPDATE_SCORE = 'mp/selectedSession/UPDATE_SCORE';
+const UPDATE_RESULT = 'mp/selectedSession/UPDATE_RESULT';
 const initialState = {
   loading: false,
   loaded: false,
   session: null,
+  results: {},
   scoreChange: {},
   scoreUpdate: {},
 };
@@ -89,19 +91,18 @@ export default (state = initialState, action) => {
     case SELECT_SESSION: {
       const session = action.payload;
       if (!session.finalized) {
-        debugger;
         const { players } = session;
         const scoreChange = {};
         for (const player of players) {
           scoreChange[player._id] = 0;
         }
-        const result = {};
+        const results = {};
         session.selectedSchema.reduce((acc, numInGroup) => {
           const playersInGroup = players.slice(acc, acc + numInGroup);
           playersInGroup.forEach((player, i) => {
-            result[player._id] = {};
+            results[player._id] = {};
             [...playersInGroup.slice(0, i), ...playersInGroup.slice(i + 1)].forEach((other) => {
-              result[player._id][other._id] = [0, 0];
+              results[player._id][other._id] = [0, 0];
             });
           });
           return acc + numInGroup;
@@ -111,16 +112,36 @@ export default (state = initialState, action) => {
           loading: false,
           scoreUpdate: {},
           session,
-          result,
+          results,
           scoreChange,
         };
       }
       return {
+        ...state,
         loaded: true,
         loading: false,
         session,
         scoreChange: session.scoreChange,
-        scoreUpdate: null,
+        scoreUpdate: {},
+      };
+    }
+
+    case UPDATE_RESULT: {
+      const { self, other, idx, val } = action.payload;
+      const selfResult = state.results[self];
+      const result = {
+        ...selfResult,
+        [other]: [
+          idx === 1 ? selfResult[other][0] : val,
+          idx === 0 ? selfResult[other][1] : val,
+        ],
+      };
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          [self]: result,
+        },
       };
     }
     default:
@@ -159,6 +180,18 @@ export const updateScore = (scoreChangeInGroup, idx) => {
     type: UPDATE_SCORE,
     payload: {
       scoreChangeInGroup, idx,
+    },
+  };
+};
+
+export const updateResult = (self, other, idx, val) => {
+  return {
+    type: UPDATE_RESULT,
+    payload: {
+      self,
+      other,
+      idx,
+      val,
     },
   };
 };

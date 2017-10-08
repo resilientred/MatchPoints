@@ -7,7 +7,7 @@ import MenuItem from 'material-ui/MenuItem';
 const style = { paddingLeft: '0' };
 
 const RecordTableEnter = (props) => {
-  const { sizeOfGroup, start, joinedPlayers, result, groupNum } = props;
+  const { sizeOfGroup, joinedPlayers, results, groupNum } = props;
   return (<Table
     selectable={false}
     multiSelectable={false}
@@ -38,8 +38,9 @@ const RecordTableEnter = (props) => {
     <TableBody displayRowCheckbox={false}>
       {
         [...Array(sizeOfGroup)].map((_, m) => {
-          const curPlayer = joinedPlayers[m + start];
+          const curPlayer = joinedPlayers[m] || {};
           return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 2)].map((__, n) => {
+            // is this right?
             let content;
             let cellStyle;
             let disabled = false;
@@ -64,13 +65,16 @@ const RecordTableEnter = (props) => {
                   // but figure out what i - 2 > j means lol
                   // shit
                   cellStyle = { paddingLeft: '10px', paddingRight: '10px' };
+                  const other = joinedPlayers[i - 2];
                   if ((i - 2) > j) {
                     content = (<div className="score-div">
                       <SelectField
                         style={{ marginRight: '5px', width: '50%' }}
                         key={`row${j}:${i}-1`}
-                        onChange={(e, idx, val) => props.updateResult(j, i - 2, 0, e, idx, val)}
-                        value={result[j][i - 2][0]}
+                        onChange={(e, idx, val) =>
+                          props.updateResult(curPlayer._id, other._id, 0, val)
+                        }
+                        value={results[curPlayer._id][other._id][0]}
                       >
                         <MenuItem value={0} primaryText="0" />
                         <MenuItem value={1} primaryText="1" />
@@ -78,14 +82,19 @@ const RecordTableEnter = (props) => {
                         <MenuItem
                           value={3}
                           primaryText="3"
-                          disabled={result[j][i - 2][1] === 3}
+                          disabled={results[curPlayer._id][other._id][1] === 3}
                         />
                       </SelectField>
                       <SelectField
                         style={{ width: '50%' }}
                         key={`row${j}:${i}-2`}
-                        onChange={(e, idx, val) => props.updateResult(j, i - 2, 1, e, idx, val)}
-                        value={result[j][i - 2][1]}
+                        onChange={
+                          (e, idx, val) => {
+                            debugger;
+                            props.updateResult(curPlayer._id, other._id, 1, val)
+                          }
+                        }
+                        value={results[curPlayer._id][other._id][1]}
                       >
                         <MenuItem value={0} primaryText="0" />
                         <MenuItem value={1} primaryText="1" />
@@ -93,7 +102,7 @@ const RecordTableEnter = (props) => {
                         <MenuItem
                           value={3}
                           primaryText="3"
-                          disabled={result[j][i - 2][0] === 3}
+                          disabled={results[curPlayer._id][other._id][0] === 3}
                         />
                       </SelectField>
                     </div>);
@@ -102,7 +111,7 @@ const RecordTableEnter = (props) => {
                       <SelectField
                         style={{ marginRight: '5px', width: '50%' }}
                         key={`row${j}:${i}-1`}
-                        value={result[i - 2][j][1]}
+                        value={results[other._id][curPlayer._id][1]}
                         disabled
                       >
                         <MenuItem value={0} primaryText="0" />
@@ -113,7 +122,7 @@ const RecordTableEnter = (props) => {
                       <SelectField
                         style={{ width: '50%' }}
                         key={`row${j}:${i}-2`}
-                        value={result[i - 2][j][0]}
+                        value={results[other._id][curPlayer._id][0]}
                         disabled
                       >
                         <MenuItem value={0} primaryText="0" />

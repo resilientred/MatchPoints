@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-async-connect';
-import { fetchSession, isLoaded, updateScore } from 'redux/modules/selectedSession';
+import { fetchSession, isLoaded, updateScore, updateResult } from 'redux/modules/selectedSession';
 import { deleteSession, postResult } from 'redux/modules/sessions';
 import EditSession from './EditSession';
 import ViewSession from './ViewSession';
@@ -20,9 +20,12 @@ import ViewSession from './ViewSession';
   ({ selectedSession: { session, scoreChange, scoreUpdate, results } }) => {
     return ({ session, scoreChange, scoreUpdate, results });
   },
-  { deleteSession, postResult, updateScore })
+  { deleteSession, postResult, updateScore, updateResult })
 export default class RoundrobinSession extends Component {
   render() {
+    if (!this.props.session) {
+      return null;
+    }
     if (this.props.session.finalized) {
       return (<ViewSession
         session={this.props.session}
@@ -37,8 +40,9 @@ export default class RoundrobinSession extends Component {
       deleteSession={this.props.deleteSession}
       updateScore={this.props.updateScore}
       postResult={this.props.postResult}
+      updateResult={this.props.updateResult}
       scoreUpdate={this.props.scoreUpdate}
-      results={results}
+      results={this.props.results}
     />);
   }
 }

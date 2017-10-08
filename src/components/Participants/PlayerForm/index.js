@@ -45,8 +45,9 @@ class PlayerForm extends Component {
       isValid = false;
     }
 
-    return false;
+    return isValid;
   }
+
   updateRating = (e) => {
     const { rating, ...errorText } = this.state.errorText;
     if (rating && e.target.value !== '0') {

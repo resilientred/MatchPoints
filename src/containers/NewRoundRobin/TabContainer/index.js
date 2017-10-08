@@ -13,12 +13,12 @@ import Grouping from './Grouping';
 import Participants from './Participants';
 
 @connect(
-  ({ newSession, players }) => ({
+  ({ newSession, players, activePlayers }) => ({
     date: newSession.date,
     numJoined: newSession.numJoined,
     allPlayers: newSession.allPlayers,
     addedPlayers: newSession.addedPlayers,
-    activePlayers: players.activePlayers,
+    activePlayers: activePlayers.players,
   }),
   ({
     openNewModal,

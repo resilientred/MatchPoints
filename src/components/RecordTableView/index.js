@@ -63,7 +63,7 @@ const RecordTableView = (props) => {
     <TableBody displayRowCheckbox={false} className="record-table-body">
       {
         [...Array(sizeOfGroup)].map((__, m) => {
-          const curPlayer = joinedPlayers[m + start];
+          const curPlayer = joinedPlayers[m + start] || {};
           let ratingChangeSum = 0;
           let bonus = 0;
           return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 6)].map((_, n) => {

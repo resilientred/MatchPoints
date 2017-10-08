@@ -14,6 +14,7 @@ import uploadReducer from './upload';
 import modals from './modals';
 import tutorial from './tutorial';
 import players from './players';
+import activePlayers from './activePlayers';
 
 export default combineReducers({
   reduxAsyncConnect,
@@ -31,4 +32,5 @@ export default combineReducers({
   modals,
   tutorial,
   players,
+  activePlayers,
 });

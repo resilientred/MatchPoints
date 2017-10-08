@@ -86,15 +86,20 @@ export default class EditSession extends Component {
       <div className="session-container-body">
         {
           selectedSchema.map((sizeOfGroup, i) => {
+            const joinedPlayers = players.slice(
+              countedPlayers,
+              countedPlayers + sizeOfGroup
+            );
             countedPlayers += +sizeOfGroup;
             return (<EditRecordTable
               key={i}
               groupNum={i + 1}
               finalized={finalized}
-              joinedPlayers={players.slice(countedPlayers, countedPlayers + sizeOfGroup)}
+              joinedPlayers={joinedPlayers}
               sizeOfGroup={+sizeOfGroup}
               results={this.props.results}
               updateScore={this.props.updateScore}
+              updateResult={this.props.updateResult}
               scoreChange={scoreChange.length ? scoreChange[i] : []}
             />);
           })
