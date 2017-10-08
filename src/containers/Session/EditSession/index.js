@@ -67,7 +67,7 @@ export default class EditSession extends Component {
         onTouchTap={this.handleDelete}
       />,
     ];
-    const { session: { date, selectedSchema, players, finalized }, scoreChange } = this.props;
+    const { session: { date, selectedSchema, players, finalized } } = this.props;
     let countedPlayers = 0;
     return (<div className="session-container">
       <AppBar
@@ -100,7 +100,9 @@ export default class EditSession extends Component {
               results={this.props.results}
               updateScore={this.props.updateScore}
               updateResult={this.props.updateResult}
-              scoreChange={scoreChange.length ? scoreChange[i] : []}
+              sortedPlayerList={this.props.sortedPlayerList[i]}
+              ratingChange={this.props.ratingChange}
+              ratingChangeDetail={this.props.ratingChangeDetail}
             />);
           })
         }

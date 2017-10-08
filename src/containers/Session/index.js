@@ -17,8 +17,8 @@ import ViewSession from './ViewSession';
   },
 }])
 @connect(
-  ({ selectedSession: { session, scoreChange, scoreUpdate, results } }) => {
-    return ({ session, scoreChange, scoreUpdate, results });
+  ({ selectedSession: { session, sortedPlayerList, ratingChange, ratingChangeDetail, results } }) => {
+    return ({ session, sortedPlayerList, ratingChange, ratingChangeDetail, results });
   },
   { deleteSession, postResult, updateScore, updateResult })
 export default class RoundrobinSession extends Component {
@@ -32,16 +32,17 @@ export default class RoundrobinSession extends Component {
         scoreChange={this.props.scoreChange}
       />);
     }
-
+    console.log(' +--', this.props.ratingChangeDetail);
     return (<EditSession
       id={this.props.params.id}
       session={this.props.session}
-      scoreChange={this.props.scoreChange}
       deleteSession={this.props.deleteSession}
       updateScore={this.props.updateScore}
       postResult={this.props.postResult}
       updateResult={this.props.updateResult}
-      scoreUpdate={this.props.scoreUpdate}
+      sortedPlayerList={this.props.sortedPlayerList}
+      ratingChange={this.props.ratingChange}
+      ratingChangeDetail={this.props.ratingChangeDetail}
       results={this.props.results}
     />);
   }

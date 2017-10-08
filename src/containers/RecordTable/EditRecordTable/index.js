@@ -6,68 +6,107 @@ import { RecordTableEnter, RecordTableView } from 'components';
 export default class EditRecordTable extends Component {
   state = {
     tab: 0,
+    results: {},
   };
 
+  componentWillMount() {
+    const { joinedPlayers } = this.props;
+    const results = {};
+    joinedPlayers.forEach((player, i) => {
+      results[player._id] = {};
+      [...joinedPlayers.slice(0, i), ...joinedPlayers.slice(i + 1)].forEach((other) => {
+        results[player._id][other._id] = [0, 0];
+      });
+    });
+    this.setState({ results });
+  }
+
+  componentWillUnmount() {
+    this.props.updateResult(this.state.results);
+  }
+
   handleCalculate = () => {
-    this.props.updateScore(this.calculateScore(), this.props.groupNum - 1);
+    const [scoreChange, playerRatingChange] = this.calculateScore();
+    this.props.updateScore(
+      scoreChange,
+      playerRatingChange,
+      this.state.results,
+      this.props.groupNum - 1
+    );
   }
 
   changeTab = (tab) => {
     this.setState({ tab });
   }
+
   calculateScore() {
-    // scoreChange = [{ id: 1000, change: 100, before }];
-    //
+    const { results } = this.state;
     const joinedPlayers = this.props.joinedPlayers;
-    const startIdx = this.props.start;
-    const calculatedScore = [];
+    const scoreChange = {};
     const rc = {};
-
-    this.props.results.forEach((indRecord, i) => {
-      const currentRecord = indRecord.map((record, j) => {
-        if (j < i) return -calculatedScore[j][i];
-        if (i === j) return 0;
-
-        let sign = -1;
-        if (record[0] - record[1] === 0) {
-          sign = 0;
-        } else if (record[0] - record[1] > 0) {
-          sign = 1;
-        }
-
-        if (sign === 0) return 0;
-        const player1 = joinedPlayers[startIdx + i];
-        const player2 = joinedPlayers[startIdx + j];
-        const player1Id = player1._id;
-        const player2Id = player2._id;
-        let scoreAdjust;
-        if (sign === 1) {
-          scoreAdjust = parseInt(16 -
-            ((player1.rating - player2.rating) * 0.04), 10) - (record[1] * 2);
-        } else {
-          scoreAdjust = -(parseInt(16 +
-            ((player1.rating - player2.rating) * 0.04), 10)) + (record[0] * 2);
-        }
-
-        if (sign === 1 && scoreAdjust < 0) {
-          scoreAdjust = 0 - (record[1] * 2);
-        }
-        rc[player1Id] += scoreAdjust;
-        rc[player2Id] -= scoreAdjust;
-
-        return scoreAdjust;
-      });
-      calculatedScore.push(currentRecord);
+    const players = {};
+    joinedPlayers.forEach((player) => {
+      players[player._id] = player;
+      rc[player._id] = 0;
+      scoreChange[player._id] = {};
     });
-    return [calculatedScore, rc];
+    for (const curPlayerId of Object.keys(results)) {
+      const personalResult = results[curPlayerId];
+      for (const otherId of Object.keys(personalResult)) {
+        const record = personalResult[otherId];
+        if (record[0] - record[1] === 0) {
+          scoreChange[curPlayerId][otherId] = 0;
+        } else {
+          const sign = record[0] - record[1] > 0 ? 1 : -1;
+          const player1 = players[curPlayerId];
+          const player2 = players[otherId];
+
+          let scoreAdjust;
+          if (sign === 1) {
+            scoreAdjust = parseInt(16 -
+              ((player1.rating - player2.rating) * 0.04), 10) - (record[1] * 2);
+          } else {
+            scoreAdjust = -(parseInt(16 +
+              ((player1.rating - player2.rating) * 0.04), 10)) + (record[0] * 2);
+          }
+
+          if (sign === 1 && scoreAdjust < 0) {
+            scoreAdjust = 0 - (record[1] * 2);
+          }
+          rc[curPlayerId] += scoreAdjust;
+          scoreChange[curPlayerId][otherId] = scoreAdjust;
+        }
+      }
+    }
+    return [scoreChange, rc];
   }
 
-  // updateResult = (i, j, k, val) => {
-  //   this.state.result[i][j][k] = val;
-  //   this.setState({
-  //     result: this.state.result,
-  //   });
-  // }
+  updateResult = (self, other, idx, val) => {
+    const { results } = this.state;
+    const selfResult = results[self];
+    const otherResult = results[other];
+    const opponentResult = {
+      ...otherResult,
+      [self]: [
+        idx === 1 ? val : otherResult[self][0],
+        idx === 0 ? val : otherResult[self][1],
+      ],
+    };
+    const personalResult = {
+      ...selfResult,
+      [other]: [
+        idx === 0 ? val : selfResult[other][0],
+        idx === 1 ? val : selfResult[other][1],
+      ],
+    };
+    this.setState({
+      results: {
+        ...results,
+        [self]: personalResult,
+        [other]: opponentResult,
+      },
+    });
+  }
 
   render() {
     return (<div className="tab-container" style={{ width: '100%' }}>
@@ -89,12 +128,15 @@ export default class EditRecordTable extends Component {
           />
           <RecordTableEnter
             {...this.props}
-            results={this.props.results}
-            updateResult={this.props.updateResult}
+            results={this.state.results}
+            updateResult={this.updateResult}
           />
         </Tab>
         <Tab label="View Result" value={1} className="tab-menu-tab">
-          {/* <RecordTableView {...this.props} result={this.props.results} /> */}
+          <RecordTableView
+            {...this.props}
+            result={this.state.results}
+          />
         </Tab>
       </Tabs>
     </div>);

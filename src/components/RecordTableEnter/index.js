@@ -40,7 +40,6 @@ const RecordTableEnter = (props) => {
         [...Array(sizeOfGroup)].map((_, m) => {
           const curPlayer = joinedPlayers[m] || {};
           return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 2)].map((__, n) => {
-            // is this right?
             let content;
             let cellStyle;
             let disabled = false;
@@ -61,11 +60,10 @@ const RecordTableEnter = (props) => {
                   cellStyle = style;
                   break;
                 default:
-                  // this should first declare the other person
-                  // but figure out what i - 2 > j means lol
-                  // shit
                   cellStyle = { paddingLeft: '10px', paddingRight: '10px' };
                   const other = joinedPlayers[i - 2];
+                  // we only want uni-directional change
+                  // and only reflect the counter part on the screen
                   if ((i - 2) > j) {
                     content = (<div className="score-div">
                       <SelectField
@@ -89,10 +87,7 @@ const RecordTableEnter = (props) => {
                         style={{ width: '50%' }}
                         key={`row${j}:${i}-2`}
                         onChange={
-                          (e, idx, val) => {
-                            debugger;
-                            props.updateResult(curPlayer._id, other._id, 1, val)
-                          }
+                          (e, idx, val) => props.updateResult(curPlayer._id, other._id, 1, val)
                         }
                         value={results[curPlayer._id][other._id][1]}
                       >

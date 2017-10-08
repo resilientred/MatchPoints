@@ -4,7 +4,18 @@ import { Table, TableBody, TableHeader,
 import './styles.scss';
 
 const RecordTableView = (props) => {
-  const { sizeOfGroup, start, joinedPlayers, scoreChange, groupNum } = props;
+  const {
+    sizeOfGroup,
+    joinedPlayers,
+    sortedPlayerList,
+    groupNum,
+    ratingChange,
+    ratingChangeDetail,
+  } = props;
+  const playerRef = {};
+  joinedPlayers.forEach(p => {
+    playerRef[p._id] = p;
+  });
   return (<Table
     selectable={false}
     multiSelectable={false}
@@ -18,7 +29,7 @@ const RecordTableView = (props) => {
     >
       <TableRow>
         {
-          [...Array(sizeOfGroup + 6)].map((_, i) => {
+          [...Array(sizeOfGroup + 8)].map((_, i) => {
             let content;
             let style = {};
             let className;
@@ -37,12 +48,18 @@ const RecordTableView = (props) => {
                 content = 'Before';
                 break;
               case sizeOfGroup + 3:
-                content = 'Bonus';
+                content = 'Wins';
                 break;
               case sizeOfGroup + 4:
-                content = 'Change';
+                content = 'Losses';
+                break;
+              case sizeOfGroup + 6:
+                content = 'Bonus';
                 break;
               case sizeOfGroup + 5:
+                content = 'Change';
+                break;
+              case sizeOfGroup + 7:
                 content = 'After';
                 break;
               default:
@@ -63,10 +80,10 @@ const RecordTableView = (props) => {
     <TableBody displayRowCheckbox={false} className="record-table-body">
       {
         [...Array(sizeOfGroup)].map((__, m) => {
-          const curPlayer = joinedPlayers[m + start] || {};
-          let ratingChangeSum = 0;
+          const self = sortedPlayerList[m];
+          const curPlayer = playerRef[self.id] || {};
           let bonus = 0;
-          return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 6)].map((_, n) => {
+          return (<TableRow key={`row${m}`}>{[...Array(sizeOfGroup + 8)].map((_, n) => {
             if (n === 0) {
               return (<TableRowColumn
                 key={`row${m}:${n}`}
@@ -88,20 +105,25 @@ const RecordTableView = (props) => {
               case 2:
                 cellContent = curPlayer.rating;
                 break;
-              case sizeOfGroup + 4:
-                cellContent = ratingChangeSum;
+              case sizeOfGroup + 3:
+                cellContent = self.wins;
                 break;
-              case sizeOfGroup + 3: {
-                const hasBonus = ratingChangeSum > 24;
-                if (hasBonus) {
-                  bonus = ratingChangeSum - 24;
+              case sizeOfGroup + 4:
+                cellContent = self.losses;
+                break;
+              case sizeOfGroup + 6: {
+                const change = ratingChange[self.id];
+                if (change > 24) {
+                  bonus = change - 24;
                 }
                 cellContent = bonus;
-                ratingChangeSum += bonus;
                 break;
               }
               case sizeOfGroup + 5:
-                cellContent = ratingChangeSum + +curPlayer.rating;
+                cellContent = ratingChange[self.id];
+                break;
+              case sizeOfGroup + 7:
+                cellContent = ratingChange[self.id] + bonus + +curPlayer.rating;
                 break;
               default:
                 break;
@@ -109,19 +131,20 @@ const RecordTableView = (props) => {
             if (n === sizeOfGroup + 3 ||
               n === sizeOfGroup + 4 ||
               n === sizeOfGroup + 5 ||
+              n === sizeOfGroup + 6 ||
+              n === sizeOfGroup + 7 ||
               n === 1 ||
               n === 2) {
               return (<TableRowColumn key={`row${m}:${n}`} style={style} className={className}>
                 {cellContent}
               </TableRowColumn>);
             }
-
-            if (!scoreChange) {
+            const otherId = sortedPlayerList[n - 3] && sortedPlayerList[n - 3].id;
+            if (!ratingChangeDetail[self.id] || ratingChangeDetail[self.id][otherId] === undefined) {
               return <TableRowColumn key={`row${m}:${n}`}>0</TableRowColumn>;
             }
-            ratingChangeSum += +scoreChange[m][n - 3];
             return (<TableRowColumn key={`row${m}:${n}`}>
-              { scoreChange[m][n - 3] }
+              {ratingChangeDetail[self.id][otherId]}
             </TableRowColumn>);
           })}</TableRow>);
         })

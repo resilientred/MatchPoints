@@ -10,81 +10,57 @@ const initialState = {
   loading: false,
   loaded: false,
   session: null,
+  sortedPlayerList: [],
+  ratingChange: {},
+  ratingChangeDetail: {},
   results: {},
-  scoreChange: {},
-  scoreUpdate: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case DELETE_SESSION_SUCCESS:
-      return {
-        loading: false,
-        loaded: false,
-        session: null,
-        scoreChange: [],
-        results: {},
-        scoreUpdate: {},
-      };
+      return initialState;
     case UPDATE_SCORE: {
-      const { idx, scoreChangeInGroup } = action.payload;
-      const scoreUpdate = Object.assign({}, state.scoreUpdate);
-      const scoreUpdateInGroup = scoreChangeInGroup[1];
-      // scoreChange would be something different,
-      // hopefully can be just a list of object { id: change }
-      /*
-        results { id<int>: { id1<int>: [3, 0], id2<int>: [0, 3] } }
-
-        // get the player list with wins/losses
-        // this is only when sort is clicked*
-        const playerRecords = Object.keys(results).map((playerId) => {
-          const versusRecords = results[playerId];
-          const record = {
-            id: playerId,
-            wins: 0,
-            losses: 0,
-          };
-          Object.keys(versusRecords).forEach((otherPlayer) => {
-            const [wins, losses] = versusRecords[otherPlayer];
-            record.wins += wins;
-            record.losses + = losses;
-          });
-
-          return record;
+      const { idx, ratingChangeDetail, ratingChange, results } = action.payload;
+      const playerRecords = Object.keys(results).map((playerId) => {
+        const versusRecords = results[playerId];
+        const record = {
+          id: playerId,
+          wins: 0,
+          losses: 0,
+        };
+        Object.keys(versusRecords).forEach((otherPlayer) => {
+          const [wins, losses] = versusRecords[otherPlayer];
+          record.wins += wins;
+          record.losses += losses;
         });
-        // sort
-        const sorted = playerRecords.sort((p1, p2) => {
-          if (p1.wins > p2.wins) {
-            return -1;
-          } else if (p1.wins < p2.wins) {
-            return 1;
-          } else if (p1.losses < p2.losses) {
-            return -1;
-          } else {
-            // also should see the match between them
-            return 0;
-          }
-        });
-      */
-      Object.keys(scoreUpdateInGroup).forEach((playerId) => {
-        if (scoreUpdateInGroup[playerId].change > 24) {
-          scoreUpdate[playerId] = {
-            ...scoreUpdateInGroup[playerId],
-            change: 24 + ((scoreUpdateInGroup[playerId].change - 24) * 2),
-          };
+
+        return record;
+      });
+
+      const sortedPlayerList = playerRecords.sort((p1, p2) => {
+        if (p1.wins > p2.wins) {
+          return -1;
+        } else if (p1.wins < p2.wins) {
+          return 1;
+        } else if (p1.losses < p2.losses) {
+          return -1;
         } else {
-          scoreUpdate[playerId] = scoreUpdateInGroup[playerId];
+          const [player1GameWon, player2GameWon] = state.results[p1.id][p2.id];
+          return player1GameWon - player2GameWon;
         }
       });
 
       return {
         ...state,
-        scoreChange: [
-          ...state.scoreChange.slice(0, idx),
-          scoreChangeInGroup[0],
-          ...state.scoreChange.slice(idx + 1),
+        results: Object.assign({}, state.results, results),
+        sortedPlayerList: [
+          ...state.sortedPlayerList.slice(0, idx),
+          sortedPlayerList,
+          ...state.sortedPlayerList.slice(idx + 1),
         ],
-        scoreUpdate,
+        ratingChangeDetail: Object.assign({}, state.ratingChangeDetail, ratingChangeDetail),
+        ratingChange: Object.assign({}, state.ratingChange, ratingChange),
       };
     }
     case FETCH_SESSION_SUCCESS:
@@ -92,13 +68,19 @@ export default (state = initialState, action) => {
       const session = action.payload;
       if (!session.finalized) {
         const { players } = session;
-        const scoreChange = {};
+        const ratingChange = {};
         for (const player of players) {
-          scoreChange[player._id] = 0;
+          ratingChange[player._id] = 0;
         }
+        const sortedPlayerList = [];
         const results = {};
         session.selectedSchema.reduce((acc, numInGroup) => {
           const playersInGroup = players.slice(acc, acc + numInGroup);
+          sortedPlayerList.push(playersInGroup.map(p => ({
+            id: p._id,
+            wins: 0,
+            losses: 0,
+          })));
           playersInGroup.forEach((player, i) => {
             results[player._id] = {};
             [...playersInGroup.slice(0, i), ...playersInGroup.slice(i + 1)].forEach((other) => {
@@ -108,12 +90,13 @@ export default (state = initialState, action) => {
           return acc + numInGroup;
         }, 0);
         return {
+          ...state,
           loaded: true,
           loading: false,
-          scoreUpdate: {},
+          sortedPlayerList,
           session,
           results,
-          scoreChange,
+          ratingChange,
         };
       }
       return {
@@ -121,29 +104,16 @@ export default (state = initialState, action) => {
         loaded: true,
         loading: false,
         session,
-        scoreChange: session.scoreChange,
-        scoreUpdate: {},
+        ratingChange: session.ratingChange,
       };
     }
 
-    case UPDATE_RESULT: {
-      const { self, other, idx, val } = action.payload;
-      const selfResult = state.results[self];
-      const result = {
-        ...selfResult,
-        [other]: [
-          idx === 1 ? selfResult[other][0] : val,
-          idx === 0 ? selfResult[other][1] : val,
-        ],
-      };
+    case UPDATE_RESULT:
       return {
         ...state,
-        results: {
-          ...state.results,
-          [self]: result,
-        },
+        results: Object.assign({}, state.results, action.payload.results),
       };
-    }
+
     default:
       return state;
   }
@@ -175,23 +145,23 @@ export const fetchSession = (id) => {
   };
 };
 
-export const updateScore = (scoreChangeInGroup, idx) => {
+export const updateScore = (ratingChangeDetail, ratingChange, results, idx) => {
   return {
     type: UPDATE_SCORE,
     payload: {
-      scoreChangeInGroup, idx,
+      ratingChangeDetail,
+      ratingChange,
+      results,
+      idx,
     },
   };
 };
 
-export const updateResult = (self, other, idx, val) => {
+export const updateResult = (results) => {
   return {
     type: UPDATE_RESULT,
     payload: {
-      self,
-      other,
-      idx,
-      val,
+      results
     },
   };
 };

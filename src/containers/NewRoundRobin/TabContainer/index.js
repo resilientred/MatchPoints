@@ -7,13 +7,13 @@ import { openNewModal } from 'redux/modules/modals';
 import { openUpload } from 'redux/modules/upload';
 import { startTutorial } from 'redux/modules/tutorial';
 import { setDate, registerPlayer, unregisterPlayer } from 'redux/modules/newSession';
-import { saveTempSession, getTempSession, restoreTempSession } from 'redux/modules/tempSession';
+// import { saveTempSession, getTempSession, restoreTempSession } from 'redux/modules/tempSession';
 import { updateSchemata } from 'redux/modules/schemata';
 import Grouping from './Grouping';
 import Participants from './Participants';
 
 @connect(
-  ({ newSession, players, activePlayers }) => ({
+  ({ newSession, activePlayers }) => ({
     date: newSession.date,
     numJoined: newSession.numJoined,
     allPlayers: newSession.allPlayers,
@@ -28,8 +28,8 @@ import Participants from './Participants';
     openUpload,
     startTutorial,
     updateSchemata,
-    saveTempSession,
-    restoreTempSession,
+    // saveTempSession,
+    // restoreTempSession,
   })
 )
 export default class TabContainer extends Component {
