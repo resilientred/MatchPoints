@@ -1,6 +1,6 @@
-export default class ClubValidation {
+class Club {
   validateUsername(username) {
-    if (username.length < 8) {
+    if (username && username.length < 8) {
       return "Username must be at least 8 characters long";
     }
 
@@ -8,7 +8,7 @@ export default class ClubValidation {
   }
 
   validatePassword(password) {
-    if (password.length < 8) {
+    if (password && password.length < 8) {
       return "Password must be at least 8 characters long";
     }
 
@@ -26,19 +26,19 @@ export default class ClubValidation {
   };
 
   validateClubName(clubName) {
-    if (clubName.length === 0) {
+    if (clubName && clubName.length === 0) {
       return "Club name cannot be empty";
     }
   }
 
   validateCity(city) {
-    if (city.length === 0) {
+    if (city && city.length === 0) {
       return "City cannot be empty";
     }
   }
 
   validateState(stateName) {
-    if (stateName.length === 0) {
+    if (stateName && stateName.length === 0) {
       return "State cannot be empty";
     }
   }
@@ -50,6 +50,7 @@ export default class ClubValidation {
     err = this.validateState(club.state);
     if (err) return { state: err };
   }
+
   validate(club) {
     let err = this.validateUsername(club.username);
     if (err) return err;
@@ -63,3 +64,6 @@ export default class ClubValidation {
     if (err) return err;
   }
 }
+
+const clubValidation = new Club();
+export default clubValidation;

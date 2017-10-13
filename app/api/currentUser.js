@@ -5,7 +5,6 @@ import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appM
 import Mailer from "../helpers/mailer";
 
 const router = express.Router();
-
 router.post("/accounts/resend", (req, res) => {
   new Mailer(req.club).sendConfirmationEmail()
     .then(() => {
@@ -53,7 +52,7 @@ router.post("/accounts/resend", (req, res) => {
   const id = req.params.id;
   const { date, data, ratingUpdateList } = req.body.result;
 
-  ClubModel.postPlayersRating(req.club._id, ratingUpdateList, date)
+  ClubModel.postPlayersRating(req.club._id, date, ratingUpdateList)
     .then(() => RoundRobinModel.saveResult(id, data))
     .then((session) => {
       client.del(`players:${req.club._id}`);
@@ -64,16 +63,16 @@ router.post("/accounts/resend", (req, res) => {
       res.status(422).send(err);
     });
 })
-.post("/session/new", jsonParser, csrfProtection, (req, res) => {
+.post("/sessions", jsonParser, csrfProtection, (req, res) => {
   const clubId = req.club._id;
   const data = req.body.session;
   const newRR = new RoundRobinModel({
-   _clubId: clubId,
-   date: data.date,
-   numOfPlayers: data.numOfPlayers,
-   players: data.players,
-   schemata: data.schemata,
-   selectedSchema: data.selectedSchema
+    _clubId: clubId,
+    date: data.date,
+    numOfPlayers: data.numOfPlayers,
+    players: data.players,
+    // schemata: data.schemata,
+    selectedSchema: data.selectedSchema
   });
 
   newRR.save()

@@ -1,3 +1,5 @@
+require('dotenv').config()
+import Raven from "raven";
 import path from "path";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
@@ -13,15 +15,59 @@ import currentUserRoutes from "./api/currentUser";
 import Roundrobin from './models/roundrobin';
 
 const port = process.env.PORT || 3000;
-const mongoURI = process.env.NODE_ENV === "test" ?
-  "mongodb://127.0.0.1:27017/match_point_test"
-  :
-  "mongodb://127.0.0.1:27017/roundrobindb";
 
-mongoose.connect(mongoURI);
+Raven.config("https://66966ed896744b44b5e33998522c1d77:cd526570e2b545609d8cb53f944960f2@sentry.io/228973").install();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use(cookieParser());
+app.use((err, req, res, next) => {
+  if (err.code !== "EBADCSRFTOKEN") {
+    next(err);
+  } else {
+    res.status(403).send("Forbidden Access");
+  }
+});
+
+app.use("/favicon.ico", (req, res) => {
+  res.end();
+});
+
+app.use(express.static(path.join(__dirname, "..", "public")));
+app.use("/api/clubs", clubRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/my", jsonParser, (req, res, next) => {
+  ClubModel.findBySessionToken(req.cookies.matchpoint_session)
+    .then(
+      (club) => {
+        req.club = club;
+        return next();
+      },
+      (err) => {
+        res.status(403).send(err);
+      }
+    ).catch((err) => {
+      console.warn(err);
+      res.status(500).send(err);
+    });
+});
+app.use("/api/my", currentUserRoutes);
+app.use("/api/my", playerRoutes);
+app.use("/api/*", (req, res) => {
+  res.status(404).send("Invalid route");
+  res.end();
+});
+app.use("/session", sessionRoutes);
+app.use("/accounts", accountRoutes);
+app.get("*", csrfProtection, (req, res) => {
+  res.render("index", { csrfToken: req.csrfToken() });
+});
+
+app.use((err, req, res, next) => {
+  if (err.code && err.code !== 500) {
+    Raven.captureException(err);
+    next({ code: 500 });
+  }
+});
 
 app.use((err, req, res, next) => {
   let errorMessage = err.message;
@@ -45,42 +91,6 @@ app.use((err, req, res, next) => {
     }
   }
   res.status(err.code).send({ error_description: errorMEssage });
-});
-
-app.use((err, req, res, next) => {
-  if (err.code !== "EBADCSRFTOKEN") {
-    next(err);
-  } else {
-    res.status(403).send("Forbidden Access");
-  }
-});
-
-app.use("/favicon.ico", (req, res) => {
-  res.end();
-});
-
-app.use(express.static(path.join(__dirname, "..", "public")));
-app.use("/api/clubs", clubRoutes);
-app.use("/api/upload", uploadRoutes);
-app.use("/api/my", jsonParser, (req, res, next) => {
-  ClubHelper.findCurrentClub(req)
-    .then((club) => {
-      req.club = club;
-      return next();
-    }).catch((err) => {
-      res.status(403).send(err);
-    });
-});
-app.use("/api/my", currentUserRoutes);
-app.use("/api/my", playerRoutes);
-app.use("/api/*", (req, res) => {
-  res.status(404).send("Invalid route");
-  res.end();
-});
-app.use("/session", sessionRoutes);
-app.use("/accounts", accountRoutes);
-app.get("*", csrfProtection, (req, res) => {
-  res.render("index", { csrfToken: req.csrfToken() });
 });
 
 app.listen(port, () => {

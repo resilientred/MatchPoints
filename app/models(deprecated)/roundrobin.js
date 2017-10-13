@@ -10,10 +10,13 @@ const roundRobinSchema = new Schema({
   date: { type: Date, default: Date.now, required: true },
   numOfPlayers: { type: Number, required: true },
   players: { type: Array, default: [] },
-  schemata: { type: Object },
+  // schemata: { type: Object },
   selectedSchema: { type: Object },
   finalized: { type: Boolean, default: false },
-  scoreChange: { type: Array, default: [] },
+  // ratingChange: { type: Object, default: {} },
+  // ratingChangeDetail: { type: Object, default: {} },
+  results: { type: Object, default: {} },
+  // scoreChange: { type: Array, default: [] },
   id: { type: String, default: shortid.generate, required: true, index: true }
 });
 
@@ -25,10 +28,10 @@ roundRobinSchema.statics.findRoundRobin = function(clubId, id) {
   return this.findOne({ id: id, _clubId: clubId });
 };
 
-roundRobinSchema.statics.saveResult = function(id, scoreChange) {
+roundRobinSchema.statics.saveResult = function(id, ratingChangeDetail) {
   return this.findOneAndUpdate(
     { _id: id },
-    { $set: { finalized: true, scoreChange: scoreChange } },
+    { $set: { finalized: true, ratingChangeDetail } },
     { new: true });
 };
 
@@ -36,10 +39,10 @@ roundRobinSchema.statics.deleteRoundRobin = function(clubId, id) {
   return this.remove({ id: id, _clubId: clubId, finalized: false });
 };
 
-roundRobinSchema.statics.updateResult = function(id, result, scoreChange) {
+roundRobinSchema.statics.updateResult = function(id, result, ratingChangeDetail) {
   return this.update(
     { _id: id },
-    { $set: { results: result, scoreChange: scoreChange } }
+    { $set: { results: result, ratingChangeDetail } }
   );
 };
 

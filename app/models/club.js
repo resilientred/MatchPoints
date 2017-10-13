@@ -1,242 +1,310 @@
-import mongoose from "mongoose";
 import URLSafeBase64 from "urlsafe-base64";
+import ClubValidation from "../validations/club";
 import crypto from "crypto";
-import bcrypt from "bcrypt-as-promised";
 import shortid from "shortid";
-import { playerSchema, Player } from "./player";
-import { History } from "./history";
-import ClubValidation from "../validations/clubValidation";
+import bcrypt from "bcrypt-as-promised";
+import mysql from "mysql";
+  // id              MEDIUMINT    NOT NULL AUTOINCREMENT
+  // password_digest VARCHAR(50)  NOT NULL
+  // session_token   VARCHAR(32)  NOT NULL
+  // short_id        CHAR(10)     NOT NULL
+  // username        VARCHAR(40)  NOT NULL
+  // club_name       VARCHAR(80)  NOT NULL
+  // email           VARCHAR(255) NOT NULL
+  // verified        TINYINT(1)   DEFAULT 0
+  // token           VARCHAR(50)  NOT NULL
+  // confirm_token   VARCHAR(50)  NOT NULL
+  // updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMSTAMP
+  // created_on      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 
-mongoose.Promise = require("bluebird");
-
-const Schema = mongoose.Schema;
-const clubSchema = new Schema({
-  username: {
-    type: String,
-    index: { unique: [true, "Username has been taken."] }
-  },
-  passwordDigest: { type: String, required: true },
-  sessionToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
-  clubName: { type: String, required: true },
-  email: { type: String, required: true },
-  location: {
-    city: { type: String, required: true },
-    state: { type: String, required: true }
-  },
-  token: { type: String },
-  confirmed: { type: Boolean, default: false },
-  confirmToken: { type: String, default: URLSafeBase64.encode(crypto.randomBytes(32)) },
-  id: { type: String, default: shortid.generate, index: true },
-  players: [playerSchema]
-});
-
-clubSchema.statics.changeInfo = function(club, data) {
-  const info = data.info;
-
-  const error = new ClubValidation().validateInfo(info);
-  if (error) {
-    return Promise.reject(error);
+class ClubModel {
+  static generateToken() {
+    return URLSafeBase64.encode(crypto.randomBytes(32));
   }
 
-  return club.isPassword(data.password)
-    .then(() => {
-      if (club.email !== info.email) {
-        club.email = info.email;
-        //although this will work, it will still say "welcome to matchpoint";
-        club.confirmed = false;
-        club.confirmToken = URLSafeBase64.encode(crypto.randomBytes(32));
+  static isPassword(password, passwordDigest) {
+    return bcrypt.compare(password, passwordDigest);
+  }
+
+  static generatePasswordDigest(password) {
+    return bcrypt.hash(password, 10);
+  }
+
+  constructor(connection) {
+    this.connection = connection;
+  }
+
+  formatClubRow(row) {
+    const fields = [
+      'id', 'password_digest', 'session_token',
+      'short_id', 'username', 'club_name',
+      'email', 'verified', 'token',
+      'confirm_token', 'updated_at', 'created_on'
+    ];
+    const club = {};
+    fields.forEach(field => {
+      if (row[field]) {
+        club[field] = row[field];
       }
-      club.location = { ...info };
-      return club.save();
-    }).catch((err) => {
-      console.log(err);
-      return Promise.reject({ password: "Old password does not match." });
     });
-};
 
-clubSchema.statics.changePassword = function(club, info) {
-  const { oldPassword, newPassword } = info;
-  let oldDigest;
-  if (newPassword.length < 8) {
-    return Promise.reject("Password must have at least 8 characters.");
+    return club;
   }
 
-  if (oldPassword === newPassword) {
-    return Promise.resolve();
-  }
-  return club.isPassword(oldPassword)
-    .then(() => {
-      return this.generatePasswordDigest(newPassword);
-    }).then((digest) => {
-      club.passwordDigest = digest;
-      return club.save();
-    }).catch((err) => {
-      return Promise.reject({ oldPassword: "Old password does not match."});
-    });
-};
+  find(id) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(`
+        SELECT id, short_id, username, club_name, email, verified
+        FROM clubs WHERE id = ?
+      `, [id], (err, results, field) => {
+        if (err) {
+          return reject(err);
+        }
 
-clubSchema.statics.newUser = function(user) {
-  const err = new ClubValidation().validate(user);
-  if (err) {
-    return Promise.reject(err);
-  }
-
-  return this.generatePasswordDigest(user.password)
-    .then((digest) => {
-      return this.create({
-        username: user.username.toLowerCase(),
-        location: {
-          city: user.city,
-          state: user.stateName
-        },
-        email: user.email,
-        clubName: user.clubName,
-        passwordDigest: digest
+        return resolve(results);
       });
     });
-}
+  }
 
-clubSchema.statics.resetSessionToken = function(club) {
-  const token = URLSafeBase64.encode(crypto.randomBytes(32));
-  return this.update(
-    { username: club.username },
-    { sessionToken: token }
-  );
-};
+  all() {
+    return new Promise((resolve, reject) => {
+      this.connection.query(`SELECT
+       SELECT id, short_id, username, club_name, email
+       FROM clubs`, (err, results, field) => {
+        if (err) throw(err);
 
-clubSchema.statics.resetSessionTokenWithOldToken = function(token) {
-  const newToken = URLSafeBase64.encode(crypto.randomBytes(32));
-  return this.update(
-    { sessionToken: token },
-    { $set: { sessionToken: newToken } }
-  );
-};
+        return resolve(results);
+      });
+    });
+  }
 
-clubSchema.statics.confirmUser = function(token) {
-  return this.findOneAndUpdate(
-    { confirmToken: token },
-    { confirmed: true, confirmToken: undefined },
-    { new: true }
-  ).catch((err) => {
-    return Promise.reject("The token may have expired.");
-  });
-};
+  resetPasswordWithToken(token, newPassword) {
+    return this.generatePasswordDigest(newPassword)
+      .then((digest) => {
+        return this.findOneAndUpdate(
+          { token: token },
+          { $set: { passwordDigest: digest, token: undefined } }
+        );
+      });
+  }
 
-clubSchema.statics.findPlayers = function(clubId) {
-  return this.findOne({ _id: clubId }, { players: true, _id: false });
-};
+  confirm(token) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(`
+        UPDATE clubs
+        SET confirmed = 1, confirm_token = ""
+        WHERE confirm_token = ?
+      `, [token], (err, results, field) => {
+        if (err) {
+          throw 'The token might have expired or doesn\'t exist.';
+        }
 
-clubSchema.statics.addPlayer = function(clubId, player) {
-  const newPlayer = new Player({ name: player.name, rating: player.rating });
-  newPlayer.markModified("player");
-  return this.update(
-    { _id: clubId },
-    { $push: { players: newPlayer } },
-  ).then(() => Promise.resolve(newPlayer));
-};
+        return resolve(results);
+      });
+    });
+  }
 
-clubSchema.statics.addPlayers = function(clubId, players) {
-  return this.findOneAndUpdate(
-    { _id: clubId },
-    { $push: { players: { $each: players } } },
-    { new: true, select: "players" }
-  );
-};
+  resetSessionTokenWithOldToken(token) {
+    const newToken = ClubModel.generateToken();
+    return new Promise((resolve, reject) => {
+      this.connection.query(`
+        UPDATE clubs SET session_token = ?
+        WHERE session_token = ?
+      `, [newToken, token], (err, results, field) => {
+        if (err) throw err;
 
-clubSchema.statics.postPlayersRating = function(clubId, updateList, date) {
-  return this.findOne({ _id: clubId }).then((club) => {
-    const players = club.players;
-    for (let i = 0; i < players.length; i++) {
-      const curPlayer = players[i];
-      if (updateList[curPlayer._id]) {
-        const updatedRating = +updateList[curPlayer._id].change + curPlayer.rating;
-        const newHistory = new History({
-          date: date,
-          oldRating: curPlayer.rating,
-          newRating: updatedRating,
-          ratingChange: +updateList[curPlayer._id].change
-        });
-        newHistory.markModified("history");
-        curPlayer.ratingHistory.push(newHistory);
-        curPlayer.rating = updatedRating;
-        curPlayer.markModified("player");
-      }
+        return resolve(results);
+      });
+    });
+  }
+
+
+  changeInfo(club, data) {
+    const info = data.info;
+    {
+      const error = new ClubValidation().validateInfo(info);
+      if (error) throw error;
     }
-    return club.save();
-  });
-};
-clubSchema.statics.removePlayer = function(clubId, id) {
-  return this.update(
-    { _id: clubId },
-    { $pull: { players: { _id: id } } },
-    { new: true }
-  );
-};
 
-clubSchema.statics.updatePlayer = function(clubId, id, player) {
-  return this.update(
-    { _id: clubId, "players._id": id },
-    { $set: { "players.$.rating": player.rating, "players.$.name": player.name } },
-    { new: true, select: "players" }
-  );
-};
-
-clubSchema.methods.isPassword = function(password) {
-  return bcrypt.compare(password, this.passwordDigest);
-};
-
-clubSchema.statics.findByUsernameAndPassword = function(username, password) {
-  let club;
-  return this.findOne({ username: username })
-    .then((cl) => {
-      club = cl;
-      return cl.isPassword(password);
-    }).then((bool) => {
-      console.log(bool);
-      return Promise.resolve(club);
-    });
-};
-
-clubSchema.statics.findBySessionToken = function(sessionToken) {
-  return this.findOne(
-    { sessionToken: sessionToken },
-    { sessionToken: false, players: false }
-  );
-};
-
-clubSchema.statics.generatePasswordDigest = function(password) {
-  return bcrypt.hash(password, 10);
-};
-
-clubSchema.statics.findClub = function(id) {
-  return this.find({ _id: id }, { passwordDigest: false, sessionToken: false, confirmToken: false });
-};
-clubSchema.statics.findAll = function() {
-  return this.find({},
-    { passwordDigest: false, sessionToken: false, confirmToken: false, username: false, players: false }
-  );
-};
-
-clubSchema.statics.resetPasswordWithToken = function(token, newPassword) {
-  return this.generatePasswordDigest(newPassword)
-    .then((digest) => {
-      return this.findOneAndUpdate(
-        { token: token },
-        { $set: { passwordDigest: digest, token: undefined } }
+    return ClubModel.isPassword(data.password)
+      .then(
+        () => {
+          let sql = "UPDATE clubs SET ";
+          const inserts = [];
+          sql = mysql.format(sql, inserts);
+          if (club.email !== info.email) {
+            sql += ' email = ?, confirmed = 0, confirm_token'
+            //although this will work, it will still say "welcome to matchpoint";
+            const confirmToken = ClubModel.generateToken();
+            inserts.push(info.email, confirmToken);
+          }
+          sql += 'city = ?, state = ? ';
+          inserts.push(info.city, info.state);
+          club.location = { ...info };
+          sql += 'WHERE id = ?';
+          inserts.push(club.id);
+          connect.query(sql, inserts, (err, results, field) => {
+            if (err) throw err;
+          })
+        },
+        (err) => {
+          return Promise.reject({ password: "Old password does not match." });
+        }
       );
-    });
-};
+  }
 
-clubSchema.statics.getMostActivePlayers = function(id) {
-  return this.aggregate([
-    { $match: { _id: id }},
-    { $unwind: "$players" },
-    { $project: { _id: "$players._id", sessionCount: { $size: "$players.ratingHistory" }} },
-    { $sort: { sessionCount: -1 }},
-    { $limit: 10 }
-  ]);
+  changePassword(id, info) {
+    const { oldPassword, newPassword } = info;
+    if (newPassword.length < 8) {
+      throw "Password must have at least 8 characters.";
+    }
+
+    if (oldPassword === newPassword) {
+      return Promise.resolve();
+    }
+
+    return club.isPassword(oldPassword)
+      .then(
+        () => this.generatePasswordDigest(newPassword),
+        (err) => {
+          throw "Password is incorrect";
+        }
+      ).then((digest) => {
+        return new Promise((resolve, reject) => {
+          this.connection.query(`
+            UPDATE clubs
+            SET password_digest = ?
+            WHERE id = ?`, [digest, id], (err, results, field) => {
+            if (err) throw(err);
+
+            return resolve(results);
+          });
+        });
+      });
+  }
+
+  newUser(user) {
+    {
+      const err = ClubValidation.validate(user);
+      if (err) throw err;
+    }
+
+    return ClubModel.generatePasswordDigest(user.password)
+      .then((digest) => {
+        return new Promise((resolve, reject) => {
+          this.connection.beginTransaction((tError) => {
+            if (tError) throw tError;
+
+            this.connection.query(`
+             INSERT INTO clubs
+             (short_id, username, email, club_name, password_digest, session_token)
+             VALUES
+             (?, ?, ?, ?, ?, ?)`,
+             [shortid.generate(), user.username.toLowerCase(), user.email, user.clubName, digest, ClubModel.generateToken()],
+             (err, results, field) => {
+                if (err) {
+                  this.connection.rollback();
+                  throw(err);
+                }
+                resolve(results.insertId);
+              });
+          });
+        }).then(clubId => this.insertGeolocations(user, clubId));
+      });
+  }
+
+  insertGeolocations(user, clubId) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `INSERT INTO club_geolocations
+          (city, state, address, club_id)
+          VALUES (?, ?, ?, ?)`,
+          [user.city, user.state, user.address, clubId], (err, results, field) => {
+            if (err) {
+              this.connection.rollback();
+              throw(err);
+            }
+            this.connection.commit();
+            resolve(clubId);
+          });
+    });
+  }
+
+  resetSessionToken(club) {
+    const token = ClubModel.generateToken();
+    return new Promise((resolve, reject) => {
+      this.connection.query(`
+       UPDATE clubs
+       SET session_token = ?
+       WHERE username = ?`, [token, club.username], (err, results, field) => {
+        if (err) throw(err);
+
+        return resolve(results);
+      });
+    });
+  }
+
+  findBySessionToken(sessionToken) {
+    // check if I need all the fields
+    if (!sessionToken) {
+      throw 'Session token cnanot be empty';
+    }
+    return new Promise((resolve, reject) => {
+      this.connection.query(`
+        SELECT id, short_id, username, club_name,
+          email, verified, token, confirm_token,
+          password_digest, updated_at, created_on
+        FROM clubs
+        WHERE session_token = ?`, [sessionToken], (err, results, field) => {
+        if (err) throw(err);
+
+        return resolve(results);
+      });
+    });
+  }
+
+  resetPasswordWithToken(token, newPassword) {
+    return ClubModel.generatePasswordDigest(newPassword)
+      .then((digest) => {
+        return new Promise((resolve, reject) => {
+          this.connection.query(`
+           UPDATE clubs
+           SET password_digest = ?, token = ?
+           WHERE token = ?`, [digest, "", token], (err, results, field) => {
+            if (err) throw(err);
+
+            return resolve(results);
+          });
+        });
+      });
+  }
+
+  // incomplete
+  findByUsernameAndPassword(username, password) {
+    let club;
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(`
+       SELECT * FROM clubs
+       WHERE username = ?`, [username], (err, results, field) => {
+        if (err) throw(err);
+
+        const digest = results[0].password_digest;
+        ClubModel.isPassword(password, digest).then(
+          () => {
+            const club = this.formatClubRow(results[0]);
+            delete club.password_digest;
+            return resolve(club);
+          },
+          () => {
+            throw('Passwords do not match.');
+          }
+        )
+      });
+    });
+  }
 }
 
-const Club = mongoose.model("Club", clubSchema);
-
-export default Club;
+export default (connection) => {
+  return new ClubModel(connection);
+};

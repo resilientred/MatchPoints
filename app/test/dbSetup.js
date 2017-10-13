@@ -1,35 +1,50 @@
-import mongoose from "mongoose";
-import { Player } from "../models/player";
-import Club from "../models/club";
-import History from "../models/history";
-import Roundrobin from "../models/roundrobin";
-import { players, club } from "./seeds";
-import bcrypt from "bcrypt";
+// require("babel-polyfill");
+import mysql from "mysql";
+// import History from "../sqlmodel/history";
+// import Roundrobin from "../sqlmodel/roundrobin";
+// import { players, club } from "./seeds";
+// import bcrypt from "bcrypt";
 
-mongoose.connect("mongodb://127.0.0.1:27017/match_point_test");
-
-const allPlayers = players.map((player) => {
-  const newPlayer = new Player({ name: player.name, rating: player.rating });
-  newPlayer.markModified("player");
-  return newPlayer;
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: 'test',
+  port: process.env.PORT || 3306,
+  database: 'matchpoints_test',
 });
 
-const newClub = new Club({
-  _id: mongoose.Types.ObjectId("abcdefghijkl"),
-  username: "guest1234",
-  password: "password",
-  clubName: "TestClub",
-  location: {
-    city: "San Francisco",
-    state: "CA",
-  },
-  players: allPlayers,
-  passwordDigest: bcrypt.hashSync("password", 10)
+connection.connect(function(err) {
+  if (err) {
+    console.log("\x1B[91mFailed to connect to the database   ✗\x1B[0m");
+    console.error(err);
+    process.exit(1);
+  }
+  const Player = require("../sqlmodel/player")(connection);
+  const Club = require("../sqlmodel/club")(connection);
+  console.log("\x1B[32mConnected   ✓\x1B[0m");
+  console.log("\x1B[96mCreating Mock data   \x1B[0m");
+  const user = {
+    username: 'testuser',
+    password: 'password',
+    email: 'testuser@test.com',
+    clubName: 'test club',
+    city: 'San Francisco',
+    state: 'CA',
+  };
+  Club.newUser(user).then((res) => {
+    console.log(res);
+    process.exit(0);
+  }).catch((err) => {
+    console.log("\x1B[91mFailed to create mock data   ✗\x1B[0m");
+    console.log(err);
+    process.exit(1);
+  });
 });
-console.log("- - - - - saving - - - - -");
-newClub.save();
-console.log("- - - - - saved - - - - -");
-console.log("- - - - - terminating - - - - -");
-process.exit(0);
+// const allPlayers = players.map((player) => {
+//   const newPlayer = new Player({ name: player.name, rating: player.rating });
+//   newPlayer.markModified("player");
+//   return newPlayer;
+// });
+
+// process.exit(0);
 
 

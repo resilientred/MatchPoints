@@ -2,7 +2,7 @@ import express from "express";
 import Club from "../models/club";
 import { csrfProtection, clubMethods, client } from "../helpers/appModules";
 import ClubModel from "../models/club";
-import { validatePlayer } from "../models/player";
+import PlayerValidation from "../models/player";
 
 const router = express.Router();
 router.route("/players").get((req, res, next) => {
@@ -34,28 +34,27 @@ router.route("/players/active").get((req, res, next) => {
   ClubModel.getMostActivePlayers(clubId)
     .then((data) => {
       res.status(200).send({ players: data });
-    }).catch((_) => {
-      next({ code: 500 });
-    })
+    });
 });
 
 router.route("/players/new")
-  .post(csrfProtection, (req, res) => {
+  .post(csrfProtection, (req, res, next) => {
     const clubId = req.club._id;
     const data = req.body.player;
 
-    const [hasError, err] = validatePlayer(data);
+    const [hasError, err] = PlayerValidation(data);
     if (hasError) {
-      return res.status(422).send(err);
+      return next({ code: 422, message: err });
     }
 
     ClubModel.addPlayer(clubId, data)
-      .then((player) => {
-        client.del(`players:${clubId}`);
-        res.status(200).send(player);
-      }).catch((err) => {
-        res.status(422).send(err);
-      });
+      .then(
+        (player) => {
+          client.del(`players:${clubId}`);
+          res.status(200).send(player);
+        },
+        err => next({ code: 400, message: 'Unable to add Player' })}
+      );
   });
 
 router.route("/players/:id")
@@ -63,13 +62,16 @@ router.route("/players/:id")
     const clubId = req.club._id;
     const id = req.params.id;
     Club.removePlayer(clubId, id)
-      .then((club) => {
-        client.del(`players:${clubId}`);
-        res.status(200).send(id);
-      }).catch((err) => {
-        console.log(err)
-        res.status(422).send("Unable to remove player");
-      });
+      .then(
+        () => {
+          client.del(`players:${clubId}`);
+          res.status(200);
+        },
+        (err) => {
+          next({ code: 400, message: "Unable to remove player" });
+          res.status(422).send();
+        }
+      );
   })
   .patch(csrfProtection, (req, res) => {
     const clubId = req.club._id;
@@ -77,13 +79,15 @@ router.route("/players/:id")
     const player = req.body.player;
 
     Club.updatePlayer(clubId, id, player)
-      .then(() => {
-        client.del(`players:${clubId}`);
-        res.status(200).send(player);
-      }).catch((err) => {
-        console.log(err);
-        res.status(422).send("Unable to update player");
-      });
+      .then(
+        () => {
+          client.del(`players:${clubId}`);
+          res.status(200).send({ player: player });
+        },
+        (err) => {
+          next({ code: 400, message: "Unable to update player" });
+        }
+      );
   });
 
 export default router;
