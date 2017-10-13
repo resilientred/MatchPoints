@@ -42,4 +42,27 @@ describe('ClubModal Test', () => {
       }).catch(done);
     });
   });
+
+  describe('#resetSessionTokenWithOldToken', () => {
+    it('should return token', (done) => {
+      ClubModel.findByUsernameAndPassword('testuser', 'password').then(({ session_token }) => {
+        ClubModel.resetSessionTokenWithOldToken(session_token).then((token) => {
+          expect(token.length).to.be.above(32);
+          ClubModel.findByUsernameAndPassword('testuser', 'password').then((club) => {
+            expect(club.session_token).to.equal(token);
+            done();
+          }).catch(done);
+        }).catch(done);
+      }).catch(done);
+    });
+
+    it('with non existent token should return errro', (done) => {
+      ClubModel.resetSessionTokenWithOldToken('abcdef')
+        .then(done)
+        .catch((res) => {
+          expect(res.token).to.equal('Token doesn\'t exist.');
+          done();
+        });
+    });
+  });
 });

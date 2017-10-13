@@ -1,3 +1,4 @@
+import Raven from "raven";
 import URLSafeBase64 from "urlsafe-base64";
 import crypto from "crypto";
 import shortid from "shortid";
@@ -48,17 +49,36 @@ class ClubModel {
     return club;
   }
 
+  detail() {
+    return new Promise((resolve, reject) => {
+      db.connection.query(`
+        SELECT id, short_id, username, club_name, email, verified, session_token
+        FROM clubs WHERE id = ?
+      `, [id], (err, results, field) => {
+        if (err) throw err;
+        if (results.length > 0) {
+          const club = this.formatClubRow(results[0]);
+          resolve(club);
+        } else {
+          reject({ club: 'Club not found.' });
+        }
+      });
+    });
+  }
+
   find(id) {
     return new Promise((resolve, reject) => {
       db.connection.query(`
         SELECT id, short_id, username, club_name, email, verified
         FROM clubs WHERE id = ?
       `, [id], (err, results, field) => {
-        if (err) {
-          return reject(err);
+        if (err) throw err;
+        if (results.length > 0) {
+          const club = this.formatClubRow(results[0]);
+          resolve(club);
+        } else {
+          reject({ club: 'Club not found.' });
         }
-        const club = this.formatClubRow(results[0]);
-        return resolve(club);
       });
     });
   }
@@ -82,11 +102,13 @@ class ClubModel {
         SET confirmed = 1, confirm_token = ""
         WHERE confirm_token = ?
       `, [token], (err, results, field) => {
-        if (err) {
-          throw 'The token might have expired or doesn\'t exist.';
-        }
+        if (err) throw err;
 
-        resolve(true);
+        if (results.affectedRows > 0) {
+          resolve(true);
+        } else {
+          reject({ token: 'Token might have expired.' });
+        }
       });
     });
   }
@@ -99,8 +121,11 @@ class ClubModel {
         WHERE session_token = ?
       `, [newToken, token], (err, results, field) => {
         if (err) throw err;
-
-        resolve(true);
+        if (results.affectedRows > 0) {
+          resolve(newToken);
+        } else {
+          reject({ token: 'Session token might have expired.' });
+        }
       });
     });
   }
@@ -143,7 +168,7 @@ class ClubModel {
   changePassword(id, info) {
     const { oldPassword, newPassword } = info;
     if (newPassword.length < 8) {
-      throw "Password must have at least 8 characters.";
+      throw ({ newPassword: "Password must have at least 8 characters." });
     }
 
     if (oldPassword === newPassword) {
@@ -154,7 +179,7 @@ class ClubModel {
       .then(
         () => this.generatePasswordDigest(newPassword),
         (err) => {
-          throw "Password is incorrect";
+          throw ({ oldPassword: "Old password is incorrect." });
         }
       ).then((digest) => {
         return new Promise((resolve, reject) => {
@@ -163,19 +188,21 @@ class ClubModel {
             SET password_digest = ?
             WHERE id = ?`, [digest, id], (err, results, field) => {
             if (err) throw(err);
-
-            resolve(true);
+            if (results.affectedRows > 0) {
+              resolve(true);
+            } else {
+              Raven.captureException({
+                logging_reason: 'Exploits',
+                error_description: 'Users attempted to call change password directly.'
+              });
+              reject({ user: 'User doesn\'t exist.' });
+            }
           });
         });
       });
   }
 
-  newUser(user) {
-    {
-      const err = ClubValidation.validate(user);
-      if (err) throw err;
-    }
-
+  create(user) {
     return ClubModel.generatePasswordDigest(user.password)
       .then((digest) => {
         return new Promise((resolve, reject) => {
@@ -225,8 +252,11 @@ class ClubModel {
        SET session_token = ?
        WHERE id = ?`, [token, id], (err, results, field) => {
         if (err) throw(err);
-
-        return resolve(token);
+        if (results.affectedRows > 0) {
+          resolve(token);
+        } else {
+          reject({ token: 'Session token might have expired.' });
+        }
       });
     });
   }
@@ -234,7 +264,7 @@ class ClubModel {
   findBySessionToken(sessionToken) {
     // check if I need all the fields
     if (!sessionToken) {
-      throw 'Session token cnanot be empty';
+      throw { token: 'Auth token is required.' };
     }
     return new Promise((resolve, reject) => {
       db.connection.query(`
@@ -244,8 +274,12 @@ class ClubModel {
         FROM clubs
         WHERE session_token = ?`, [sessionToken], (err, results, field) => {
         if (err) throw(err);
-        const club = this.formatClubRow(results[0]);
-        return resolve(club);
+        if (results.length > 0) {
+          const club = this.formatClubRow(results[0]);
+          return resolve(club);
+        } else {
+          return reject({ token: 'Session token might have expired.' });
+        }
       });
     });
   }
@@ -259,16 +293,17 @@ class ClubModel {
            SET password_digest = ?, token = ?
            WHERE token = ?`, [digest, "", token], (err, results, field) => {
             if (err) throw(err);
-
-            return resolve(results);
+            if (results.affectedRows > 0) {
+              resolve(results);
+            } else {
+              reject({ token: 'Session token might have expired.' });
+            }
           });
         });
       });
   }
 
   findByUsernameAndPassword(username, password) {
-    let club;
-
     return new Promise((resolve, reject) => {
       db.connection.query(`
        SELECT * FROM clubs
@@ -283,7 +318,7 @@ class ClubModel {
             return resolve(club);
           },
           () => {
-            throw('Passwords do not match.');
+            throw({ password: 'Passwords do not match.' });
           }
         )
       });

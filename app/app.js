@@ -72,7 +72,7 @@ app.get("*", csrfProtection, (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  if (err.code && err.code !== 500) {
+  if (err.code && err.code === 500) {
     Raven.captureException(err);
     next({ code: 500 });
   }

@@ -1,23 +1,21 @@
 import express from "express";
+import URLSafeBase64 from "urlsafe-base64";
+import crypto from "crypto";
 import Mailer from "../helpers/mailer";
 import Club from "../models/club";
 import { csrfProtection, jsonParser } from "../helpers/appModules";
-import URLSafeBase64 from "urlsafe-base64";
-import crypto from "crypto";
 
 const router = express.Router();
 
 router.get("/activate", (req, res) => {
   const token = req.query.token;
-  console.log(token);
-  Club.confirmUser(token)
-    .then((club) => {
-      console.log(club);
-      res.redirect("/activate/success");
-    })
-    .catch(message => res.redirect("/activate/error"))
+  Club.confirm(token)
+    .then(
+      () => res.redirect("/activate/success"),
+      message => res.redirect("/activate/error")
+    );
 })
-.post("/reset/request", csrfProtection, (req, res) => {
+.post("/reset/request", csrfProtection, (req, res, next) => {
   const email = req.query.email;
   const username = req.query.username;
   let promise;
@@ -34,28 +32,29 @@ router.get("/activate", (req, res) => {
       { new: true }
     );
   } else {
-    return res.status(422).send("No parameters were found");
+    return next({ code: 400 })
   }
 
-  promise.then(club => new Mailer(club).sendResetEmail())
-    .then(() => res.status(202).send("Confirmation Email sent"))
-    .catch((err) => {
-      res.status(404).send("No users are associated with this credential..")
-    });
+  return promise.then(club => new Mailer(club).sendResetEmail())
+    .then(
+      () => res.status(202).send("Confirmation Email sent"),
+      (err) => {
+        next({ code: 404, message: { user: 'User not found.' } });
+      }
+    );
 })
-.post("/reset", jsonParser, csrfProtection, (req, res) => {
+.post("/reset", jsonParser, csrfProtection, (req, res, next) => {
   const { token, newPassword } = req.body;
   Club.resetPasswordWithToken(token, newPassword)
-    .then((club) => {
-      console.log(club);
-      if (!club) return Promise.reject();
-
-      Club.resetSessionToken(club.sessionToken);
-      return res.status(200).send("success");
-    }).catch((err) => {
-      console.log(err);
-      res.status(422).send("Token has expired.");
-    });
+    .then(
+      (club) => {
+        Club.resetSessionToken(club.sessionToken);
+        return res.status(200).send({ success: true });
+      },
+      (err) => {
+        next({ code: 404, message: err });
+      }
+    );
 });
 
 export default router;

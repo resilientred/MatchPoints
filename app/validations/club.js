@@ -1,7 +1,7 @@
 class Club {
   validateUsername(username) {
     if (username && username.length < 8) {
-      return "Username must be at least 8 characters long";
+      return { username: "Username must be at least 8 characters long" };
     }
 
     return null;
@@ -9,7 +9,7 @@ class Club {
 
   validatePassword(password) {
     if (password && password.length < 8) {
-      return "Password must be at least 8 characters long";
+      return { password: "Password must be at least 8 characters long" };
     }
 
     return null;
@@ -19,7 +19,7 @@ class Club {
     const emailRegex = new RegExp(".+@.+..+", "i");
 
     if (!emailRegex.test(email)) {
-      return "Email is not a valid format";
+      return { email: "Email is not a valid format" };
     }
 
     return null;
@@ -27,28 +27,28 @@ class Club {
 
   validateClubName(clubName) {
     if (clubName && clubName.length === 0) {
-      return "Club name cannot be empty";
+      return { clubName: "Club name cannot be empty" };
     }
   }
 
   validateCity(city) {
     if (city && city.length === 0) {
-      return "City cannot be empty";
+      return { city: "City cannot be empty" };
     }
   }
 
   validateState(stateName) {
     if (stateName && stateName.length === 0) {
-      return "State cannot be empty";
+      return { stateName: "State cannot be empty" };
     }
   }
   validateInfo(club) {
     let err = this.validateEmail(club.email);
-    if (err) return { email: err };
+    if (err) return err;
     err = this.validateCity(club.city);
-    if (err) return { city: err };
+    if (err) return err;
     err = this.validateState(club.state);
-    if (err) return { state: err };
+    if (err) return err;
   }
 
   validate(club) {

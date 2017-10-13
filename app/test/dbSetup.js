@@ -20,7 +20,7 @@ db.connect().then(
       city: 'San Francisco',
       state: 'CA',
     };
-    Club.newUser(user).then((res) => {
+    Club.create(user).then((res) => {
       console.log(res);
       process.exit(0);
     }).catch((err) => {

@@ -8,22 +8,18 @@ import ClubHelper from "../helpers/clubHelper";
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  ClubHelper.findCurrentClub(req)
-    .then((currentClub) => {
-      res.status(200).send({
-        club: currentClub || {}
-      });
-    });
+   ClubModel.findBySessionToken(req.cookies.matchpoint_session)
+    .then(
+      club => res.status(200).send({ club }),
+      err => next({ code: 404, message: err }),
+    ).catch(err => next({ code: 500, message: err }));
 })
 .get("/all", (req, res, next) => {
-  ClubModel.findAll()
-    .then((roundrobins) => {
-      res.status(200).send(roundrobins);
-    }).catch((err) => {
-      res.status(404).send(err);
-    });
+  ClubModel.all()
+    .then(clubs => res.status(200).send({ clubs }))
+    .catch(err => next({ code: 500, message: err }));
 })
-.get("/:clubId/sessions", (req, res) => {
+.get("/:clubId/sessions", (req, res, next) => {
   const clubId = req.params.clubId;
   client.get(`sessions:${clubId}`, (err, reply) => {
     if (!reply) {
@@ -31,40 +27,39 @@ router.get("/", (req, res, next) => {
         .then((roundrobins) => {
           client.set(`sessions:${clubId}`, JSON.stringify(roundrobins));
           res.status(200).send(roundrobins);
-        }).catch(() => {
-          res.status(500);
-        });
+        }).catch(err => next({ code: 500, message: err }));
     } else {
-      res.status(200).send(JSON.parse(reply));
+      try {
+        res.status(200).send(JSON.parse(reply));
+      } catch (e) {
+        next({ code: 500, message: 'Redis session data corrupted.' });
+      }
     }
   })
 })
-.get("/:clubId/roundrobins", (req, res) => {
+.get("/:clubId/roundrobins", (req, res, next) => {
   const clubId = req.params.clubId;
   RoundRobinModel.findRoundRobinsByClub(clubId)
     .then((roundrobins) => {
       res.status(200).send({ clubId, roundrobins });
       res.end();
-    }).catch(() => {
-      res.status(500);
-      res.end();
-    });
+    }).catch(err => next({ code: 500, message: err }));
 })
-.post("/new", jsonParser, (req, res) => {
-  const data = req.body.user;
-
-  ClubModel.newUser(data)
-    .then((club) => {
-      new Mailer(club).sendConfirmationEmail();
-      return ClubHelper.logIn(club, res);
-    }).catch((err) => {
-      console.log(err);
-      if (err.code === 11000 || err.code === 11001) {
-        res.status(422).send("Username has already been taken");
-      } else {
-        res.status(422).send(err);
+.post("/new", jsonParser, (req, res, next) => {
+  const user = req.body.user;
+  const err = ClubValidation.validate(user);
+  if (err) {
+    return next({ code: 422, message: err });
+  }
+  ClubModel.create(user)
+    .then(
+      (userId) => {
+        new Mailer(userId).sendConfirmationEmail();
+        return ClubHelper.logIn(userId, res)
+          .catch(() => next({ code: 500 }));
       }
-    });
+    ).catch(err => next({ code: 500, message: err }))
+  );
 });
 
 export default router;

@@ -1,10 +1,6 @@
 import ClubModel from "../models/club";
 
 export default class ClubHelper {
-  static findCurrentClub(req) {
-    return ClubModel.findBySessionToken.call(ClubModel, req.cookies.matchpoint_session);
-  }
-
   static findClub(username, password) {
     let club;
     return ClubModel.findByUsernameAndPassword.call(ClubModel, username)
@@ -18,15 +14,17 @@ export default class ClubHelper {
       );
   }
 
-  static logIn(club, res) {
+  static logIn(clubId, res) {
     if (!club) return Promise.reject();
-    const sessionToken = club.sessionToken;
+    ClubModel.detail(clubId).then((club) => {
+      const sessionToken = club.sessionToken;
 
-    delete club.sessionToken;
-    delete club.passwordDigest;
-    delete club.confirmToken;
+      delete club.sessionToken;
+      delete club.passwordDigest;
+      delete club.confirmToken;
 
-    res.cookie("matchpoint_session", sessionToken,
-      { maxAge: 14 * 24 * 60 * 60 * 1000 }).send({ club });
+      res.cookie("matchpoint_session", sessionToken,
+        { maxAge: 14 * 24 * 60 * 60 * 1000 }).send({ club });
+    });
   }
 }
