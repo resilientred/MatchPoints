@@ -1,22 +1,16 @@
 // require("babel-polyfill");
 var chai = require("chai");
-var connectDB = require("../dbConnect");
+var db = require('../../utils/connection');
 var expect = chai.expect;
-var playerModel = require('../../models/player');
-var clubModel = require('../../models/club');
+var PlayerModel = require('../../models/player');
+var ClubModel = require('../../models/club');
 
-let PlayerModel;
-let ClubModel;
-let connection;
 describe('PlayerModel Test', () => {
   before(function(done) {
     // return new Promise((resolve) => {
-    connectDB().then((connection) => {
-      connection = connection;
-      PlayerModel = playerModel(connection);
-      ClubModel = clubModel(connection);
+    db.connect().then(() => {
       setTimeout(done, 300);
-    });
+    }, done);
   });
 
   describe('#createPlayer', () => {

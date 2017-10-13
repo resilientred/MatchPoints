@@ -13,8 +13,6 @@ router.get("/", (req, res, next) => {
       res.status(200).send({
         club: currentClub || {}
       });
-    }).catch((err) => {
-      next({ code: 500 });
     });
 })
 .get("/all", (req, res, next) => {

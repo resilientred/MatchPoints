@@ -5,14 +5,16 @@ import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appM
 import Mailer from "../helpers/mailer";
 
 const router = express.Router();
-router.post("/accounts/resend", (req, res) => {
+router.post("/accounts/resend", (req, res, next) => {
   new Mailer(req.club).sendConfirmationEmail()
-    .then(() => {
-      res.status(200).send("An email has been sent to your inbox.");
-    }).catch((err) => {
-      console.log(err);
-      res.status(422).send("Something went wrong. Please try again later.")
-    });
+    .then(
+      () => {
+        res.status(200).send({ status: "An email has been sent to your inbox." });
+      },
+      (err) => {
+        next({ code: 400, message: "Something went wrong. Please try again later." });
+      }
+    );
 })
 .get("/sessions", (req, res) => {
   const clubId = req.club._id;
@@ -22,8 +24,6 @@ router.post("/accounts/resend", (req, res) => {
         .then((roundrobins) => {
           client.set(`sessions:${clubId}`, JSON.stringify(roundrobins));
           return res.status(200).send(roundrobins);
-        }).catch(() => {
-          return res.status(500);
         });
     } else {
       res.status(200).send(JSON.parse(reply));

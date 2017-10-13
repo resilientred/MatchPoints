@@ -4,6 +4,7 @@ import path from "path";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import express from "express";
+import db from './utils/connection';
 import { app, csrfProtection, jsonParser } from "./helpers/appModules";
 import ClubHelper  from "./helpers/clubHelper";
 import playerRoutes from "./api/players";
@@ -15,10 +16,18 @@ import currentUserRoutes from "./api/currentUser";
 import Roundrobin from './models/roundrobin';
 
 const port = process.env.PORT || 3000;
-
 Raven.config("https://66966ed896744b44b5e33998522c1d77:cd526570e2b545609d8cb53f944960f2@sentry.io/228973").install();
+db.connect();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
+app.use((err, req, res, next) => {
+  try {
+    next();
+  } catch (e) {
+    Raven.captureException(e);
+    res.status(500).send({ error_description: "Internal Server Error" });
+  }
+})
 app.use(cookieParser());
 app.use((err, req, res, next) => {
   if (err.code !== "EBADCSRFTOKEN") {
@@ -90,7 +99,7 @@ app.use((err, req, res, next) => {
         break;
     }
   }
-  res.status(err.code).send({ error_description: errorMEssage });
+  res.status(err.code).send({ error_description: errorMessage });
 });
 
 app.listen(port, () => {

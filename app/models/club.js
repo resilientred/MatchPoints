@@ -1,9 +1,10 @@
 import URLSafeBase64 from "urlsafe-base64";
-import ClubValidation from "../validations/club";
 import crypto from "crypto";
 import shortid from "shortid";
 import bcrypt from "bcrypt-as-promised";
+import db from '../utils/connection';
 import mysql from "mysql";
+import ClubValidation from "../validations/club";
   // id              MEDIUMINT    NOT NULL AUTOINCREMENT
   // password_digest VARCHAR(50)  NOT NULL
   // session_token   VARCHAR(32)  NOT NULL
@@ -30,10 +31,6 @@ class ClubModel {
     return bcrypt.hash(password, 10);
   }
 
-  constructor(connection) {
-    this.connection = connection;
-  }
-
   formatClubRow(row) {
     const fields = [
       'id', 'password_digest', 'session_token',
@@ -53,44 +50,34 @@ class ClubModel {
 
   find(id) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         SELECT id, short_id, username, club_name, email, verified
         FROM clubs WHERE id = ?
       `, [id], (err, results, field) => {
         if (err) {
           return reject(err);
         }
-
-        return resolve(results);
+        const club = this.formatClubRow(results[0]);
+        return resolve(club);
       });
     });
   }
 
   all() {
     return new Promise((resolve, reject) => {
-      this.connection.query(`SELECT
+      db.connection.query(`SELECT
        SELECT id, short_id, username, club_name, email
        FROM clubs`, (err, results, field) => {
         if (err) throw(err);
-
-        return resolve(results);
+        const clubs = results.map(r => this.formatClubRow(r));
+        resolve(clubs);
       });
     });
   }
 
-  resetPasswordWithToken(token, newPassword) {
-    return this.generatePasswordDigest(newPassword)
-      .then((digest) => {
-        return this.findOneAndUpdate(
-          { token: token },
-          { $set: { passwordDigest: digest, token: undefined } }
-        );
-      });
-  }
-
   confirm(token) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         UPDATE clubs
         SET confirmed = 1, confirm_token = ""
         WHERE confirm_token = ?
@@ -99,7 +86,7 @@ class ClubModel {
           throw 'The token might have expired or doesn\'t exist.';
         }
 
-        return resolve(results);
+        resolve(true);
       });
     });
   }
@@ -107,13 +94,13 @@ class ClubModel {
   resetSessionTokenWithOldToken(token) {
     const newToken = ClubModel.generateToken();
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         UPDATE clubs SET session_token = ?
         WHERE session_token = ?
       `, [newToken, token], (err, results, field) => {
         if (err) throw err;
 
-        return resolve(results);
+        resolve(true);
       });
     });
   }
@@ -171,13 +158,13 @@ class ClubModel {
         }
       ).then((digest) => {
         return new Promise((resolve, reject) => {
-          this.connection.query(`
+          db.connection.query(`
             UPDATE clubs
             SET password_digest = ?
             WHERE id = ?`, [digest, id], (err, results, field) => {
             if (err) throw(err);
 
-            return resolve(results);
+            resolve(true);
           });
         });
       });
@@ -192,10 +179,10 @@ class ClubModel {
     return ClubModel.generatePasswordDigest(user.password)
       .then((digest) => {
         return new Promise((resolve, reject) => {
-          this.connection.beginTransaction((tError) => {
+          db.connection.beginTransaction((tError) => {
             if (tError) throw tError;
 
-            this.connection.query(`
+            db.connection.query(`
              INSERT INTO clubs
              (short_id, username, email, club_name, password_digest, session_token)
              VALUES
@@ -203,7 +190,7 @@ class ClubModel {
              [shortid.generate(), user.username.toLowerCase(), user.email, user.clubName, digest, ClubModel.generateToken()],
              (err, results, field) => {
                 if (err) {
-                  this.connection.rollback();
+                  db.connection.rollback();
                   throw(err);
                 }
                 resolve(results.insertId);
@@ -215,31 +202,31 @@ class ClubModel {
 
   insertGeolocations(user, clubId) {
     return new Promise((resolve, reject) => {
-      this.connection.query(
+      db.connection.query(
         `INSERT INTO club_geolocations
           (city, state, address, club_id)
           VALUES (?, ?, ?, ?)`,
           [user.city, user.state, user.address, clubId], (err, results, field) => {
             if (err) {
-              this.connection.rollback();
+              db.connection.rollback();
               throw(err);
             }
-            this.connection.commit();
+            db.connection.commit();
             resolve(clubId);
           });
     });
   }
 
-  resetSessionToken(club) {
+  resetSessionToken(id) {
     const token = ClubModel.generateToken();
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
        UPDATE clubs
        SET session_token = ?
-       WHERE username = ?`, [token, club.username], (err, results, field) => {
+       WHERE id = ?`, [token, id], (err, results, field) => {
         if (err) throw(err);
 
-        return resolve(results);
+        return resolve(token);
       });
     });
   }
@@ -250,15 +237,15 @@ class ClubModel {
       throw 'Session token cnanot be empty';
     }
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         SELECT id, short_id, username, club_name,
           email, verified, token, confirm_token,
           password_digest, updated_at, created_on
         FROM clubs
         WHERE session_token = ?`, [sessionToken], (err, results, field) => {
         if (err) throw(err);
-
-        return resolve(results);
+        const club = this.formatClubRow(results[0]);
+        return resolve(club);
       });
     });
   }
@@ -267,7 +254,7 @@ class ClubModel {
     return ClubModel.generatePasswordDigest(newPassword)
       .then((digest) => {
         return new Promise((resolve, reject) => {
-          this.connection.query(`
+          db.connection.query(`
            UPDATE clubs
            SET password_digest = ?, token = ?
            WHERE token = ?`, [digest, "", token], (err, results, field) => {
@@ -279,12 +266,11 @@ class ClubModel {
       });
   }
 
-  // incomplete
   findByUsernameAndPassword(username, password) {
     let club;
 
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
        SELECT * FROM clubs
        WHERE username = ?`, [username], (err, results, field) => {
         if (err) throw(err);
@@ -305,6 +291,5 @@ class ClubModel {
   }
 }
 
-export default (connection) => {
-  return new ClubModel(connection);
-};
+const model = new ClubModel();
+export default model;

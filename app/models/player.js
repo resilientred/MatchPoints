@@ -1,10 +1,7 @@
 import shortid from "shortid";
+import db from '../utils/connection';
 
 class PlayerModel {
-  constructor(connection) {
-    this.connection = connection;
-  }
-
   formatPlayer(row) {
     const fields = [
       'id', 'short_id', 'usatt_url', 'rating', 'name', 'updated_at', 'created_on'
@@ -21,7 +18,7 @@ class PlayerModel {
 
   getMostActivePlayers(id) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         SELECT cp.*, hc.session_count AS session_count FROM players AS p2
         INNER JOIN (
           SELECT COUNT(*) AS session_count, id FROM players AS p
@@ -46,7 +43,7 @@ class PlayerModel {
   }
   removePlayer(id) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`DELETE FROM players WHERE id = ?`, [id], (err, results, field) => {
+      db.connection.query(`DELETE FROM players WHERE id = ?`, [id], (err, results, field) => {
         if (err) throw(err);
         return resolve(results);
       });
@@ -55,7 +52,7 @@ class PlayerModel {
 
   updatePlayer(player) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         UPDATE players
         SET name = ?, rating = ?
         WHERE id = ?
@@ -69,14 +66,14 @@ class PlayerModel {
   createPlayer(clubId, player) {
     const shortId = shortid.generate();
     return new Promise((resolve, reject) => {
-      this.connection.beginTransaction((tError) => {
+      db.connection.beginTransaction((tError) => {
         if (tError) throw tError;
-        this.connection.query(`
+        db.connection.query(`
           INSERT INTO players (short_id, name, rating)
           VALUES (?, ?, ?)
         `, [shortId, player.name, player.rating], (err, results, field) => {
           if (err) {
-            this.connection.rollback();
+            db.connection.rollback();
             throw(err);
           }
           resolve(results.insertId);
@@ -87,15 +84,15 @@ class PlayerModel {
 
   createClubPlayer(clubId, id) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         INSERT INTO club_players (club_id, player_id)
         VALUES (?, ?)
       `, [clubId, id], (err, results, field) => {
         if (err) {
-          this.connection.rollback();
+          db.connection.rollback();
           throw(err);
         }
-        this.connection.commit();
+        db.connection.commit();
         resolve(id);
       });
     });
@@ -104,16 +101,16 @@ class PlayerModel {
   createPlayers(clubId, players) {
     const promises = players.map(player => this.createPlayer(clubId, player));
     return new Promise((resolve, reject) => {
-      this.connection.beginTransaction((tError) => {
+      db.connection.beginTransaction((tError) => {
         if (tError) throw tError;
         Promise.all(promises)
           .then(
             (players) => {
-              this.connection.commit();
+              db.connection.commit();
               resolve(players);
             },
             (error) => {
-              this.connection.rollback();
+              db.connection.rollback();
               reject(error);
             }
           );
@@ -123,7 +120,7 @@ class PlayerModel {
 
   findPlayers(clubId) {
     return new Promise((resolve, reject) => {
-      this.connection.query(`
+      db.connection.query(`
         SELECT p.id, short_id, rating, name, created_on, updated_at
         FROM players AS p
         INNER JOIN club_players AS cp
@@ -137,6 +134,5 @@ class PlayerModel {
   }
 }
 
-export default (connection) => {
-  return new PlayerModel(connection);
-};
+const model = new PlayerModel();
+export default model;
