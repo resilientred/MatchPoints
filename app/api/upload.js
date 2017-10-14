@@ -25,9 +25,9 @@ router.post("/players", jsonParser, csrfProtection, (req, res) => {
       });
     }).then(() => clubMethods.currentClub(req)).then((club) => {
       if (/json/.test(filetype)) {
-        return PlayerParser.jsonToPlayers(filepath, club._id);
+        return PlayerParser.jsonToPlayers(filepath, club.id);
       }
-      return PlayerParser.csvToPlayers(filepath, club._id);
+      return PlayerParser.csvToPlayers(filepath, club.id);
     });
   } else {
     res.status(422).send("Invalid file type");

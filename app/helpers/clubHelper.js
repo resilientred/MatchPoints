@@ -14,17 +14,17 @@ export default class ClubHelper {
       );
   }
 
-  static logIn(clubId, res) {
+  static logIn(club, res) {
     if (!club) return Promise.reject();
-    ClubModel.detail(clubId).then((club) => {
-      const sessionToken = club.sessionToken;
+    const sessionToken = club.session_token;
+    delete club.session_token;
+    delete club.password_digest;
+    delete club.confirm_token;
 
-      delete club.sessionToken;
-      delete club.passwordDigest;
-      delete club.confirmToken;
-
-      res.cookie("matchpoint_session", sessionToken,
-        { maxAge: 14 * 24 * 60 * 60 * 1000 }).send({ club });
-    });
+    res.cookie(
+      "matchpoint_session",
+      sessionToken,
+      { maxAge: 14 * 24 * 60 * 60 * 1000, httpOnly: true, domain: 'localhost' }
+    ).send({ club });
   }
 }

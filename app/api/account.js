@@ -7,13 +7,15 @@ import { csrfProtection, jsonParser } from "../helpers/appModules";
 
 const router = express.Router();
 
-router.get("/activate", (req, res) => {
+router.get("/activate", (req, res, next) => {
   const token = req.query.token;
   Club.confirm(token)
     .then(
       () => res.redirect("/activate/success"),
-      message => res.redirect("/activate/error")
-    );
+      message => {
+        res.redirect("/activate/error");
+      }
+    ).catch(err => next({ status: 500, message: err }));
 })
 .post("/reset/request", csrfProtection, (req, res, next) => {
   const email = req.query.email;

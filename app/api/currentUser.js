@@ -1,6 +1,6 @@
 import express from "express";
 import ClubModel from "../models/club";
-import RoundRobinModel from "../models/roundrobin";
+// import RoundRobinModel from "../models/roundrobin";
 import { clubMethods, jsonParser, csrfProtection, client } from "../helpers/appModules";
 import Mailer from "../helpers/mailer";
 
@@ -45,7 +45,7 @@ router.post("/accounts/resend", (req, res, next) => {
       client.del(`sessions:${req.club._id}`);
       return res.status(200).send(id);
     }).catch((err) => {
-      return next({ code: 500 });
+      return next({ code: 500, message: err });
     });
 })
 .post("/sessions/:id", jsonParser, csrfProtection, (req, res) => {

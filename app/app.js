@@ -1,23 +1,22 @@
 require('dotenv').config()
 import Raven from "raven";
 import path from "path";
-import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import express from "express";
 import db from './utils/connection';
 import { app, csrfProtection, jsonParser } from "./helpers/appModules";
 import ClubHelper  from "./helpers/clubHelper";
+import ClubModel  from "./models/club";
 import playerRoutes from "./api/players";
 import clubRoutes from "./api/club";
 import sessionRoutes from "./api/session";
 import accountRoutes from "./api/account";
 import uploadRoutes from "./api/upload";
 import currentUserRoutes from "./api/currentUser";
-import Roundrobin from './models/roundrobin';
 
 const port = process.env.PORT || 3000;
 Raven.config("https://66966ed896744b44b5e33998522c1d77:cd526570e2b545609d8cb53f944960f2@sentry.io/228973").install();
-db.connect();
+// db.connect();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "..", "public", "views"));
 app.use((err, req, res, next) => {
@@ -76,10 +75,12 @@ app.use((err, req, res, next) => {
     Raven.captureException(err);
     next({ code: 500 });
   }
+  next(err);
 });
 
 app.use((err, req, res, next) => {
   let errorMessage = err.message;
+  console.log(errorMessage);
   if (!errorMessage) {
     switch (err.code) {
       case 500:
@@ -99,7 +100,7 @@ app.use((err, req, res, next) => {
         break;
     }
   }
-  res.status(err.code).send({ error_description: errorMessage });
+  res.status(err.code || 500).send({ error_description: errorMessage });
 });
 
 app.listen(port, () => {

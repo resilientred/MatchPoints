@@ -1,18 +1,20 @@
 import express from "express";
 import ClubModel from "../models/club";
-import RoundRobinModel from "../models/roundrobin";
+// import RoundRobinModel from "../models/roundrobin";
 import { jsonParser, csrfProtection, client } from "../helpers/appModules";
 import Mailer from "../helpers/mailer";
 import ClubHelper from "../helpers/clubHelper";
+import ClubValidation from "../validations/club";
 
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-   ClubModel.findBySessionToken(req.cookies.matchpoint_session)
+  ClubModel.findBySessionToken(req.cookies.matchpoint_session)
     .then(
       club => res.status(200).send({ club }),
       err => next({ code: 404, message: err }),
-    ).catch(err => next({ code: 500, message: err }));
+    )
+    .catch(err => next({ code: 500, message: err }));
 })
 .get("/all", (req, res, next) => {
   ClubModel.all()
@@ -45,7 +47,7 @@ router.get("/", (req, res, next) => {
       res.end();
     }).catch(err => next({ code: 500, message: err }));
 })
-.post("/new", jsonParser, (req, res, next) => {
+.post("/", jsonParser, (req, res, next) => {
   const user = req.body.user;
   const err = ClubValidation.validate(user);
   if (err) {
@@ -54,12 +56,19 @@ router.get("/", (req, res, next) => {
   ClubModel.create(user)
     .then(
       (userId) => {
-        new Mailer(userId).sendConfirmationEmail();
-        return ClubHelper.logIn(userId, res)
-          .catch(() => next({ code: 500 }));
+        // new Mailer(userId).sendConfirmationEmail();
+        ClubModel.detail(userId)
+          .then(club => ClubHelper.logIn(club, res))
+          .catch((err) => next({ code: 500, message: err }));
+      },
+      (err) => {
+        if (err.username) {
+          next({ code: 422, message: err });
+        } else {
+          next({ code: 500, message: err });
+        }
       }
     ).catch(err => next({ code: 500, message: err }))
-  );
 });
 
 export default router;
