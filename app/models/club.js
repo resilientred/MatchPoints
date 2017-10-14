@@ -49,13 +49,16 @@ class ClubModel {
     return club;
   }
 
-  detail() {
+  async detail(id) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         SELECT id, short_id, username, club_name, email, verified, session_token
         FROM clubs WHERE id = ?
       `, [id], (err, results, field) => {
+        connection.release();
         if (err) throw err;
+        console.log(results);
         if (results.length > 0) {
           const club = this.formatClubRow(results[0]);
           resolve(club);
@@ -66,12 +69,14 @@ class ClubModel {
     });
   }
 
-  find(id) {
+  async find(id) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         SELECT id, short_id, username, club_name, email, verified
         FROM clubs WHERE id = ?
       `, [id], (err, results, field) => {
+        connection.release();
         if (err) throw err;
         if (results.length > 0) {
           const club = this.formatClubRow(results[0]);
@@ -83,11 +88,14 @@ class ClubModel {
     });
   }
 
-  all() {
+  async all() {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`SELECT
-       SELECT id, short_id, username, club_name, email
-       FROM clubs`, (err, results, field) => {
+      connection.query(`
+        SELECT id, short_id, username, club_name, email
+        FROM clubs
+      `, (err, results, field) => {
+        connection.release();
         if (err) throw(err);
         const clubs = results.map(r => this.formatClubRow(r));
         resolve(clubs);
@@ -95,15 +103,16 @@ class ClubModel {
     });
   }
 
-  confirm(token) {
+  async confirm(token) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         UPDATE clubs
-        SET confirmed = 1, confirm_token = ""
+        SET verified = 1, confirm_token = ""
         WHERE confirm_token = ?
       `, [token], (err, results, field) => {
+        connection.release();
         if (err) throw err;
-
         if (results.affectedRows > 0) {
           resolve(true);
         } else {
@@ -113,13 +122,15 @@ class ClubModel {
     });
   }
 
-  resetSessionTokenWithOldToken(token) {
+  async resetSessionTokenWithOldToken(token) {
+    const connection = await db.getConnection();
     const newToken = ClubModel.generateToken();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         UPDATE clubs SET session_token = ?
         WHERE session_token = ?
       `, [newToken, token], (err, results, field) => {
+        connection.release();
         if (err) throw err;
         if (results.affectedRows > 0) {
           resolve(newToken);
@@ -131,41 +142,46 @@ class ClubModel {
   }
 
 
-  changeInfo(club, data) {
+  async changeInfo(club, data) {
     const info = data.info;
     {
-      const error = new ClubValidation().validateInfo(info);
+      const error = ClubValidation.validateInfo(info);
       if (error) throw error;
     }
-
-    return ClubModel.isPassword(data.password)
-      .then(
-        () => {
-          let sql = "UPDATE clubs SET ";
-          const inserts = [];
-          sql = mysql.format(sql, inserts);
-          if (club.email !== info.email) {
-            sql += ' email = ?, confirmed = 0, confirm_token'
-            //although this will work, it will still say "welcome to matchpoint";
-            const confirmToken = ClubModel.generateToken();
-            inserts.push(info.email, confirmToken);
-          }
-          sql += 'city = ?, state = ? ';
-          inserts.push(info.city, info.state);
-          club.location = { ...info };
-          sql += 'WHERE id = ?';
-          inserts.push(club.id);
-          connect.query(sql, inserts, (err, results, field) => {
-            if (err) throw err;
-          })
-        },
-        (err) => {
-          return Promise.reject({ password: "Old password does not match." });
+    try {
+      const isPassword = await ClubModel.isPassword(data.password);
+    } catch (_e) {
+      return Promise.reject({ password: "Password is incorrect" });
+    }
+    const connection = await db.getConnection();
+    return new Promise((resolve, reject) => {
+      let sql = "UPDATE clubs SET ";
+      const inserts = [];
+      sql = mysql.format(sql, inserts);
+      if (club.email !== info.email) {
+        sql += ' email = ?, confirmed = 0, confirm_token'
+        //although this will work, it will still say "welcome to matchpoint";
+        const confirmToken = ClubModel.generateToken();
+        inserts.push(info.email, confirmToken);
+      }
+      sql += 'city = ?, state = ? ';
+      inserts.push(info.city, info.state);
+      club.location = { ...info };
+      sql += 'WHERE id = ?';
+      inserts.push(club.id);
+      connection.query(sql, inserts, (err, results, field) => {
+        connection.release();
+        if (err) throw err;
+        if (results.affectedRows > 0) {
+          resolve(true);
+        } else {
+          reject({ club: 'Failed to update.' });
         }
-      );
+      })
+    });
   }
 
-  changePassword(id, info) {
+  async changePassword(id, info) {
     const { oldPassword, newPassword } = info;
     if (newPassword.length < 8) {
       throw ({ newPassword: "Password must have at least 8 characters." });
@@ -175,82 +191,98 @@ class ClubModel {
       return Promise.resolve();
     }
 
-    return club.isPassword(oldPassword)
-      .then(
-        () => this.generatePasswordDigest(newPassword),
-        (err) => {
-          throw ({ oldPassword: "Old password is incorrect." });
-        }
-      ).then((digest) => {
-        return new Promise((resolve, reject) => {
-          db.connection.query(`
-            UPDATE clubs
-            SET password_digest = ?
-            WHERE id = ?`, [digest, id], (err, results, field) => {
-            if (err) throw(err);
-            if (results.affectedRows > 0) {
-              resolve(true);
-            } else {
-              Raven.captureException({
-                logging_reason: 'Exploits',
-                error_description: 'Users attempted to call change password directly.'
-              });
-              reject({ user: 'User doesn\'t exist.' });
-            }
-          });
-        });
-      });
-  }
-
-  create(user) {
-    return ClubModel.generatePasswordDigest(user.password)
-      .then((digest) => {
-        return new Promise((resolve, reject) => {
-          db.connection.beginTransaction((tError) => {
-            if (tError) throw tError;
-
-            db.connection.query(`
-             INSERT INTO clubs
-             (short_id, username, email, club_name, password_digest, session_token)
-             VALUES
-             (?, ?, ?, ?, ?, ?)`,
-             [shortid.generate(), user.username.toLowerCase(), user.email, user.clubName, digest, ClubModel.generateToken()],
-             (err, results, field) => {
-                if (err) {
-                  db.connection.rollback();
-                  throw(err);
-                }
-                resolve(results.insertId);
-              });
-          });
-        }).then(clubId => this.insertGeolocations(user, clubId));
-      });
-  }
-
-  insertGeolocations(user, clubId) {
+    const connection = await db.getConnection();
+    try {
+      const isPassword = await club.isPassword(oldPassword);
+    } catch (_e) {
+      return Promise.reject({ oldPassword: "Old password is incorrect." });
+    }
+    const digest = await this.generatePasswordDigest(newPassword);
     return new Promise((resolve, reject) => {
-      db.connection.query(
-        `INSERT INTO club_geolocations
-          (city, state, address, club_id)
-          VALUES (?, ?, ?, ?)`,
-          [user.city, user.state, user.address, clubId], (err, results, field) => {
-            if (err) {
-              db.connection.rollback();
-              throw(err);
-            }
-            db.connection.commit();
-            resolve(clubId);
+      connection.query(`
+        UPDATE clubs
+        SET password_digest = ?
+        WHERE id = ?`, [digest, id], (err, results, field) => {
+        connection.release();
+        if (err) throw(err);
+        if (results.affectedRows > 0) {
+          resolve(true);
+        } else {
+          Raven.captureException({
+            logging_reason: 'Exploits',
+            error_description: 'Users attempted to call change password directly.'
           });
+          reject({ user: 'User doesn\'t exist.' });
+        }
+      });
     });
   }
 
-  resetSessionToken(id) {
-    const token = ClubModel.generateToken();
+  async create(user) {
+    const connection = await db.getConnection();
+    console.log(user);
+    const digest = await ClubModel.generatePasswordDigest(user.password);
+    const isPassword = await ClubModel.isPassword(user.password, digest);
+    console.log(isPassword);
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.beginTransaction((tError) => {
+        if (tError) {
+          connection.release();
+          throw tError;
+        }
+
+        connection.query(`
+         INSERT INTO clubs
+         (short_id, username, email, club_name, password_digest, session_token, confirm_token)
+         VALUES
+         (?, ?, ?, ?, ?, ?)`,
+         [
+           shortid.generate(), user.username.toLowerCase(), user.email,
+           user.clubName, digest, ClubModel.generateToken(), ClubModel.generateToken()
+         ],
+         (err, results, field) => {
+            if (err) {
+              connection.release();
+              if (err.code === 'ER_DUP_ENTRY') {
+                return reject({ username: 'Username has been taken' });
+              }
+              throw err;
+            }
+            resolve(results.insertId);
+          });
+      });
+    }).then(clubId => this.insertGeolocations(connection, user, clubId));
+  }
+
+  insertGeolocations(connection, user, clubId) {
+    return new Promise((resolve, reject) => {
+      connection.query(`
+        INSERT INTO club_geolocations
+        (city, state, address, club_id)
+        VALUES (?, ?, ?, ?)
+      `, [user.city, user.state, user.address, clubId], (err, results, field) => {
+        if (err) {
+          connection.rollback();
+          connection.release();
+          throw(err);
+        }
+        connection.commit();
+        connection.release();
+        console.log('inserted geolocations');
+        resolve(clubId);
+      });
+    });
+  }
+
+  async resetSessionToken(id) {
+    const token = ClubModel.generateToken();
+    const connection = await db.getConnection();
+    return new Promise((resolve, reject) => {
+      connection.query(`
        UPDATE clubs
        SET session_token = ?
        WHERE id = ?`, [token, id], (err, results, field) => {
+        connection.release();
         if (err) throw(err);
         if (results.affectedRows > 0) {
           resolve(token);
@@ -261,18 +293,21 @@ class ClubModel {
     });
   }
 
-  findBySessionToken(sessionToken) {
+  async findBySessionToken(sessionToken) {
     // check if I need all the fields
     if (!sessionToken) {
-      throw { token: 'Auth token is required.' };
+      return Promise.reject({ token: 'Auth token is required.' });
     }
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         SELECT id, short_id, username, club_name,
           email, verified, token, confirm_token,
-          password_digest, updated_at, created_on
+          updated_at, created_on
         FROM clubs
-        WHERE session_token = ?`, [sessionToken], (err, results, field) => {
+        WHERE session_token = ?
+      `, [sessionToken], (err, results, field) => {
+        connection.release();
         if (err) throw(err);
         if (results.length > 0) {
           const club = this.formatClubRow(results[0]);
@@ -284,14 +319,17 @@ class ClubModel {
     });
   }
 
-  resetPasswordWithToken(token, newPassword) {
+  async resetPasswordWithToken(token, newPassword) {
+    const connection = await db.getConnection();
     return ClubModel.generatePasswordDigest(newPassword)
       .then((digest) => {
         return new Promise((resolve, reject) => {
-          db.connection.query(`
+          connection.query(`
            UPDATE clubs
            SET password_digest = ?, token = ?
-           WHERE token = ?`, [digest, "", token], (err, results, field) => {
+           WHERE token = ?
+          `, [digest, "", token], (err, results, field) => {
+            connection.release();
             if (err) throw(err);
             if (results.affectedRows > 0) {
               resolve(results);
@@ -303,24 +341,33 @@ class ClubModel {
       });
   }
 
-  findByUsernameAndPassword(username, password) {
+  async findByUsernameAndPassword(username, password) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
-       SELECT * FROM clubs
-       WHERE username = ?`, [username], (err, results, field) => {
+      connection.query(`
+       SELECT * FROM clubs WHERE username = ?
+      `, [username], async (err, results, field) => {
+        connection.release();
         if (err) throw(err);
 
+        if (results.length === 0) {
+          return reject({
+            username: 'Username or password is not correct.',
+            password: 'Username or password is not correct.'
+          });
+        }
         const digest = results[0].password_digest;
-        ClubModel.isPassword(password, digest).then(
-          () => {
-            const club = this.formatClubRow(results[0]);
-            delete club.password_digest;
-            return resolve(club);
-          },
-          () => {
-            throw({ password: 'Passwords do not match.' });
-          }
-        )
+        try {
+          const isPassword = await ClubModel.isPassword(password, digest);
+        } catch (e) {
+          return reject({
+            username: 'Username or password is not correct.',
+            password: 'Username or password is not correct.'
+          });
+        }
+        const club = this.formatClubRow(results[0]);
+        delete club.password_digest;
+        return resolve(club);
       });
     });
   }

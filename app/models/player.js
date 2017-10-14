@@ -16,9 +16,10 @@ class PlayerModel {
     return player;
   }
 
-  getMostActivePlayers(id) {
+  async getMostActivePlayers(id) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         SELECT cp.*, hc.session_count AS session_count FROM players AS p2
         INNER JOIN (
           SELECT COUNT(*) AS session_count, id FROM players AS p
@@ -35,82 +36,102 @@ class PlayerModel {
         ) AS hc
         ON p2.id = hc.id
       `, [id], (err, results, field) => {
+        connection.release();
         if (err) throw(err);
         // format blha blah
         return resolve(results);
       });
     });
   }
-  removePlayer(id) {
+  async removePlayer(id) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`DELETE FROM players WHERE id = ?`, [id], (err, results, field) => {
+      connection.query(`DELETE FROM players WHERE id = ?`, [id], (err, results, field) => {
+        connection.release();
         if (err) throw(err);
-        return resolve(results);
+        if (results.affectedRows > 0) {
+          resolve(true);
+        } else {
+          reject({ player: 'Player not found.' });
+        }
       });
     });
   }
 
-  updatePlayer(player) {
+  async updatePlayer(player) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         UPDATE players
         SET name = ?, rating = ?
         WHERE id = ?
       `, [player.name, player.rating, player.id], (err, results, field) => {
+        connection.release();
         if (err) throw(err);
-        return resolve(results);
+        if (results.affectedRows > 0) {
+          resolve(true);
+        } else {
+          reject({ player: 'Player not found.' });
+        }
       });
     });
   }
 
-  createPlayer(clubId, player) {
+  async createPlayer(clubId, player) {
     const shortId = shortid.generate();
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.beginTransaction((tError) => {
+      connection.beginTransaction((tError) => {
         if (tError) throw tError;
-        db.connection.query(`
+        connection.query(`
           INSERT INTO players (short_id, name, rating)
           VALUES (?, ?, ?)
         `, [shortId, player.name, player.rating], (err, results, field) => {
           if (err) {
-            db.connection.rollback();
+            connection.rollback();
+            connection.release();
             throw(err);
           }
           resolve(results.insertId);
-        })
+        });
       });
-    }).then((id) => this.createClubPlayer(clubId, id));
+    }).then((id) => this.createClubPlayer(connection, clubId, id));
   }
 
-  createClubPlayer(clubId, id) {
+  async createClubPlayer(conn, clubId, id) {
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         INSERT INTO club_players (club_id, player_id)
         VALUES (?, ?)
       `, [clubId, id], (err, results, field) => {
         if (err) {
-          db.connection.rollback();
-          throw(err);
+          connection.rollback();
+          connection.release();
+          throw err;
         }
-        db.connection.commit();
+        connection.commit();
+        connection.release();
         resolve(id);
       });
     });
   }
 
-  createPlayers(clubId, players) {
+  async createPlayers(clubId, players) {
+    const connection = await db.getConnection();
     const promises = players.map(player => this.createPlayer(clubId, player));
     return new Promise((resolve, reject) => {
-      db.connection.beginTransaction((tError) => {
+      connection.beginTransaction((tError) => {
         if (tError) throw tError;
         Promise.all(promises)
           .then(
             (players) => {
-              db.connection.commit();
+              connection.commit();
+              connection.release();
               resolve(players);
             },
             (error) => {
-              db.connection.rollback();
+              connection.rollback();
+              connection.release();
               reject(error);
             }
           );
@@ -118,14 +139,17 @@ class PlayerModel {
     });
   }
 
-  findPlayers(clubId) {
+  async findPlayers(clubId) {
+    const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      db.connection.query(`
+      connection.query(`
         SELECT p.id, short_id, rating, name, created_on, updated_at
         FROM players AS p
         INNER JOIN club_players AS cp
         ON cp.player_id = p.id
-        WHERE cp.club_id = ?`, [clubId], (err, results, field) => {
+        WHERE cp.club_id = ?
+      `, [clubId], (err, results, field) => {
+        connection.release();
         if (err) throw(err);
         const data = results.map(row => this.formatPlayer(row));
         return resolve(data);
