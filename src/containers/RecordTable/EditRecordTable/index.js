@@ -6,6 +6,7 @@ import { RecordTableEnter, RecordTableView } from 'components';
 export default class EditRecordTable extends Component {
   state = {
     tab: 0,
+    // storing results in state due to poor performance to update in reducer
     results: {},
   };
 
@@ -18,6 +19,7 @@ export default class EditRecordTable extends Component {
         results[player._id][other._id] = [0, 0];
       });
     });
+    // separating out results is a performance
     this.setState({ results });
   }
 

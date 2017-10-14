@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'isomorphic-fetch';
 import 'assets/resets.scss';
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';

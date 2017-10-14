@@ -20,8 +20,20 @@ export default class LogInForm extends Component {
     };
   }
 
-  componentWillUnmount() {
-    if (this.props.error) this.props.clearError();
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error !== this.props.error) {
+      if (nextProps.error) {
+        const usernameError = nextProps.error.username;
+        const passwordError = nextProps.error.password;
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            username: usernameError,
+            password: passwordError,
+          },
+        });
+      }
+    }
   }
 
   updateField(field, e) {
@@ -52,19 +64,14 @@ export default class LogInForm extends Component {
 
   handleSubmit = (event) => {
     if (this.validate()) {
+      const { username, password } = this.state;
       if (event) {
         event.preventDefault();
         if (event.target.tagName !== 'BUTTON') {
-          this.props.logIn(this.state).then(() => {
-            this.setState({ username: '', password: '', error: '' });
-            browserHistory.push('/club');
-          });
+          this.props.logIn({ username, password });
         }
       } else {
-        this.props.logIn(this.state).then(() => {
-          this.setState({ username: '', password: '', error: '' });
-          browserHistory.push('/club');
-        });
+        this.props.logIn({ username, password });
       }
     }
   }
@@ -93,7 +100,6 @@ export default class LogInForm extends Component {
     return (<div className="forms" style={{ maxHeight: '70vh' }}>
       <form onSubmit={this.handleSubmit}>
         <h3>Log In</h3>
-        <div className="form-error">{this.props.error}</div>
         <div>
           <TextField
             type="text"

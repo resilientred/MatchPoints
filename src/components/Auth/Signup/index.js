@@ -10,15 +10,28 @@ export default class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      username: '',
-      password: '',
-      clubName: '',
-      stateName: '',
-      city: '',
+      email: 'kxmingg@gmail.com',
+      username: 'test user',
+      password: 'password',
+      passwordRepeat: '',
+      clubName: 'Test Club',
+      stateName: 'CA',
+      city: 'San Francisco',
       errors: {},
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error !== this.props.error && nextProps.error && nextProps.error.username) {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          username: nextProps.error.username,
+        },
+      });
+    }
+  }
+
   validate() {
     const emailRegex = new RegExp('.+@.+..+', 'i');
     let isValid = true;
@@ -35,12 +48,21 @@ export default class SignUpForm extends Component {
       errors.stateName = 'State cannot be empty';
       isValid = false;
     }
-    if (this.state.username.length < 8) {
+
+    if (!/^[0-9a-z]+$/.test(this.state.username)) {
+      errors.username = 'Username can only contain alphanumeric characters.';
+      isValid = false;
+    } else if (this.state.username.length < 8) {
       errors.username = 'Username must be at least 8 characters long';
       isValid = false;
     }
     if (this.state.password.length < 8) {
       errors.password = 'Password must be at least 8 characters long';
+      isValid = false;
+    } else if (this.state.passwordRepeat.length > 1 &&
+      this.state.password !== this.state.passwordRepeat) {
+      errors.passwordRepeat = 'Passwords must match';
+      errors.password = 'Passwords must match';
       isValid = false;
     }
     if (!emailRegex.test(this.state.email)) {
@@ -53,7 +75,7 @@ export default class SignUpForm extends Component {
   }
 
   updateField(field, e) {
-    const { [field]: fieldError, ...errors } = this.state.error;
+    const { [field]: fieldError, ...errors } = this.state.errors;
 
     if (fieldError) {
       this.setState({ errors });
@@ -61,13 +83,32 @@ export default class SignUpForm extends Component {
     this.setState({ [field]: e.target.value });
   }
 
+  updatePassword = (field, e) => {
+    const self = e.target.value;
+    const other = field === 'password' ?
+      this.state.passwordRepeat :
+      this.state.password;
+    const repeatError = this.state.errors.passwordRepeat;
+    if (repeatError) {
+      if (self === other) {
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            passwordRepeat: null,
+            password: null,
+          },
+        });
+      }
+    }
+
+    this.setState({ [field]: self });
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     if (this.validate()) {
-      this.props.signUp(this.state).then(() => {
-        this.props.setPage(0);
-        browserHistory.push('/club');
-      });
+      const { errors, ...rest } = this.state;
+      this.props.signUp(rest);
     }
   }
   render() {
@@ -75,11 +116,10 @@ export default class SignUpForm extends Component {
     return (<div className="forms">
       <form onSubmit={this.handleSubmit}>
         <h3>Sign Up</h3>
-        <div style={{ color: 'red' }}>{this.props.error}</div>
         <div>
           <TextField
             type="text"
-            hintText="clubName"
+            value={this.state.clubName}
             floatingLabelText="Club Name"
             onChange={e => this.updateField('clubName', e)}
             errorText={errors.clubName}
@@ -89,7 +129,7 @@ export default class SignUpForm extends Component {
         <div>
           <TextField
             type="text"
-            hintText="city"
+            value={this.state.city}
             floatingLabelText="City"
             onChange={e => this.updateField('city', e)}
             errorText={errors.city}
@@ -99,7 +139,7 @@ export default class SignUpForm extends Component {
         <div>
           <TextField
             type="text"
-            hintText="State"
+            value={this.state.stateName}
             floatingLabelText="State"
             onChange={e => this.updateField('stateName', e)}
             errorText={errors.stateName}
@@ -109,7 +149,7 @@ export default class SignUpForm extends Component {
         <div>
           <TextField
             type="text"
-            hintText="username"
+            value={this.state.username}
             floatingLabelText="Username"
             onChange={e => this.updateField('username', e)}
             errorText={errors.username}
@@ -119,7 +159,7 @@ export default class SignUpForm extends Component {
         <div>
           <TextField
             type="email"
-            hintText="email"
+            value={this.state.email}
             floatingLabelText="Email"
             onChange={e => this.updateField('email', e)}
             errorText={errors.email}
@@ -129,10 +169,20 @@ export default class SignUpForm extends Component {
         <div>
           <TextField
             type="password"
-            hintText="password"
+            value={this.state.password}
             floatingLabelText="Password"
-            onChange={e => this.updateField('password', e)}
+            onChange={(e) => this.updatePassword('password', e)}
             errorText={errors.password}
+            required
+          />
+        </div>
+        <div>
+          <TextField
+            type="password"
+            value={this.state.passwordRepeat}
+            floatingLabelText="Password Repeat"
+            onChange={(e) => this.updatePassword('passwordRepeat', e)}
+            errorText={errors.passwordRepeat}
             required
           />
         </div>

@@ -9,7 +9,7 @@ export default ({ getState, dispatch }) => {
   const requireNotLoggedin = (nextState, replace, callback) => {
     const checkAuth = () => {
       const { club } = getState().auth;
-      if (club._id) {
+      if (club.id) {
         replace('/club');
       }
       callback();
@@ -25,7 +25,7 @@ export default ({ getState, dispatch }) => {
   const requireLoggedIn = (nextState, replace, callback) => {
     const checkAuth = () => {
       const { club } = getState().auth;
-      if (!club._id) {
+      if (!club.id) {
         replace('/');
       }
       callback();
@@ -40,14 +40,14 @@ export default ({ getState, dispatch }) => {
 
   const requireConfirmed = (nextState, replace, callback) => {
     const { club } = getState().auth;
-    if (!club.confirmed) {
+    if (!club.verified) {
       replace('/club/confirm');
     }
     callback();
   };
   const requireNotConfirmed = (nextState, replace, callback) => {
     const { club } = getState().auth;
-    if (club.confirmed) {
+    if (club.verified) {
       replace('/club');
     }
     callback();

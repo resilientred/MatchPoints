@@ -140,7 +140,8 @@ const RecordTableView = (props) => {
               </TableRowColumn>);
             }
             const otherId = sortedPlayerList[n - 3] && sortedPlayerList[n - 3].id;
-            if (!ratingChangeDetail[self.id] || ratingChangeDetail[self.id][otherId] === undefined) {
+            if (!ratingChangeDetail[self.id] ||
+              ratingChangeDetail[self.id][otherId] === undefined) {
               return <TableRowColumn key={`row${m}:${n}`}>0</TableRowColumn>;
             }
             return (<TableRowColumn key={`row${m}:${n}`}>

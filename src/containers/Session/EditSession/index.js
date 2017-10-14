@@ -27,12 +27,10 @@ export default class EditSession extends Component {
   saveSession = () => {
     const session = this.props.session;
     if (!session.finalized) {
-      this.props.postResult(
-        this.props.scoreChange,
-        this.props.scoreUpdate, session._id, session.date
-      ).then(() => {
-        return browserHistory.push('/club/sessions');
-      });
+      this.props.postResult(session._id, session.date, this.props.results)
+        .then(() => {
+          return browserHistory.push('/club/sessions');
+        });
     }
   }
   handleClose = () => {

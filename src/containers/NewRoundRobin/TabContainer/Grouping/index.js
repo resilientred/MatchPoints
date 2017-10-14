@@ -129,7 +129,6 @@ export default class Grouping extends Component {
       this.props.saveSession({
         date: moment(this.props.date).format('YYYY-MM-DD'),
         numOfPlayers: this.props.numJoined,
-        schemata: this.props.schemata,
         selectedSchema: this.props.selected,
         players: this.props.addedPlayers.toPlayerList().flatten(),
       }).then(() => {

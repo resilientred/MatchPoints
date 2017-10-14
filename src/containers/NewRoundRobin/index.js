@@ -28,7 +28,7 @@ export default class NewRRSession extends Component {
   componentWillMount() {
     if (!this.props.session.loaded && !this.props.session.loading) {
       this.props.fetchCurrentPlayers();
-      this.props.fetchActivePlayers();
+      // this.props.fetchActivePlayers();
     }
   }
 
