@@ -74,12 +74,12 @@ export default (state = initialState, action) => {
 };
 
 
-export const postResult = (data, ratingUpdateList, id, date) => {
+export const postResult = (id, date, results) => {
   const promise = axios({
     url: `/api/my/sessions/${id}`,
     method: 'POST',
     data: {
-      result: { data, ratingUpdateList, date },
+      result: { results, date },
     },
     headers: {
       'X-CSRF-TOKEN': getCSRF(),

@@ -41,19 +41,25 @@ export default (state = initialState, action) => {
   }
 };
 
-export const stopLoad = () => {
+export function startLoad() {
+  return {
+    type: LOAD,
+  };
+}
+
+export function stopLoad() {
   return {
     type: STOP_LOAD,
   };
 };
 
-export const clearMessage = () => {
+export function clearMessage() {
   return {
     type: CLEAR_ERROR,
   };
 };
 
-export const setMessage = (msg) => {
+export function setMessage(msg) {
   return {
     type: MESSAGE,
     payload: msg,

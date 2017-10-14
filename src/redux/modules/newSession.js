@@ -1,11 +1,6 @@
 import axios from 'axios';
+import ActionTypes from 'redux/actionTypes';
 import { getCSRF, Heap } from 'helpers';
-import {
-  ADD_PLAYER_SUCCESS,
-  DELETE_PLAYER_SUCCESS,
-  UPDATE_PLAYER_SUCCESS,
-  FETCH_PLAYERS_SUCCESS,
-} from 'redux/modules/players';
 import { UPDATE_SESSION_SUCCESS } from 'redux/modules/sessions';
 import {
   CHANGE_SCHEMA,
@@ -83,7 +78,7 @@ export default (state = initialState, action) => {
       };
     }
 
-    case FETCH_PLAYERS_SUCCESS: {
+    case ActionTypes.FETCH_PLAYERS_SUCCESS: {
       const allPlayers = {};
       action.payload.players.forEach((player) => {
         allPlayers[player._id] = player;
@@ -97,7 +92,7 @@ export default (state = initialState, action) => {
         players: action.payload.players,
       };
     }
-    case DELETE_PLAYER_SUCCESS: {
+    case ActionTypes.DELETE_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
       delete allPlayers[action.payload];
 
@@ -117,7 +112,7 @@ export default (state = initialState, action) => {
         loading: false,
       };
     }
-    case ADD_PLAYER_SUCCESS: {
+    case ActionTypes.ADD_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
       allPlayers[action.payload._id] = action.payload;
       return {
@@ -126,7 +121,7 @@ export default (state = initialState, action) => {
         loading: false,
       };
     }
-    case UPDATE_PLAYER_SUCCESS: {
+    case ActionTypes.UPDATE_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
       allPlayers[action.payload._id] = action.payload;
 
@@ -223,7 +218,7 @@ export const restoreSession = (data) => {
 
 export const saveSession = (data) => {
   const promise = axios({
-    url: '/api/my/session/new',
+    url: '/api/my/session',
     method: 'POST',
     data: { session: data },
     headers: {

@@ -1,6 +1,8 @@
 import axios from 'axios';
+import request from 'utils/request';
+import ActionTypes from 'redux/actionTypes';
 import { getCSRF } from 'helpers';
-import { MESSAGE } from 'redux/modules/main';
+import { setMessage } from 'redux/modules/main';
 
 export const USER_CHANGED = 'mp/infoChange/USER_CHANGED';
 
@@ -49,17 +51,40 @@ export const changeInfo = (info, password) => {
   };
 };
 
-
-export const resendEmail = () => {
-  const promise = axios({
-    url: '/api/my/accounts/resend',
-    method: 'POST',
-    headers: {
-      'X-CSRF-TOKEN': getCSRF(),
-    },
-  });
-  return {
-    types: ['NOT NEEDED', MESSAGE, MESSAGE],
-    promise,
+export function resendEmail() {
+  return (dispatch) => {
+    dispatch(resendEmailRequest());
+    return request('/api/my/accounts/resend', {
+      method: 'POST',
+    }).then(
+      () => {
+        dispatch(setMessage('Email has been resend successfully'));
+        dispatch(resendEmailSuccess());
+      },
+      err => {
+        dispatch(setMessage('Oops. Something had gone wrong...'));
+        dispatch(resendEmailFailure(err));
+      }
+    );
   };
-};
+}
+
+function resendEmailRequest() {
+  return {
+    type: ActionTypes.RESEND_EMAIL_REQUEST,
+  };
+}
+
+function resendEmailSuccess() {
+  return {
+    type: ActionTypes.RESEND_EMAIL_SUCCESS,
+  };
+}
+function resendEmailFailure(err) {
+  return {
+    type: ActionTypes.RESEND_EMAIL_FAILURE,
+    payload: {
+      err,
+    },
+  };
+}
