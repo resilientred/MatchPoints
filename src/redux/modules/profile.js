@@ -51,24 +51,6 @@ export const changeInfo = (info, password) => {
   };
 };
 
-export function resendEmail() {
-  return (dispatch) => {
-    dispatch(resendEmailRequest());
-    return request('/api/my/accounts/resend', {
-      method: 'POST',
-    }).then(
-      () => {
-        dispatch(setMessage('Email has been resend successfully'));
-        dispatch(resendEmailSuccess());
-      },
-      err => {
-        dispatch(setMessage('Oops. Something had gone wrong...'));
-        dispatch(resendEmailFailure(err));
-      }
-    );
-  };
-}
-
 function resendEmailRequest() {
   return {
     type: ActionTypes.RESEND_EMAIL_REQUEST,
@@ -86,5 +68,23 @@ function resendEmailFailure(err) {
     payload: {
       err,
     },
+  };
+}
+
+export function resendEmail() {
+  return (dispatch) => {
+    dispatch(resendEmailRequest());
+    return request('/api/my/accounts/resend', {
+      method: 'POST',
+    }).then(
+      () => {
+        dispatch(setMessage('Email has been resend successfully'));
+        dispatch(resendEmailSuccess());
+      },
+      err => {
+        dispatch(setMessage('Oops. Something had gone wrong...'));
+        dispatch(resendEmailFailure(err));
+      }
+    );
   };
 }

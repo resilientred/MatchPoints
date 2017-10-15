@@ -5,8 +5,8 @@ import { Table, TableBody, TableHeader,
 const SelectedPlayerList = (props) => {
   const idRef = {};
   const playerList = props.players.map((player, i) => {
-    idRef[i] = player._id;
-    return (<TableRow key={player._id} selected={!!props.addedPlayers.find(player._id)}>
+    idRef[i] = player.id;
+    return (<TableRow key={player.id} selected={!!props.addedPlayers.find(player.id)}>
       <TableRowColumn>{player.name}</TableRowColumn>
       <TableRowColumn>{player.rating}</TableRowColumn>
     </TableRow>);

@@ -78,10 +78,10 @@ export default (state = initialState, action) => {
       };
     }
 
-    case ActionTypes.FETCH_PLAYERS_SUCCESS: {
+    case ActionTypes.FETCH_CURRENT_PLAYERS_SUCCESS: {
       const allPlayers = {};
       action.payload.players.forEach((player) => {
-        allPlayers[player._id] = player;
+        allPlayers[player.id] = player;
       });
 
       return {
@@ -94,17 +94,26 @@ export default (state = initialState, action) => {
     }
     case ActionTypes.DELETE_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
-      delete allPlayers[action.payload];
+      delete allPlayers[action.payload.id];
+      console.log(action.payload.id);
+      let addedPlayers = state.addedPlayers;
+      let numJoined = state.numJoined;
+      if (state.addedPlayers.find(action.payload.id)) {
+        addedPlayers = state.addedPlayers.remove(action.payload);
+        numJoined -= 1;
+      }
 
       return {
         ...state,
         allPlayers,
+        addedPlayers,
+        numJoined,
       };
     }
     case ADD_PLAYERS_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
       action.payload.forEach((player) => {
-        allPlayers[player._id] = player;
+        allPlayers[player.id] = player;
       });
       return {
         ...state,
@@ -112,19 +121,10 @@ export default (state = initialState, action) => {
         loading: false,
       };
     }
+    case ActionTypes.UPDATE_PLAYER_SUCCESS:
     case ActionTypes.ADD_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
-      allPlayers[action.payload._id] = action.payload;
-      return {
-        ...state,
-        allPlayers,
-        loading: false,
-      };
-    }
-    case ActionTypes.UPDATE_PLAYER_SUCCESS: {
-      const allPlayers = Object.assign({}, state.allPlayers);
-      allPlayers[action.payload._id] = action.payload;
-
+      allPlayers[action.payload.player.id] = action.payload.player;
       return {
         ...state,
         allPlayers,

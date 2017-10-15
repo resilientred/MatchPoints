@@ -51,17 +51,17 @@ export function stopLoad() {
   return {
     type: STOP_LOAD,
   };
-};
+}
 
 export function clearMessage() {
   return {
     type: CLEAR_ERROR,
   };
-};
+}
 
 export function setMessage(msg) {
   return {
     type: MESSAGE,
     payload: msg,
   };
-};
+}

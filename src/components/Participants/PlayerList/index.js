@@ -36,12 +36,15 @@ class PlayerList extends Component {
 
   playerRow(player) {
     return (
-      <TableRow key={player._id} selected={!!this.props.addedPlayers.find(player._id)}>
+      <TableRow key={player.id} selected={!!this.props.addedPlayers.find(player.id)}>
         <TableRowColumn className="col-name">{player.name}</TableRowColumn>
         <TableRowColumn className="col-rating">{player.rating}</TableRowColumn>
         <TableRowColumn className="col-button">
           <IconButton
-            onClick={() => this.props.openEditModal(player)}
+            onClick={(ev) => {
+              ev.stopPropagation();
+              this.props.openEditModal(player);
+            }}
             iconClassName="material-icons"
             tooltip="Edit Player"
           >
@@ -50,7 +53,10 @@ class PlayerList extends Component {
         </TableRowColumn>
         <TableRowColumn className="col-button">
           <IconButton
-            onClick={() => this.props.deletePlayer(player._id)}
+            onClick={(ev) => {
+              ev.stopPropagation();
+              this.props.deletePlayer(player.id)
+            }}
             iconClassName="material-icons"
             tooltip="Remove Player"
           >
@@ -62,7 +68,7 @@ class PlayerList extends Component {
   }
   render() {
     const { players, activePlayers } = this.props;
-    const input = this.state.input;
+    const { input } = this.state;
     const filteredPlayers = [];
     const playerList = [];
 
@@ -80,8 +86,8 @@ class PlayerList extends Component {
     }
 
     if (playerList.length === 0) {
-      for (const { _id } of activePlayers) {
-        const player = players[_id];
+      for (const { id } of activePlayers) {
+        const player = players[id];
         if (player.name) {
           playerList.push(this.playerRow(player));
           filteredPlayers.push(player);
@@ -101,7 +107,7 @@ class PlayerList extends Component {
           fixedHeader={Boolean(true)}
           selectable={Boolean(true)}
           multiSelectable={Boolean(true)}
-          onCellClick={i => this.toggleRegister(filteredPlayers[i]._id)}
+          onCellClick={i => this.toggleRegister(filteredPlayers[i].id)}
         >
           <TableHeader displaySelectAll={false}>
             <TableRow>

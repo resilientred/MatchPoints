@@ -1,8 +1,7 @@
-// import axios from 'axios';
 import request from 'utils/request';
 import ActionTypes from 'redux/actionTypes';
-import { getCSRF } from 'helpers';
-import { LOAD, MESSAGE } from './main';
+import { closeEditModal, closeNewModal } from './modals';
+// import { MESSAGE } from './main';
 
 const initialState = {
   loaded: false,
@@ -11,7 +10,7 @@ const initialState = {
   error: null,
 };
 
-export default function players(state = initialState, action) {
+export default function Players(state = initialState, action) {
   // what are these for???
   switch (action.type) {
     case ActionTypes.ADD_PLAYER_REQUEST:
@@ -63,19 +62,15 @@ function fetchCurrentPlayersFailure(error) {
   };
 }
 
-export function addPlayer({ name, rating }) {
+export function fetchCurrentPlayers() {
   return (dispatch) => {
-    const player = { name, rating };
-    dispatch(addPlayerRequest());
-    return request('/api/my/players', {
-      method: 'POST',
-      body: JSON.stringify({ player }),
-    }).then(
-      res => dispatch(addPlayerSuccess(res.player)),
-      err => dispatch(addPlayerFailure(err))
+    dispatch(fetchCurrentPlayersRequest());
+    return request('/api/my/players').then(
+      res => dispatch(fetchCurrentPlayersSuccess(res.players)),
+      err => dispatch(fetchCurrentPlayersFailure(err))
     );
   };
-};
+}
 
 function addPlayerRequest() {
   return {
@@ -83,10 +78,10 @@ function addPlayerRequest() {
   };
 }
 
-function addPlayerSuccess(players) {
+function addPlayerSuccess(player) {
   return {
     type: ActionTypes.ADD_PLAYER_SUCCESS,
-    payload; { players },
+    payload: { player },
   };
 }
 
@@ -97,16 +92,6 @@ function addPlayerFailure(error) {
   };
 }
 
-export function addPlayer() {
-  return (dispatch) => {
-    dispatch(fetchCurrentPlayersRequest());
-    return request('/api/my/players').then(
-      res => dispatch(fetchCurrentPlayersSuccess(res.player)),
-      err => dispatch(fetchCurrentPlayersFailure(err))
-    );
-  };
-};
-
 export function addPlayer({ name, rating }) {
   return (dispatch) => {
     const player = { name, rating };
@@ -115,11 +100,14 @@ export function addPlayer({ name, rating }) {
       method: 'POST',
       body: JSON.stringify({ player }),
     }).then(
-      res => dispatch(addPlayerSuccess(res.player)),
+      res => {
+        dispatch(closeNewModal());
+        dispatch(addPlayerSuccess(res.player));
+      },
       err => dispatch(addPlayerFailure(err))
     );
   };
-};
+}
 
 function updatePlayerRequest() {
   return {
@@ -130,7 +118,7 @@ function updatePlayerRequest() {
 function updatePlayerSuccess(player) {
   return {
     type: ActionTypes.UPDATE_PLAYER_SUCCESS,
-    payload; { player },
+    payload: { player },
   };
 }
 
@@ -149,11 +137,14 @@ export function updatePlayer({ name, rating, id }) {
       method: 'PATCH',
       body: JSON.stringify({ player }),
     }).then(
-      res => dispatch(updatePlayerSuccess(res.player)),
+      res => {
+        dispatch(closeEditModal());
+        dispatch(updatePlayerSuccess(res.player));
+      },
       err => dispatch(updatePlayerFailure(err))
     );
   };
-};
+}
 
 function deletePlayerRequest() {
   return {
@@ -161,10 +152,10 @@ function deletePlayerRequest() {
   };
 }
 
-function deletePlayerSuccess(player) {
+function deletePlayerSuccess(id) {
   return {
     type: ActionTypes.DELETE_PLAYER_SUCCESS,
-    payload; { player },
+    payload: { id },
   };
 }
 
@@ -178,12 +169,11 @@ function deletePlayerFailure(error) {
 export function deletePlayer(id) {
   return (dispatch) => {
     dispatch(deletePlayerRequest());
-    const player = { name, rating, id };
     return request(`/api/my/players/${id}`, {
       method: 'DELETE',
     }).then(
-      res => dispatch(deletePlayerSuccess(res.player)),
+      res => dispatch(deletePlayerSuccess(res.playerId)),
       err => dispatch(deletePlayerFailure(err))
     );
   };
-};
+}

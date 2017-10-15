@@ -1,7 +1,4 @@
-const OPEN_EDIT_MODAL = 'mp/modals/OPEN_EDIT_MODAL';
-const OPEN_NEW_MODAL = 'mp/modals/OPEN_NEW_MODAL';
-const CLOSE_EDIT_MODAL = 'mp/modals/CLOSE_EDIT_MODAL';
-const CLOSE_NEW_MODAL = 'mp/modals/CLOSE_NEW_MODAL';
+import ActionTypes from 'redux/actionTypes';
 
 const initialState = {
   newPlayerModal: false,
@@ -13,7 +10,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case OPEN_NEW_MODAL:
+    case ActionTypes.OPEN_NEW_MODAL:
       return {
         ...state,
         newPlayerModal: true,
@@ -22,22 +19,22 @@ export default (state = initialState, action) => {
           player: null,
         },
       };
-    case OPEN_EDIT_MODAL: {
-      const player = action.payload;
+    case ActionTypes.OPEN_EDIT_MODAL: {
+      const player = action.payload.player;
       return {
         ...state,
         newPlayerModal: false,
         editPlayerModal: {
           open: true,
           player: {
-            _id: player._id,
+            id: player.id,
             name: player.name,
             rating: player.rating,
           },
         },
       };
     }
-    case CLOSE_EDIT_MODAL:
+    case ActionTypes.CLOSE_EDIT_MODAL:
       return {
         ...state,
         editPlayerModal: {
@@ -45,7 +42,7 @@ export default (state = initialState, action) => {
           player: null,
         },
       };
-    case CLOSE_NEW_MODAL:
+    case ActionTypes.CLOSE_NEW_MODAL:
       return {
         ...state,
         newPlayerModal: false,
@@ -55,26 +52,27 @@ export default (state = initialState, action) => {
   }
 };
 
-export const openEditModal = (player) => {
+export function openEditModal(player) {
   return {
-    type: OPEN_EDIT_MODAL,
-    payload: player,
+    type: ActionTypes.OPEN_EDIT_MODAL,
+    payload: { player },
   };
-};
+}
 
-export const openNewModal = () => {
+export function openNewModal() {
   return {
-    type: OPEN_NEW_MODAL,
+    type: ActionTypes.OPEN_NEW_MODAL,
   };
-};
-export const closeEditModal = () => {
-  return {
-    type: CLOSE_EDIT_MODAL,
-  };
-};
+}
 
-export const closeNewModal = () => {
+export function closeEditModal() {
   return {
-    type: CLOSE_NEW_MODAL,
+    type: ActionTypes.CLOSE_EDIT_MODAL,
   };
-};
+}
+
+export function closeNewModal() {
+  return {
+    type: ActionTypes.CLOSE_NEW_MODAL,
+  };
+}

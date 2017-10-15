@@ -47,13 +47,16 @@ export default class Heap {
     - Returns a new heap with the player removed
   */
   remove(id) {
+    if (!this.find(id)) {
+      return this;
+    }
     const idx = this.map[id];
     const copiedArr = this.heap.slice();
     const copiedMap = Object.assign({}, this.map);
 
     delete copiedMap[id];
     if (idx < copiedArr.length - 1) {
-      copiedMap[copiedArr[copiedArr.length - 1]._id] = idx;
+      copiedMap[copiedArr[copiedArr.length - 1].id] = idx;
       copiedArr[idx] = copiedArr[copiedArr.length - 1];
     }
     copiedArr.pop();

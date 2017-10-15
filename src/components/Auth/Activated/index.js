@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { activateClub } from 'redux/modules/auth';
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
+import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton/IconButton';
 import Close from 'react-icons/lib/md/close';
@@ -13,19 +14,34 @@ class PlayerForm extends Component {
       rating: '',
     };
     if (props.player) {
-      def.id = props.player._id;
+      def.id = props.player.id;
       def.name = props.player.name;
       def.rating = props.player.rating;
     }
     this.state = {
       ...def,
-      errorText: {
+      errors: {
         name: '',
         rating: '',
       },
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error !== this.props.error) {
+      if (nextProps.error) {
+        const ratingError = nextProps.error.rating;
+        const nameError = nextProps.error.name;
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            rating: ratingError,
+            name: nameError,
+          },
+        });
+      }
+    }
+  }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.modalOpen && this.props.modalOpen) {
@@ -35,44 +51,46 @@ class PlayerForm extends Component {
 
   validateFields() {
     let isValid = true;
-    const errorText = {};
+    const errors = {};
     if (this.state.name === '') {
-      errorText.name = 'Name field cannot be empty.';
+      errors.name = 'Name field cannot be empty.';
       isValid = false;
     }
     if (this.state.rating === '0' || this.state.rating === '') {
-      errorText.rating = 'Rating field cannot be empty.';
+      errors.rating = 'Rating field cannot be empty.';
       isValid = false;
     }
 
+    if (!isValid) {
+      this.setState({ errors });
+    }
     return isValid;
   }
 
   updateRating = (e) => {
-    const { rating, ...errorText } = this.state.errorText;
+    const { rating, ...errors } = this.state.errors;
     if (rating && e.target.value !== '0') {
-      this.setState({ errorText });
+      this.setState({ errors });
     }
     this.setState({ rating: e.target.value });
   }
 
   updateName = (e) => {
-    const { name, ...errorText } = this.state.errorText;
+    const { name, ...errors } = this.state.errors;
     if (name && e.target.value) {
-      this.setState({ errorText });
+      this.setState({ errors });
     }
     this.setState({ name: e.target.value });
   }
 
   handleSubmit = () => {
     if (this.validateFields()) {
-      this.props.callback(this.state).then(() => {
-        this.setState({ name: '', rating: '' });
-        this.props.closeModal();
-      });
+      this.props.callback(this.state);
     }
   }
   render() {
+    const { isLoading } = this.props;
+    const { errors } = this.state;
     return (<div
       className="player-form"
       style={{ display: this.props.modalOpen ? 'block' : 'none' }}
@@ -94,7 +112,7 @@ class PlayerForm extends Component {
             id="name"
             hintText="Name"
             onChange={this.updateName}
-            errorText={this.state.errorText.name}
+            errorText={errors.name}
             value={this.state.name}
             required
           />
@@ -105,17 +123,25 @@ class PlayerForm extends Component {
             floatingLabelText="Rating"
             hintText="Rating"
             onChange={this.updateRating}
-            errorText={this.state.errorText.rating}
+            errorText={errors.rating}
             value={this.state.rating} pattern="^\d{2,4}$"
             required
           />
         </div>
-        <RaisedButton
-          fullWidth={Boolean(true)}
-          label={this.props.title}
-          style={{ marginTop: '20px' }}
-          onTouchTap={this.handleSubmit}
-        />
+        {
+          isLoading && <CircularProgress
+            size={0.5}
+            color="#aaa"
+          />
+        }
+        {
+          !isLoading && <RaisedButton
+            fullWidth={Boolean(true)}
+            label={this.props.title}
+            style={{ marginTop: '20px' }}
+            onTouchTap={this.handleSubmit}
+          />
+        }
       </form>
     </div>);
   }

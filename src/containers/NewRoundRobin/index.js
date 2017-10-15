@@ -12,7 +12,7 @@ import UploadDialog from './UploadDialog';
 import TabContainer from './TabContainer';
 
 @connect(
-  ({ newSession, modals }) => ({ session: newSession, modals }),
+  ({ players, newSession, modals }) => ({ session: newSession, modals, players }),
   {
     openNewModal,
     openEditModal,
@@ -34,6 +34,7 @@ export default class NewRRSession extends Component {
 
   render() {
     const { newPlayerModal, editPlayerModal } = this.props.modals;
+    const { players } = this.props;
     return (<div className="tab-container">
       <TabContainer />
       <UploadDialog />
@@ -42,6 +43,8 @@ export default class NewRRSession extends Component {
           (<div className="overlay">
             <PlayerForm
               title="Register Player"
+              isLoading={players.loading}
+              error={players.error}
               callback={this.props.addPlayer}
               modalOpen={newPlayerModal}
               closeModal={this.props.closeNewModal}
@@ -53,6 +56,8 @@ export default class NewRRSession extends Component {
           (<div className="overlay">
             <PlayerForm
               title="Update Player"
+              isLoading={players.loading}
+              error={players.error}
               callback={this.props.updatePlayer}
               player={editPlayerModal.player}
               modalOpen={editPlayerModal.open}

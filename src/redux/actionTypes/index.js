@@ -35,6 +35,11 @@ const actionTypes = keymirror({
   ADD_PLAYER_FAILURE: null,
   UPDATE_PLAYER_FAILURE: null,
   DELETE_PLAYER_FAILURE: null,
+
+  OPEN_EDIT_MODAL: null,
+  OPEN_NEW_MODAL: null,
+  CLOSE_EDIT_MODAL: null,
+  CLOSE_NEW_MODAL: null,
 });
 
 export default actionTypes;
