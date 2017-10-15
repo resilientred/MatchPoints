@@ -95,11 +95,10 @@ export default (state = initialState, action) => {
     case ActionTypes.DELETE_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
       delete allPlayers[action.payload.id];
-      console.log(action.payload.id);
       let addedPlayers = state.addedPlayers;
       let numJoined = state.numJoined;
       if (state.addedPlayers.find(action.payload.id)) {
-        addedPlayers = state.addedPlayers.remove(action.payload);
+        addedPlayers = state.addedPlayers.remove(action.payload.id);
         numJoined -= 1;
       }
 
@@ -121,7 +120,18 @@ export default (state = initialState, action) => {
         loading: false,
       };
     }
-    case ActionTypes.UPDATE_PLAYER_SUCCESS:
+    case ActionTypes.UPDATE_PLAYER_SUCCESS: {
+      const { player } = action.payload;
+      const allPlayers = Object.assign({}, state.allPlayers);
+      allPlayers[player.id] = player;
+      return {
+        ...state,
+        allPlayers,
+        addedPlayers: state.addedPlayers.replace(player),
+        loading: false,
+      };
+    }
+
     case ActionTypes.ADD_PLAYER_SUCCESS: {
       const allPlayers = Object.assign({}, state.allPlayers);
       allPlayers[action.payload.player.id] = action.payload.player;

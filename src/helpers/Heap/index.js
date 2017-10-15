@@ -20,7 +20,7 @@ export default class Heap {
 
     const copiedMap = {
       ...this.map,
-      [val._id]: copiedArr.length - 1,
+      [val.id]: copiedArr.length - 1,
     };
     const newHeap = new Heap(copiedArr, copiedMap);
     newHeap.heapifyUp(newHeap.heap.length - 1);
@@ -35,7 +35,7 @@ export default class Heap {
   removeMax() {
     const max = this.heap[0];
     this.heap[0] = this.heap[this.heap.length - 1];
-    delete this.map[this.heap[0]._id];
+    delete this.map[this.heap[0].id];
     this.heap.pop();
     this.heapifyDown(0);
 
@@ -65,6 +65,25 @@ export default class Heap {
 
     return newHeap;
   }
+
+  replace(player) {
+    if (!this.find(player.id)) {
+      return this;
+    }
+    const idx = this.map[player.id];
+    const old = this.heap[idx];
+    const copiedArr = this.heap.slice();
+    copiedArr[idx] = player;
+    const newHeap = new Heap(copiedArr, this.map);
+    if (player.rating > old.rating) {
+      newHeap.heapifyDown(idx);
+    } else {
+      newHeap.heapifyUp(idx);
+    }
+
+    return newHeap;
+  }
+
   /*
     [0, 1, 2, 3, 4, 5, 6]
     parent Math.ceil(idx / 2) - 1
@@ -85,8 +104,8 @@ export default class Heap {
   }
 
   swap(idx1, idx2) {
-    this.map[this.heap[idx1]._id] = idx2;
-    this.map[this.heap[idx2]._id] = idx1;
+    this.map[this.heap[idx1].id] = idx2;
+    this.map[this.heap[idx2].id] = idx1;
     [this.heap[idx1], this.heap[idx2]] = [this.heap[idx2], this.heap[idx1]];
   }
 

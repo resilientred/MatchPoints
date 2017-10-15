@@ -64,11 +64,10 @@ router.route("/players/:id")
   .delete(csrfProtection, (req, res, next) => {
     const clubId = req.club.id;
     const playerId = req.params.id;
-    // make sure user is the owner
     Player.removePlayer(clubId, playerId)
       .then(
-        (id) => {
-          res.status(200).send({ playerId: id });
+        () => {
+          res.status(200).send({ playerId });
           // client.del(`players:${clubId}`);
         },
         (err) => {
