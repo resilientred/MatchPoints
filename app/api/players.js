@@ -29,19 +29,26 @@ router.route("/players").get((req, res, next) => {
 .post(csrfProtection, (req, res, next) => {
   const clubId = req.club.id;
   const data = req.body.player;
-
   const [hasError, err] = PlayerValidation(data);
   if (hasError) {
     return next({ code: 422, message: err });
   }
 
-  Player.addPlayer(clubId, data)
+  Player.createPlayer(clubId, data)
     .then(
-      (player) => {
-        client.del(`players:${clubId}`);
-        res.status(200).send(player);
+      async (playerId) => {
+        try {
+          const player = await Player.find(playerId);
+          res.status(200).send({ player });
+        } catch (e) {
+          next({ code: 500, message: e });
+        }
+        // client.del(`players:${clubId}`);
       }
-    ).catch(err => next({ code: 500, message: err }));
+    ).catch(err => {
+      console.log(err);
+      next({ code: 500, message: err })
+    });
 });
 
 router.route("/players/active").get((req, res, next) => {
@@ -54,37 +61,43 @@ router.route("/players/active").get((req, res, next) => {
 });
 
 router.route("/players/:id")
-  .delete(csrfProtection, (req, res) => {
-    const clubId = req.club._id;
-    const id = req.params.id;
-    Player.removePlayer(clubId, id)
+  .delete(csrfProtection, (req, res, next) => {
+    const clubId = req.club.id;
+    const playerId = req.params.id;
+    // make sure user is the owner
+    Player.removePlayer(clubId, playerId)
       .then(
-        () => {
-          client.del(`players:${clubId}`);
-          res.status(200);
+        (id) => {
+          res.status(200).send({ playerId: id });
+          // client.del(`players:${clubId}`);
         },
         (err) => {
           if (err.player) {
-            next({ code: 422, message: err });
+            return next({ code: 422, message: err });
           }
           throw err;
         }
       ).catch(err => next({ code: 500, message: err }));
   })
-  .patch(csrfProtection, (req, res) => {
-    const clubId = req.club._id;
+  .patch(csrfProtection, (req, res, next) => {
+    const clubId = req.club.id;
     const id = req.params.id;
     const player = req.body.player;
 
     Player.updatePlayer(clubId, id, player)
       .then(
-        () => {
-          client.del(`players:${clubId}`);
-          res.status(200).send({ player: player });
+        async () => {
+          // client.del(`players:${clubId}`);
+          try {
+            const player = await Player.find(id);
+            res.status(200).send({ player });
+          } catch (e) {
+            next({ code: 500, message: e });
+          }
         },
         (err) => {
           if (err.player) {
-            next({ code: 422, message: err });
+            return next({ code: 422, message: err });
           }
           throw err;
         }).catch(err => next({ code: 500, message: err }));

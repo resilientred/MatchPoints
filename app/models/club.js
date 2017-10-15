@@ -220,10 +220,8 @@ class ClubModel {
 
   async create(user) {
     const connection = await db.getConnection();
-    console.log(user);
     const digest = await ClubModel.generatePasswordDigest(user.password);
     const isPassword = await ClubModel.isPassword(user.password, digest);
-    console.log(isPassword);
     return new Promise((resolve, reject) => {
       connection.beginTransaction((tError) => {
         if (tError) {

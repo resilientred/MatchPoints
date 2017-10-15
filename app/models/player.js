@@ -43,10 +43,19 @@ class PlayerModel {
       });
     });
   }
-  async removePlayer(id) {
+  async removePlayer(clubId, id) {
     const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
-      connection.query(`DELETE FROM players WHERE id = ?`, [id], (err, results, field) => {
+      connection.query(`
+        DELETE FROM players WHERE id = ? AND EXISTS (
+          SELECT * FROM (SELECT * FROM players) AS p
+          INNER JOIN club_players AS cp
+          ON cp.player_id = p.id
+          INNER JOIN clubs AS c
+          ON c.id = cp.club_id
+          WHERE p.id = ? AND c.id = ?
+        )
+      `, [id, id, clubId], (err, results, field) => {
         connection.release();
         if (err) throw(err);
         if (results.affectedRows > 0) {
@@ -58,28 +67,35 @@ class PlayerModel {
     });
   }
 
-  async updatePlayer(player) {
+  async updatePlayer(clubId, id, player) {
     const connection = await db.getConnection();
     return new Promise((resolve, reject) => {
       connection.query(`
         UPDATE players
         SET name = ?, rating = ?
-        WHERE id = ?
-      `, [player.name, player.rating, player.id], (err, results, field) => {
+        WHERE id = ? AND EXISTS (
+          SELECT * FROM (SELECT * FROM players) AS p
+          INNER JOIN club_players AS cp
+          ON cp.player_id = p.id
+          INNER JOIN clubs AS c
+          ON c.id = cp.club_id
+          WHERE p.id = ? AND c.id = ?
+        )
+      `, [player.name, player.rating, id, id, clubId], async (err, results, field) => {
         connection.release();
         if (err) throw(err);
-        if (results.affectedRows > 0) {
-          resolve(true);
-        } else {
+        if (results.affectedRows === 0) {
           reject({ player: 'Player not found.' });
+        } else {
+          resolve(id);
         }
       });
     });
   }
 
-  async createPlayer(clubId, player) {
+  async createPlayer(clubId, player, conn) {
     const shortId = shortid.generate();
-    const connection = await db.getConnection();
+    const connection = conn || await db.getConnection();
     return new Promise((resolve, reject) => {
       connection.beginTransaction((tError) => {
         if (tError) throw tError;
@@ -98,7 +114,7 @@ class PlayerModel {
     }).then((id) => this.createClubPlayer(connection, clubId, id));
   }
 
-  async createClubPlayer(conn, clubId, id) {
+  createClubPlayer(connection, clubId, id) {
     return new Promise((resolve, reject) => {
       connection.query(`
         INSERT INTO club_players (club_id, player_id)
@@ -153,6 +169,25 @@ class PlayerModel {
         if (err) throw(err);
         const data = results.map(row => this.formatPlayer(row));
         return resolve(data);
+      });
+    });
+  }
+
+  async find(id) {
+    const connection = await db.getConnection();
+    return new Promise((resolve, reject) => {
+      connection.query(`
+        SELECT id, short_id, rating, name, created_on, updated_at
+        FROM players
+        WHERE id = ?
+      `, [id], (err, results, field) => {
+        connection.release();
+        if (err) throw(err);
+        if (results.length === 0) {
+          return reject({ player: 'Player not found' });
+        }
+        const player = this.formatPlayer(results[0]);
+        return resolve(player);
       });
     });
   }
